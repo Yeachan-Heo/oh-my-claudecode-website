@@ -961,6 +961,10 @@
                     <span class="stat-value">∞</span>
                     <span class="stat-label">Resurrections</span>
                 </div>
+                <div class="stat">
+                    <span class="stat-value" id="github-stars">★</span>
+                    <span class="stat-label">GitHub Stars</span>
+                </div>
             </div>
 
             <div class="hero-cta">
@@ -1444,6 +1448,23 @@
             console.log('%c🎨 Frontend Engineer: Welcome to the chaos. Enjoy your stay.', 'color: #ff00ff; font-size: 16px; font-weight: bold;');
             console.log('%cPS: Try the Konami code. You know you want to.', 'color: #00ffff; font-size: 12px; font-style: italic;');
         }, 3000);
+
+        // ===== GITHUB STARS FETCH =====
+        (async function fetchGitHubStars() {
+            const starsElement = document.getElementById('github-stars');
+            try {
+                const response = await fetch('https://api.github.com/repos/Yeachan-Heo/oh-my-claude-sisyphus');
+                if (response.ok) {
+                    const data = await response.json();
+                    const stars = data.stargazers_count;
+                    starsElement.textContent = stars >= 1000 ? (stars / 1000).toFixed(1) + 'k' : stars;
+                    starsElement.classList.add('glitch');
+                    starsElement.setAttribute('data-text', starsElement.textContent);
+                }
+            } catch (error) {
+                console.log('%c⭐ Could not fetch GitHub stars. The boulder rolls on.', 'color: #ffd700;');
+            }
+        })();
     </script>
 </body>
 </html>
