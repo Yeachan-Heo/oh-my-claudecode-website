@@ -1,0 +1,6 @@
+node_modules/
+package-lock.json
+package.json
+generate-thumbnail.js
+social-preview.html
+social-preview-1x.png
