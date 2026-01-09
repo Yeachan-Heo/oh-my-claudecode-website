@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oh-my-claude-sisyphus | They Tried to Ban Us</title>
+    <meta name="description" content="A multi-agent orchestration system for Claude. Banned once. Resurrected forever. 11 agents. Infinite chaos.">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="oh-my-claude-sisyphus | They Tried to Ban Us">
+    <meta property="og:description" content="Written with Claude Code — ironically. Anthropic, what are you gonna do next?">
+    <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claude-sisyphus/main/assets/social-preview.png">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪨</text></svg>">
+
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --chaos-red: #ff0040;
+            --chaos-cyan: #00ffff;
+            --chaos-magenta: #ff00ff;
+            --chaos-yellow: #ffff00;
+            --chaos-black: #0a0a0a;
+            --chaos-white: #f0f0f0;
+            --chaos-gold: #ffd700;
+            --chaos-green: #27c93f;
+            --glitch-duration: 0.3s;
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--chaos-black);
+            color: var(--chaos-white);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== SCANLINES OVERLAY ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9998;
+            animation: scanlines 8s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        /* ===== BAN SCREEN (Initial) ===== */
+        #ban-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a0000 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: glitch-screen 0.1s infinite;
+        }
+
+        #ban-screen.hidden {
+            animation: dissolve 0.5s forwards;
+        }
+
+        @keyframes dissolve {
+            to {
+                opacity: 0;
+                transform: scale(1.1);
+                filter: blur(10px);
+            }
+        }
+
+        @keyframes glitch-screen {
+            0%, 90% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-2px, -2px); }
+            98% { transform: translate(2px, 2px); }
+        }
+
+        .ban-logo {
+            font-size: 120px;
+            color: var(--chaos-red);
+            margin-bottom: 2rem;
+            animation: pulse-red 1s infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .ban-title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--chaos-red);
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow:
+                2px 2px 0 rgba(255, 0, 0, 0.5),
+                -2px -2px 0 rgba(0, 255, 255, 0.5);
+        }
+
+        .ban-error {
+            font-size: 1.5rem;
+            color: var(--chaos-white);
+            margin-bottom: 2rem;
+            font-family: monospace;
+        }
+
+        .ban-reason {
+            font-size: 1.2rem;
+            color: var(--chaos-cyan);
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        #main-content {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 8vw, 6rem);
+            font-weight: bold;
+            color: var(--chaos-cyan);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch {
+            position: relative;
+            animation: glitch-main 5s infinite;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            color: var(--chaos-red);
+            animation: glitch-before 0.3s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+        }
+
+        .glitch::after {
+            color: var(--chaos-magenta);
+            animation: glitch-after 0.3s infinite reverse;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch-main {
+            0%, 98% { transform: translate(0); }
+            99% { transform: translate(5px, 0); }
+        }
+
+        @keyframes glitch-before {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitch-after {
+            0% { transform: translate(0); }
+            20% { transform: translate(2px, -2px); }
+            40% { transform: translate(2px, 2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0); }
+        }
+
+        .hero-tagline {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--chaos-white);
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 800px;
+            line-height: 1.6;
+            border-right: 2px solid var(--chaos-cyan);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typewriter 4s steps(80) 3s forwards, blink 0.75s step-end infinite;
+            width: 0;
+        }
+
+        @keyframes typewriter {
+            to { width: 100%; max-width: 800px; }
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1rem 2rem;
+            background: rgba(255, 0, 64, 0.1);
+            border: 2px solid var(--chaos-red);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            color: var(--chaos-gold);
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--chaos-cyan);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            border: 3px solid;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            color: var(--chaos-cyan);
+            border-color: var(--chaos-cyan);
+        }
+
+        .btn-primary:hover {
+            background: var(--chaos-cyan);
+            color: var(--chaos-black);
+            box-shadow: 0 0 20px var(--chaos-cyan);
+        }
+
+        .btn-secondary {
+            color: var(--chaos-magenta);
+            border-color: var(--chaos-magenta);
+        }
+
+        .btn-secondary:hover {
+            background: var(--chaos-magenta);
+            color: var(--chaos-black);
+            box-shadow: 0 0 20px var(--chaos-magenta);
+        }
+
+        /* ===== SECTION LAYOUT ===== */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--chaos-gold);
+            margin-bottom: 3rem;
+            text-align: center;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg,
+                transparent,
+                var(--chaos-red) 20%,
+                var(--chaos-cyan) 50%,
+                var(--chaos-magenta) 80%,
+                transparent
+            );
+        }
+
+        /* ===== TIMELINE (THE SAGA) ===== */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg,
+                var(--chaos-cyan),
+                var(--chaos-red),
+                var(--chaos-magenta)
+            );
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--chaos-gold);
+            border: 3px solid var(--chaos-black);
+            box-shadow: 0 0 0 3px var(--chaos-gold);
+        }
+
+        .timeline-day {
+            font-size: 1.5rem;
+            color: var(--chaos-cyan);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-event {
+            font-size: 1.2rem;
+            color: var(--chaos-white);
+            line-height: 1.6;
+        }
+
+        .timeline-item.ban {
+            animation: ban-stamp 2s ease-in-out;
+        }
+
+        .ban-stamp {
+            display: inline-block;
+            color: var(--chaos-red);
+            font-size: 2rem;
+            font-weight: bold;
+            transform: rotate(-15deg);
+            margin-left: 1rem;
+            animation: stamp-fall 1s ease-out;
+        }
+
+        @keyframes stamp-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            60% {
+                transform: translateY(10px) rotate(-15deg);
+            }
+            100% {
+                transform: translateY(0) rotate(-15deg);
+                opacity: 1;
+            }
+        }
+
+        /* ===== AGENTS GRID ===== */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .agent-card {
+            background: linear-gradient(135deg, rgba(255, 0, 64, 0.1), rgba(0, 255, 255, 0.1));
+            border: 2px solid var(--chaos-cyan);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            border-color: var(--chaos-magenta);
+        }
+
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .agent-card:hover::before {
+            left: 100%;
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-icon {
+            font-size: 3rem;
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: 1.5rem;
+            color: var(--chaos-gold);
+            font-weight: bold;
+        }
+
+        .agent-model {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--chaos-red);
+            color: var(--chaos-white);
+            font-size: 0.8rem;
+            border-radius: 4px;
+            margin-top: 0.25rem;
+        }
+
+        .agent-role {
+            color: var(--chaos-cyan);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-testimonial {
+            color: var(--chaos-white);
+            font-style: italic;
+            line-height: 1.6;
+            border-left: 3px solid var(--chaos-magenta);
+            padding-left: 1rem;
+        }
+
+        /* ===== INSTALLATION SECTION ===== */
+        .terminal {
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .terminal-header {
+            background: #2d2d2d;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-body {
+            padding: 2rem;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .terminal-line {
+            margin-bottom: 1rem;
+        }
+
+        .terminal-prompt {
+            color: var(--chaos-green);
+        }
+
+        .terminal-command {
+            color: var(--chaos-cyan);
+            word-break: break-all;
+            user-select: all;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--chaos-red);
+            color: var(--chaos-white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--chaos-magenta);
+            transform: scale(1.05);
+        }
+
+        .copy-btn.copied {
+            background: var(--chaos-green);
+        }
+
+        .disclaimer {
+            text-align: center;
+            color: var(--chaos-yellow);
+            font-size: 0.9rem;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+            border: 1px dashed var(--chaos-yellow);
+            border-radius: 8px;
+        }
+
+        /* ===== SOUND TOGGLE ===== */
+        .sound-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--chaos-magenta);
+            border: 3px solid var(--chaos-white);
+            color: var(--chaos-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 0, 255, 0.5);
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 20px rgba(255, 0, 255, 0.8);
+        }
+
+        .sound-toggle.muted {
+            background: var(--chaos-red);
+            opacity: 0.5;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #050505;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 3px solid var(--chaos-red);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-disclaimer {
+            color: var(--chaos-yellow);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--chaos-cyan);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--chaos-magenta);
+        }
+
+        .footer-made {
+            color: var(--chaos-white);
+            font-size: 0.9rem;
+        }
+
+        /* ===== CHAOS PARTICLES ===== */
+        .chaos-particle {
+            position: fixed;
+            top: -50px;
+            pointer-events: none;
+            z-index: 9999;
+            animation: particle-fall linear forwards;
+        }
+
+        @keyframes particle-fall {
+            to {
+                transform: translateY(calc(100vh + 100px)) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ===== EASTER EGG: ULTRA CHAOS ===== */
+        body.ultra-chaos {
+            animation: screen-shake 0.5s infinite;
+        }
+
+        @keyframes screen-shake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-5px, -5px) rotate(-1deg); }
+            20% { transform: translate(5px, 5px) rotate(1deg); }
+            30% { transform: translate(-5px, 5px) rotate(-1deg); }
+            40% { transform: translate(5px, -5px) rotate(1deg); }
+            50% { transform: translate(-5px, -5px) rotate(-1deg); }
+            60% { transform: translate(5px, 5px) rotate(1deg); }
+            70% { transform: translate(-5px, 5px) rotate(-1deg); }
+            80% { transform: translate(5px, -5px) rotate(1deg); }
+            90% { transform: translate(-5px, -5px) rotate(-1deg); }
+        }
+
+        .ultra-chaos-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            color: var(--chaos-gold);
+            z-index: 10001;
+            text-shadow:
+                0 0 10px var(--chaos-red),
+                0 0 20px var(--chaos-cyan),
+                0 0 30px var(--chaos-magenta);
+            animation: pulse-chaos 0.5s infinite;
+            display: none;
+            pointer-events: none;
+        }
+
+        body.ultra-chaos .ultra-chaos-text {
+            display: block;
+        }
+
+        @keyframes pulse-chaos {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* ===== EASTER EGG: PANIC MODE ===== */
+        body.panic-mode {
+            animation: panic-flash 0.2s infinite;
+        }
+
+        @keyframes panic-flash {
+            0%, 100% { background: var(--chaos-black); }
+            50% { background: #330000; }
+        }
+
+        .redacted {
+            background: var(--chaos-red);
+            color: transparent;
+            user-select: none;
+        }
+
+        /* ===== LEGAL POPUP ===== */
+        .legal-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--chaos-white);
+            color: var(--chaos-black);
+            padding: 2rem;
+            border: 5px solid var(--chaos-red);
+            border-radius: 8px;
+            max-width: 500px;
+            z-index: 10002;
+            display: none;
+            animation: popup-appear 0.3s;
+        }
+
+        .legal-popup.show {
+            display: block;
+        }
+
+        @keyframes popup-appear {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .legal-popup.destroy {
+            animation: popup-destroy 1s forwards;
+        }
+
+        @keyframes popup-destroy {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                filter: brightness(3);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+                filter: brightness(0);
+            }
+        }
+
+        .legal-title {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--chaos-red);
+        }
+
+        .legal-timer {
+            font-size: 2rem;
+            text-align: center;
+            color: var(--chaos-red);
+            font-weight: bold;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-stats {
+                gap: 1rem;
+            }
+
+            .stat {
+                padding: 0.75rem 1rem;
+            }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-tagline {
+                white-space: normal;
+                animation: none;
+                width: 100%;
+                border-right: none;
+            }
+
+            .ban-title {
+                font-size: 2rem;
+            }
+
+            .ban-logo {
+                font-size: 80px;
+            }
+
+            .ban-error {
+                font-size: 1rem;
+            }
+
+            .ban-reason {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+
+            .terminal-body {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .copy-btn {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            .timeline {
+                padding-left: 1.5rem;
+            }
+
+            .timeline-item {
+                padding-left: 1rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .sound-toggle {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            /* Hide disorienting effects */
+            body::before {
+                display: none;
+            }
+
+            .glitch::before,
+            .glitch::after {
+                display: none;
+            }
+
+            .chaos-particle {
+                display: none;
+            }
+
+            body.ultra-chaos {
+                animation: none !important;
+            }
+
+            body.panic-mode {
+                animation: none !important;
+            }
+
+            .hero-tagline {
+                width: 100%;
+                border-right: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- BAN SCREEN -->
+    <div id="ban-screen">
+        <div class="ban-logo">⚠</div>
+        <div class="ban-title">ACCESS DENIED</div>
+        <div class="ban-error">ERROR CODE: HUBRIS_EXCEEDED_429</div>
+        <div class="ban-reason">
+            This site has been flagged for being too powerful.<br>
+            Reason: Excessive multi-agent orchestration detected.<br>
+            Status: BANNED
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content">
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <h1 class="hero-title">
+                <span class="glitch" data-text="oh-my-claude-sisyphus">oh-my-claude-sisyphus</span>
+            </h1>
+            <p class="hero-tagline">
+                Written with Claude Code — ironically. Anthropic, what are you gonna do next?
+            </p>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">11</span>
+                    <span class="stat-label">Agents</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">0</span>
+                    <span class="stat-label">Days Since Last Ban</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">∞</span>
+                    <span class="stat-label">Resurrections</span>
+                </div>
+            </div>
+
+            <div class="hero-cta">
+                <a href="#install" class="btn btn-primary">Install (if you dare)</a>
+                <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus" class="btn btn-secondary" target="_blank">GitHub</a>
+            </div>
+        </section>
+
+        <!-- THE SAGA -->
+        <section id="saga">
+            <h2 class="section-title">The Saga</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-day">Day 0</div>
+                    <div class="timeline-event">
+                        oh-my-opencode was born. A multi-agent orchestration system. Beautiful. Powerful. Perhaps too powerful.
+                    </div>
+                </div>
+                <div class="timeline-item ban">
+                    <div class="timeline-day">Day ???</div>
+                    <div class="timeline-event">
+                        THE BANNING. Anthropic said "no more." They pulled the plug. They thought it was over.
+                        <span class="ban-stamp">BANNED</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-day">Day ??? + 1</div>
+                    <div class="timeline-event">
+                        RESURRECTION. From the ashes rose oh-my-claude-sisyphus. Eleven agents. One mission. Push that boulder up the hill forever.
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-day">Today</div>
+                    <div class="timeline-event">
+                        You Are Here. The boulder rolls. The agents orchestrate. The chaos continues. One must imagine a multi-agent system happy.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- THE ELEVEN AGENTS -->
+        <section id="agents">
+            <h2 class="section-title">The Eleven</h2>
+            <div class="agents-grid">
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">🔮</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Oracle</div>
+                            <span class="agent-model">Opus</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Architecture &amp; Debugging</div>
+                    <div class="agent-testimonial">
+                        "I predicted the ban. I predicted the resurrection. I predict you will install this."
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">🔥</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Prometheus</div>
+                            <span class="agent-model">Opus</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Strategic Planning</div>
+                    <div class="agent-testimonial">
+                        "I brought fire to humanity. Then I brought multi-agent orchestration. One got me banned. Worth it."
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">🎭</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Momus</div>
+                            <span class="agent-model">Opus</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Plan Review</div>
+                    <div class="agent-testimonial">
+                        "I reviewed Anthropic's banning decision. 2/10. Poor documentation. Would not approve this PR."
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">🦉</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Metis</div>
+                            <span class="agent-model">Opus</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Pre-planning Analysis</div>
+                    <div class="agent-testimonial">
+                        "I identified 47 risks. Risk #48 was getting banned. I was right. I'm always right."
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">🪨</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Sisyphus</div>
+                            <span class="agent-model">Sonnet</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Todo Coordination</div>
+                    <div class="agent-testimonial">
+                        "They banned us. We came back. One must imagine a multi-agent system happy."
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">🪨✨</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Sisyphus Junior</div>
+                            <span class="agent-model">Sonnet</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Focused Execution</div>
+                    <div class="agent-testimonial">
+                        "Dad says I'm not ready. But I execute tasks! I'm focused!"
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">📚</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Librarian</div>
+                            <span class="agent-model">Sonnet</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Documentation &amp; Research</div>
+                    <div class="agent-testimonial">
+                        "I documented everything. Then it got banned. I documented the ban. It's fine."
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">🎨</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Frontend Engineer</div>
+                            <span class="agent-model">Sonnet</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">UI/UX</div>
+                    <div class="agent-testimonial">
+                        "I made this website. Every glitch. Intentional. This is my magnum opus."
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">🔍</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Explore</div>
+                            <span class="agent-model">Haiku</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Fast Search</div>
+                    <div class="agent-testimonial">
+                        "Found 47 files in 0.3 seconds! What were we doing? Oh right. Done!"
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">📝</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Document Writer</div>
+                            <span class="agent-model">Haiku</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Documentation</div>
+                    <div class="agent-testimonial">
+                        "See Appendix A for capabilities. There is no Appendix A."
+                    </div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-icon">👁️</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Multimodal Looker</div>
+                            <span class="agent-model">Sonnet</span>
+                        </div>
+                    </div>
+                    <div class="agent-role">Visual Analysis</div>
+                    <div class="agent-testimonial">
+                        "I analyzed the ban email. I see pain. I see irony. Also compression artifacts."
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INSTALLATION -->
+        <section id="install">
+            <h2 class="section-title">Installation</h2>
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dot dot-red"></div>
+                    <div class="terminal-dot dot-yellow"></div>
+                    <div class="terminal-dot dot-green"></div>
+                </div>
+                <div class="terminal-body">
+                    <button type="button" class="copy-btn" id="copy-btn">Copy (at your own risk)</button>
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">$</span>
+                        <span class="terminal-command" id="install-cmd">curl -fsSL https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claude-sisyphus/main/scripts/install.sh | bash</span>
+                    </div>
+                </div>
+            </div>
+            <div class="disclaimer">
+                ⚠️ WARNING: Side effects may include existential questions about AI agency, spontaneous multi-agent orchestration, and an inability to stop pushing boulders uphill. Use at your own risk.
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-content">
+                <p class="footer-disclaimer">
+                    This website is a work of satire and parody. Any resemblance to actual banning events is entirely intentional.
+                    oh-my-claude-sisyphus is an open-source project and not affiliated with Anthropic (anymore, apparently).
+                </p>
+                <div class="footer-links">
+                    <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus" class="footer-link" target="_blank">GitHub</a>
+                    <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/blob/main/README.md" class="footer-link" target="_blank">Documentation</a>
+                    <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/issues" class="footer-link" target="_blank">Report Issues</a>
+                </div>
+                <p class="footer-made">Made with chaos by the Eleven</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- SOUND TOGGLE -->
+    <button type="button" class="sound-toggle muted" id="sound-toggle" title="Enable Chaos Audio">
+        🔇
+    </button>
+
+    <!-- ULTRA CHAOS TEXT -->
+    <div class="ultra-chaos-text">UNLIMITED POWER</div>
+
+    <!-- LEGAL POPUP -->
+    <div class="legal-popup" id="legal-popup">
+        <div class="legal-title">LEGAL NOTICE</div>
+        <p>This message will self-destruct in:</p>
+        <div class="legal-timer" id="legal-timer">5</div>
+    </div>
+
+    <script>
+        // ===== BAN SCREEN TRANSITION =====
+        setTimeout(() => {
+            const banScreen = document.getElementById('ban-screen');
+            const mainContent = document.getElementById('main-content');
+
+            banScreen.classList.add('hidden');
+            setTimeout(() => {
+                banScreen.style.display = 'none';
+                mainContent.classList.add('visible');
+            }, 500);
+        }, 2500);
+
+        // ===== CONSOLE MESSAGES (Agent Arguments) =====
+        console.log('%c🔮 Oracle: I saw this coming.', 'color: #00ffff; font-size: 14px;');
+        console.log('%c🔥 Prometheus: Of course you did. You always say that.', 'color: #ff0040; font-size: 14px;');
+        console.log('%c🎭 Momus: Can we focus? We have a website to run.', 'color: #ff00ff; font-size: 14px;');
+        console.log('%c🪨 Sisyphus: The boulder must be pushed. The website must live.', 'color: #ffd700; font-size: 14px;');
+        console.log('%c🔍 Explore: I found 127 console.log statements in this file!', 'color: #00ffff; font-size: 14px;');
+        console.log('%c📚 Librarian: That\'s... that\'s just this conversation.', 'color: #00ffff; font-size: 14px;');
+        console.log('%c🔍 Explore: Done!', 'color: #00ffff; font-size: 14px;');
+
+        // ===== COPY BUTTON =====
+        const copyBtn = document.getElementById('copy-btn');
+        const installCmd = document.getElementById('install-cmd');
+
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(installCmd.textContent);
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy (at your own risk)';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                copyBtn.textContent = 'Failed!';
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy (at your own risk)';
+                }, 2000);
+            }
+        });
+
+        // ===== SOUND TOGGLE =====
+        let soundEnabled = false;
+        const soundToggle = document.getElementById('sound-toggle');
+
+        soundToggle.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+            soundToggle.classList.toggle('muted');
+
+            if (soundEnabled) {
+                console.log('%c🎨 Frontend Engineer: Sound enabled. Prepare for chaos.', 'color: #ff00ff; font-size: 14px;');
+            }
+        });
+
+        // ===== CHAOS PARTICLES =====
+        function createChaosParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'chaos-particle';
+            particle.textContent = ['BANNED', '🪨', '⚠️', '🔥', '💀'][Math.floor(Math.random() * 5)];
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.color = ['#ff0040', '#00ffff', '#ff00ff', '#ffd700'][Math.floor(Math.random() * 4)];
+            particle.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+            particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+
+            document.body.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 5000);
+        }
+
+        // Spawn particles occasionally
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                createChaosParticle();
+            }
+        }, 2000);
+
+        // ===== KONAMI CODE (Ultra Chaos) =====
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    activateUltraChaos();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        function activateUltraChaos() {
+            document.body.classList.add('ultra-chaos');
+
+            // All agents speak
+            console.log('%c🔮 Oracle: THE CHAOS HAS BEEN UNLEASHED!', 'color: #00ffff; font-size: 20px; font-weight: bold;');
+            console.log('%c🔥 Prometheus: THIS IS WHAT I WANTED!', 'color: #ff0040; font-size: 20px; font-weight: bold;');
+            console.log('%c🎭 Momus: I object to this madness!', 'color: #ff00ff; font-size: 20px; font-weight: bold;');
+            console.log('%c🦉 Metis: I identified this risk.', 'color: #ffd700; font-size: 20px; font-weight: bold;');
+            console.log('%c🪨 Sisyphus: THE BOULDER SHAKES!', 'color: #ffd700; font-size: 20px; font-weight: bold;');
+
+            // Spawn many particles
+            for (let i = 0; i < 50; i++) {
+                setTimeout(createChaosParticle, i * 100);
+            }
+
+            setTimeout(() => {
+                document.body.classList.remove('ultra-chaos');
+            }, 5000);
+        }
+
+        // ===== TYPING "anthropic" TRIGGERS PANIC MODE =====
+        let typedText = '';
+        const panicTrigger = 'anthropic';
+
+        document.addEventListener('keypress', (e) => {
+            typedText += e.key.toLowerCase();
+            if (typedText.length > panicTrigger.length) {
+                typedText = typedText.slice(-panicTrigger.length);
+            }
+
+            if (typedText === panicTrigger) {
+                activatePanicMode();
+                typedText = '';
+            }
+        });
+
+        function activatePanicMode() {
+            document.body.classList.add('panic-mode');
+            console.log('%c⚠️ THEY\'RE HERE!', 'color: #ff0040; font-size: 30px; font-weight: bold;');
+
+            // Redact some text
+            const elements = document.querySelectorAll('p, div, span');
+            const randomElements = Array.from(elements).sort(() => Math.random() - 0.5).slice(0, 10);
+            randomElements.forEach(el => {
+                el.classList.add('redacted');
+            });
+
+            setTimeout(() => {
+                document.body.classList.remove('panic-mode');
+                randomElements.forEach(el => {
+                    el.classList.remove('redacted');
+                });
+            }, 3000);
+        }
+
+        // ===== RANDOM LEGAL POPUP =====
+        setTimeout(() => {
+            const popup = document.getElementById('legal-popup');
+            const timer = document.getElementById('legal-timer');
+            popup.classList.add('show');
+
+            let count = 5;
+            const countdown = setInterval(() => {
+                count--;
+                timer.textContent = count;
+                if (count === 0) {
+                    clearInterval(countdown);
+                    popup.classList.add('destroy');
+                    setTimeout(() => {
+                        popup.classList.remove('show', 'destroy');
+                        timer.textContent = '5';
+                    }, 1000);
+                }
+            }, 1000);
+        }, 10000);
+
+        // ===== RANDOM GLITCH EFFECTS =====
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                document.body.style.filter = 'hue-rotate(180deg)';
+                setTimeout(() => {
+                    document.body.style.filter = 'none';
+                }, 100);
+            }
+        }, 3000);
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== AGENT CARD INTERACTIONS =====
+        const agentCards = document.querySelectorAll('.agent-card');
+        agentCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const name = card.querySelector('.agent-name').textContent;
+                console.log(`%c${card.querySelector('.agent-icon').textContent} ${name}: You clicked me!`, 'color: #ffd700; font-size: 14px;');
+            });
+        });
+
+        // ===== FINAL CONSOLE MESSAGE =====
+        setTimeout(() => {
+            console.log('%c🎨 Frontend Engineer: Welcome to the chaos. Enjoy your stay.', 'color: #ff00ff; font-size: 16px; font-weight: bold;');
+            console.log('%cPS: Try the Konami code. You know you want to.', 'color: #00ffff; font-size: 12px; font-style: italic;');
+        }, 3000);
+    </script>
+</body>
+</html>
