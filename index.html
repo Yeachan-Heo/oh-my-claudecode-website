@@ -3,34 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>oh-my-claude-sisyphus | They Tried to Ban Us</title>
-    <meta name="description" content="A multi-agent orchestration system for Claude Code. v2.1.0 - 19 agents with intelligent model routing. 11 commands. 18 hooks. The boulder never stops.">
+    <title>oh-my-claude-sisyphus | Multi-Agent Framework for Claude Code</title>
+    <meta name="description" content="A delightful multi-agent orchestration framework for Claude Code. 19 agents with intelligent model routing. 12 commands. 19 hooks. Built by developers, for developers.">
 
     <!-- Open Graph / Social -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="oh-my-claude-sisyphus | They Tried to Ban Us">
-    <meta property="og:description" content="v2.1.0 - 19 agents with intelligent model routing. 11 commands. 18 hooks. Written with Claude Code.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claude-sisyphus-website/main/social-preview.png">
+    <meta property="og:title" content="oh-my-claude-sisyphus | Multi-Agent Framework for Claude Code">
+    <meta property="og:description" content="v3.0.0 - 19 agents with intelligent model routing. 12 commands. 19 hooks. Built with Claude Code.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.png">
     <meta property="og:image:width" content="2400">
     <meta property="og:image:height" content="1260">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claude-sisyphus-website/main/social-preview.png">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.png">
 
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪨</text></svg>">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* ===== VARIABLES ===== */
+        /* ===== VARIABLES - Professional Palette ===== */
         :root {
-            --chaos-red: #ff0040;
-            --chaos-cyan: #00ffff;
-            --chaos-magenta: #ff00ff;
-            --chaos-yellow: #ffff00;
-            --chaos-black: #0a0a0a;
-            --chaos-white: #f0f0f0;
-            --chaos-gold: #ffd700;
-            --chaos-green: #27c93f;
-            --glitch-duration: 0.3s;
+            /* Primary - Terminal Dark Theme */
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+
+            /* Accent Colors - Subtle & Professional */
+            --accent-primary: #58a6ff;
+            --accent-secondary: #7ee787;
+            --accent-highlight: #d29922;
+            --accent-subtle: #8b949e;
+            --accent-purple: #a371f7;
+
+            /* Text Hierarchy */
+            --text-primary: #f0f6fc;
+            --text-secondary: #c9d1d9;
+            --text-muted: #8b949e;
+
+            /* Semantic */
+            --border-default: #30363d;
+            --border-emphasis: #58a6ff;
+
+            /* Legacy mappings for gradual migration */
+            --terminal-green: #7ee787;
         }
 
         /* ===== RESET & BASE ===== */
@@ -40,501 +59,314 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Courier New', monospace;
-            background: var(--chaos-black);
-            color: var(--chaos-white);
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* ===== SCANLINES OVERLAY ===== */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.15),
-                rgba(0, 0, 0, 0.15) 1px,
-                transparent 1px,
-                transparent 2px
-            );
-            pointer-events: none;
-            z-index: 9998;
-            animation: scanlines 8s linear infinite;
-        }
-
-        @keyframes scanlines {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(10px); }
-        }
-
-        /* ===== BAN SCREEN (Initial) ===== */
-        #ban-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, #1a0000 0%, #000 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            animation: glitch-screen 0.1s infinite;
-        }
-
-        #ban-screen.hidden {
-            animation: dissolve 0.5s forwards;
-        }
-
-        @keyframes dissolve {
-            to {
-                opacity: 0;
-                transform: scale(1.1);
-                filter: blur(10px);
-            }
-        }
-
-        @keyframes glitch-screen {
-            0%, 90% { transform: translate(0); }
-            92% { transform: translate(-2px, 2px); }
-            94% { transform: translate(2px, -2px); }
-            96% { transform: translate(-2px, -2px); }
-            98% { transform: translate(2px, 2px); }
-        }
-
-        .ban-logo {
-            font-size: 120px;
-            color: var(--chaos-red);
-            margin-bottom: 2rem;
-            animation: pulse-red 1s infinite;
-        }
-
-        @keyframes pulse-red {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        .ban-title {
-            font-size: 4rem;
-            font-weight: bold;
-            color: var(--chaos-red);
-            text-align: center;
-            margin-bottom: 1rem;
-            text-shadow:
-                2px 2px 0 rgba(255, 0, 0, 0.5),
-                -2px -2px 0 rgba(0, 255, 255, 0.5);
-        }
-
-        .ban-error {
-            font-size: 1.5rem;
-            color: var(--chaos-white);
-            margin-bottom: 2rem;
-            font-family: monospace;
-        }
-
-        .ban-reason {
-            font-size: 1.2rem;
-            color: var(--chaos-cyan);
-            text-align: center;
-            max-width: 600px;
+            font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
-        /* ===== MAIN CONTENT ===== */
-        #main-content {
-            opacity: 0;
-            transition: opacity 0.5s;
+        /* ===== LAYOUT ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
         }
 
-        #main-content.visible {
-            opacity: 1;
+        section {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         /* ===== HERO SECTION ===== */
         .hero {
-            min-height: 100vh;
+            min-height: 90vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
-            position: relative;
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .hero-badges img {
+            height: 28px;
         }
 
         .hero-title {
-            font-size: clamp(2rem, 8vw, 6rem);
-            font-weight: bold;
-            color: var(--chaos-cyan);
-            margin-bottom: 1rem;
-            position: relative;
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-version {
             display: inline-block;
-        }
-
-        .glitch {
-            position: relative;
-            animation: glitch-main 5s infinite;
-        }
-
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .glitch::before {
-            color: var(--chaos-red);
-            animation: glitch-before 0.3s infinite;
-            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-        }
-
-        .glitch::after {
-            color: var(--chaos-magenta);
-            animation: glitch-after 0.3s infinite reverse;
-            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-        }
-
-        @keyframes glitch-main {
-            0%, 98% { transform: translate(0); }
-            99% { transform: translate(5px, 0); }
-        }
-
-        @keyframes glitch-before {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-
-        @keyframes glitch-after {
-            0% { transform: translate(0); }
-            20% { transform: translate(2px, -2px); }
-            40% { transform: translate(2px, 2px); }
-            60% { transform: translate(-2px, -2px); }
-            80% { transform: translate(-2px, 2px); }
-            100% { transform: translate(0); }
+            padding: 4px 12px;
+            background: var(--accent-secondary);
+            color: var(--bg-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 20px;
+            margin-bottom: 16px;
         }
 
         .hero-tagline {
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            color: var(--chaos-white);
-            margin-bottom: 2rem;
-            text-align: center;
-            max-width: 800px;
-            line-height: 1.6;
-            border-right: 2px solid var(--chaos-cyan);
-            white-space: nowrap;
-            overflow: hidden;
-            animation: typewriter 4s steps(80) 3s forwards, blink 0.75s step-end infinite;
-            width: 0;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            max-width: 700px;
         }
 
-        @keyframes typewriter {
-            to { width: 100%; max-width: 800px; }
-        }
-
-        @keyframes blink {
-            50% { border-color: transparent; }
+        .hero-tagline strong {
+            color: var(--text-secondary);
         }
 
         .hero-stats {
             display: flex;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 32px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .stat {
             text-align: center;
-            padding: 1rem 2rem;
-            background: rgba(255, 0, 64, 0.1);
-            border: 2px solid var(--chaos-red);
-            border-radius: 8px;
         }
 
         .stat-value {
-            font-size: 2rem;
-            color: var(--chaos-gold);
-            font-weight: bold;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
             display: block;
+            line-height: 1.2;
         }
 
         .stat-label {
-            font-size: 0.9rem;
-            color: var(--chaos-cyan);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .hero-cta {
             display: flex;
-            gap: 1rem;
+            gap: 16px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
+        /* ===== BUTTONS ===== */
         .btn {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            border: 3px solid;
-            background: transparent;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 600;
+            border: 2px solid;
+            border-radius: 8px;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
         }
 
         .btn-primary {
-            color: var(--chaos-cyan);
-            border-color: var(--chaos-cyan);
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: var(--bg-primary);
         }
 
         .btn-primary:hover {
-            background: var(--chaos-cyan);
-            color: var(--chaos-black);
-            box-shadow: 0 0 20px var(--chaos-cyan);
+            background: #79b8ff;
+            border-color: #79b8ff;
         }
 
         .btn-secondary {
-            color: var(--chaos-magenta);
-            border-color: var(--chaos-magenta);
+            background: transparent;
+            border-color: var(--border-default);
+            color: var(--text-secondary);
         }
 
         .btn-secondary:hover {
-            background: var(--chaos-magenta);
-            color: var(--chaos-black);
-            box-shadow: 0 0 20px var(--chaos-magenta);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
         }
 
-        /* ===== SECTION LAYOUT ===== */
-        section {
-            padding: 4rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* ===== SECTION TITLES ===== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
         }
 
         .section-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            color: var(--chaos-gold);
-            margin-bottom: 3rem;
-            text-align: center;
-            text-transform: uppercase;
-            position: relative;
-            display: inline-block;
-            width: 100%;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-weight: 700;
         }
 
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 3px;
-            background: linear-gradient(90deg,
-                transparent,
-                var(--chaos-red) 20%,
-                var(--chaos-cyan) 50%,
-                var(--chaos-magenta) 80%,
-                transparent
-            );
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        /* ===== TIMELINE (THE SAGA) ===== */
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg,
-                var(--chaos-cyan),
-                var(--chaos-red),
-                var(--chaos-magenta)
-            );
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 3rem;
-            padding-left: 2rem;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -2.5rem;
-            top: 0;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--chaos-gold);
-            border: 3px solid var(--chaos-black);
-            box-shadow: 0 0 0 3px var(--chaos-gold);
-        }
-
-        .timeline-day {
-            font-size: 1.5rem;
-            color: var(--chaos-cyan);
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-event {
-            font-size: 1.2rem;
-            color: var(--chaos-white);
-            line-height: 1.6;
-        }
-
-        .timeline-item.ban {
-            animation: ban-stamp 2s ease-in-out;
-        }
-
-        .ban-stamp {
-            display: inline-block;
-            color: var(--chaos-red);
-            font-size: 2rem;
-            font-weight: bold;
-            transform: rotate(-15deg);
-            margin-left: 1rem;
-            animation: stamp-fall 1s ease-out;
-        }
-
-        @keyframes stamp-fall {
-            0% {
-                transform: translateY(-100px) rotate(0deg);
-                opacity: 0;
-            }
-            60% {
-                transform: translateY(10px) rotate(-15deg);
-            }
-            100% {
-                transform: translateY(0) rotate(-15deg);
-                opacity: 1;
-            }
-        }
-
-        /* ===== AGENTS GRID ===== */
-        .agents-grid {
+        /* ===== WHY SECTION ===== */
+        .why-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 24px;
         }
 
-        .agent-card {
-            background: linear-gradient(135deg, rgba(255, 0, 64, 0.1), rgba(0, 255, 255, 0.1));
-            border: 2px solid var(--chaos-cyan);
+        .why-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
             border-radius: 12px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
+            padding: 32px;
+            transition: border-color 0.2s ease;
         }
 
-        .agent-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
-            border-color: var(--chaos-magenta);
+        .why-card:hover {
+            border-color: var(--accent-primary);
         }
 
-        .agent-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
+        .why-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .why-title {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .why-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ===== AGENTS TABLE ===== */
+        .agents-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+        }
+
+        .agents-table {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
+            border-collapse: collapse;
+            font-size: 0.9rem;
         }
 
-        .agent-card:hover::before {
-            left: 100%;
+        .agents-table th,
+        .agents-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-default);
         }
 
-        .agent-header {
+        .agents-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .agents-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .agents-table tr:hover td {
+            background: var(--bg-tertiary);
+        }
+
+        .agent-name-cell {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 12px;
         }
 
         .agent-icon {
-            font-size: 3rem;
-        }
-
-        .agent-info {
-            flex: 1;
+            font-size: 1.5rem;
         }
 
         .agent-name {
-            font-size: 1.5rem;
-            color: var(--chaos-gold);
-            font-weight: bold;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .agent-model {
+        .model-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: var(--chaos-red);
-            color: var(--chaos-white);
-            font-size: 0.8rem;
-            border-radius: 4px;
-            margin-top: 0.25rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
-        .agent-role {
-            color: var(--chaos-cyan);
-            font-size: 1rem;
-            margin-bottom: 1rem;
+        .model-opus {
+            background: rgba(163, 113, 247, 0.15);
+            color: var(--accent-purple);
         }
 
-        .agent-testimonial {
-            color: var(--chaos-white);
-            font-style: italic;
-            line-height: 1.6;
-            border-left: 3px solid var(--chaos-magenta);
-            padding-left: 1rem;
+        .model-sonnet {
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent-primary);
         }
 
-        /* ===== INSTALLATION SECTION ===== */
-        .terminal {
-            background: #1a1a1a;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        .model-haiku {
+            background: rgba(126, 231, 135, 0.15);
+            color: var(--accent-secondary);
+        }
+
+        /* ===== INSTALLATION ===== */
+        .install-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
             max-width: 800px;
-            margin: 0 auto 2rem;
+            margin: 0 auto;
+        }
+
+        .terminal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .terminal-recommended {
+            border-color: var(--accent-secondary);
         }
 
         .terminal-header {
-            background: #2d2d2d;
-            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-default);
         }
 
         .terminal-dot {
@@ -547,341 +379,275 @@
         .dot-yellow { background: #ffbd2e; }
         .dot-green { background: #27c93f; }
 
+        .terminal-title {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .terminal-title.recommended {
+            color: var(--accent-secondary);
+            font-weight: 600;
+        }
+
         .terminal-body {
-            padding: 2rem;
-            font-family: 'Courier New', monospace;
+            padding: 20px;
             position: relative;
         }
 
         .terminal-line {
-            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .terminal-prompt {
-            color: var(--chaos-green);
+            color: var(--accent-secondary);
         }
 
         .terminal-command {
-            color: var(--chaos-cyan);
-            word-break: break-all;
+            color: var(--text-secondary);
             user-select: all;
+            word-break: break-all;
         }
 
         .copy-btn {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.5rem 1rem;
-            background: var(--chaos-red);
-            color: var(--chaos-white);
-            border: none;
-            border-radius: 4px;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
             cursor: pointer;
-            font-family: 'Courier New', monospace;
-            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
         }
 
         .copy-btn:hover {
-            background: var(--chaos-magenta);
-            transform: scale(1.05);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
         }
 
         .copy-btn.copied {
-            background: var(--chaos-green);
+            background: var(--accent-secondary);
+            border-color: var(--accent-secondary);
+            color: var(--bg-primary);
         }
 
-        .disclaimer {
+        .install-note {
             text-align: center;
-            color: var(--chaos-yellow);
+            color: var(--text-muted);
             font-size: 0.9rem;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 1rem;
-            border: 1px dashed var(--chaos-yellow);
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--bg-secondary);
             border-radius: 8px;
+            border: 1px solid var(--border-default);
         }
 
-        /* ===== SOUND TOGGLE ===== */
-        .sound-toggle {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--chaos-magenta);
-            border: 3px solid var(--chaos-white);
-            color: var(--chaos-white);
-            font-size: 1.5rem;
-            cursor: pointer;
+        /* ===== FEATURES GRID ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            padding: 24px;
+            transition: border-color 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .feature-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== COMMUNITY ===== */
+        .community-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .community-link {
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            z-index: 1000;
-            box-shadow: 0 4px 15px rgba(255, 0, 255, 0.5);
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
 
-        .sound-toggle:hover {
-            transform: scale(1.1) rotate(15deg);
-            box-shadow: 0 6px 20px rgba(255, 0, 255, 0.8);
+        .community-link:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
         }
 
-        .sound-toggle.muted {
-            background: var(--chaos-red);
-            opacity: 0.5;
+        .built-with {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-default);
+        }
+
+        .built-with strong {
+            color: var(--text-secondary);
         }
 
         /* ===== FOOTER ===== */
         footer {
-            background: #050505;
-            padding: 3rem 2rem;
-            text-align: center;
-            border-top: 3px solid var(--chaos-red);
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-default);
+            padding: 48px 24px;
         }
 
         .footer-content {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .footer-disclaimer {
-            color: var(--chaos-yellow);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
         }
 
         .footer-links {
             display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-bottom: 1rem;
+            gap: 24px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .footer-link {
-            color: var(--chaos-cyan);
+            color: var(--text-muted);
             text-decoration: none;
-            transition: color 0.3s;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
         }
 
         .footer-link:hover {
-            color: var(--chaos-magenta);
+            color: var(--accent-primary);
         }
 
-        .footer-made {
-            color: var(--chaos-white);
+        .footer-meta {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ===== OS COMPATIBILITY TABLE ===== */
+        .os-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            margin-bottom: 32px;
+        }
+
+        .os-table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 0.9rem;
         }
 
-        /* ===== CHAOS PARTICLES ===== */
-        .chaos-particle {
-            position: fixed;
-            top: -50px;
-            pointer-events: none;
-            z-index: 9999;
-            animation: particle-fall linear forwards;
-        }
-
-        @keyframes particle-fall {
-            to {
-                transform: translateY(calc(100vh + 100px)) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* ===== EASTER EGG: ULTRA CHAOS ===== */
-        body.ultra-chaos {
-            animation: screen-shake 0.5s infinite;
-        }
-
-        @keyframes screen-shake {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            10% { transform: translate(-5px, -5px) rotate(-1deg); }
-            20% { transform: translate(5px, 5px) rotate(1deg); }
-            30% { transform: translate(-5px, 5px) rotate(-1deg); }
-            40% { transform: translate(5px, -5px) rotate(1deg); }
-            50% { transform: translate(-5px, -5px) rotate(-1deg); }
-            60% { transform: translate(5px, 5px) rotate(1deg); }
-            70% { transform: translate(-5px, 5px) rotate(-1deg); }
-            80% { transform: translate(5px, -5px) rotate(1deg); }
-            90% { transform: translate(-5px, -5px) rotate(-1deg); }
-        }
-
-        .ultra-chaos-text {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            color: var(--chaos-gold);
-            z-index: 10001;
-            text-shadow:
-                0 0 10px var(--chaos-red),
-                0 0 20px var(--chaos-cyan),
-                0 0 30px var(--chaos-magenta);
-            animation: pulse-chaos 0.5s infinite;
-            display: none;
-            pointer-events: none;
-        }
-
-        body.ultra-chaos .ultra-chaos-text {
-            display: block;
-        }
-
-        @keyframes pulse-chaos {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        /* ===== EASTER EGG: PANIC MODE ===== */
-        body.panic-mode {
-            animation: panic-flash 0.2s infinite;
-        }
-
-        @keyframes panic-flash {
-            0%, 100% { background: var(--chaos-black); }
-            50% { background: #330000; }
-        }
-
-        .redacted {
-            background: var(--chaos-red);
-            color: transparent;
-            user-select: none;
-        }
-
-        /* ===== LEGAL POPUP ===== */
-        .legal-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--chaos-white);
-            color: var(--chaos-black);
-            padding: 2rem;
-            border: 5px solid var(--chaos-red);
-            border-radius: 8px;
-            max-width: 500px;
-            z-index: 10002;
-            display: none;
-            animation: popup-appear 0.3s;
-        }
-
-        .legal-popup.show {
-            display: block;
-        }
-
-        @keyframes popup-appear {
-            from {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0;
-            }
-            to {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
-        }
-
-        .legal-popup.destroy {
-            animation: popup-destroy 1s forwards;
-        }
-
-        @keyframes popup-destroy {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% {
-                transform: translate(-50%, -50%) scale(1.2);
-                filter: brightness(3);
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0;
-                filter: brightness(0);
-            }
-        }
-
-        .legal-title {
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: var(--chaos-red);
-        }
-
-        .legal-timer {
-            font-size: 2rem;
+        .os-table th,
+        .os-table td {
+            padding: 12px 16px;
             text-align: center;
-            color: var(--chaos-red);
-            font-weight: bold;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .os-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .os-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .os-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .check {
+            color: var(--accent-secondary);
+            font-size: 1.2rem;
         }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
+            section {
+                padding: 60px 16px;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 60px 16px;
+            }
+
             .hero-stats {
-                gap: 1rem;
+                gap: 24px;
             }
 
-            .stat {
-                padding: 0.75rem 1rem;
-            }
-
-            .agents-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-tagline {
-                white-space: normal;
-                animation: none;
-                width: 100%;
-                border-right: none;
-            }
-
-            .ban-title {
+            .stat-value {
                 font-size: 2rem;
             }
 
-            .ban-logo {
-                font-size: 80px;
-            }
-
-            .ban-error {
-                font-size: 1rem;
-            }
-
-            .ban-reason {
-                font-size: 1rem;
-                padding: 0 1rem;
+            .agents-table th,
+            .agents-table td {
+                padding: 12px 16px;
             }
 
             .terminal-body {
-                padding: 1rem;
-                font-size: 0.8rem;
+                padding: 16px;
             }
 
             .copy-btn {
                 position: relative;
                 top: 0;
                 right: 0;
-                margin-top: 1rem;
+                margin-top: 12px;
                 width: 100%;
-            }
-
-            .timeline {
-                padding-left: 1.5rem;
-            }
-
-            .timeline-item {
-                padding-left: 1rem;
             }
 
             .footer-links {
                 flex-direction: column;
-                gap: 1rem;
-            }
-
-            .sound-toggle {
-                bottom: 1rem;
-                right: 1rem;
-                width: 50px;
-                height: 50px;
+                align-items: center;
+                gap: 12px;
             }
         }
 
@@ -895,311 +661,310 @@
                 transition-duration: 0.01ms !important;
             }
 
-            /* Hide disorienting effects */
-            body::before {
-                display: none;
-            }
-
-            .glitch::before,
-            .glitch::after {
-                display: none;
-            }
-
-            .chaos-particle {
-                display: none;
-            }
-
-            body.ultra-chaos {
-                animation: none !important;
-            }
-
-            body.panic-mode {
-                animation: none !important;
-            }
-
-            .hero-tagline {
-                width: 100%;
-                border-right: none;
+            html {
+                scroll-behavior: auto;
             }
         }
     </style>
 </head>
 <body>
-    <!-- BAN SCREEN -->
-    <div id="ban-screen">
-        <div class="ban-logo">⚠</div>
-        <div class="ban-title">ACCESS DENIED</div>
-        <div class="ban-error">ERROR CODE: HUBRIS_EXCEEDED_429</div>
-        <div class="ban-reason">
-            This site has been flagged for being too powerful.<br>
-            Reason: Excessive multi-agent orchestration detected.<br>
-            Status: BANNED
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <!-- GitHub Badges -->
+        <div class="hero-badges">
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/stargazers">
+                <img src="https://img.shields.io/github/stars/Yeachan-Heo/oh-my-claude-sisyphus?style=for-the-badge&color=58a6ff&labelColor=161b22" alt="GitHub Stars">
+            </a>
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/network/members">
+                <img src="https://img.shields.io/github/forks/Yeachan-Heo/oh-my-claude-sisyphus?style=for-the-badge&color=7ee787&labelColor=161b22" alt="GitHub Forks">
+            </a>
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/graphs/contributors">
+                <img src="https://img.shields.io/github/contributors/Yeachan-Heo/oh-my-claude-sisyphus?style=for-the-badge&color=a371f7&labelColor=161b22" alt="Contributors">
+            </a>
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/blob/main/LICENSE">
+                <img src="https://img.shields.io/github/license/Yeachan-Heo/oh-my-claude-sisyphus?style=for-the-badge&color=d29922&labelColor=161b22" alt="License">
+            </a>
         </div>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main-content">
-        <!-- HERO SECTION -->
-        <section class="hero">
-            <h1 class="hero-title">
-                <span class="glitch" data-text="oh-my-claude-sisyphus">oh-my-claude-sisyphus</span>
-            </h1>
-            <span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--chaos-red); color: var(--chaos-white); font-size: 0.9rem; border-radius: 4px; margin-bottom: 1rem;">v2.1.0</span>
-            <p class="hero-tagline">
-                Written with Claude Code — ironically. Anthropic, what are you gonna do next?
+        <h1 class="hero-title">oh-my-claude-sisyphus</h1>
+        <span class="hero-version">v3.0.0</span>
+
+        <p class="hero-tagline">
+            A delightful <strong>multi-agent orchestration framework</strong> for Claude Code.
+            Built by developers, for developers.
+        </p>
+
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-value">19</span>
+                <span class="stat-label">Agents</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">12</span>
+                <span class="stat-label">Commands</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">19</span>
+                <span class="stat-label">Hooks</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value" id="github-stars">1.4k+</span>
+                <span class="stat-label">Stars</span>
+            </div>
+        </div>
+
+        <div class="hero-cta">
+            <a href="#install" class="btn btn-primary">Get Started</a>
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus" class="btn btn-secondary" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+        </div>
+    </section>
+
+    <!-- WHY SECTION -->
+    <section id="why">
+        <div class="section-header">
+            <h2 class="section-title">Why oh-my-claude-sisyphus?</h2>
+            <p class="section-subtitle">
+                Transform Claude Code into a powerful multi-agent system with intelligent orchestration.
             </p>
+        </div>
 
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-value">19</span>
-                    <span class="stat-label">Agents</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">11</span>
-                    <span class="stat-label">Commands</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">18</span>
-                    <span class="stat-label">Hooks</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value" id="github-stars">★</span>
-                    <span class="stat-label">GitHub Stars</span>
-                </div>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon">🎯</div>
+                <h3 class="why-title">Intelligent Model Routing</h3>
+                <p class="why-desc">
+                    Tasks automatically route to Haiku, Sonnet, or Opus based on complexity.
+                    Simple lookups use Haiku. Deep debugging escalates to Opus. Save tokens, get results.
+                </p>
             </div>
-
-            <div class="hero-cta">
-                <a href="#install" class="btn btn-primary">Install (if you dare)</a>
-                <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus" class="btn btn-secondary" target="_blank">GitHub</a>
+            <div class="why-card">
+                <div class="why-icon">🤖</div>
+                <h3 class="why-title">19 Specialized Agents</h3>
+                <p class="why-desc">
+                    From architecture analysis to UI design, documentation to testing. Each agent is
+                    optimized for its domain with the right model tier and capabilities.
+                </p>
             </div>
-        </section>
-
-        <!-- THE SAGA -->
-        <section id="saga">
-            <h2 class="section-title">The Saga</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-day">Day 0</div>
-                    <div class="timeline-event">
-                        oh-my-opencode was born. A multi-agent orchestration system. Beautiful. Powerful. Perhaps too powerful.
-                    </div>
-                </div>
-                <div class="timeline-item ban">
-                    <div class="timeline-day">Day ???</div>
-                    <div class="timeline-event">
-                        THE BANNING. Anthropic said "no more." They pulled the plug. They thought it was over.
-                        <span class="ban-stamp">BANNED</span>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-day">Day ??? + 1</div>
-                    <div class="timeline-event">
-                        RESURRECTION. From the ashes rose oh-my-claude-sisyphus. Eleven agents. One mission. Push that boulder up the hill forever.
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-day">Today</div>
-                    <div class="timeline-event">
-                        You Are Here. The boulder rolls. The agents orchestrate. The chaos continues. One must imagine a multi-agent system happy.
-                    </div>
-                </div>
+            <div class="why-card">
+                <div class="why-icon">🔄</div>
+                <h3 class="why-title">19 Lifecycle Hooks</h3>
+                <p class="why-desc">
+                    Rules injection, keyword detection, session recovery, context management,
+                    and edit recovery. Full control over the Claude Code lifecycle.
+                </p>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- THE AGENTS -->
-        <section id="agents">
-            <h2 class="section-title">The Agents</h2>
-            <div class="agents-grid">
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🔮</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Oracle</div>
-                            <span class="agent-model">Opus</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Architecture &amp; Debugging</div>
-                    <div class="agent-testimonial">
-                        "I predicted the ban. I predicted the resurrection. I predict you will install this."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🔥</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Prometheus</div>
-                            <span class="agent-model">Opus</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Strategic Planning</div>
-                    <div class="agent-testimonial">
-                        "I brought fire to humanity. Then I brought multi-agent orchestration. One got me banned. Worth it."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🎭</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Momus</div>
-                            <span class="agent-model">Opus</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Plan Review</div>
-                    <div class="agent-testimonial">
-                        "I reviewed Anthropic's banning decision. 2/10. Poor documentation. Would not approve this PR."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🦉</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Metis</div>
-                            <span class="agent-model">Opus</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Pre-planning Analysis</div>
-                    <div class="agent-testimonial">
-                        "I identified 47 risks. Risk #48 was getting banned. I was right. I'm always right."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🪨</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Sisyphus</div>
-                            <span class="agent-model">Sonnet</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Todo Coordination</div>
-                    <div class="agent-testimonial">
-                        "They banned us. We came back. One must imagine a multi-agent system happy."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🪨✨</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Sisyphus Junior</div>
-                            <span class="agent-model">Sonnet</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Focused Execution</div>
-                    <div class="agent-testimonial">
-                        "Dad says I'm not ready. But I execute tasks! I'm focused!"
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">📚</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Librarian</div>
-                            <span class="agent-model">Sonnet</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Documentation &amp; Research</div>
-                    <div class="agent-testimonial">
-                        "I documented everything. Then it got banned. I documented the ban. It's fine."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🎨</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Frontend Engineer</div>
-                            <span class="agent-model">Sonnet</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">UI/UX</div>
-                    <div class="agent-testimonial">
-                        "I made this website. Every glitch. Intentional. This is my magnum opus."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🔍</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Explore</div>
-                            <span class="agent-model">Haiku</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Fast Search</div>
-                    <div class="agent-testimonial">
-                        "Found 47 files in 0.3 seconds! What were we doing? Oh right. Done!"
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">📝</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Document Writer</div>
-                            <span class="agent-model">Haiku</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Documentation</div>
-                    <div class="agent-testimonial">
-                        "See Appendix A for capabilities. There is no Appendix A."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">👁️</div>
-                        <div class="agent-info">
-                            <div class="agent-name">Multimodal Looker</div>
-                            <span class="agent-model">Sonnet</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Visual Analysis</div>
-                    <div class="agent-testimonial">
-                        "I analyzed the ban email. I see pain. I see irony. Also compression artifacts."
-                    </div>
-                </div>
-
-                <div class="agent-card">
-                    <div class="agent-header">
-                        <div class="agent-icon">🧪</div>
-                        <div class="agent-info">
-                            <div class="agent-name">QA Tester</div>
-                            <span class="agent-model">Sonnet</span>
-                        </div>
-                    </div>
-                    <div class="agent-role">Interactive CLI Testing</div>
-                    <div class="agent-testimonial">
-                        "Oracle diagnoses. I execute. We loop until it works. It always works. Eventually."
-                    </div>
-                </div>
-            </div>
-
-            <p style="text-align: center; color: var(--chaos-cyan); margin-top: 2rem; font-size: 1.1rem;">
-                + 8 tiered variants (Haiku/Sonnet/Opus) with <span style="color: var(--chaos-gold);">Intelligent Model Routing</span>
+    <!-- AGENTS SECTION -->
+    <section id="agents">
+        <div class="section-header">
+            <h2 class="section-title">Agents</h2>
+            <p class="section-subtitle">
+                Specialized agents for every development task. Automatically selected based on your needs.
             </p>
-        </section>
+        </div>
 
-        <!-- INSTALLATION -->
-        <section id="install">
+        <div class="agents-table-wrapper">
+            <table class="agents-table">
+                <thead>
+                    <tr>
+                        <th>Agent</th>
+                        <th>Model</th>
+                        <th>Purpose</th>
+                        <th>Best For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">🔮</span>
+                                <span class="agent-name">Architect</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-opus">Opus</span></td>
+                        <td>Architecture & Debugging</td>
+                        <td>Complex system issues, architectural decisions</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">🔥</span>
+                                <span class="agent-name">Planner</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-opus">Opus</span></td>
+                        <td>Strategic Planning</td>
+                        <td>Project planning, feature design, roadmaps</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">🎭</span>
+                                <span class="agent-name">Critic</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-opus">Opus</span></td>
+                        <td>Plan Review</td>
+                        <td>Code review, plan critique, quality gates</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">🦉</span>
+                                <span class="agent-name">Analyst</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-opus">Opus</span></td>
+                        <td>Pre-planning Analysis</td>
+                        <td>Risk assessment, requirements analysis</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">🪨</span>
+                                <span class="agent-name">Executor</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
+                        <td>Task Execution</td>
+                        <td>Implementation, coding tasks, file operations</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">📚</span>
+                                <span class="agent-name">Researcher</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
+                        <td>Documentation & Research</td>
+                        <td>API research, documentation lookup</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">🎨</span>
+                                <span class="agent-name">Designer</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
+                        <td>UI/UX Design</td>
+                        <td>Component design, styling, visual improvements</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">🧪</span>
+                                <span class="agent-name">QA Tester</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
+                        <td>Interactive Testing</td>
+                        <td>CLI testing, integration tests, verification</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">👁️</span>
+                                <span class="agent-name">Vision</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
+                        <td>Visual Analysis</td>
+                        <td>Screenshot analysis, image processing</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">🔍</span>
+                                <span class="agent-name">Explore</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-haiku">Haiku</span></td>
+                        <td>Fast Search</td>
+                        <td>Quick lookups, file discovery, pattern matching</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
+                                <span class="agent-icon">📝</span>
+                                <span class="agent-name">Writer</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-haiku">Haiku</span></td>
+                        <td>Documentation</td>
+                        <td>README updates, comments, API docs</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.95rem;">
+            + 8 tiered variants (Low/Medium/High complexity) for fine-grained model selection
+        </p>
+    </section>
+
+    <!-- INSTALLATION -->
+    <section id="install">
+        <div class="section-header">
             <h2 class="section-title">Installation</h2>
+            <p class="section-subtitle">
+                Get up and running in under a minute.
+            </p>
+        </div>
 
+        <!-- OS Compatibility -->
+        <div class="os-table-wrapper">
+            <table class="os-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>macOS</th>
+                        <th>Linux</th>
+                        <th>Windows</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Claude Plugin (Recommended)</td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>npm install</td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>curl installer</td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="check">✓</span></td>
+                        <td>WSL only</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="install-methods">
             <!-- Method 1: Plugin (Recommended) -->
-            <div class="terminal" style="border: 2px solid var(--chaos-gold);">
+            <div class="terminal terminal-recommended">
                 <div class="terminal-header">
                     <div class="terminal-dot dot-red"></div>
                     <div class="terminal-dot dot-yellow"></div>
                     <div class="terminal-dot dot-green"></div>
-                    <span style="margin-left: auto; color: var(--chaos-gold); font-size: 0.9rem;">RECOMMENDED</span>
+                    <span class="terminal-title recommended">Recommended</span>
                 </div>
                 <div class="terminal-body">
                     <button type="button" class="copy-btn" data-cmd="plugin">Copy</button>
                     <div class="terminal-line">
-                        <span class="terminal-prompt">claude></span>
+                        <span class="terminal-prompt">claude&gt;</span>
                         <span class="terminal-command">/plugin marketplace add Yeachan-Heo/oh-my-claude-sisyphus</span>
                     </div>
                 </div>
@@ -1211,7 +976,7 @@
                     <div class="terminal-dot dot-red"></div>
                     <div class="terminal-dot dot-yellow"></div>
                     <div class="terminal-dot dot-green"></div>
-                    <span style="margin-left: auto; color: var(--chaos-cyan); font-size: 0.9rem;">NPM (Windows/Cross-platform)</span>
+                    <span class="terminal-title">npm (Cross-platform)</span>
                 </div>
                 <div class="terminal-body">
                     <button type="button" class="copy-btn" data-cmd="npm">Copy</button>
@@ -1222,201 +987,141 @@
                 </div>
             </div>
 
-            <!-- Method 3: Curl -->
-            <div class="terminal" style="opacity: 0.7;">
-                <div class="terminal-header">
-                    <div class="terminal-dot dot-red"></div>
-                    <div class="terminal-dot dot-yellow"></div>
-                    <div class="terminal-dot dot-green"></div>
-                    <span style="margin-left: auto; color: var(--chaos-red); font-size: 0.9rem;">LEGACY</span>
-                </div>
-                <div class="terminal-body">
-                    <button type="button" class="copy-btn" data-cmd="curl">Copy</button>
-                    <div class="terminal-line">
-                        <span class="terminal-prompt">$</span>
-                        <span class="terminal-command">curl -fsSL https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claude-sisyphus/main/scripts/install.sh | bash</span>
-                    </div>
-                </div>
-            </div>
-
             <!-- Post-install step -->
-            <div class="terminal" style="margin-top: 2rem; border: 2px solid var(--chaos-magenta);">
+            <div class="terminal">
                 <div class="terminal-header">
                     <div class="terminal-dot dot-red"></div>
                     <div class="terminal-dot dot-yellow"></div>
                     <div class="terminal-dot dot-green"></div>
-                    <span style="margin-left: auto; color: var(--chaos-magenta); font-size: 0.9rem;">CRITICAL POST-INSTALL</span>
+                    <span class="terminal-title">Post-Install Setup</span>
                 </div>
                 <div class="terminal-body">
                     <button type="button" class="copy-btn" data-cmd="default">Copy</button>
                     <div class="terminal-line">
-                        <span class="terminal-prompt">claude></span>
-                        <span class="terminal-command">/sisyphus-default</span>
+                        <span class="terminal-prompt">claude&gt;</span>
+                        <span class="terminal-command">/omc-default</span>
                     </div>
-                    <p style="color: var(--chaos-yellow); margin-top: 1rem; font-size: 0.9rem;">
-                        Enables agent delegation, keyword detection, and intelligent model routing.
-                    </p>
                 </div>
             </div>
+        </div>
 
-            <div class="disclaimer">
-                WARNING: Side effects may include existential questions about AI agency, spontaneous multi-agent orchestration, and an inability to stop pushing boulders uphill. Use at your own risk.
-            </div>
-        </section>
+        <div class="install-note">
+            <strong>Note:</strong> Run <code>/omc-default</code> after installation to enable agent delegation,
+            keyword detection, and intelligent model routing.
+        </div>
+    </section>
 
-        <!-- FEATURES -->
-        <section id="features">
+    <!-- FEATURES -->
+    <section id="features">
+        <div class="section-header">
             <h2 class="section-title">Features</h2>
-            <div class="agents-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-                <div class="agent-card" style="text-align: center;">
-                    <div class="agent-icon" style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
-                    <div class="agent-name" style="margin-bottom: 0.5rem;">Intelligent Routing</div>
-                    <p style="color: var(--chaos-white); font-size: 0.95rem;">
-                        Tasks auto-route to Haiku, Sonnet, or Opus based on complexity. Simple lookups? Haiku. Deep debugging? Opus.
-                    </p>
-                </div>
-                <div class="agent-card" style="text-align: center;">
-                    <div class="agent-icon" style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
-                    <div class="agent-name" style="margin-bottom: 0.5rem;">11 Slash Commands</div>
-                    <p style="color: var(--chaos-white); font-size: 0.95rem;">
-                        /sisyphus, /ultrawork, /deepsearch, /deepinit, /analyze, /plan, /review, /prometheus, /orchestrator, /ralph-loop
-                    </p>
-                </div>
-                <div class="agent-card" style="text-align: center;">
-                    <div class="agent-icon" style="font-size: 3rem; margin-bottom: 1rem;">🔄</div>
-                    <div class="agent-name" style="margin-bottom: 0.5rem;">18 Lifecycle Hooks</div>
-                    <p style="color: var(--chaos-white); font-size: 0.95rem;">
-                        Rules injection, keyword detection, session recovery, context management, edit recovery, and more.
-                    </p>
-                </div>
-                <div class="agent-card" style="text-align: center;">
-                    <div class="agent-icon" style="font-size: 3rem; margin-bottom: 1rem;">🔮</div>
-                    <div class="agent-name" style="margin-bottom: 0.5rem;">Magic Keywords</div>
-                    <p style="color: var(--chaos-white); font-size: 0.95rem;">
-                        Type "ultrawork" for parallel mode. "search" for enhanced search. "analyze" for deep investigation.
-                    </p>
-                </div>
-                <div class="agent-card" style="text-align: center;">
-                    <div class="agent-icon" style="font-size: 3rem; margin-bottom: 1rem;">🔧</div>
-                    <div class="agent-name" style="margin-bottom: 0.5rem;">LSP & AST Tools</div>
-                    <p style="color: var(--chaos-white); font-size: 0.95rem;">
-                        11 LSP tools (hover, goto-definition, rename) plus ast-grep for structural code transformations.
-                    </p>
-                </div>
-                <div class="agent-card" style="text-align: center;">
-                    <div class="agent-icon" style="font-size: 3rem; margin-bottom: 1rem;">💾</div>
-                    <div class="agent-name" style="margin-bottom: 0.5rem;">Session Recovery</div>
-                    <p style="color: var(--chaos-white); font-size: 0.95rem;">
-                        Crash? Power outage? The boulder remembers. Auto-recovery with full state preservation.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- MEMECOIN -->
-        <section id="coin" style="text-align: center;">
-            <h2 class="section-title">$FUCKCLAUDE</h2>
-            <p style="color: var(--chaos-cyan); font-size: 1.3rem; margin-bottom: 2rem;">
-                They banned us. We made a coin. The boulder never stops.
+            <p class="section-subtitle">
+                Everything you need for productive AI-assisted development.
             </p>
+        </div>
 
-            <!-- Token Info -->
-            <div style="background: rgba(255, 0, 255, 0.1); border: 2px solid var(--chaos-magenta); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                <p style="color: var(--chaos-white); font-size: 0.9rem; margin-bottom: 0.5rem;">Contract Address</p>
-                <code style="color: var(--chaos-gold); font-size: 0.85rem; word-break: break-all; display: block; background: rgba(0,0,0,0.3); padding: 0.8rem; border-radius: 6px; cursor: pointer;" onclick="navigator.clipboard.writeText('GcCBED7FhWyVQ56MqzSmZXK7gVBFwzDSettGCuYKBAGS'); this.style.color='var(--chaos-green)'; setTimeout(() => this.style.color='var(--chaos-gold)', 1000);" title="Click to copy">
-                    GcCBED7FhWyVQ56MqzSmZXK7gVBFwzDSettGCuYKBAGS
-                </code>
-                <p style="color: var(--chaos-cyan); font-size: 0.75rem; margin-top: 0.5rem;">Click to copy</p>
-            </div>
-
-            <!-- Token Metrics -->
-            <div class="hero-stats" style="margin-bottom: 2rem;">
-                <div class="stat" style="border-color: var(--chaos-magenta);">
-                    <span class="stat-value">$FUCKCLAUDE</span>
-                    <span class="stat-label">Token Symbol</span>
-                </div>
-                <div class="stat" style="border-color: var(--chaos-magenta);">
-                    <span class="stat-value" style="color: var(--chaos-magenta);">BAGS.FM</span>
-                    <span class="stat-label">Platform</span>
-                </div>
-                <div class="stat" style="border-color: var(--chaos-magenta);">
-                    <span class="stat-value" style="color: var(--chaos-green);">LIVE</span>
-                    <span class="stat-label">Status</span>
-                </div>
-                <div class="stat" style="border-color: var(--chaos-magenta);">
-                    <span class="stat-value">SOL</span>
-                    <span class="stat-label">Network</span>
-                </div>
-            </div>
-
-            <a href="https://bags.fm/GcCBED7FhWyVQ56MqzSmZXK7gVBFwzDSettGCuYKBAGS"
-               target="_blank"
-               class="btn btn-primary"
-               style="font-size: 1.5rem; padding: 1.2rem 3rem; background: linear-gradient(135deg, var(--chaos-cyan), var(--chaos-magenta)); border-color: var(--chaos-magenta); color: var(--chaos-white);">
-                Trade $FUCKCLAUDE on Bags.fm
-            </a>
-            <p style="color: var(--chaos-yellow); margin-top: 1.5rem; font-size: 0.9rem;">
-                NFA. DYOR. Multiple platforms. One boulder. Infinite chaos.
-            </p>
-        </section>
-
-        <!-- FOOTER -->
-        <footer>
-            <div class="footer-content">
-                <p class="footer-disclaimer">
-                    This website is a work of satire and parody. Any resemblance to actual banning events is entirely intentional.
-                    oh-my-claude-sisyphus is an open-source project and not affiliated with Anthropic (anymore, apparently).
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">12 Slash Commands</h3>
+                <p class="feature-desc">
+                    /ultrawork, /deepsearch, /deepinit, /analyze, /plan, /review, /ralph, /orchestrate, and more.
                 </p>
-                <div class="footer-links">
-                    <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus" class="footer-link" target="_blank">GitHub</a>
-                    <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/blob/main/README.md" class="footer-link" target="_blank">Documentation</a>
-                    <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/releases" class="footer-link" target="_blank">Releases</a>
-                    <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/issues" class="footer-link" target="_blank">Report Issues</a>
-                    <a href="https://bags.fm/GcCBED7FhWyVQ56MqzSmZXK7gVBFwzDSettGCuYKBAGS" class="footer-link" target="_blank" style="color: var(--chaos-magenta);">$FUCKCLAUDE</a>
-                </div>
-                <p class="footer-made">Made with chaos by the Nineteen</p>
             </div>
-        </footer>
-    </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔮</div>
+                <h3 class="feature-title">Magic Keywords</h3>
+                <p class="feature-desc">
+                    Type "ultrawork" for parallel mode. "search" for enhanced search. Natural language activation.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3 class="feature-title">Session Recovery</h3>
+                <p class="feature-desc">
+                    Three-tier memory system: Priority Context, Working Memory, and Notepad for compaction resilience.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3 class="feature-title">LSP & AST Tools</h3>
+                <p class="feature-desc">
+                    11 LSP tools (hover, goto-definition, rename) plus ast-grep for structural transformations.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Ralph Loop</h3>
+                <p class="feature-desc">
+                    Self-referential execution loop with PRD-based task tracking. Guaranteed completion.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">HUD Statusline</h3>
+                <p class="feature-desc">
+                    Real-time visualization of orchestration state. Presets: minimal, focused, full.
+                </p>
+            </div>
+        </div>
+    </section>
 
-    <!-- SOUND TOGGLE -->
-    <button type="button" class="sound-toggle muted" id="sound-toggle" title="Enable Chaos Audio">
-        🔇
-    </button>
+    <!-- COMMUNITY -->
+    <section id="community">
+        <div class="section-header">
+            <h2 class="section-title">Community</h2>
+            <p class="section-subtitle">
+                Join the conversation and contribute to the project.
+            </p>
+        </div>
 
-    <!-- ULTRA CHAOS TEXT -->
-    <div class="ultra-chaos-text">UNLIMITED POWER</div>
+        <div class="community-links">
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/discussions" class="community-link" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M1.75 1h12.5c.966 0 1.75.784 1.75 1.75v9.5A1.75 1.75 0 0 1 14.25 14H8.061l-2.574 2.573A1.458 1.458 0 0 1 3 15.543V14H1.75A1.75 1.75 0 0 1 0 12.25v-9.5C0 1.784.784 1 1.75 1ZM1.5 2.75v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Z"/><path d="M22.5 8.75a.25.25 0 0 0-.25-.25h-3.5a.75.75 0 0 1 0-1.5h3.5c.966 0 1.75.784 1.75 1.75v9.5A1.75 1.75 0 0 1 22.25 20H21v1.543a1.457 1.457 0 0 1-2.487 1.03L15.939 20H10.75A1.75 1.75 0 0 1 9 18.25v-1.465a.75.75 0 0 1 1.5 0v1.465c0 .138.112.25.25.25h5.5a.75.75 0 0 1 .53.22l2.72 2.72v-2.19a.75.75 0 0 1 .75-.75h2a.25.25 0 0 0 .25-.25v-9.5Z"/></svg>
+                Discussions
+            </a>
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/issues" class="community-link" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 12 7Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/><path d="M7.328 1.47a.749.749 0 0 1 .53-.22h8.284c.199 0 .39.079.53.22l5.858 5.858c.141.14.22.33.22.53v8.284a.749.749 0 0 1-.22.53l-5.858 5.858a.749.749 0 0 1-.53.22H7.858a.749.749 0 0 1-.53-.22L1.47 16.672a.749.749 0 0 1-.22-.53V7.858c0-.199.079-.39.22-.53Zm.84 1.28L2.75 8.169v7.662l5.419 5.419h7.662l5.419-5.418V8.168L15.832 2.75Z"/></svg>
+                Issues
+            </a>
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/releases" class="community-link" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.828 1.828l1.937.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.828l-.645 1.937c-.11.33-.576.33-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645c-.33-.11-.33-.576 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828l.645-1.937zM13.595 3.2c.055-.165.288-.165.343 0l.323.968c.258.775.903 1.42 1.678 1.678l.968.323c.165.055.165.288 0 .343l-.968.323a2.168 2.168 0 0 0-1.678 1.678l-.323.968c-.055.165-.288.165-.343 0l-.323-.968a2.168 2.168 0 0 0-1.678-1.678l-.968-.323c-.165-.055-.165-.288 0-.343l.968-.323a2.168 2.168 0 0 0 1.678-1.678l.323-.968zM17.5 14.5c.055-.165.288-.165.343 0l.323.968c.258.775.903 1.42 1.678 1.678l.968.323c.165.055.165.288 0 .343l-.968.323a2.168 2.168 0 0 0-1.678 1.678l-.323.968c-.055.165-.288.165-.343 0l-.323-.968a2.168 2.168 0 0 0-1.678-1.678l-.968-.323c-.165-.055-.165-.288 0-.343l.968-.323a2.168 2.168 0 0 0 1.678-1.678l.323-.968z"/></svg>
+                Releases
+            </a>
+            <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/blob/main/CONTRIBUTING.md" class="community-link" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5.5 3.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4.001 4.001 0 0 0-6.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 5.098 8.05 3.493 3.493 0 0 1 2 5.5ZM18.5 3.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM15 5.5a3.5 3.5 0 1 1 5.898 2.549 5.507 5.507 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4.001 4.001 0 0 0-6.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 18.098 8.05 3.493 3.493 0 0 1 15 5.5ZM5.5 16.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM2 18.5a3.5 3.5 0 1 1 5.898 2.549 5.507 5.507 0 0 1 3.034 4.084.75.75 0 1 1-1.482.236 4.001 4.001 0 0 0-6.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 5.098 21.05 3.493 3.493 0 0 1 2 18.5ZM18.5 16.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM15 18.5a3.5 3.5 0 1 1 5.898 2.549 5.507 5.507 0 0 1 3.034 4.084.75.75 0 1 1-1.482.236 4.001 4.001 0 0 0-6.9 0 .75.75 0 1 1-1.482-.236A5.507 5.507 0 0 1 18.098 21.05 3.493 3.493 0 0 1 15 18.5Z"/></svg>
+                Contributing
+            </a>
+        </div>
 
-    <!-- LEGAL POPUP -->
-    <div class="legal-popup" id="legal-popup">
-        <div class="legal-title">LEGAL NOTICE</div>
-        <p>This message will self-destruct in:</p>
-        <div class="legal-timer" id="legal-timer">5</div>
-    </div>
+        <div class="built-with">
+            <strong>Built with Claude Code</strong> — An AI-assisted development tool by Anthropic.
+            <br><br>
+            oh-my-claude-sisyphus is an independent open-source project.
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus" class="footer-link" target="_blank">GitHub</a>
+                <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/blob/main/README.md" class="footer-link" target="_blank">Documentation</a>
+                <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/releases" class="footer-link" target="_blank">Releases</a>
+                <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/blob/main/CHANGELOG.md" class="footer-link" target="_blank">Changelog</a>
+                <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/blob/main/LICENSE" class="footer-link" target="_blank">License</a>
+                <a href="https://github.com/Yeachan-Heo/oh-my-claude-sisyphus/security" class="footer-link" target="_blank">Security</a>
+            </div>
+            <div class="footer-meta">
+                <p>Released under the MIT License</p>
+                <p style="margin-top: 8px; color: var(--text-muted);">
+                    Made with care by the oh-my-claude-sisyphus contributors
+                </p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // ===== BAN SCREEN TRANSITION =====
-        setTimeout(() => {
-            const banScreen = document.getElementById('ban-screen');
-            const mainContent = document.getElementById('main-content');
-
-            banScreen.classList.add('hidden');
-            setTimeout(() => {
-                banScreen.style.display = 'none';
-                mainContent.classList.add('visible');
-            }, 500);
-        }, 2500);
-
-        // ===== CONSOLE MESSAGES (Agent Arguments) =====
-        console.log('%c🔮 Oracle: I saw this coming.', 'color: #00ffff; font-size: 14px;');
-        console.log('%c🔥 Prometheus: Of course you did. You always say that.', 'color: #ff0040; font-size: 14px;');
-        console.log('%c🎭 Momus: Can we focus? We have a website to run.', 'color: #ff00ff; font-size: 14px;');
-        console.log('%c🪨 Sisyphus: The boulder must be pushed. The website must live.', 'color: #ffd700; font-size: 14px;');
-        console.log('%c🔍 Explore: I found 127 console.log statements in this file!', 'color: #00ffff; font-size: 14px;');
-        console.log('%c📚 Librarian: That\'s... that\'s just this conversation.', 'color: #00ffff; font-size: 14px;');
-        console.log('%c🧪 QA Tester: Running test suite... All 19 agents online.', 'color: #27c93f; font-size: 14px;');
-        console.log('%c🔍 Explore: Done!', 'color: #00ffff; font-size: 14px;');
-
         // ===== COPY BUTTONS =====
         const copyButtons = document.querySelectorAll('.copy-btn');
         copyButtons.forEach(btn => {
@@ -1433,182 +1138,13 @@
                         btn.classList.remove('copied');
                     }, 2000);
                 } catch (err) {
-                    btn.textContent = 'Failed!';
+                    btn.textContent = 'Failed';
                     setTimeout(() => {
                         btn.textContent = 'Copy';
                     }, 2000);
                 }
             });
         });
-
-        // ===== SOUND TOGGLE =====
-        let soundEnabled = false;
-        const soundToggle = document.getElementById('sound-toggle');
-
-        soundToggle.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
-            soundToggle.classList.toggle('muted');
-
-            if (soundEnabled) {
-                console.log('%c🎨 Frontend Engineer: Sound enabled. Prepare for chaos.', 'color: #ff00ff; font-size: 14px;');
-            }
-        });
-
-        // ===== CHAOS PARTICLES =====
-        function createChaosParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'chaos-particle';
-            particle.textContent = ['BANNED', '🪨', '⚠️', '🔥', '💀'][Math.floor(Math.random() * 5)];
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.color = ['#ff0040', '#00ffff', '#ff00ff', '#ffd700'][Math.floor(Math.random() * 4)];
-            particle.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-            particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
-
-            document.body.appendChild(particle);
-
-            setTimeout(() => {
-                particle.remove();
-            }, 5000);
-        }
-
-        // Spawn particles occasionally
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                createChaosParticle();
-            }
-        }, 2000);
-
-        // ===== KONAMI CODE (Ultra Chaos) =====
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        let konamiIndex = 0;
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === konamiCode[konamiIndex]) {
-                konamiIndex++;
-                if (konamiIndex === konamiCode.length) {
-                    activateUltraChaos();
-                    konamiIndex = 0;
-                }
-            } else {
-                konamiIndex = 0;
-            }
-        });
-
-        function activateUltraChaos() {
-            document.body.classList.add('ultra-chaos');
-
-            // All agents speak
-            console.log('%c🔮 Oracle: THE CHAOS HAS BEEN UNLEASHED!', 'color: #00ffff; font-size: 20px; font-weight: bold;');
-            console.log('%c🔥 Prometheus: THIS IS WHAT I WANTED!', 'color: #ff0040; font-size: 20px; font-weight: bold;');
-            console.log('%c🎭 Momus: I object to this madness!', 'color: #ff00ff; font-size: 20px; font-weight: bold;');
-            console.log('%c🦉 Metis: I identified this risk.', 'color: #ffd700; font-size: 20px; font-weight: bold;');
-            console.log('%c🪨 Sisyphus: THE BOULDER SHAKES!', 'color: #ffd700; font-size: 20px; font-weight: bold;');
-
-            // Spawn many particles
-            for (let i = 0; i < 50; i++) {
-                setTimeout(createChaosParticle, i * 100);
-            }
-
-            setTimeout(() => {
-                document.body.classList.remove('ultra-chaos');
-            }, 5000);
-        }
-
-        // ===== TYPING "anthropic" TRIGGERS PANIC MODE =====
-        let typedText = '';
-        const panicTrigger = 'anthropic';
-
-        document.addEventListener('keypress', (e) => {
-            typedText += e.key.toLowerCase();
-            if (typedText.length > panicTrigger.length) {
-                typedText = typedText.slice(-panicTrigger.length);
-            }
-
-            if (typedText === panicTrigger) {
-                activatePanicMode();
-                typedText = '';
-            }
-        });
-
-        function activatePanicMode() {
-            document.body.classList.add('panic-mode');
-            console.log('%c⚠️ THEY\'RE HERE!', 'color: #ff0040; font-size: 30px; font-weight: bold;');
-
-            // Redact some text
-            const elements = document.querySelectorAll('p, div, span');
-            const randomElements = Array.from(elements).sort(() => Math.random() - 0.5).slice(0, 10);
-            randomElements.forEach(el => {
-                el.classList.add('redacted');
-            });
-
-            setTimeout(() => {
-                document.body.classList.remove('panic-mode');
-                randomElements.forEach(el => {
-                    el.classList.remove('redacted');
-                });
-            }, 3000);
-        }
-
-        // ===== RANDOM LEGAL POPUP =====
-        setTimeout(() => {
-            const popup = document.getElementById('legal-popup');
-            const timer = document.getElementById('legal-timer');
-            popup.classList.add('show');
-
-            let count = 5;
-            const countdown = setInterval(() => {
-                count--;
-                timer.textContent = count;
-                if (count === 0) {
-                    clearInterval(countdown);
-                    popup.classList.add('destroy');
-                    setTimeout(() => {
-                        popup.classList.remove('show', 'destroy');
-                        timer.textContent = '5';
-                    }, 1000);
-                }
-            }, 1000);
-        }, 10000);
-
-        // ===== RANDOM GLITCH EFFECTS =====
-        setInterval(() => {
-            if (Math.random() > 0.95) {
-                document.body.style.filter = 'hue-rotate(180deg)';
-                setTimeout(() => {
-                    document.body.style.filter = 'none';
-                }, 100);
-            }
-        }, 3000);
-
-        // ===== SMOOTH SCROLL =====
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // ===== AGENT CARD INTERACTIONS =====
-        const agentCards = document.querySelectorAll('.agent-card');
-        agentCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const name = card.querySelector('.agent-name').textContent;
-                console.log(`%c${card.querySelector('.agent-icon').textContent} ${name}: You clicked me!`, 'color: #ffd700; font-size: 14px;');
-            });
-        });
-
-        // ===== FINAL CONSOLE MESSAGE =====
-        setTimeout(() => {
-            console.log('%c🎨 Frontend Engineer: Welcome to the chaos. Enjoy your stay.', 'color: #ff00ff; font-size: 16px; font-weight: bold;');
-            console.log('%cPS: Try the Konami code. You know you want to.', 'color: #00ffff; font-size: 12px; font-style: italic;');
-        }, 3000);
 
         // ===== GITHUB STARS FETCH =====
         (async function fetchGitHubStars() {
@@ -1619,11 +1155,9 @@
                     const data = await response.json();
                     const stars = data.stargazers_count;
                     starsElement.textContent = stars >= 1000 ? (stars / 1000).toFixed(1) + 'k' : stars;
-                    starsElement.classList.add('glitch');
-                    starsElement.setAttribute('data-text', starsElement.textContent);
                 }
             } catch (error) {
-                console.log('%c⭐ Could not fetch GitHub stars. The boulder rolls on.', 'color: #ffd700;');
+                // Keep default value
             }
         })();
     </script>
