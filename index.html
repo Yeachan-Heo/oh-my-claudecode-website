@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>oh-my-claudecode | Multi-Agent Framework for Claude Code</title>
-    <meta name="description" content="A delightful multi-agent orchestration framework for Claude Code. 19 agents with intelligent model routing. 12 commands. 19 hooks. Built by developers, for developers.">
+    <meta name="description" content="A delightful multi-agent orchestration framework for Claude Code. 12 agents with intelligent model routing. 18 commands. 21 skills. 19 hooks. Built by developers, for developers.">
 
     <!-- Open Graph / Social -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="oh-my-claudecode | Multi-Agent Framework for Claude Code">
-    <meta property="og:description" content="v3.0.0 - 19 agents with intelligent model routing. 12 commands. 19 hooks. Built with Claude Code.">
+    <meta property="og:description" content="v3.0.0 - 12 agents with intelligent model routing. 18 commands. 21 skills. 19 hooks. Built with Claude Code.">
     <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.png">
     <meta property="og:image:width" content="2400">
     <meta property="og:image:height" content="1260">
@@ -696,12 +696,16 @@
 
         <div class="hero-stats">
             <div class="stat">
-                <span class="stat-value">19</span>
+                <span class="stat-value">12</span>
                 <span class="stat-label">Agents</span>
             </div>
             <div class="stat">
-                <span class="stat-value">12</span>
+                <span class="stat-value">18</span>
                 <span class="stat-label">Commands</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">21</span>
+                <span class="stat-label">Skills</span>
             </div>
             <div class="stat">
                 <span class="stat-value">19</span>
@@ -742,7 +746,7 @@
             </div>
             <div class="why-card">
                 <div class="why-icon">🤖</div>
-                <h3 class="why-title">19 Specialized Agents</h3>
+                <h3 class="why-title">12 Specialized Agents</h3>
                 <p class="why-desc">
                     From architecture analysis to UI design, documentation to testing. Each agent is
                     optimized for its domain with the right model tier and capabilities.
@@ -826,6 +830,17 @@
                     <tr>
                         <td>
                             <div class="agent-name-cell">
+                                <span class="agent-icon">🎼</span>
+                                <span class="agent-name">Orchestrator</span>
+                            </div>
+                        </td>
+                        <td><span class="model-badge model-opus">Opus</span></td>
+                        <td>Multi-Agent Coordination</td>
+                        <td>Parallel execution, task distribution</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="agent-name-cell">
                                 <span class="agent-icon">🪨</span>
                                 <span class="agent-name">Executor</span>
                             </div>
@@ -905,7 +920,7 @@
         </div>
 
         <p style="text-align: center; color: var(--text-muted); font-size: 0.95rem;">
-            + 8 tiered variants (Low/Medium/High complexity) for fine-grained model selection
+            Each agent has tiered variants (Low/Medium/High complexity) for fine-grained model selection
         </p>
     </section>
 
@@ -1023,9 +1038,9 @@
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
-                <h3 class="feature-title">12 Slash Commands</h3>
+                <h3 class="feature-title">18 Slash Commands</h3>
                 <p class="feature-desc">
-                    /ultrawork, /deepsearch, /deepinit, /analyze, /plan, /review, /ralph, /orchestrate, and more.
+                    /orchestrate, /ultrawork, /ralph, /ultraqa, /deepsearch, /deepinit, /analyze, /plan, /review, /planner, and more.
                 </p>
             </div>
             <div class="feature-card">
@@ -1044,9 +1059,9 @@
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🔧</div>
-                <h3 class="feature-title">LSP & AST Tools</h3>
+                <h3 class="feature-title">19 LSP & AST Tools</h3>
                 <p class="feature-desc">
-                    11 LSP tools (hover, goto-definition, rename) plus ast-grep for structural transformations.
+                    19 LSP tools (hover, goto-definition, rename, references) plus ast-grep for structural transformations.
                 </p>
             </div>
             <div class="feature-card">
