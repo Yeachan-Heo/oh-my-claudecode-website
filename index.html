@@ -1,1180 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>oh-my-claudecode | Multi-Agent Framework for Claude Code</title>
-    <meta name="description" content="A delightful multi-agent orchestration framework for Claude Code. 12 agents with intelligent model routing. 18 commands. 21 skills. 19 hooks. Built by developers, for developers.">
-
-    <!-- Open Graph / Social -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="oh-my-claudecode | Multi-Agent Framework for Claude Code">
-    <meta property="og:description" content="v3.0.0 - 12 agents with intelligent model routing. 18 commands. 21 skills. 19 hooks. Built with Claude Code.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.png">
-    <meta property="og:image:width" content="2400">
-    <meta property="og:image:height" content="1260">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.png">
-
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪨</text></svg>">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        /* ===== VARIABLES - Professional Palette ===== */
-        :root {
-            /* Primary - Terminal Dark Theme */
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #21262d;
-
-            /* Accent Colors - Subtle & Professional */
-            --accent-primary: #58a6ff;
-            --accent-secondary: #7ee787;
-            --accent-highlight: #d29922;
-            --accent-subtle: #8b949e;
-            --accent-purple: #a371f7;
-
-            /* Text Hierarchy */
-            --text-primary: #f0f6fc;
-            --text-secondary: #c9d1d9;
-            --text-muted: #8b949e;
-
-            /* Semantic */
-            --border-default: #30363d;
-            --border-emphasis: #58a6ff;
-
-            /* Legacy mappings for gradual migration */
-            --terminal-green: #7ee787;
-        }
-
-        /* ===== RESET & BASE ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Courier New', monospace;
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* ===== LAYOUT ===== */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        section {
-            padding: 80px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* ===== HERO SECTION ===== */
-        .hero {
-            min-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px 24px;
-        }
-
-        .hero-badges {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-
-        .hero-badges img {
-            height: 28px;
-        }
-
-        .hero-title {
-            font-size: clamp(2rem, 6vw, 4rem);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-version {
-            display: inline-block;
-            padding: 4px 12px;
-            background: var(--accent-secondary);
-            color: var(--bg-primary);
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-radius: 20px;
-            margin-bottom: 16px;
-        }
-
-        .hero-tagline {
-            font-size: clamp(1rem, 2.5vw, 1.25rem);
-            color: var(--text-muted);
-            margin-bottom: 32px;
-            max-width: 700px;
-        }
-
-        .hero-tagline strong {
-            color: var(--text-secondary);
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 32px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            color: var(--text-primary);
-            font-weight: 700;
-            display: block;
-            line-height: 1.2;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            padding: 12px 24px;
-            font-size: 1rem;
-            font-family: inherit;
-            font-weight: 600;
-            border: 2px solid;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            color: var(--bg-primary);
-        }
-
-        .btn-primary:hover {
-            background: #79b8ff;
-            border-color: #79b8ff;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border-color: var(--border-default);
-            color: var(--text-secondary);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-
-        /* ===== SECTION TITLES ===== */
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .section-title {
-            font-size: clamp(1.75rem, 4vw, 2.5rem);
-            color: var(--text-primary);
-            margin-bottom: 16px;
-            font-weight: 700;
-        }
-
-        .section-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* ===== WHY SECTION ===== */
-        .why-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        .why-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-default);
-            border-radius: 12px;
-            padding: 32px;
-            transition: border-color 0.2s ease;
-        }
-
-        .why-card:hover {
-            border-color: var(--accent-primary);
-        }
-
-        .why-icon {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-        }
-
-        .why-title {
-            font-size: 1.25rem;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .why-desc {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* ===== AGENTS TABLE ===== */
-        .agents-table-wrapper {
-            overflow-x: auto;
-            border: 1px solid var(--border-default);
-            border-radius: 12px;
-            background: var(--bg-secondary);
-        }
-
-        .agents-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        .agents-table th,
-        .agents-table td {
-            padding: 16px 20px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-default);
-        }
-
-        .agents-table th {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .agents-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .agents-table tr:hover td {
-            background: var(--bg-tertiary);
-        }
-
-        .agent-name-cell {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .agent-icon {
-            font-size: 1.5rem;
-        }
-
-        .agent-name {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .model-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .model-opus {
-            background: rgba(163, 113, 247, 0.15);
-            color: var(--accent-purple);
-        }
-
-        .model-sonnet {
-            background: rgba(88, 166, 255, 0.15);
-            color: var(--accent-primary);
-        }
-
-        .model-haiku {
-            background: rgba(126, 231, 135, 0.15);
-            color: var(--accent-secondary);
-        }
-
-        /* ===== INSTALLATION ===== */
-        .install-methods {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .terminal {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-default);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .terminal-recommended {
-            border-color: var(--accent-secondary);
-        }
-
-        .terminal-header {
-            background: var(--bg-tertiary);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid var(--border-default);
-        }
-
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .dot-red { background: #ff5f56; }
-        .dot-yellow { background: #ffbd2e; }
-        .dot-green { background: #27c93f; }
-
-        .terminal-title {
-            margin-left: auto;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .terminal-title.recommended {
-            color: var(--accent-secondary);
-            font-weight: 600;
-        }
-
-        .terminal-body {
-            padding: 20px;
-            position: relative;
-        }
-
-        .terminal-line {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .terminal-prompt {
-            color: var(--accent-secondary);
-        }
-
-        .terminal-command {
-            color: var(--text-secondary);
-            user-select: all;
-            word-break: break-all;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            padding: 6px 12px;
-            background: var(--bg-tertiary);
-            color: var(--text-muted);
-            border: 1px solid var(--border-default);
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.8rem;
-            transition: all 0.2s ease;
-        }
-
-        .copy-btn:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-
-        .copy-btn.copied {
-            background: var(--accent-secondary);
-            border-color: var(--accent-secondary);
-            color: var(--bg-primary);
-        }
-
-        .install-note {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 24px;
-            padding: 16px;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            border: 1px solid var(--border-default);
-        }
-
-        /* ===== FEATURES GRID ===== */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .feature-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-default);
-            border-radius: 12px;
-            padding: 24px;
-            transition: border-color 0.2s ease;
-        }
-
-        .feature-card:hover {
-            border-color: var(--accent-primary);
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
-        }
-
-        .feature-title {
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .feature-desc {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* ===== COMMUNITY ===== */
-        .community-links {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
-
-        .community-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-default);
-            border-radius: 8px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .community-link:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-
-        .built-with {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            padding: 24px;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            border: 1px solid var(--border-default);
-        }
-
-        .built-with strong {
-            color: var(--text-secondary);
-        }
-
-        /* ===== FOOTER ===== */
-        footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-default);
-            padding: 48px 24px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .footer-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
-        }
-
-        .footer-link:hover {
-            color: var(--accent-primary);
-        }
-
-        .footer-meta {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        /* ===== OS COMPATIBILITY TABLE ===== */
-        .os-table-wrapper {
-            overflow-x: auto;
-            border: 1px solid var(--border-default);
-            border-radius: 12px;
-            background: var(--bg-secondary);
-            margin-bottom: 32px;
-        }
-
-        .os-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        .os-table th,
-        .os-table td {
-            padding: 12px 16px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-default);
-        }
-
-        .os-table th {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .os-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .os-table td:first-child {
-            text-align: left;
-            font-weight: 500;
-        }
-
-        .check {
-            color: var(--accent-secondary);
-            font-size: 1.2rem;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            section {
-                padding: 60px 16px;
-            }
-
-            .hero {
-                min-height: auto;
-                padding: 60px 16px;
-            }
-
-            .hero-stats {
-                gap: 24px;
-            }
-
-            .stat-value {
-                font-size: 2rem;
-            }
-
-            .agents-table th,
-            .agents-table td {
-                padding: 12px 16px;
-            }
-
-            .terminal-body {
-                padding: 16px;
-            }
-
-            .copy-btn {
-                position: relative;
-                top: 0;
-                right: 0;
-                margin-top: 12px;
-                width: 100%;
-            }
-
-            .footer-links {
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-        }
-
-        /* ===== REDUCED MOTION ===== */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-
-            html {
-                scroll-behavior: auto;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>oh-my-claudecode | Multi-agent Orchestration for Claude Code</title>
+  <meta name="description" content="Zero learning curve. Maximum power. Multi-agent orchestration for Claude Code with 19 specialized agents and 26 skills.">
+  <meta property="og:title" content="oh-my-claudecode">
+  <meta property="og:description" content="Multi-agent orchestration for Claude Code. Zero learning curve.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.png">
+  <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f23;
+      --bg-light: #1a1a2e;
+      --text: #e0e0e0;
+      --text-muted: #707080;
+      --accent: #6366f1;
+      --accent-light: #8b5cf6;
+      --success: #10b981;
+      --border: #2a2a3e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 100px 0 80px;
+      background: linear-gradient(180deg, var(--bg-light) 0%, var(--bg) 100%);
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .version-badge {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .tagline {
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .philosophy {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.8;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin-bottom: 48px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat:nth-child(2) .stat-value { color: var(--accent-light); }
+    .stat:nth-child(3) .stat-value { color: var(--success); }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Install */
+    .install {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .install-step {
+      margin-bottom: 16px;
+    }
+
+    .install-step:last-child { margin-bottom: 0; }
+
+    .install-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .install-code {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--success);
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 0;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 48px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .stats { flex-direction: column; gap: 32px; }
+      .hero h1 { font-size: 2.5rem; }
+    }
+
+    .feature-card {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--accent-light);
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Keywords */
+    .keywords {
+      padding: 60px 0;
+      background: var(--bg-light);
+    }
+
+    .keywords h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    .keywords-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .keyword-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 640px) {
+      .keyword-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .keyword {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .keyword code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .keyword span {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a {
+      color: var(--accent-light);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    .footer-links {
+      margin-bottom: 16px;
+    }
+
+    .footer-links a {
+      margin: 0 16px;
+    }
+
+    .footer-credit {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
 </head>
 <body>
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <!-- GitHub Badges -->
-        <div class="hero-badges">
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/stargazers">
-                <img src="https://img.shields.io/github/stars/Yeachan-Heo/oh-my-claudecode?style=for-the-badge&color=58a6ff&labelColor=161b22" alt="GitHub Stars">
-            </a>
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/network/members">
-                <img src="https://img.shields.io/github/forks/Yeachan-Heo/oh-my-claudecode?style=for-the-badge&color=7ee787&labelColor=161b22" alt="GitHub Forks">
-            </a>
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/graphs/contributors">
-                <img src="https://img.shields.io/github/contributors/Yeachan-Heo/oh-my-claudecode?style=for-the-badge&color=a371f7&labelColor=161b22" alt="Contributors">
-            </a>
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/LICENSE">
-                <img src="https://img.shields.io/github/license/Yeachan-Heo/oh-my-claudecode?style=for-the-badge&color=d29922&labelColor=161b22" alt="License">
-            </a>
+  <section class="hero">
+    <div class="container">
+      <h1>oh-my-claudecode</h1>
+      <div class="version-badge">v3.0.0</div>
+      <p class="tagline">Multi-agent orchestration for Claude Code</p>
+      <p class="philosophy"><em>Some advanced users customize zsh for years — most of us just use oh-my-zsh.</em><br><em>Don't learn Claude Code. Just use OMC.</em></p>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">19</div>
+          <div class="stat-label">Specialized Agents</div>
         </div>
-
-        <h1 class="hero-title">oh-my-claudecode</h1>
-        <span class="hero-version">v3.0.0</span>
-
-        <p class="hero-tagline">
-            A delightful <strong>multi-agent orchestration framework</strong> for Claude Code.
-            Built by developers, for developers.
-        </p>
-
-        <div class="hero-stats">
-            <div class="stat">
-                <span class="stat-value">12</span>
-                <span class="stat-label">Agents</span>
-            </div>
-            <div class="stat">
-                <span class="stat-value">18</span>
-                <span class="stat-label">Commands</span>
-            </div>
-            <div class="stat">
-                <span class="stat-value">21</span>
-                <span class="stat-label">Skills</span>
-            </div>
-            <div class="stat">
-                <span class="stat-value">19</span>
-                <span class="stat-label">Hooks</span>
-            </div>
-            <div class="stat">
-                <span class="stat-value" id="github-stars">1.4k+</span>
-                <span class="stat-label">Stars</span>
-            </div>
+        <div class="stat">
+          <div class="stat-value">26</div>
+          <div class="stat-label">Skills</div>
         </div>
-
-        <div class="hero-cta">
-            <a href="#install" class="btn btn-primary">Get Started</a>
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode" class="btn btn-secondary" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                GitHub
-            </a>
+        <div class="stat">
+          <div class="stat-value">0</div>
+          <div class="stat-label">Learning Curve</div>
         </div>
-    </section>
+      </div>
 
-    <!-- WHY SECTION -->
-    <section id="why">
-        <div class="section-header">
-            <h2 class="section-title">Why oh-my-claudecode?</h2>
-            <p class="section-subtitle">
-                Transform Claude Code into a powerful multi-agent system with intelligent orchestration.
-            </p>
+      <div class="install">
+        <div class="install-step">
+          <div class="install-label">Step 1: Install the plugin</div>
+          <div class="install-code">/plugin marketplace add Yeachan-Heo/oh-my-claudecode</div>
         </div>
-
-        <div class="why-grid">
-            <div class="why-card">
-                <div class="why-icon">🎯</div>
-                <h3 class="why-title">Intelligent Model Routing</h3>
-                <p class="why-desc">
-                    Tasks automatically route to Haiku, Sonnet, or Opus based on complexity.
-                    Simple lookups use Haiku. Deep debugging escalates to Opus. Save tokens, get results.
-                </p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon">🤖</div>
-                <h3 class="why-title">12 Specialized Agents</h3>
-                <p class="why-desc">
-                    From architecture analysis to UI design, documentation to testing. Each agent is
-                    optimized for its domain with the right model tier and capabilities.
-                </p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon">🔄</div>
-                <h3 class="why-title">19 Lifecycle Hooks</h3>
-                <p class="why-desc">
-                    Rules injection, keyword detection, session recovery, context management,
-                    and edit recovery. Full control over the Claude Code lifecycle.
-                </p>
-            </div>
+        <div class="install-step">
+          <div class="install-label">Step 2: Run setup</div>
+          <div class="install-code">/omc-setup</div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- AGENTS SECTION -->
-    <section id="agents">
-        <div class="section-header">
-            <h2 class="section-title">Agents</h2>
-            <p class="section-subtitle">
-                Specialized agents for every development task. Automatically selected based on your needs.
-            </p>
+  <section class="features">
+    <div class="container">
+      <h2>What Happens Automatically</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Complex Tasks → Parallelized</h3>
+          <p>Give me a complex task and I automatically parallelize work across specialist agents for maximum speed.</p>
         </div>
-
-        <div class="agents-table-wrapper">
-            <table class="agents-table">
-                <thead>
-                    <tr>
-                        <th>Agent</th>
-                        <th>Model</th>
-                        <th>Purpose</th>
-                        <th>Best For</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🔮</span>
-                                <span class="agent-name">Architect</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-opus">Opus</span></td>
-                        <td>Architecture & Debugging</td>
-                        <td>Complex system issues, architectural decisions</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🔥</span>
-                                <span class="agent-name">Planner</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-opus">Opus</span></td>
-                        <td>Strategic Planning</td>
-                        <td>Project planning, feature design, roadmaps</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🎭</span>
-                                <span class="agent-name">Critic</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-opus">Opus</span></td>
-                        <td>Plan Review</td>
-                        <td>Code review, plan critique, quality gates</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🦉</span>
-                                <span class="agent-name">Analyst</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-opus">Opus</span></td>
-                        <td>Pre-planning Analysis</td>
-                        <td>Risk assessment, requirements analysis</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🎼</span>
-                                <span class="agent-name">Orchestrator</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-opus">Opus</span></td>
-                        <td>Multi-Agent Coordination</td>
-                        <td>Parallel execution, task distribution</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🪨</span>
-                                <span class="agent-name">Executor</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
-                        <td>Task Execution</td>
-                        <td>Implementation, coding tasks, file operations</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">📚</span>
-                                <span class="agent-name">Researcher</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
-                        <td>Documentation & Research</td>
-                        <td>API research, documentation lookup</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🎨</span>
-                                <span class="agent-name">Designer</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
-                        <td>UI/UX Design</td>
-                        <td>Component design, styling, visual improvements</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🧪</span>
-                                <span class="agent-name">QA Tester</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
-                        <td>Interactive Testing</td>
-                        <td>CLI testing, integration tests, verification</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">👁️</span>
-                                <span class="agent-name">Vision</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-sonnet">Sonnet</span></td>
-                        <td>Visual Analysis</td>
-                        <td>Screenshot analysis, image processing</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">🔍</span>
-                                <span class="agent-name">Explore</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-haiku">Haiku</span></td>
-                        <td>Fast Search</td>
-                        <td>Quick lookups, file discovery, pattern matching</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="agent-name-cell">
-                                <span class="agent-icon">📝</span>
-                                <span class="agent-name">Writer</span>
-                            </div>
-                        </td>
-                        <td><span class="model-badge model-haiku">Haiku</span></td>
-                        <td>Documentation</td>
-                        <td>README updates, comments, API docs</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="feature-card">
+          <h3>Planning → Interview Mode</h3>
+          <p>Say "plan this" and I start an interview to understand your requirements before creating a comprehensive plan.</p>
         </div>
-
-        <p style="text-align: center; color: var(--text-muted); font-size: 0.95rem;">
-            Each agent has tiered variants (Low/Medium/High complexity) for fine-grained model selection
-        </p>
-    </section>
-
-    <!-- INSTALLATION -->
-    <section id="install">
-        <div class="section-header">
-            <h2 class="section-title">Installation</h2>
-            <p class="section-subtitle">
-                Get up and running in under a minute.
-            </p>
+        <div class="feature-card">
+          <h3>Must Complete → Persistence</h3>
+          <p>Say "don't stop until done" and I persist until the task is verified complete. No partial implementations.</p>
         </div>
-
-        <!-- OS Compatibility -->
-        <div class="os-table-wrapper">
-            <table class="os-table">
-                <thead>
-                    <tr>
-                        <th>Method</th>
-                        <th>macOS</th>
-                        <th>Linux</th>
-                        <th>Windows</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Claude Plugin (Recommended)</td>
-                        <td><span class="check">✓</span></td>
-                        <td><span class="check">✓</span></td>
-                        <td><span class="check">✓</span></td>
-                    </tr>
-                    <tr>
-                        <td>npm install</td>
-                        <td><span class="check">✓</span></td>
-                        <td><span class="check">✓</span></td>
-                        <td><span class="check">✓</span></td>
-                    </tr>
-                    <tr>
-                        <td>curl installer</td>
-                        <td><span class="check">✓</span></td>
-                        <td><span class="check">✓</span></td>
-                        <td>WSL only</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="feature-card">
+          <h3>UI Work → Design Sensibility</h3>
+          <p>When working on UI/frontend, I automatically activate design expertise for better results.</p>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="install-methods">
-            <!-- Method 1: Plugin (Recommended) -->
-            <div class="terminal terminal-recommended">
-                <div class="terminal-header">
-                    <div class="terminal-dot dot-red"></div>
-                    <div class="terminal-dot dot-yellow"></div>
-                    <div class="terminal-dot dot-green"></div>
-                    <span class="terminal-title recommended">Recommended</span>
-                </div>
-                <div class="terminal-body">
-                    <button type="button" class="copy-btn" data-cmd="plugin">Copy</button>
-                    <div class="terminal-line">
-                        <span class="terminal-prompt">claude&gt;</span>
-                        <span class="terminal-command">/plugin marketplace add Yeachan-Heo/oh-my-claudecode</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Method 2: NPM -->
-            <div class="terminal">
-                <div class="terminal-header">
-                    <div class="terminal-dot dot-red"></div>
-                    <div class="terminal-dot dot-yellow"></div>
-                    <div class="terminal-dot dot-green"></div>
-                    <span class="terminal-title">npm (Cross-platform)</span>
-                </div>
-                <div class="terminal-body">
-                    <button type="button" class="copy-btn" data-cmd="npm">Copy</button>
-                    <div class="terminal-line">
-                        <span class="terminal-prompt">$</span>
-                        <span class="terminal-command">npm install -g oh-my-claudecode</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Post-install step -->
-            <div class="terminal">
-                <div class="terminal-header">
-                    <div class="terminal-dot dot-red"></div>
-                    <div class="terminal-dot dot-yellow"></div>
-                    <div class="terminal-dot dot-green"></div>
-                    <span class="terminal-title">Post-Install Setup</span>
-                </div>
-                <div class="terminal-body">
-                    <button type="button" class="copy-btn" data-cmd="default">Copy</button>
-                    <div class="terminal-line">
-                        <span class="terminal-prompt">claude&gt;</span>
-                        <span class="terminal-command">/omc-default</span>
-                    </div>
-                </div>
-            </div>
+  <section class="keywords">
+    <div class="container">
+      <h2>Magic Keywords</h2>
+      <p class="keywords-subtitle">Power users can use these anywhere in messages for explicit control</p>
+      <div class="keyword-grid">
+        <div class="keyword">
+          <code>ralph</code>
+          <span>Persistence mode</span>
         </div>
-
-        <div class="install-note">
-            <strong>Note:</strong> Run <code>/omc-default</code> after installation to enable agent delegation,
-            keyword detection, and intelligent model routing.
+        <div class="keyword">
+          <code>ralplan</code>
+          <span>Iterative planning</span>
         </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section id="features">
-        <div class="section-header">
-            <h2 class="section-title">Features</h2>
-            <p class="section-subtitle">
-                Everything you need for productive AI-assisted development.
-            </p>
+        <div class="keyword">
+          <code>ulw</code>
+          <span>Max parallelism</span>
         </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3 class="feature-title">18 Slash Commands</h3>
-                <p class="feature-desc">
-                    /orchestrate, /ultrawork, /ralph, /ultraqa, /deepsearch, /deepinit, /analyze, /plan, /review, /planner, and more.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔮</div>
-                <h3 class="feature-title">Magic Keywords</h3>
-                <p class="feature-desc">
-                    Type "ultrawork" for parallel mode. "search" for enhanced search. Natural language activation.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💾</div>
-                <h3 class="feature-title">Session Recovery</h3>
-                <p class="feature-desc">
-                    Three-tier memory system: Priority Context, Working Memory, and Notepad for compaction resilience.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔧</div>
-                <h3 class="feature-title">19 LSP & AST Tools</h3>
-                <p class="feature-desc">
-                    19 LSP tools (hover, goto-definition, rename, references) plus ast-grep for structural transformations.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔄</div>
-                <h3 class="feature-title">Ralph Loop</h3>
-                <p class="feature-desc">
-                    Self-referential execution loop with PRD-based task tracking. Guaranteed completion.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3 class="feature-title">HUD Statusline</h3>
-                <p class="feature-desc">
-                    Real-time visualization of orchestration state. Presets: minimal, focused, full.
-                </p>
-            </div>
+        <div class="keyword">
+          <code>plan</code>
+          <span>Start interview</span>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- COMMUNITY -->
-    <section id="community">
-        <div class="section-header">
-            <h2 class="section-title">Community</h2>
-            <p class="section-subtitle">
-                Join the conversation and contribute to the project.
-            </p>
-        </div>
-
-        <div class="community-links">
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/discussions" class="community-link" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M1.75 1h12.5c.966 0 1.75.784 1.75 1.75v9.5A1.75 1.75 0 0 1 14.25 14H8.061l-2.574 2.573A1.458 1.458 0 0 1 3 15.543V14H1.75A1.75 1.75 0 0 1 0 12.25v-9.5C0 1.784.784 1 1.75 1ZM1.5 2.75v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Z"/><path d="M22.5 8.75a.25.25 0 0 0-.25-.25h-3.5a.75.75 0 0 1 0-1.5h3.5c.966 0 1.75.784 1.75 1.75v9.5A1.75 1.75 0 0 1 22.25 20H21v1.543a1.457 1.457 0 0 1-2.487 1.03L15.939 20H10.75A1.75 1.75 0 0 1 9 18.25v-1.465a.75.75 0 0 1 1.5 0v1.465c0 .138.112.25.25.25h5.5a.75.75 0 0 1 .53.22l2.72 2.72v-2.19a.75.75 0 0 1 .75-.75h2a.25.25 0 0 0 .25-.25v-9.5Z"/></svg>
-                Discussions
-            </a>
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/issues" class="community-link" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 12 7Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/><path d="M7.328 1.47a.749.749 0 0 1 .53-.22h8.284c.199 0 .39.079.53.22l5.858 5.858c.141.14.22.33.22.53v8.284a.749.749 0 0 1-.22.53l-5.858 5.858a.749.749 0 0 1-.53.22H7.858a.749.749 0 0 1-.53-.22L1.47 16.672a.749.749 0 0 1-.22-.53V7.858c0-.199.079-.39.22-.53Zm.84 1.28L2.75 8.169v7.662l5.419 5.419h7.662l5.419-5.418V8.168L15.832 2.75Z"/></svg>
-                Issues
-            </a>
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/releases" class="community-link" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.828 1.828l1.937.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.828l-.645 1.937c-.11.33-.576.33-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645c-.33-.11-.33-.576 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828l.645-1.937zM13.595 3.2c.055-.165.288-.165.343 0l.323.968c.258.775.903 1.42 1.678 1.678l.968.323c.165.055.165.288 0 .343l-.968.323a2.168 2.168 0 0 0-1.678 1.678l-.323.968c-.055.165-.288.165-.343 0l-.323-.968a2.168 2.168 0 0 0-1.678-1.678l-.968-.323c-.165-.055-.165-.288 0-.343l.968-.323a2.168 2.168 0 0 0 1.678-1.678l.323-.968zM17.5 14.5c.055-.165.288-.165.343 0l.323.968c.258.775.903 1.42 1.678 1.678l.968.323c.165.055.165.288 0 .343l-.968.323a2.168 2.168 0 0 0-1.678 1.678l-.323.968c-.055.165-.288.165-.343 0l-.323-.968a2.168 2.168 0 0 0-1.678-1.678l-.968-.323c-.165-.055-.165-.288 0-.343l.968-.323a2.168 2.168 0 0 0 1.678-1.678l.323-.968z"/></svg>
-                Releases
-            </a>
-            <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/CONTRIBUTING.md" class="community-link" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5.5 3.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4.001 4.001 0 0 0-6.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 5.098 8.05 3.493 3.493 0 0 1 2 5.5ZM18.5 3.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM15 5.5a3.5 3.5 0 1 1 5.898 2.549 5.507 5.507 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4.001 4.001 0 0 0-6.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 18.098 8.05 3.493 3.493 0 0 1 15 5.5ZM5.5 16.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM2 18.5a3.5 3.5 0 1 1 5.898 2.549 5.507 5.507 0 0 1 3.034 4.084.75.75 0 1 1-1.482.236 4.001 4.001 0 0 0-6.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 5.098 21.05 3.493 3.493 0 0 1 2 18.5ZM18.5 16.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM15 18.5a3.5 3.5 0 1 1 5.898 2.549 5.507 5.507 0 0 1 3.034 4.084.75.75 0 1 1-1.482.236 4.001 4.001 0 0 0-6.9 0 .75.75 0 1 1-1.482-.236A5.507 5.507 0 0 1 18.098 21.05 3.493 3.493 0 0 1 15 18.5Z"/></svg>
-                Contributing
-            </a>
-        </div>
-
-        <div class="built-with">
-            <strong>Built with Claude Code</strong> — An AI-assisted development tool by Anthropic.
-            <br><br>
-            oh-my-claudecode is an independent open-source project.
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="https://github.com/Yeachan-Heo/oh-my-claudecode" class="footer-link" target="_blank">GitHub</a>
-                <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/README.md" class="footer-link" target="_blank">Documentation</a>
-                <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/releases" class="footer-link" target="_blank">Releases</a>
-                <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/CHANGELOG.md" class="footer-link" target="_blank">Changelog</a>
-                <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/LICENSE" class="footer-link" target="_blank">License</a>
-                <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/security" class="footer-link" target="_blank">Security</a>
-            </div>
-            <div class="footer-meta">
-                <p>Released under the MIT License</p>
-                <p style="margin-top: 8px; color: var(--text-muted);">
-                    Made with care by the oh-my-claudecode contributors
-                </p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // ===== COPY BUTTONS =====
-        const copyButtons = document.querySelectorAll('.copy-btn');
-        copyButtons.forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const terminal = btn.closest('.terminal');
-                const command = terminal.querySelector('.terminal-command').textContent;
-                try {
-                    await navigator.clipboard.writeText(command);
-                    const originalText = btn.textContent;
-                    btn.textContent = 'Copied!';
-                    btn.classList.add('copied');
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.classList.remove('copied');
-                    }, 2000);
-                } catch (err) {
-                    btn.textContent = 'Failed';
-                    setTimeout(() => {
-                        btn.textContent = 'Copy';
-                    }, 2000);
-                }
-            });
-        });
-
-        // ===== GITHUB STARS FETCH =====
-        (async function fetchGitHubStars() {
-            const starsElement = document.getElementById('github-stars');
-            try {
-                const response = await fetch('https://api.github.com/repos/Yeachan-Heo/oh-my-claudecode');
-                if (response.ok) {
-                    const data = await response.json();
-                    const stars = data.stargazers_count;
-                    starsElement.textContent = stars >= 1000 ? (stars / 1000).toFixed(1) + 'k' : stars;
-                }
-            } catch (error) {
-                // Keep default value
-            }
-        })();
-    </script>
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode">GitHub</a>
+        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/docs/FULL-README.md">Documentation</a>
+        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/docs/MIGRATION.md">Migration Guide</a>
+      </div>
+      <p class="footer-credit">
+        Inspired by <a href="https://github.com/code-yeongyu/oh-my-opencode">oh-my-opencode</a>
+      </p>
+    </div>
+  </footer>
 </body>
 </html>
