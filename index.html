@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>oh-my-claudecode | Multi-agent Orchestration for Claude Code</title>
-  <meta name="description" content="Zero learning curve. Maximum power. Multi-agent orchestration for Claude Code with 19 specialized agents and 26 skills.">
+  <meta name="description" content="Zero learning curve. Maximum power. Multi-agent orchestration for Claude Code with 27 specialized agents and 26 skills.">
   <meta property="og:title" content="oh-my-claudecode">
   <meta property="og:description" content="Multi-agent orchestration for Claude Code. Zero learning curve.">
   <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.png">
@@ -95,11 +95,52 @@
 
     .stat:nth-child(2) .stat-value { color: var(--accent-light); }
     .stat:nth-child(3) .stat-value { color: var(--success); }
+    .stat:nth-child(4) .stat-value { color: #f59e0b; }
+    .stat:nth-child(5) .stat-value { color: #ec4899; }
 
     .stat-label {
       font-size: 0.9rem;
       color: var(--text-muted);
       margin-top: 4px;
+    }
+
+    .github-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .github-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .github-stat svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .github-stat .count {
+      font-weight: 600;
+      color: #f59e0b;
+    }
+
+    .github-stat.forks .count {
+      color: #10b981;
+    }
+
+    .github-stat.downloads .count {
+      color: #ec4899;
+    }
+
+    @media (max-width: 640px) {
+      .github-stats { flex-direction: column; gap: 16px; align-items: center; }
     }
 
     /* Install */
@@ -264,7 +305,7 @@
 
       <div class="stats">
         <div class="stat">
-          <div class="stat-value">19</div>
+          <div class="stat-value">27</div>
           <div class="stat-label">Specialized Agents</div>
         </div>
         <div class="stat">
@@ -275,6 +316,24 @@
           <div class="stat-value">0</div>
           <div class="stat-label">Learning Curve</div>
         </div>
+      </div>
+
+      <div class="github-stats">
+        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/stargazers" class="github-stat" style="text-decoration: none;">
+          <svg viewBox="0 0 16 16" fill="#f59e0b"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+          <span class="count" id="stars-count">1.5k+</span>
+          <span style="color: var(--text-muted);">Stars</span>
+        </a>
+        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/forks" class="github-stat forks" style="text-decoration: none;">
+          <svg viewBox="0 0 16 16" fill="#10b981"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>
+          <span class="count" id="forks-count">140+</span>
+          <span style="color: var(--text-muted);">Forks</span>
+        </a>
+        <a href="https://www.npmjs.com/package/oh-my-claude-sisyphus" class="github-stat downloads" style="text-decoration: none;">
+          <svg viewBox="0 0 16 16" fill="#ec4899"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"/></svg>
+          <span class="count" id="downloads-count">4.8k+</span>
+          <span style="color: var(--text-muted);">Downloads/mo</span>
+        </a>
       </div>
 
       <div class="install">
@@ -352,5 +411,47 @@
       </p>
     </div>
   </footer>
+  <script>
+    // Fetch live GitHub stats
+    async function fetchGitHubStats() {
+      try {
+        const response = await fetch('https://api.github.com/repos/Yeachan-Heo/oh-my-claudecode');
+        if (response.ok) {
+          const data = await response.json();
+          const stars = data.stargazers_count;
+          const forks = data.forks_count;
+
+          document.getElementById('stars-count').textContent = formatNumber(stars);
+          document.getElementById('forks-count').textContent = formatNumber(forks);
+        }
+      } catch (e) {
+        console.log('Using fallback GitHub stats');
+      }
+    }
+
+    // Fetch live npm downloads
+    async function fetchNpmDownloads() {
+      try {
+        const response = await fetch('https://api.npmjs.org/downloads/point/last-month/oh-my-claude-sisyphus');
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById('downloads-count').textContent = formatNumber(data.downloads) + '/mo';
+        }
+      } catch (e) {
+        console.log('Using fallback npm stats');
+      }
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+      }
+      return num.toString();
+    }
+
+    // Fetch stats on page load
+    fetchGitHubStats();
+    fetchNpmDownloads();
+  </script>
 </body>
 </html>
