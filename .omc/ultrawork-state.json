@@ -1,0 +1,7 @@
+{
+  "active": true,
+  "started_at": "2026-01-20T08:04:05.752Z",
+  "original_prompt": "is our ~/.claude/CLAUDE.md (same with docs/CLAUDE.md) properly registers all skills that we have? i think that might need updating? ultrawork",
+  "reinforcement_count": 8,
+  "last_checked_at": "2026-01-20T08:36:51.802Z"
+}

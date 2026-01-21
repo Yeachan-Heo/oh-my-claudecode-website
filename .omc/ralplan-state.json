@@ -1,0 +1,10 @@
+{
+  "active": true,
+  "mode": "ralplan",
+  "iteration": 0,
+  "max_iterations": 5,
+  "plan_path": ".omc/plans/v3-sync.md",
+  "current_phase": "planner_planning",
+  "started_at": "2026-01-20T08:30:00Z",
+  "task_description": "Sync oh-my-claudecode website with actual v3.0.0-beta features - ensure accurate agent count, command count, hook count, feature list, and installation instructions match the real codebase"
+}
