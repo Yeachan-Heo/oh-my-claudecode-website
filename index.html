@@ -3,23 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>oh-my-claudecode | Multi-agent Orchestration for Claude Code</title>
-  <meta name="description" content="Zero learning curve. Maximum power. Multi-agent orchestration for Claude Code with 32 specialized agents and 40 skills.">
-  <meta property="og:title" content="oh-my-claudecode">
-  <meta property="og:description" content="Multi-agent orchestration for Claude Code. Zero learning curve.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.png">
+  <title>oh-my-claudecode | Claude-On-Steroids</title>
+  <meta name="description" content="Claude-On-Steroids. Multi-agent orchestration for Claude Code with 32 specialized agents and 40 skills. A weapon, not a tool.">
+  <meta property="og:title" content="oh-my-claudecode | Claude-On-Steroids">
+  <meta property="og:description" content="Claude-On-Steroids. Multi-agent orchestration for Claude Code. A weapon, not a tool.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.jpg">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f0f23;
-      --bg-light: #1a1a2e;
+      --bg: #0a0a0f;
+      --bg-light: #12121a;
+      --bg-card: #1a1a24;
       --text: #e0e0e0;
       --text-muted: #707080;
-      --accent: #6366f1;
-      --accent-light: #8b5cf6;
+      --accent: #dc2626;
+      --accent-light: #ef4444;
+      --accent-dark: #991b1b;
+      --accent-glow: rgba(220, 38, 38, 0.5);
       --success: #10b981;
       --border: #2a2a3e;
     }
@@ -38,49 +41,100 @@
     /* Hero */
     .hero {
       text-align: center;
-      padding: 100px 0 80px;
+      padding: 60px 0 80px;
       background: linear-gradient(180deg, var(--bg-light) 0%, var(--bg) 100%);
+      position: relative;
+      overflow: hidden;
     }
 
-    .hero h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%);
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 50%, var(--accent-dark) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      text-transform: uppercase;
+      text-shadow: 0 0 60px var(--accent-glow);
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    .character-container {
+      position: relative;
+      max-width: 400px;
+      margin: 0 auto 32px;
+    }
+
+    .character-img {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      border-radius: 16px;
+      box-shadow:
+        0 0 60px var(--accent-glow),
+        0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--accent-dark);
+    }
+
+    .project-name {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
     }
 
     .version-badge {
       display: inline-block;
-      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      background: linear-gradient(90deg, var(--accent), var(--accent-dark));
       color: white;
       padding: 6px 16px;
       border-radius: 20px;
       font-size: 0.9rem;
       font-weight: 600;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
     .tagline {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       color: var(--text-muted);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .philosophy {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--text-muted);
-      margin-bottom: 48px;
+      margin-bottom: 40px;
       line-height: 1.8;
     }
 
     .stats {
       display: flex;
       justify-content: center;
-      gap: 60px;
-      margin-bottom: 48px;
+      gap: 48px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
     }
 
     .stat {
@@ -88,7 +142,7 @@
     }
 
     .stat-value {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 700;
       color: var(--accent);
     }
@@ -99,7 +153,7 @@
     .stat:nth-child(5) .stat-value { color: #ec4899; }
 
     .stat-label {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       margin-top: 4px;
     }
@@ -107,23 +161,24 @@
     .github-stats {
       display: flex;
       justify-content: center;
-      gap: 40px;
+      gap: 32px;
       margin-top: 32px;
       padding-top: 32px;
       border-top: 1px solid var(--border);
+      flex-wrap: wrap;
     }
 
     .github-stat {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text);
     }
 
     .github-stat svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
 
     .github-stat .count {
@@ -139,13 +194,20 @@
       color: #ec4899;
     }
 
+    .github-stat.version .count {
+      color: var(--accent-light);
+    }
+
     @media (max-width: 640px) {
       .github-stats { flex-direction: column; gap: 16px; align-items: center; }
+      .hero-title { font-size: 2rem; }
+      .stats { gap: 24px; }
+      .stat-value { font-size: 2rem; }
     }
 
     /* Install */
     .install {
-      background: var(--bg-light);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 24px;
@@ -171,8 +233,8 @@
       border-radius: 8px;
       padding: 12px 16px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem;
-      color: var(--success);
+      font-size: 0.9rem;
+      color: var(--accent-light);
       white-space: pre-wrap;
     }
 
@@ -185,6 +247,7 @@
       text-align: center;
       font-size: 2rem;
       margin-bottom: 48px;
+      color: #fff;
     }
 
     .feature-grid {
@@ -195,15 +258,20 @@
 
     @media (max-width: 640px) {
       .feature-grid { grid-template-columns: 1fr; }
-      .stats { flex-direction: column; gap: 32px; }
-      .hero h1 { font-size: 2.5rem; }
+      .stats { flex-direction: column; gap: 24px; }
     }
 
     .feature-card {
-      background: var(--bg-light);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 24px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--accent-dark);
+      box-shadow: 0 0 20px rgba(220, 38, 38, 0.1);
     }
 
     .feature-card h3 {
@@ -227,6 +295,7 @@
       text-align: center;
       font-size: 1.8rem;
       margin-bottom: 16px;
+      color: #fff;
     }
 
     .keywords-subtitle {
@@ -253,6 +322,11 @@
       border-radius: 8px;
       padding: 16px;
       text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .keyword:hover {
+      border-color: var(--accent-dark);
     }
 
     .keyword code {
@@ -299,18 +373,25 @@
 <body>
   <section class="hero">
     <div class="container">
-      <h1>oh-my-claudecode</h1>
-      <div class="version-badge">v3.5.5</div>
+      <h1 class="hero-title">Claude-On-Steroids</h1>
+      <p class="hero-subtitle">A weapon, not a tool.</p>
+
+      <div class="character-container">
+        <img src="omc-character.jpg" alt="OMC Character - Claude On Steroids" class="character-img">
+      </div>
+
+      <div class="project-name">oh-my-claudecode</div>
+      <div class="version-badge" id="version-badge">v3.5.5</div>
       <p class="tagline">Multi-agent orchestration for Claude Code</p>
       <p class="philosophy"><em>Some advanced users customize zsh for years — most of us just use oh-my-zsh.</em><br><em>Don't learn Claude Code. Just use OMC.</em></p>
 
       <div class="stats">
         <div class="stat">
-          <div class="stat-value">32</div>
+          <div class="stat-value" id="agent-count">32</div>
           <div class="stat-label">Specialized Agents</div>
         </div>
         <div class="stat">
-          <div class="stat-value">40</div>
+          <div class="stat-value" id="skill-count">40</div>
           <div class="stat-label">Skills</div>
         </div>
         <div class="stat">
@@ -320,6 +401,11 @@
       </div>
 
       <div class="github-stats">
+        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/releases" class="github-stat version" style="text-decoration: none;">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>
+          <span class="count" id="version-count">v3.5.5</span>
+          <span style="color: var(--text-muted);">Latest</span>
+        </a>
         <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/stargazers" class="github-stat" style="text-decoration: none;">
           <svg viewBox="0 0 16 16" fill="#f59e0b"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
           <span class="count" id="stars-count">1.5k+</span>
@@ -356,35 +442,35 @@
       <h2>What Happens Automatically</h2>
       <div class="feature-grid">
         <div class="feature-card">
-          <h3>Ultrapilot → Parallel Autopilot</h3>
+          <h3>Ultrapilot - Parallel Autopilot</h3>
           <p>Say "ultrapilot" or "parallel build" for 3-5x faster execution with up to 5 concurrent workers handling different parts of your project.</p>
         </div>
         <div class="feature-card">
-          <h3>Swarm → Coordinated Agents</h3>
+          <h3>Swarm - Coordinated Agents</h3>
           <p>Spawn N agents with shared task pool. Each agent claims atomic tasks, executes them, and marks completion with 5-minute timeouts.</p>
         </div>
         <div class="feature-card">
-          <h3>Pipeline → Sequential Chaining</h3>
+          <h3>Pipeline - Sequential Chaining</h3>
           <p>Chain agents in sequence with data passing between stages. Use built-in presets (review, implement, debug, refactor) or create custom chains.</p>
         </div>
         <div class="feature-card">
-          <h3>Ecomode → Token-Efficient Parallelism</h3>
+          <h3>Ecomode - Token-Efficient Parallelism</h3>
           <p>Say "eco" for budget-friendly parallel execution. Like ultrawork but with smaller agents and tighter budget controls for Pro plan users.</p>
         </div>
         <div class="feature-card">
-          <h3>Complex Tasks → Parallelized</h3>
+          <h3>Complex Tasks - Parallelized</h3>
           <p>Give me a complex task and I automatically parallelize work across specialist agents for maximum speed.</p>
         </div>
         <div class="feature-card">
-          <h3>Planning → Interview Mode</h3>
+          <h3>Planning - Interview Mode</h3>
           <p>Say "plan this" and I start an interview to understand your requirements before creating a comprehensive plan.</p>
         </div>
         <div class="feature-card">
-          <h3>Must Complete → Persistence</h3>
+          <h3>Must Complete - Persistence</h3>
           <p>Say "don't stop until done" and I persist until the task is verified complete. No partial implementations.</p>
         </div>
         <div class="feature-card">
-          <h3>UI Work → Design Sensibility</h3>
+          <h3>UI Work - Design Sensibility</h3>
           <p>When working on UI/frontend, I automatically activate design expertise for better results.</p>
         </div>
       </div>
@@ -462,6 +548,56 @@
       }
     }
 
+    // Fetch latest release version
+    async function fetchLatestVersion() {
+      try {
+        const response = await fetch('https://api.github.com/repos/Yeachan-Heo/oh-my-claudecode/releases/latest');
+        if (response.ok) {
+          const data = await response.json();
+          const version = data.tag_name;
+          document.getElementById('version-badge').textContent = version;
+          document.getElementById('version-count').textContent = version;
+        }
+      } catch (e) {
+        // Try fetching from package.json if releases fail
+        try {
+          const pkgResponse = await fetch('https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode/main/package.json');
+          if (pkgResponse.ok) {
+            const pkgData = await pkgResponse.json();
+            const version = 'v' + pkgData.version;
+            document.getElementById('version-badge').textContent = version;
+            document.getElementById('version-count').textContent = version;
+          }
+        } catch (e2) {
+          console.log('Using fallback version');
+        }
+      }
+    }
+
+    // Fetch agent and skill counts from README
+    async function fetchCounts() {
+      try {
+        const response = await fetch('https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode/main/README.md');
+        if (response.ok) {
+          const text = await response.text();
+
+          // Look for agent count patterns like "32 agents" or "32 Specialized Agents"
+          const agentMatch = text.match(/(\d+)\s*(?:specialized\s*)?agents?/i);
+          if (agentMatch) {
+            document.getElementById('agent-count').textContent = agentMatch[1];
+          }
+
+          // Look for skill count patterns like "40 skills"
+          const skillMatch = text.match(/(\d+)\s*skills?/i);
+          if (skillMatch) {
+            document.getElementById('skill-count').textContent = skillMatch[1];
+          }
+        }
+      } catch (e) {
+        console.log('Using fallback counts');
+      }
+    }
+
     // Fetch live npm downloads
     async function fetchNpmDownloads() {
       try {
@@ -482,9 +618,11 @@
       return num.toString();
     }
 
-    // Fetch stats on page load
+    // Fetch all stats on page load
     fetchGitHubStats();
     fetchNpmDownloads();
+    fetchLatestVersion();
+    fetchCounts();
   </script>
 </body>
 </html>
