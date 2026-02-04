@@ -39,7 +39,7 @@ const elementCallbacks = new WeakMap();
 export const initScrollReveal = (options = {}) => {
   const {
     selector = '[data-reveal]',
-    visibleClass = 'is-visible',
+    visibleClass = 'revealed',
     once = true,
     observerOptions = DEFAULT_OPTIONS,
   } = options;
@@ -111,7 +111,7 @@ export const initScrollReveal = (options = {}) => {
  */
 export const observeElement = (element, options = {}) => {
   const {
-    visibleClass = 'is-visible',
+    visibleClass = 'revealed',
     once = true,
     onReveal = null,
     observerOptions = DEFAULT_OPTIONS,
@@ -166,7 +166,7 @@ export const observeElement = (element, options = {}) => {
  * @param {string} selector - CSS selector for elements to reveal
  * @param {string} visibleClass - Class to add
  */
-export const revealAll = (selector = '[data-reveal]', visibleClass = 'is-visible') => {
+export const revealAll = (selector = '[data-reveal]', visibleClass = 'revealed') => {
   document.querySelectorAll(selector).forEach((el) => {
     el.classList.add(visibleClass);
   });
@@ -177,7 +177,7 @@ export const revealAll = (selector = '[data-reveal]', visibleClass = 'is-visible
  * @param {string} selector - CSS selector for elements to reset
  * @param {string} visibleClass - Class to remove
  */
-export const resetAll = (selector = '[data-reveal]', visibleClass = 'is-visible') => {
+export const resetAll = (selector = '[data-reveal]', visibleClass = 'revealed') => {
   document.querySelectorAll(selector).forEach((el) => {
     el.classList.remove(visibleClass);
   });

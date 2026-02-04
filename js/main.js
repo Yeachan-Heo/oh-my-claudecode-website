@@ -110,7 +110,7 @@ function initializeUI() {
   if (FEATURES.scrollReveal) {
     initScrollReveal({
       selector: '[data-reveal]',
-      visibleClass: 'is-visible',
+      visibleClass: 'revealed',
       once: true,
     });
   }
@@ -346,7 +346,7 @@ function renderStats(container, stats) {
   // Initialize scroll reveal for new elements
   if (FEATURES.scrollReveal) {
     observeElement(container, {
-      visibleClass: 'is-visible',
+      visibleClass: 'revealed',
       once: true,
     });
   }
