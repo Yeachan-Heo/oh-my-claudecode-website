@@ -1313,6 +1313,11 @@
             <td>"plan the new API"</td>
           </tr>
           <tr>
+            <td><code>ralplan</code></td>
+            <td>Iterative planning consensus</td>
+            <td>"ralplan this feature"</td>
+          </tr>
+          <tr>
             <td><code>eco</code></td>
             <td>Token-efficient execution</td>
             <td>"eco fix all linting errors"</td>
@@ -1387,61 +1392,45 @@
     </div>
   </section>
 
-  <!-- Documentation Preview Section -->
-  <section class="section docs-section" aria-labelledby="docs-title">
+  <!-- Zero Learning Curve Section -->
+  <section class="section zero-curve-section" aria-labelledby="zero-curve-title">
     <div class="section__header" data-reveal="fade-up">
-      <h2 id="docs-title" class="section__title">Documentation</h2>
-      <p class="section__subtitle">Everything you need to master multi-agent orchestration.</p>
+      <h2 id="zero-curve-title" class="section__title">Zero Learning Curve</h2>
+      <p class="section__subtitle">No docs needed. No commands to memorize. Just say what you want.</p>
     </div>
 
     <div class="docs-grid" data-reveal="stagger">
-      <a href="docs.html#getting-started" class="doc-card" data-reveal="fade-up">
+      <div class="doc-card" data-reveal="fade-up">
+        <div class="doc-card__icon">
+          <svg width="24" height="24"><use href="#icon-zap"></use></svg>
+        </div>
+        <h3 class="doc-card__title">Just Talk</h3>
+        <p class="doc-card__description">"Build me a REST API" - that's it. Autopilot detects your intent and orchestrates 33 agents automatically.</p>
+      </div>
+
+      <div class="doc-card" data-reveal="fade-up" data-reveal-delay="100">
+        <div class="doc-card__icon">
+          <svg width="24" height="24"><use href="#icon-compass"></use></svg>
+        </div>
+        <h3 class="doc-card__title">Smart Detection</h3>
+        <p class="doc-card__description">Say "fast" and it activates parallelism. Say "don't stop" and it persists. Every intent maps to the right mode.</p>
+      </div>
+
+      <div class="doc-card" data-reveal="fade-up" data-reveal-delay="200">
+        <div class="doc-card__icon">
+          <svg width="24" height="24"><use href="#icon-cpu"></use></svg>
+        </div>
+        <h3 class="doc-card__title">Self-Orchestrating</h3>
+        <p class="doc-card__description">Delegates to specialists, routes to the right model tier, verifies with architect. You focus on the what, not the how.</p>
+      </div>
+
+      <div class="doc-card" data-reveal="fade-up" data-reveal-delay="300">
         <div class="doc-card__icon">
           <svg width="24" height="24"><use href="#icon-terminal"></use></svg>
         </div>
-        <h3 class="doc-card__title">Getting Started</h3>
-        <p class="doc-card__description">Quick setup guide, first commands, and understanding the basics of multi-agent execution.</p>
-        <span class="doc-card__link">
-          Learn more
-          <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg>
-        </span>
-      </a>
-
-      <a href="docs.html#modes" class="doc-card" data-reveal="fade-up" data-reveal-delay="100">
-        <div class="doc-card__icon">
-          <svg width="24" height="24"><use href="#icon-layers"></use></svg>
-        </div>
-        <h3 class="doc-card__title">Execution Modes</h3>
-        <p class="doc-card__description">Deep dive into autopilot, ralph, ultrawork, swarm, pipeline, and ecomode configurations.</p>
-        <span class="doc-card__link">
-          Learn more
-          <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg>
-        </span>
-      </a>
-
-      <a href="docs.html#agents" class="doc-card" data-reveal="fade-up" data-reveal-delay="200">
-        <div class="doc-card__icon">
-          <svg width="24" height="24"><use href="#icon-users"></use></svg>
-        </div>
-        <h3 class="doc-card__title">Agent Reference</h3>
-        <p class="doc-card__description">Complete reference for all 33 agents including capabilities, model tiers, and use cases.</p>
-        <span class="doc-card__link">
-          Learn more
-          <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg>
-        </span>
-      </a>
-
-      <a href="docs.html#configuration" class="doc-card" data-reveal="fade-up" data-reveal-delay="300">
-        <div class="doc-card__icon">
-          <svg width="24" height="24"><use href="#icon-settings"></use></svg>
-        </div>
-        <h3 class="doc-card__title">Configuration</h3>
-        <p class="doc-card__description">Customize behavior, set default modes, configure MCP servers, and advanced options.</p>
-        <span class="doc-card__link">
-          Learn more
-          <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg>
-        </span>
-      </a>
+        <h3 class="doc-card__title">One Setup Command</h3>
+        <p class="doc-card__description"><code>npx oh-my-claudecode@latest init</code> - restart Claude Code - done. Everything else is automatic.</p>
+      </div>
     </div>
   </section>
 
