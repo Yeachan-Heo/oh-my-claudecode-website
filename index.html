@@ -3,626 +3,1590 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>oh-my-claudecode | Claude-On-Steroids</title>
-  <meta name="description" content="Claude-On-Steroids. Multi-agent orchestration for Claude Code with 32 specialized agents and 40 skills. A weapon, not a tool.">
-  <meta property="og:title" content="oh-my-claudecode | Claude-On-Steroids">
-  <meta property="og:description" content="Claude-On-Steroids. Multi-agent orchestration for Claude Code. A weapon, not a tool.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode-website/main/social-preview.jpg">
-  <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website">
+  <meta name="description" content="oh-my-claudecode - A weapon, not a tool. Multi-agent orchestration plugin for Claude Code with 33 specialized agents and 40+ skills.">
+  <meta name="keywords" content="Claude Code, AI agents, multi-agent, orchestration, automation, CLI, developer tools">
+  <meta name="author" content="oh-my-claudecode">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/">
+  <meta property="og:title" content="oh-my-claudecode - A weapon, not a tool">
+  <meta property="og:description" content="Multi-agent orchestration plugin for Claude Code. 33 specialized agents, 40+ skills, full autonomous execution.">
+  <meta property="og:image" content="./assets/og-image.png">
+
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="oh-my-claudecode - A weapon, not a tool">
+  <meta name="twitter:description" content="Multi-agent orchestration plugin for Claude Code. 33 specialized agents, 40+ skills.">
+
+  <title>oh-my-claudecode - A weapon, not a tool</title>
+
+  <!-- Preconnect to external resources -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Critical CSS - Inline for faster FCP -->
   <style>
+    /* Critical above-fold styles */
     :root {
-      --bg: #0a0a0f;
-      --bg-light: #12121a;
-      --bg-card: #1a1a24;
-      --text: #e0e0e0;
-      --text-muted: #707080;
-      --accent: #dc2626;
-      --accent-light: #ef4444;
-      --accent-dark: #991b1b;
-      --accent-glow: rgba(220, 38, 38, 0.5);
-      --success: #10b981;
-      --border: #2a2a3e;
+      --accent-color: #dc2626;
+      --accent-color-light: #ef4444;
+      --accent-color-dark: #b91c1c;
+      --accent-color-rgb: 220, 38, 38;
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-tertiary: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --border-color: #27272a;
+      --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: var(--font-family-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
       line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
-
-    /* Hero */
+    /* Hero critical styles */
     .hero {
-      text-align: center;
-      padding: 60px 0 80px;
-      background: linear-gradient(180deg, var(--bg-light) 0%, var(--bg) 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-      opacity: 0.3;
-      pointer-events: none;
-    }
-
-    .hero-title {
-      font-size: 3rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 50%, var(--accent-dark) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-transform: uppercase;
-      text-shadow: 0 0 60px var(--accent-glow);
-    }
-
-    .hero-subtitle {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-      font-weight: 500;
-    }
-
-    .character-container {
-      position: relative;
-      max-width: 400px;
-      margin: 0 auto 32px;
-    }
-
-    .character-img {
-      width: 100%;
-      max-width: 400px;
-      height: auto;
-      border-radius: 16px;
-      box-shadow:
-        0 0 60px var(--accent-glow),
-        0 20px 60px rgba(0, 0, 0, 0.5);
-      border: 2px solid var(--accent-dark);
-    }
-
-    .project-name {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #fff;
-    }
-
-    .version-badge {
-      display: inline-block;
-      background: linear-gradient(90deg, var(--accent), var(--accent-dark));
-      color: white;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-      box-shadow: 0 0 20px var(--accent-glow);
-    }
-
-    .tagline {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .philosophy {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 40px;
-      line-height: 1.8;
-    }
-
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 48px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .stat:nth-child(2) .stat-value { color: var(--accent-light); }
-    .stat:nth-child(3) .stat-value { color: var(--success); }
-    .stat:nth-child(4) .stat-value { color: #f59e0b; }
-    .stat:nth-child(5) .stat-value { color: #ec4899; }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .github-stats {
-      display: flex;
-      justify-content: center;
-      gap: 32px;
-      margin-top: 32px;
-      padding-top: 32px;
-      border-top: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-
-    .github-stat {
+      min-height: 100vh;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 1rem;
-      color: var(--text);
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 2rem 1rem;
     }
 
-    .github-stat svg {
-      width: 18px;
-      height: 18px;
+    .hero__content {
+      max-width: 1200px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      z-index: 1;
     }
 
-    .github-stat .count {
-      font-weight: 600;
-      color: #f59e0b;
+    @media (max-width: 968px) {
+      .hero__content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+      }
     }
 
-    .github-stat.forks .count {
-      color: #10b981;
+    .hero__title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
     }
 
-    .github-stat.downloads .count {
-      color: #ec4899;
+    .hero__tagline {
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      font-weight: 500;
+      margin-bottom: 2rem;
     }
 
-    .github-stat.version .count {
-      color: var(--accent-light);
+    /* Gradient text animation */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color-light) 50%, var(--accent-color) 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 4s ease infinite;
     }
 
-    @media (max-width: 640px) {
-      .github-stats { flex-direction: column; gap: 16px; align-items: center; }
-      .hero-title { font-size: 2rem; }
-      .stats { gap: 24px; }
-      .stat-value { font-size: 2rem; }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
-    /* Install */
-    .install {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+    /* Skeleton loading state */
+    .skeleton {
+      background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+
+  <!-- Main stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Page-specific styles -->
+  <style>
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      transition: transform 0.3s ease;
+    }
+
+    .nav__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav__logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .nav__logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav__link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav__link:hover {
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 768px) {
+      .nav__links {
+        display: none;
+      }
+    }
+
+    /* Hero section */
+    .hero {
+      background: radial-gradient(ellipse at 50% 0%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 50%, rgba(220, 38, 38, 0.08) 0%, transparent 40%),
+                  var(--bg-primary);
+    }
+
+    .hero__text {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .hero__text > *:nth-child(1) { animation-delay: 0.1s; }
+    .hero__text > *:nth-child(2) { animation-delay: 0.2s; }
+    .hero__text > *:nth-child(3) { animation-delay: 0.3s; }
+    .hero__text > *:nth-child(4) { animation-delay: 0.4s; }
+
+    .hero__text > * {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero__description {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 500px;
+    }
+
+    @media (max-width: 968px) {
+      .hero__description {
+        margin: 0 auto 2rem;
+      }
+    }
+
+    .hero__cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 968px) {
+      .hero__cta {
+        justify-content: center;
+      }
+    }
+
+    /* Hero illustration */
+    .hero__visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeInScale 1s ease 0.5s forwards;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .hero__illustration {
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 1;
+      position: relative;
+    }
+
+    .hero__illustration svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Stats grid */
+    .stats-section {
+      padding: 4rem 1rem;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .stats-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+
+    @media (max-width: 968px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 24px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(220, 38, 38, 0.15);
+      border-color: var(--accent-color);
+    }
+
+    .stat-card__icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+      background: linear-gradient(135deg, var(--accent-color-dark), var(--accent-color));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .stat-card__value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card__label {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Section styles */
+    .section {
+      padding: 6rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section__header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section__title {
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
       max-width: 600px;
       margin: 0 auto;
     }
 
-    .install-step {
-      margin-bottom: 16px;
+    /* Installation section */
+    .install-section {
+      background: var(--bg-primary);
     }
 
-    .install-step:last-child { margin-bottom: 0; }
-
-    .install-label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .install-code {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
-      color: var(--accent-light);
-      white-space: pre-wrap;
-    }
-
-    /* Features */
-    .features {
-      padding: 80px 0;
-    }
-
-    .features h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 48px;
-      color: #fff;
-    }
-
-    .feature-grid {
+    .install-steps {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-
-    @media (max-width: 640px) {
-      .feature-grid { grid-template-columns: 1fr; }
-      .stats { flex-direction: column; gap: 24px; }
-    }
-
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .feature-card:hover {
-      border-color: var(--accent-dark);
-      box-shadow: 0 0 20px rgba(220, 38, 38, 0.1);
-    }
-
-    .feature-card h3 {
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-      color: var(--accent-light);
-    }
-
-    .feature-card p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-    }
-
-    /* Keywords */
-    .keywords {
-      padding: 60px 0;
-      background: var(--bg-light);
-    }
-
-    .keywords h2 {
-      text-align: center;
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-      color: #fff;
-    }
-
-    .keywords-subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-    }
-
-    .keyword-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
       max-width: 800px;
       margin: 0 auto;
     }
 
-    @media (max-width: 640px) {
-      .keyword-grid { grid-template-columns: repeat(2, 1fr); }
+    .install-step {
+      position: relative;
     }
 
-    .keyword {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-      transition: border-color 0.2s;
+    .install-step__number {
+      position: absolute;
+      top: -12px;
+      left: 16px;
+      width: 28px;
+      height: 28px;
+      background: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      z-index: 1;
     }
 
-    .keyword:hover {
-      border-color: var(--accent-dark);
+    .install-step__label {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      margin-bottom: 0.75rem;
+      padding-left: 0.5rem;
     }
 
-    .keyword code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.1rem;
-      color: var(--accent);
+    .code-block {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
     }
 
-    .keyword span {
+    .code-block__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .code-block__dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-block__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .code-block__dot--red { background: #ff5f56; }
+    .code-block__dot--yellow { background: #ffbd2e; }
+    .code-block__dot--green { background: #27c93f; }
+
+    .code-block__copy {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .code-block__copy:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-color);
+    }
+
+    .code-block__copy.copied {
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .code-block__content {
+      padding: 1.25rem;
+      font-family: var(--font-family-mono);
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    .code-block__content code {
+      color: var(--text-primary);
+      background: none;
+      padding: 0;
+    }
+
+    .code-block__content .keyword { color: #ff7b72; }
+    .code-block__content .string { color: #a5d6ff; }
+    .code-block__content .comment { color: #8b949e; }
+
+    /* Features section */
+    .features-section {
+      background: var(--bg-secondary);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-color), var(--accent-color-light));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: var(--accent-color);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-card__icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent-color-dark), var(--accent-color));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-card__title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .feature-card__description {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Magic keywords table */
+    .keywords-section {
+      background: var(--bg-primary);
+    }
+
+    .keywords-table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--bg-secondary);
+    }
+
+    .keywords-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+
+    .keywords-table th,
+    .keywords-table td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .keywords-table th {
+      background: var(--bg-tertiary);
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .keywords-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .keywords-table tr:hover td {
+      background: rgba(220, 38, 38, 0.05);
+    }
+
+    .keywords-table code {
+      background: rgba(220, 38, 38, 0.15);
+      color: var(--accent-color-light);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: var(--font-family-mono);
+      font-size: 0.875rem;
+    }
+
+    .keywords-table td:nth-child(3) {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    /* Agent tiers section */
+    .agents-section {
+      background: var(--bg-secondary);
+    }
+
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 968px) {
+      .tiers-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tier-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tier-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .tier-card--low::before { background: #22c55e; }
+    .tier-card--medium::before { background: #f59e0b; }
+    .tier-card--high::before { background: #ef4444; }
+
+    .tier-card__header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tier-card__badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tier-card--low .tier-card__badge {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+    }
+
+    .tier-card--medium .tier-card__badge {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+    }
+
+    .tier-card--high .tier-card__badge {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .tier-card__model {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+    }
+
+    .tier-card__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .tier-card__agents {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .agent-tag {
+      padding: 0.375rem 0.75rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      font-family: var(--font-family-mono);
+      transition: all 0.2s ease;
+    }
+
+    .agent-tag:hover {
+      border-color: var(--accent-color);
+      color: var(--text-primary);
+    }
+
+    /* Documentation preview */
+    .docs-section {
+      background: var(--bg-primary);
+    }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .doc-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
       display: block;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 4px;
+    }
+
+    .doc-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+      border-color: var(--accent-color);
+    }
+
+    .doc-card__icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent-color-dark), var(--accent-color));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-bottom: 1.25rem;
+    }
+
+    .doc-card__title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .doc-card__description {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .doc-card__link {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .doc-card__link svg {
+      transition: transform 0.2s ease;
+    }
+
+    .doc-card:hover .doc-card__link svg {
+      transform: translateX(4px);
     }
 
     /* Footer */
-    footer {
-      padding: 40px 0;
-      text-align: center;
-      border-top: 1px solid var(--border);
+    .footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      padding: 4rem 1rem 2rem;
     }
 
-    footer a {
-      color: var(--accent-light);
+    .footer__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer__top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .footer__top {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer__top {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer__brand {
+      max-width: 300px;
+    }
+
+    .footer__logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .footer__tagline {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    .footer__column h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      margin-bottom: 1rem;
+    }
+
+    .footer__links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .footer__link {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
       text-decoration: none;
+      transition: color 0.2s ease;
     }
 
-    footer a:hover { text-decoration: underline; }
-
-    .footer-links {
-      margin-bottom: 16px;
+    .footer__link:hover {
+      color: var(--accent-color);
     }
 
-    .footer-links a {
-      margin: 0 16px;
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
     }
 
-    .footer-credit {
-      font-size: 0.85rem;
-      color: var(--text-muted);
+    @media (max-width: 640px) {
+      .footer__bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+
+    .footer__copyright {
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+    }
+
+    .footer__social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer__social-link {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .footer__social-link:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-color);
+      background: rgba(220, 38, 38, 0.1);
+    }
+
+    /* Utility classes */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
     }
   </style>
 </head>
 <body>
-  <section class="hero">
-    <div class="container">
-      <h1 class="hero-title">Claude-On-Steroids</h1>
-      <p class="hero-subtitle">A weapon, not a tool.</p>
+  <!-- SVG Icon Sprite -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+    </symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline>
+      <line x1="12" y1="15" x2="12" y2="3"></line>
+    </symbol>
+    <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </symbol>
+    <symbol id="icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x1="7" y1="7" x2="7.01" y2="7"></line>
+    </symbol>
+    <symbol id="icon-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+    </symbol>
+    <symbol id="icon-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="17 1 21 5 17 9"></polyline>
+      <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+      <polyline points="7 23 3 19 7 15"></polyline>
+      <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+    </symbol>
+    <symbol id="icon-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+      <polyline points="2 17 12 22 22 17"></polyline>
+      <polyline points="2 12 12 17 22 12"></polyline>
+    </symbol>
+    <symbol id="icon-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7"></rect>
+      <rect x="14" y="3" width="7" height="7"></rect>
+      <rect x="14" y="14" width="7" height="7"></rect>
+      <rect x="3" y="14" width="7" height="7"></rect>
+    </symbol>
+    <symbol id="icon-git-merge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="18" r="3"></circle>
+      <circle cx="6" cy="6" r="3"></circle>
+      <path d="M6 21V9a9 9 0 0 0 9 9"></path>
+    </symbol>
+    <symbol id="icon-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+      <rect x="9" y="9" width="6" height="6"></rect>
+      <line x1="9" y1="1" x2="9" y2="4"></line>
+      <line x1="15" y1="1" x2="15" y2="4"></line>
+      <line x1="9" y1="20" x2="9" y2="23"></line>
+      <line x1="15" y1="20" x2="15" y2="23"></line>
+      <line x1="20" y1="9" x2="23" y2="9"></line>
+      <line x1="20" y1="14" x2="23" y2="14"></line>
+      <line x1="1" y1="9" x2="4" y2="9"></line>
+      <line x1="1" y1="14" x2="4" y2="14"></line>
+    </symbol>
+    <symbol id="icon-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+    </symbol>
+    <symbol id="icon-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+    </symbol>
+    <symbol id="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+    </symbol>
+    <symbol id="icon-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 17 10 11 4 5"></polyline>
+      <line x1="12" y1="19" x2="20" y2="19"></line>
+    </symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </symbol>
+    <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+    </symbol>
+    <symbol id="icon-github" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+    </symbol>
+    <symbol id="icon-npm" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/>
+    </symbol>
+    <symbol id="icon-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+    </symbol>
+  </svg>
 
-      <div class="character-container">
-        <img src="omc-character.jpg" alt="OMC Character - Claude On Steroids" class="character-img">
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">
+        <span class="nav__logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </span>
+        oh-my-claudecode
+      </a>
+      <div class="nav__links">
+        <a href="#features" class="nav__link">Features</a>
+        <a href="#installation" class="nav__link">Installation</a>
+        <a href="#agents" class="nav__link">Agents</a>
+        <a href="docs.html" class="nav__link">Documentation</a>
+        <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="btn btn--primary btn--sm" target="_blank" rel="noopener">
+          <svg width="16" height="16"><use href="#icon-github"></use></svg>
+          GitHub
+        </a>
       </div>
+    </div>
+  </nav>
 
-      <div class="project-name">oh-my-claudecode</div>
-      <div class="version-badge" id="version-badge">v3.5.5</div>
-      <p class="tagline">Multi-agent orchestration for Claude Code</p>
-      <p class="philosophy"><em>Some advanced users customize zsh for years — most of us just use oh-my-zsh.</em><br><em>Don't learn Claude Code. Just use OMC.</em></p>
-
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-value" id="agent-count">32</div>
-          <div class="stat-label">Specialized Agents</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="skill-count">40</div>
-          <div class="stat-label">Skills</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value">0</div>
-          <div class="stat-label">Learning Curve</div>
+  <!-- Hero Section -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__content">
+      <div class="hero__text">
+        <h1 id="hero-title" class="hero__title hero-entrance hero-entrance--1">
+          oh-my-claudecode
+        </h1>
+        <p class="hero__tagline hero-entrance hero-entrance--2">
+          <span class="gradient-text">A weapon, not a tool</span>
+        </p>
+        <p class="hero__description hero-entrance hero-entrance--3">
+          Multi-agent orchestration plugin for Claude Code. 33 specialized agents, 40+ skills, full autonomous execution from idea to working code.
+        </p>
+        <div class="hero__cta hero-entrance hero-entrance--4">
+          <a href="#installation" class="btn btn--primary btn--lg btn-shine">
+            Get Started
+          </a>
+          <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="btn btn--secondary btn--lg" target="_blank" rel="noopener">
+            <svg width="20" height="20"><use href="#icon-github"></use></svg>
+            View on GitHub
+          </a>
         </div>
       </div>
-
-      <div class="github-stats">
-        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/releases" class="github-stat version" style="text-decoration: none;">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>
-          <span class="count" id="version-count">v3.5.5</span>
-          <span style="color: var(--text-muted);">Latest</span>
-        </a>
-        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/stargazers" class="github-stat" style="text-decoration: none;">
-          <svg viewBox="0 0 16 16" fill="#f59e0b"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
-          <span class="count" id="stars-count">1.5k+</span>
-          <span style="color: var(--text-muted);">Stars</span>
-        </a>
-        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/forks" class="github-stat forks" style="text-decoration: none;">
-          <svg viewBox="0 0 16 16" fill="#10b981"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>
-          <span class="count" id="forks-count">140+</span>
-          <span style="color: var(--text-muted);">Forks</span>
-        </a>
-        <a href="https://www.npmjs.com/package/oh-my-claude-sisyphus" class="github-stat downloads" style="text-decoration: none;">
-          <svg viewBox="0 0 16 16" fill="#ec4899"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"/></svg>
-          <span class="count" id="downloads-count">4.8k+</span>
-          <span style="color: var(--text-muted);">Downloads/mo</span>
-        </a>
-      </div>
-
-      <div class="install">
-        <div class="install-step">
-          <div class="install-label">Step 1: Install the plugin</div>
-          <div class="install-code">/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
-/plugin install oh-my-claudecode</div>
-        </div>
-        <div class="install-step">
-          <div class="install-label">Step 2: Run setup</div>
-          <div class="install-code">/oh-my-claudecode:omc-setup</div>
+      <div class="hero__visual">
+        <div class="hero__illustration" style="position: relative;">
+          <!-- Character Image -->
+          <img src="omc-character.jpg" alt="Oh My ClaudeCode character" width="400" height="400" style="border-radius: 16px; position: relative; z-index: 1; box-shadow: 0 0 60px rgba(220, 38, 38, 0.3);" loading="eager">
+          <!-- Orbiting decoration overlay -->
+          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
+            <defs>
+              <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#dc2626" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="200" cy="200" r="190" fill="url(#glow)"/>
+            <circle cx="200" cy="200" r="195" stroke="#dc2626" stroke-width="1" fill="none" opacity="0.2"/>
+            <g class="float">
+              <circle cx="200" cy="10" r="6" fill="#dc2626" opacity="0.8"/>
+            </g>
+            <g class="float float-delay-1">
+              <circle cx="390" cy="200" r="5" fill="#ef4444" opacity="0.6"/>
+            </g>
+            <g class="float float-delay-2">
+              <circle cx="10" cy="200" r="5" fill="#f87171" opacity="0.7"/>
+            </g>
+            <g class="float float-delay-3">
+              <circle cx="200" cy="390" r="4" fill="#dc2626" opacity="0.5"/>
+            </g>
+          </svg>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="features">
-    <div class="container">
-      <h2>What Happens Automatically</h2>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h3>Ultrapilot - Parallel Autopilot</h3>
-          <p>Say "ultrapilot" or "parallel build" for 3-5x faster execution with up to 5 concurrent workers handling different parts of your project.</p>
+  <!-- Stats Section -->
+  <section class="stats-section" aria-label="Project statistics">
+    <div class="stats-grid stats-container" data-reveal="stagger">
+      <!-- Stats will be populated by JavaScript, showing skeletons initially -->
+      <div class="stat-card" data-reveal="fade-up">
+        <div class="stat-card__icon">
+          <svg width="24" height="24"><use href="#icon-star"></use></svg>
         </div>
-        <div class="feature-card">
-          <h3>Swarm - Coordinated Agents</h3>
-          <p>Spawn N agents with shared task pool. Each agent claims atomic tasks, executes them, and marks completion with 5-minute timeouts.</p>
+        <div class="stat-card__value" data-stat="stars">
+          <span class="skeleton" style="width: 60px; height: 40px; display: inline-block;"></span>
         </div>
-        <div class="feature-card">
-          <h3>Pipeline - Sequential Chaining</h3>
-          <p>Chain agents in sequence with data passing between stages. Use built-in presets (review, implement, debug, refactor) or create custom chains.</p>
+        <div class="stat-card__label">GitHub Stars</div>
+      </div>
+      <div class="stat-card" data-reveal="fade-up" data-reveal-delay="100">
+        <div class="stat-card__icon">
+          <svg width="24" height="24"><use href="#icon-download"></use></svg>
         </div>
-        <div class="feature-card">
-          <h3>Ecomode - Token-Efficient Parallelism</h3>
-          <p>Say "eco" for budget-friendly parallel execution. Like ultrawork but with smaller agents and tighter budget controls for Pro plan users.</p>
+        <div class="stat-card__value" data-stat="downloads">
+          <span class="skeleton" style="width: 60px; height: 40px; display: inline-block;"></span>
         </div>
-        <div class="feature-card">
-          <h3>Complex Tasks - Parallelized</h3>
-          <p>Give me a complex task and I automatically parallelize work across specialist agents for maximum speed.</p>
+        <div class="stat-card__label">Weekly Downloads</div>
+      </div>
+      <div class="stat-card" data-reveal="fade-up" data-reveal-delay="200">
+        <div class="stat-card__icon">
+          <svg width="24" height="24"><use href="#icon-users"></use></svg>
         </div>
-        <div class="feature-card">
-          <h3>Planning - Interview Mode</h3>
-          <p>Say "plan this" and I start an interview to understand your requirements before creating a comprehensive plan.</p>
+        <div class="stat-card__value" data-stat="agents">33</div>
+        <div class="stat-card__label">Agents</div>
+      </div>
+      <div class="stat-card" data-reveal="fade-up" data-reveal-delay="300">
+        <div class="stat-card__icon">
+          <svg width="24" height="24"><use href="#icon-zap"></use></svg>
         </div>
-        <div class="feature-card">
-          <h3>Must Complete - Persistence</h3>
-          <p>Say "don't stop until done" and I persist until the task is verified complete. No partial implementations.</p>
+        <div class="stat-card__value" data-stat="skills">40+</div>
+        <div class="stat-card__label">Skills</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Section -->
+  <section id="installation" class="section install-section" aria-labelledby="install-title">
+    <div class="section__header" data-reveal="fade-up">
+      <h2 id="install-title" class="section__title">Get Started in Seconds</h2>
+      <p class="section__subtitle">Two simple steps and you're ready to go. No configuration needed.</p>
+    </div>
+
+    <div class="install-steps" data-reveal="stagger">
+      <div class="install-step" data-reveal="fade-up">
+        <span class="install-step__number">1</span>
+        <p class="install-step__label">Run the installer</p>
+        <div class="code-block">
+          <div class="code-block__header">
+            <div class="code-block__dots">
+              <span class="code-block__dot code-block__dot--red"></span>
+              <span class="code-block__dot code-block__dot--yellow"></span>
+              <span class="code-block__dot code-block__dot--green"></span>
+            </div>
+            <button class="code-block__copy" data-copy="npx oh-my-claudecode@latest init" aria-label="Copy command">
+              Copy
+            </button>
+          </div>
+          <div class="code-block__content">
+            <code><span class="keyword">npx</span> oh-my-claudecode@latest init</code>
+          </div>
         </div>
-        <div class="feature-card">
-          <h3>UI Work - Design Sensibility</h3>
-          <p>When working on UI/frontend, I automatically activate design expertise for better results.</p>
+      </div>
+
+      <div class="install-step" data-reveal="fade-up" data-reveal-delay="100">
+        <span class="install-step__number">2</span>
+        <p class="install-step__label">Restart Claude Code</p>
+        <div class="code-block">
+          <div class="code-block__header">
+            <div class="code-block__dots">
+              <span class="code-block__dot code-block__dot--red"></span>
+              <span class="code-block__dot code-block__dot--yellow"></span>
+              <span class="code-block__dot code-block__dot--green"></span>
+            </div>
+          </div>
+          <div class="code-block__content">
+            <code><span class="comment"># Close and reopen Claude Code</span><br><span class="comment"># That's it! You're ready.</span></code>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="keywords">
-    <div class="container">
-      <h2>Magic Keywords</h2>
-      <p class="keywords-subtitle">Power users can use these anywhere in messages for explicit control</p>
-      <div class="keyword-grid">
-        <div class="keyword">
-          <code>ultrapilot</code>
-          <span>Parallel autopilot</span>
+  <!-- Features Section -->
+  <section id="features" class="section features-section" aria-labelledby="features-title">
+    <div class="section__header" data-reveal="fade-up">
+      <h2 id="features-title" class="section__title">Powerful Execution Modes</h2>
+      <p class="section__subtitle">Choose how you want to work. From full autopilot to token-efficient parallel execution.</p>
+    </div>
+
+    <div class="features-grid" data-reveal="stagger">
+      <article class="feature-card" data-reveal="fade-up">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-zap"></use></svg>
         </div>
-        <div class="keyword">
-          <code>ralph</code>
-          <span>Persistence mode</span>
+        <h3 class="feature-card__title">Autopilot</h3>
+        <p class="feature-card__description">Full autonomous execution from high-level idea to working, tested code. No manual intervention required.</p>
+      </article>
+
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="100">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-repeat"></use></svg>
         </div>
-        <div class="keyword">
-          <code>ralplan</code>
-          <span>Iterative planning</span>
+        <h3 class="feature-card__title">Ralph</h3>
+        <p class="feature-card__description">Self-referential loop until completion with architect verification. The boulder never stops rolling.</p>
+      </article>
+
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="200">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-layers"></use></svg>
         </div>
-        <div class="keyword">
-          <code>ulw</code>
-          <span>Max parallelism</span>
+        <h3 class="feature-card__title">Ultrawork</h3>
+        <p class="feature-card__description">Maximum parallelism with aggressive agent delegation. Process multiple tasks simultaneously.</p>
+      </article>
+
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="300">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-cpu"></use></svg>
         </div>
-        <div class="keyword">
-          <code>eco</code>
-          <span>Token-efficient</span>
+        <h3 class="feature-card__title">Ultrapilot</h3>
+        <p class="feature-card__description">Parallel autopilot with file ownership tracking. 3-5x faster than sequential execution.</p>
+      </article>
+
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="400">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-grid"></use></svg>
         </div>
-        <div class="keyword">
-          <code>swarm</code>
-          <span>N coordinated agents</span>
+        <h3 class="feature-card__title">Swarm</h3>
+        <p class="feature-card__description">N coordinated agents working on a shared task list. True collaborative multi-agent execution.</p>
+      </article>
+
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="500">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-git-merge"></use></svg>
         </div>
-        <div class="keyword">
-          <code>pipeline</code>
-          <span>Sequential chain</span>
+        <h3 class="feature-card__title">Pipeline</h3>
+        <p class="feature-card__description">Sequential agent chaining with data passing. Build complex workflows with specialized stages.</p>
+      </article>
+
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="600">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-leaf"></use></svg>
         </div>
-        <div class="keyword">
-          <code>plan</code>
-          <span>Start interview</span>
+        <h3 class="feature-card__title">Ecomode</h3>
+        <p class="feature-card__description">Token-efficient parallel execution with smart Haiku/Sonnet routing. Save tokens without sacrificing quality.</p>
+      </article>
+
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="700">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-compass"></use></svg>
         </div>
-      </div>
+        <h3 class="feature-card__title">Planning</h3>
+        <p class="feature-card__description">Strategic interview-based planning workflow. Gather requirements before diving into implementation.</p>
+      </article>
     </div>
   </section>
 
-  <footer>
-    <div class="container">
-      <div class="footer-links">
-        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode">GitHub</a>
-        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/docs/FULL-README.md">Documentation</a>
-        <a href="https://github.com/Yeachan-Heo/oh-my-claudecode/blob/main/docs/MIGRATION.md">Migration Guide</a>
+  <!-- Magic Keywords Section -->
+  <section class="section keywords-section" aria-labelledby="keywords-title">
+    <div class="section__header" data-reveal="fade-up">
+      <h2 id="keywords-title" class="section__title">Magic Keywords</h2>
+      <p class="section__subtitle">Just say the keyword and the right mode activates automatically.</p>
+    </div>
+
+    <div class="keywords-table-wrapper" data-reveal="fade-up" data-reveal-delay="100">
+      <table class="keywords-table">
+        <thead>
+          <tr>
+            <th>Keyword</th>
+            <th>Effect</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>autopilot</code></td>
+            <td>Full autonomous execution</td>
+            <td>"autopilot: build a todo app"</td>
+          </tr>
+          <tr>
+            <td><code>ralph</code></td>
+            <td>Persistence mode until completion</td>
+            <td>"ralph: refactor auth system"</td>
+          </tr>
+          <tr>
+            <td><code>ulw</code></td>
+            <td>Maximum parallelism (ultrawork)</td>
+            <td>"ulw fix all errors"</td>
+          </tr>
+          <tr>
+            <td><code>plan</code></td>
+            <td>Planning interview mode</td>
+            <td>"plan the new API"</td>
+          </tr>
+          <tr>
+            <td><code>eco</code></td>
+            <td>Token-efficient execution</td>
+            <td>"eco fix all linting errors"</td>
+          </tr>
+          <tr>
+            <td><code>swarm</code></td>
+            <td>Coordinated multi-agent</td>
+            <td>"swarm: implement all features"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Agent Tiers Section -->
+  <section id="agents" class="section agents-section" aria-labelledby="agents-title">
+    <div class="section__header" data-reveal="fade-up">
+      <h2 id="agents-title" class="section__title">33 Specialized Agents</h2>
+      <p class="section__subtitle">Each agent is optimized for specific tasks with the right model tier.</p>
+    </div>
+
+    <div class="tiers-grid" data-reveal="stagger">
+      <article class="tier-card tier-card--low" data-reveal="fade-up">
+        <div class="tier-card__header">
+          <span class="tier-card__badge">LOW</span>
+          <span class="tier-card__model">Haiku</span>
+        </div>
+        <h3 class="tier-card__title">Fast & Focused</h3>
+        <div class="tier-card__agents">
+          <span class="agent-tag">architect-low</span>
+          <span class="agent-tag">executor-low</span>
+          <span class="agent-tag">explore</span>
+          <span class="agent-tag">researcher-low</span>
+          <span class="agent-tag">writer-low</span>
+          <span class="agent-tag">critic-low</span>
+        </div>
+      </article>
+
+      <article class="tier-card tier-card--medium" data-reveal="fade-up" data-reveal-delay="100">
+        <div class="tier-card__header">
+          <span class="tier-card__badge">MEDIUM</span>
+          <span class="tier-card__model">Sonnet</span>
+        </div>
+        <h3 class="tier-card__title">Balanced Power</h3>
+        <div class="tier-card__agents">
+          <span class="agent-tag">executor</span>
+          <span class="agent-tag">designer</span>
+          <span class="agent-tag">researcher</span>
+          <span class="agent-tag">scientist</span>
+          <span class="agent-tag">writer</span>
+          <span class="agent-tag">oracle</span>
+          <span class="agent-tag">explore-medium</span>
+          <span class="agent-tag">vision</span>
+        </div>
+      </article>
+
+      <article class="tier-card tier-card--high" data-reveal="fade-up" data-reveal-delay="200">
+        <div class="tier-card__header">
+          <span class="tier-card__badge">HIGH</span>
+          <span class="tier-card__model">Opus</span>
+        </div>
+        <h3 class="tier-card__title">Deep Reasoning</h3>
+        <div class="tier-card__agents">
+          <span class="agent-tag">architect</span>
+          <span class="agent-tag">executor-high</span>
+          <span class="agent-tag">planner</span>
+          <span class="agent-tag">critic</span>
+          <span class="agent-tag">analyst</span>
+          <span class="agent-tag">scientist-high</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Documentation Preview Section -->
+  <section class="section docs-section" aria-labelledby="docs-title">
+    <div class="section__header" data-reveal="fade-up">
+      <h2 id="docs-title" class="section__title">Documentation</h2>
+      <p class="section__subtitle">Everything you need to master multi-agent orchestration.</p>
+    </div>
+
+    <div class="docs-grid" data-reveal="stagger">
+      <a href="docs.html#getting-started" class="doc-card" data-reveal="fade-up">
+        <div class="doc-card__icon">
+          <svg width="24" height="24"><use href="#icon-terminal"></use></svg>
+        </div>
+        <h3 class="doc-card__title">Getting Started</h3>
+        <p class="doc-card__description">Quick setup guide, first commands, and understanding the basics of multi-agent execution.</p>
+        <span class="doc-card__link">
+          Learn more
+          <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg>
+        </span>
+      </a>
+
+      <a href="docs.html#modes" class="doc-card" data-reveal="fade-up" data-reveal-delay="100">
+        <div class="doc-card__icon">
+          <svg width="24" height="24"><use href="#icon-layers"></use></svg>
+        </div>
+        <h3 class="doc-card__title">Execution Modes</h3>
+        <p class="doc-card__description">Deep dive into autopilot, ralph, ultrawork, swarm, pipeline, and ecomode configurations.</p>
+        <span class="doc-card__link">
+          Learn more
+          <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg>
+        </span>
+      </a>
+
+      <a href="docs.html#agents" class="doc-card" data-reveal="fade-up" data-reveal-delay="200">
+        <div class="doc-card__icon">
+          <svg width="24" height="24"><use href="#icon-users"></use></svg>
+        </div>
+        <h3 class="doc-card__title">Agent Reference</h3>
+        <p class="doc-card__description">Complete reference for all 33 agents including capabilities, model tiers, and use cases.</p>
+        <span class="doc-card__link">
+          Learn more
+          <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg>
+        </span>
+      </a>
+
+      <a href="docs.html#configuration" class="doc-card" data-reveal="fade-up" data-reveal-delay="300">
+        <div class="doc-card__icon">
+          <svg width="24" height="24"><use href="#icon-settings"></use></svg>
+        </div>
+        <h3 class="doc-card__title">Configuration</h3>
+        <p class="doc-card__description">Customize behavior, set default modes, configure MCP servers, and advanced options.</p>
+        <span class="doc-card__link">
+          Learn more
+          <svg width="16" height="16"><use href="#icon-arrow-right"></use></svg>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <div class="footer__logo">
+            <span class="nav__logo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </span>
+            oh-my-claudecode
+          </div>
+          <p class="footer__tagline">A weapon, not a tool. Multi-agent orchestration plugin for Claude Code.</p>
+        </div>
+
+        <div class="footer__column">
+          <h4>Product</h4>
+          <nav class="footer__links" aria-label="Product links">
+            <a href="#features" class="footer__link">Features</a>
+            <a href="#installation" class="footer__link">Installation</a>
+            <a href="#agents" class="footer__link">Agents</a>
+            <a href="docs.html" class="footer__link">Documentation</a>
+          </nav>
+        </div>
+
+        <div class="footer__column">
+          <h4>Resources</h4>
+          <nav class="footer__links" aria-label="Resource links">
+            <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="footer__link" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.npmjs.com/package/oh-my-claudecode" class="footer__link" target="_blank" rel="noopener">npm</a>
+            <a href="https://github.com/yeachan-heo/oh-my-claudecode/issues" class="footer__link" target="_blank" rel="noopener">Issues</a>
+            <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases" class="footer__link" target="_blank" rel="noopener">Releases</a>
+          </nav>
+        </div>
+
+        <div class="footer__column">
+          <h4>Community</h4>
+          <nav class="footer__links" aria-label="Community links">
+            <a href="https://github.com/yeachan-heo/oh-my-claudecode/discussions" class="footer__link" target="_blank" rel="noopener">Discussions</a>
+            <a href="https://github.com/yeachan-heo/oh-my-claudecode/blob/main/CONTRIBUTING.md" class="footer__link" target="_blank" rel="noopener">Contributing</a>
+            <a href="https://github.com/yeachan-heo/oh-my-claudecode/blob/main/LICENSE" class="footer__link" target="_blank" rel="noopener">License</a>
+          </nav>
+        </div>
       </div>
-      <p class="footer-credit">
-        Inspired by <a href="https://github.com/code-yeongyu/oh-my-opencode">oh-my-opencode</a>
-      </p>
+
+      <div class="footer__bottom">
+        <p class="footer__copyright">
+          &copy; 2024-2025 oh-my-claudecode. MIT License.
+        </p>
+        <div class="footer__social">
+          <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="footer__social-link" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg width="20" height="20"><use href="#icon-github"></use></svg>
+          </a>
+          <a href="https://www.npmjs.com/package/oh-my-claudecode" class="footer__social-link" target="_blank" rel="noopener" aria-label="npm">
+            <svg width="20" height="20"><use href="#icon-npm"></use></svg>
+          </a>
+        </div>
+      </div>
     </div>
   </footer>
+
+  <!-- Main JavaScript -->
+  <script type="module" src="js/main.js"></script>
+
+  <!-- Particle Effects (deferred for fast FCP) -->
+  <script type="module">
+    import { ParticleSystem, addTypewriter, addGlowPulse } from './js/effects/particles.js';
+
+    // Initialize particle background on hero
+    const particles = new ParticleSystem({
+      container: '.hero',
+      accentColor: '#dc2626',
+      maxParticles: 80,
+      connectionDistance: 100,
+    });
+
+    // Typewriter effect on tagline
+    const tagline = document.querySelector('.hero__tagline .gradient-text');
+    if (tagline) {
+      addTypewriter(tagline, { speed: 60, cursor: '|' });
+    }
+
+    // Glow pulse on primary CTA
+    const ctaBtn = document.querySelector('.btn--primary.btn--lg');
+    if (ctaBtn) {
+      addGlowPulse(ctaBtn);
+    }
+  </script>
+
+  <!-- Inline script for copy functionality (critical for UX) -->
   <script>
-    // Fetch live GitHub stats
-    async function fetchGitHubStats() {
+    // Copy button functionality
+    document.addEventListener('click', async (e) => {
+      const copyBtn = e.target.closest('.code-block__copy');
+      if (!copyBtn) return;
+
+      const textToCopy = copyBtn.dataset.copy ||
+                         copyBtn.closest('.code-block').querySelector('code').textContent;
+
       try {
-        const response = await fetch('https://api.github.com/repos/Yeachan-Heo/oh-my-claudecode');
-        if (response.ok) {
-          const data = await response.json();
-          const stars = data.stargazers_count;
-          const forks = data.forks_count;
+        await navigator.clipboard.writeText(textToCopy);
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('copied');
 
-          document.getElementById('stars-count').textContent = formatNumber(stars);
-          document.getElementById('forks-count').textContent = formatNumber(forks);
-        }
-      } catch (e) {
-        console.log('Using fallback GitHub stats');
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
       }
-    }
+    });
 
-    // Fetch latest release version
-    async function fetchLatestVersion() {
+    // Load stats from local JSON
+    async function loadStats() {
       try {
-        const response = await fetch('https://api.github.com/repos/Yeachan-Heo/oh-my-claudecode/releases/latest');
-        if (response.ok) {
-          const data = await response.json();
-          const version = data.tag_name;
-          document.getElementById('version-badge').textContent = version;
-          document.getElementById('version-count').textContent = version;
+        const response = await fetch('./data/stats.json');
+        const data = await response.json();
+
+        const starsEl = document.querySelector('[data-stat="stars"]');
+        const downloadsEl = document.querySelector('[data-stat="downloads"]');
+
+        if (starsEl && data.github?.stars !== undefined) {
+          starsEl.textContent = data.github.stars.toLocaleString();
         }
-      } catch (e) {
-        // Try fetching from package.json if releases fail
-        try {
-          const pkgResponse = await fetch('https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode/main/package.json');
-          if (pkgResponse.ok) {
-            const pkgData = await pkgResponse.json();
-            const version = 'v' + pkgData.version;
-            document.getElementById('version-badge').textContent = version;
-            document.getElementById('version-count').textContent = version;
-          }
-        } catch (e2) {
-          console.log('Using fallback version');
+
+        if (downloadsEl && data.npm?.downloads !== undefined) {
+          downloadsEl.textContent = data.npm.downloads.toLocaleString();
         }
+      } catch (error) {
+        // Fallback to placeholders
+        const starsEl = document.querySelector('[data-stat="stars"]');
+        const downloadsEl = document.querySelector('[data-stat="downloads"]');
+
+        if (starsEl) starsEl.textContent = '---';
+        if (downloadsEl) downloadsEl.textContent = '---';
       }
     }
 
-    // Fetch agent and skill counts from README
-    async function fetchCounts() {
-      try {
-        const response = await fetch('https://raw.githubusercontent.com/Yeachan-Heo/oh-my-claudecode/main/README.md');
-        if (response.ok) {
-          const text = await response.text();
-
-          // Look for agent count patterns like "32 agents" or "32 Specialized Agents"
-          const agentMatch = text.match(/(\d+)\s*(?:specialized\s*)?agents?/i);
-          if (agentMatch) {
-            document.getElementById('agent-count').textContent = agentMatch[1];
-          }
-
-          // Look for skill count patterns like "40 skills"
-          const skillMatch = text.match(/(\d+)\s*skills?/i);
-          if (skillMatch) {
-            document.getElementById('skill-count').textContent = skillMatch[1];
-          }
-        }
-      } catch (e) {
-        console.log('Using fallback counts');
-      }
+    // Initialize on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadStats);
+    } else {
+      loadStats();
     }
-
-    // Fetch live npm downloads
-    async function fetchNpmDownloads() {
-      try {
-        const response = await fetch('https://api.npmjs.org/downloads/point/last-month/oh-my-claude-sisyphus');
-        if (response.ok) {
-          const data = await response.json();
-          document.getElementById('downloads-count').textContent = formatNumber(data.downloads) + '/mo';
-        }
-      } catch (e) {
-        console.log('Using fallback npm stats');
-      }
-    }
-
-    function formatNumber(num) {
-      if (num >= 1000) {
-        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
-      }
-      return num.toString();
-    }
-
-    // Fetch all stats on page load
-    fetchGitHubStats();
-    fetchNpmDownloads();
-    fetchLatestVersion();
-    fetchCounts();
   </script>
 </body>
 </html>
