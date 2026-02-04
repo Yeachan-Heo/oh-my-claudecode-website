@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
   /** npm registry stats */
   npm: {
     downloads: 'https://api.npmjs.org/downloads/point',
-    package: 'https://registry.npmjs.org/oh-my-claudecode',
+    package: 'https://registry.npmjs.org/oh-my-claude-sisyphus',
   },
 
   /** Local data files */
@@ -60,7 +60,7 @@ export const APP_CONFIG = {
   docsUrl: 'https://yeachan-heo.github.io/oh-my-claudecode-website/',
 
   /** npm package URL */
-  npmUrl: 'https://www.npmjs.com/package/oh-my-claudecode',
+  npmUrl: 'https://www.npmjs.com/package/oh-my-claude-sisyphus',
 };
 
 /**

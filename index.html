@@ -362,6 +362,51 @@
       }
     }
 
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-stat-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.4rem 0.9rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .hero-stat-badge:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px -2px rgba(220, 38, 38, 0.4), 0 0 20px -5px rgba(220, 38, 38, 0.4);
+    }
+
+    .hero-stat-badge__icon {
+      margin-right: 0.4rem;
+      color: var(--accent-color-light);
+    }
+
+    .hero-stat-badge__value {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-right: 0.2rem;
+    }
+
+    .hero-stat-badge__label {
+      color: var(--text-secondary);
+    }
+
     /* Hero illustration */
     .hero__visual {
       display: flex;
@@ -1181,6 +1226,22 @@
         <p class="hero__description hero-entrance hero-entrance--3">
           Multi-agent orchestration plugin for Claude Code. 33 specialized agents, 40+ skills, full autonomous execution from idea to working code.
         </p>
+        <div class="hero-stats hero-entrance hero-entrance--3" style="--reveal-delay: 150ms">
+          <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="hero-stat-badge" target="_blank" rel="noopener" aria-label="GitHub Stars">
+            <span class="hero-stat-badge__icon" aria-hidden="true">&#9733;</span>
+            <span class="hero-stat-badge__value" id="hero-stars">---</span>
+            <span class="hero-stat-badge__label">stars</span>
+          </a>
+          <div class="hero-stat-badge" aria-label="Monthly Downloads">
+            <span class="hero-stat-badge__icon" aria-hidden="true">&#8595;</span>
+            <span class="hero-stat-badge__value" id="hero-downloads">---</span>
+            <span class="hero-stat-badge__label">/mo</span>
+          </div>
+          <div class="hero-stat-badge" aria-label="Current Version">
+            <span class="hero-stat-badge__icon" aria-hidden="true">v</span>
+            <span class="hero-stat-badge__value" id="hero-version">---</span>
+          </div>
+        </div>
         <div class="hero__cta hero-entrance hero-entrance--4">
           <a href="#installation" class="btn btn--primary btn--lg btn-shine">
             Get Started
@@ -1243,7 +1304,7 @@
         <div class="stat-card__value" data-stat="downloads">
           <span class="skeleton" style="width: 60px; height: 40px; display: inline-block;"></span>
         </div>
-        <div class="stat-card__label">Weekly Downloads</div>
+        <div class="stat-card__label">Monthly Downloads</div>
       </div>
       <div class="stat-card" data-reveal="fade-up" data-reveal-delay="200">
         <div class="stat-card__icon">
@@ -1575,7 +1636,7 @@
           <h4>Resources</h4>
           <nav class="footer__links" aria-label="Resource links">
             <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="footer__link" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://www.npmjs.com/package/oh-my-claudecode" class="footer__link" target="_blank" rel="noopener">npm</a>
+            <a href="https://www.npmjs.com/package/oh-my-claude-sisyphus" class="footer__link" target="_blank" rel="noopener">npm</a>
             <a href="https://github.com/yeachan-heo/oh-my-claudecode/issues" class="footer__link" target="_blank" rel="noopener">Issues</a>
             <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases" class="footer__link" target="_blank" rel="noopener">Releases</a>
           </nav>
@@ -1599,7 +1660,7 @@
           <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="footer__social-link" target="_blank" rel="noopener" aria-label="GitHub">
             <svg width="20" height="20"><use href="#icon-github"></use></svg>
           </a>
-          <a href="https://www.npmjs.com/package/oh-my-claudecode" class="footer__social-link" target="_blank" rel="noopener" aria-label="npm">
+          <a href="https://www.npmjs.com/package/oh-my-claude-sisyphus" class="footer__social-link" target="_blank" rel="noopener" aria-label="npm">
             <svg width="20" height="20"><use href="#icon-npm"></use></svg>
           </a>
         </div>

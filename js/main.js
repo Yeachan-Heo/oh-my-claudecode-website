@@ -275,7 +275,7 @@ function renderStats(container, stats) {
       suffix: '',
     },
     {
-      label: 'Weekly Downloads',
+      label: 'Monthly Downloads',
       value: stats.downloads || 0,
       icon: 'download',
       suffix: '',
@@ -342,6 +342,15 @@ function renderStats(container, stats) {
       }
     });
   }
+
+  // Update hero stat badges
+  const heroStars = document.getElementById('hero-stars');
+  const heroDownloads = document.getElementById('hero-downloads');
+  const heroVersion = document.getElementById('hero-version');
+
+  if (heroStars) heroStars.textContent = stats.stars ? (stats.stars >= 1000 ? (stats.stars / 1000).toFixed(1) + 'k' : stats.stars.toString()) : '---';
+  if (heroDownloads) heroDownloads.textContent = stats.downloads ? (stats.downloads >= 1000 ? (stats.downloads / 1000).toFixed(1) + 'k' : stats.downloads.toString()) : '---';
+  if (heroVersion) heroVersion.textContent = stats.version || '---';
 
   // Initialize scroll reveal for new elements
   if (FEATURES.scrollReveal) {

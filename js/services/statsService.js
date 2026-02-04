@@ -197,7 +197,7 @@ class StatsService {
    * @returns {Promise<Object>}
    */
   async fetchNpmStats() {
-    const url = `${API_ENDPOINTS.npm.downloads}/last-week/oh-my-claudecode`;
+    const url = `${API_ENDPOINTS.npm.downloads}/last-month/oh-my-claude-sisyphus`;
     const response = await fetch(url, {
       headers: {
         Accept: 'application/json',
