@@ -306,6 +306,7 @@
 
     /* Hero section */
     .hero {
+      padding-top: 100px; /* Account for fixed nav */
       background: radial-gradient(ellipse at 50% 0%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
                   radial-gradient(ellipse at 80% 50%, rgba(220, 38, 38, 0.08) 0%, transparent 40%),
                   var(--bg-primary);
@@ -1564,13 +1565,23 @@
   <!-- Inline script for copy functionality (critical for UX) -->
   <script>
     // Mobile menu functionality
-    (function() {
+    document.addEventListener('DOMContentLoaded', function() {
       const hamburger = document.getElementById('nav-hamburger');
       const navLinks = document.getElementById('nav-links');
       const overlay = document.getElementById('nav-overlay');
       const navLinkItems = document.querySelectorAll('.nav__link');
 
+      function closeMenu() {
+        if (!hamburger || !navLinks || !overlay) return;
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        overlay.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
       function toggleMenu() {
+        if (!hamburger || !navLinks || !overlay) return;
         const isActive = navLinks.classList.contains('active');
 
         hamburger.classList.toggle('active');
@@ -1582,39 +1593,35 @@
         document.body.style.overflow = isActive ? '' : 'hidden';
       }
 
-      function closeMenu() {
-        hamburger.classList.remove('active');
-        navLinks.classList.remove('active');
-        overlay.classList.remove('active');
-        hamburger.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
+      // Toggle menu on hamburger click
+      if (hamburger) {
+        hamburger.addEventListener('click', toggleMenu);
       }
 
-      // Toggle menu on hamburger click
-      hamburger?.addEventListener('click', toggleMenu);
-
       // Close menu on overlay click
-      overlay?.addEventListener('click', closeMenu);
+      if (overlay) {
+        overlay.addEventListener('click', closeMenu);
+      }
 
       // Close menu when clicking a nav link
-      navLinkItems.forEach(link => {
+      navLinkItems.forEach(function(link) {
         link.addEventListener('click', closeMenu);
       });
 
       // Close menu on window resize to desktop size
-      window.addEventListener('resize', () => {
+      window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
           closeMenu();
         }
       });
 
       // Close menu on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
           closeMenu();
         }
       });
-    })();
+    });
 
     // Copy button functionality
     document.addEventListener('click', async (e) => {
