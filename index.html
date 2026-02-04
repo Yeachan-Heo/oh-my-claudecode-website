@@ -1164,7 +1164,7 @@
     <div class="install-steps" data-reveal="stagger">
       <div class="install-step" data-reveal="fade-up">
         <span class="install-step__number">1</span>
-        <p class="install-step__label">Run the installer</p>
+        <p class="install-step__label">Install the plugin</p>
         <div class="code-block">
           <div class="code-block__header">
             <div class="code-block__dots">
@@ -1172,19 +1172,19 @@
               <span class="code-block__dot code-block__dot--yellow"></span>
               <span class="code-block__dot code-block__dot--green"></span>
             </div>
-            <button class="code-block__copy" data-copy="npx oh-my-claudecode@latest init" aria-label="Copy command">
+            <button class="code-block__copy" data-copy="/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode" aria-label="Copy command">
               Copy
             </button>
           </div>
           <div class="code-block__content">
-            <code><span class="keyword">npx</span> oh-my-claudecode@latest init</code>
+            <code><span class="comment"># In Claude Code, run:</span><br>/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode<br>/plugin install oh-my-claudecode</code>
           </div>
         </div>
       </div>
 
       <div class="install-step" data-reveal="fade-up" data-reveal-delay="100">
         <span class="install-step__number">2</span>
-        <p class="install-step__label">Restart Claude Code</p>
+        <p class="install-step__label">Run setup</p>
         <div class="code-block">
           <div class="code-block__header">
             <div class="code-block__dots">
@@ -1192,9 +1192,12 @@
               <span class="code-block__dot code-block__dot--yellow"></span>
               <span class="code-block__dot code-block__dot--green"></span>
             </div>
+            <button class="code-block__copy" data-copy="/oh-my-claudecode:omc-setup" aria-label="Copy command">
+              Copy
+            </button>
           </div>
           <div class="code-block__content">
-            <code><span class="comment"># Close and reopen Claude Code</span><br><span class="comment"># That's it! You're ready.</span></code>
+            <code>/oh-my-claudecode:omc-setup<br><span class="comment"># That's it! You're ready.</span></code>
           </div>
         </div>
       </div>
@@ -1428,8 +1431,8 @@
         <div class="doc-card__icon">
           <svg width="24" height="24"><use href="#icon-terminal"></use></svg>
         </div>
-        <h3 class="doc-card__title">One Setup Command</h3>
-        <p class="doc-card__description"><code>npx oh-my-claudecode@latest init</code> - restart Claude Code - done. Everything else is automatic.</p>
+        <h3 class="doc-card__title">Plugin Install</h3>
+        <p class="doc-card__description">Install from Claude's plugin marketplace, run <code>/oh-my-claudecode:omc-setup</code> - done. Everything else is automatic.</p>
       </div>
     </div>
   </section>
