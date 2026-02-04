@@ -1807,5 +1807,42 @@
       loadStats();
     }
   </script>
+
+  <!-- Standalone stats loader - bypasses ES module chain as fallback -->
+  <script>
+    (function() {
+      fetch('./data/stats.json')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var stars = (data.github && data.github.stars) || data.stars || 0;
+          var downloads = (data.npm && data.npm.downloads) || data.downloads || 0;
+          var version = (data.npm && data.npm.version) || data.version || '0.0.0';
+
+          // Format numbers
+          function fmt(n) {
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+            return n.toString();
+          }
+
+          // Update hero badges (always - they start as "---")
+          var heroStars = document.getElementById('hero-stars');
+          var heroDownloads = document.getElementById('hero-downloads');
+          var heroVersion = document.getElementById('hero-version');
+
+          if (heroStars && heroStars.textContent === '---') heroStars.textContent = fmt(stars);
+          if (heroDownloads && heroDownloads.textContent === '---') heroDownloads.textContent = fmt(downloads);
+          if (heroVersion && heroVersion.textContent === '---') heroVersion.textContent = version;
+
+          // Update stats section values if they show skeleton/placeholder
+          var statValues = document.querySelectorAll('[data-stat]');
+          statValues.forEach(function(el) {
+            if (el.dataset.stat === 'stars' && el.textContent.includes('---')) el.textContent = fmt(stars);
+            if (el.dataset.stat === 'downloads' && el.textContent.includes('---')) el.textContent = fmt(downloads);
+          });
+        })
+        .catch(function(e) { console.error('Fallback stats failed:', e); });
+    })();
+  </script>
 </body>
 </html>
