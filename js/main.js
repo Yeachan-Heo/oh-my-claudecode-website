@@ -288,7 +288,7 @@ function renderStats(container, stats) {
     },
     {
       label: 'Latest Version',
-      value: stats.version || '0.0.0',
+      value: stats.version || '3.10.3',
       icon: 'tag',
       isText: true,
     },

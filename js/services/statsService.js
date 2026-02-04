@@ -131,10 +131,10 @@ class StatsService {
 
       // Return fallback data if fetch fails
       return {
-        stars: 0,
-        downloads: 0,
+        stars: 4493,
+        downloads: 19534,
         agents: 33,
-        version: '0.0.0',
+        version: '3.10.3',
         updatedAt: new Date().toISOString(),
       };
     }
@@ -159,12 +159,13 @@ class StatsService {
 
       const data = await response.json();
 
+      // Handle nested structure from stats.json (github.stars, npm.downloads, npm.version)
       return {
-        stars: data.stars || 0,
-        downloads: data.downloads || 0,
+        stars: data.github?.stars || data.stars || 0,
+        downloads: data.npm?.downloads || data.downloads || 0,
         agents: data.agents || 33,
-        version: data.version || '0.0.0',
-        updatedAt: data.updatedAt || new Date().toISOString(),
+        version: data.npm?.version || data.version || '0.0.0',
+        updatedAt: data.lastUpdated || data.updatedAt || new Date().toISOString(),
       };
     } catch (error) {
       // Local stats file might not exist yet

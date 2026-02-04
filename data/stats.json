@@ -1,14 +1,14 @@
 {
   "github": {
-    "stars": 0,
-    "forks": 0,
-    "updated": "2026-01-01"
+    "stars": 4493,
+    "forks": 335,
+    "updated": "2026-02-04"
   },
   "npm": {
-    "downloads": 0,
-    "version": "3.10.2"
+    "downloads": 19534,
+    "version": "3.10.3"
   },
   "agents": 33,
   "skills": 40,
-  "lastUpdated": "2026-02-04T00:00:00Z"
+  "lastUpdated": "2026-02-04T07:00:00Z"
 }
