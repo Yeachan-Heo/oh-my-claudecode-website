@@ -212,9 +212,95 @@
       color: var(--text-primary);
     }
 
+    /* Mobile hamburger button */
+    .nav__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .nav__hamburger-line {
+      width: 100%;
+      height: 2px;
+      background: var(--text-primary);
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+
+    /* Hamburger animation to X */
+    .nav__hamburger.active .nav__hamburger-line:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav__hamburger.active .nav__hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav__hamburger.active .nav__hamburger-line:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
     @media (max-width: 768px) {
+      .nav__hamburger {
+        display: flex;
+      }
+
       .nav__links {
-        display: none;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: var(--bg-secondary);
+        border-left: 1px solid var(--border-color);
+        flex-direction: column;
+        padding: 80px 2rem 2rem;
+        gap: 0;
+        transition: right 0.3s ease;
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .nav__links.active {
+        right: 0;
+      }
+
+      .nav__link {
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 1rem;
+      }
+
+      .nav__links .btn {
+        margin-top: 1rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Mobile overlay */
+      .nav__overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 999;
+      }
+
+      .nav__overlay.active {
+        opacity: 1;
+        visibility: visible;
       }
     }
 
@@ -1039,6 +1125,9 @@
     </symbol>
   </svg>
 
+  <!-- Mobile menu overlay -->
+  <div class="nav__overlay" id="nav-overlay"></div>
+
   <!-- Navigation -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav__inner">
@@ -1050,7 +1139,15 @@
         </span>
         oh-my-claudecode
       </a>
-      <div class="nav__links">
+
+      <!-- Mobile hamburger button -->
+      <button class="nav__hamburger" id="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="nav__hamburger-line"></span>
+        <span class="nav__hamburger-line"></span>
+        <span class="nav__hamburger-line"></span>
+      </button>
+
+      <div class="nav__links" id="nav-links">
         <a href="#features" class="nav__link">Features</a>
         <a href="#installation" class="nav__link">Installation</a>
         <a href="#agents" class="nav__link">Agents</a>
@@ -1532,6 +1629,59 @@
 
   <!-- Inline script for copy functionality (critical for UX) -->
   <script>
+    // Mobile menu functionality
+    (function() {
+      const hamburger = document.getElementById('nav-hamburger');
+      const navLinks = document.getElementById('nav-links');
+      const overlay = document.getElementById('nav-overlay');
+      const navLinkItems = document.querySelectorAll('.nav__link');
+
+      function toggleMenu() {
+        const isActive = navLinks.classList.contains('active');
+
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        overlay.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded', !isActive);
+
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = isActive ? '' : 'hidden';
+      }
+
+      function closeMenu() {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        overlay.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      // Toggle menu on hamburger click
+      hamburger?.addEventListener('click', toggleMenu);
+
+      // Close menu on overlay click
+      overlay?.addEventListener('click', closeMenu);
+
+      // Close menu when clicking a nav link
+      navLinkItems.forEach(link => {
+        link.addEventListener('click', closeMenu);
+      });
+
+      // Close menu on window resize to desktop size
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          closeMenu();
+        }
+      });
+
+      // Close menu on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+          closeMenu();
+        }
+      });
+    })();
+
     // Copy button functionality
     document.addEventListener('click', async (e) => {
       const copyBtn = e.target.closest('.code-block__copy');
