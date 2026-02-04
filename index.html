@@ -444,83 +444,6 @@
       height: 100%;
     }
 
-    /* Stats grid */
-    .stats-section {
-      padding: 4rem 1rem;
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .stats-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-    }
-
-    @media (max-width: 968px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 480px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .stat-card {
-      text-align: center;
-      padding: 2rem 1.5rem;
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(220, 38, 38, 0.15);
-      border-color: var(--accent-color);
-    }
-
-    .stat-card__icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 1rem;
-      background: linear-gradient(135deg, var(--accent-color-dark), var(--accent-color));
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .stat-card__value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--accent-color);
-      line-height: 1;
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-card__label {
-      font-size: 0.875rem;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .stats-updated {
-      text-align: center;
-      color: var(--text-tertiary);
-      font-size: 0.75rem;
-      margin-top: 1rem;
-      opacity: 0.6;
-    }
 
     /* Section styles */
     .section {
@@ -1284,44 +1207,6 @@
     </div>
   </section>
 
-  <!-- Stats Section -->
-  <section class="stats-section" aria-label="Project statistics">
-    <div class="stats-container" data-reveal="stagger">
-      <!-- Stats will be populated by JavaScript, showing skeletons initially -->
-      <div class="stat-card" data-reveal="fade-up">
-        <div class="stat-card__icon">
-          <svg width="24" height="24"><use href="#icon-star"></use></svg>
-        </div>
-        <div class="stat-card__value" data-stat="stars">
-          <span class="skeleton" style="width: 60px; height: 40px; display: inline-block;"></span>
-        </div>
-        <div class="stat-card__label">GitHub Stars</div>
-      </div>
-      <div class="stat-card" data-reveal="fade-up" data-reveal-delay="100">
-        <div class="stat-card__icon">
-          <svg width="24" height="24"><use href="#icon-download"></use></svg>
-        </div>
-        <div class="stat-card__value" data-stat="downloads">
-          <span class="skeleton" style="width: 60px; height: 40px; display: inline-block;"></span>
-        </div>
-        <div class="stat-card__label">Monthly Downloads</div>
-      </div>
-      <div class="stat-card" data-reveal="fade-up" data-reveal-delay="200">
-        <div class="stat-card__icon">
-          <svg width="24" height="24"><use href="#icon-users"></use></svg>
-        </div>
-        <div class="stat-card__value" data-stat="agents">33</div>
-        <div class="stat-card__label">Agents</div>
-      </div>
-      <div class="stat-card" data-reveal="fade-up" data-reveal-delay="300">
-        <div class="stat-card__icon">
-          <svg width="24" height="24"><use href="#icon-zap"></use></svg>
-        </div>
-        <div class="stat-card__value" data-stat="skills">40+</div>
-        <div class="stat-card__label">Skills</div>
-      </div>
-    </div>
-  </section>
 
   <!-- Installation Section -->
   <section id="installation" class="section install-section" aria-labelledby="install-title">
@@ -1774,41 +1659,9 @@
       }
     });
 
-    // Load stats from local JSON
-    async function loadStats() {
-      try {
-        const response = await fetch('./data/stats.json');
-        const data = await response.json();
-
-        const starsEl = document.querySelector('[data-stat="stars"]');
-        const downloadsEl = document.querySelector('[data-stat="downloads"]');
-
-        if (starsEl && data.github?.stars !== undefined) {
-          starsEl.textContent = data.github.stars.toLocaleString();
-        }
-
-        if (downloadsEl && data.npm?.downloads !== undefined) {
-          downloadsEl.textContent = data.npm.downloads.toLocaleString();
-        }
-      } catch (error) {
-        // Fallback to placeholders
-        const starsEl = document.querySelector('[data-stat="stars"]');
-        const downloadsEl = document.querySelector('[data-stat="downloads"]');
-
-        if (starsEl) starsEl.textContent = '---';
-        if (downloadsEl) downloadsEl.textContent = '---';
-      }
-    }
-
-    // Initialize on load
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadStats);
-    } else {
-      loadStats();
-    }
   </script>
 
-  <!-- Standalone stats loader - bypasses ES module chain as fallback -->
+  <!-- Standalone stats loader - updates hero badges only -->
   <script>
     (function() {
       fetch('./data/stats.json')
@@ -1833,13 +1686,6 @@
           if (heroStars && heroStars.textContent === '---') heroStars.textContent = fmt(stars);
           if (heroDownloads && heroDownloads.textContent === '---') heroDownloads.textContent = fmt(downloads);
           if (heroVersion && heroVersion.textContent === '---') heroVersion.textContent = version;
-
-          // Update stats section values if they show skeleton/placeholder
-          var statValues = document.querySelectorAll('[data-stat]');
-          statValues.forEach(function(el) {
-            if (el.dataset.stat === 'stars' && el.textContent.includes('---')) el.textContent = fmt(stars);
-            if (el.dataset.stat === 'downloads' && el.textContent.includes('---')) el.textContent = fmt(downloads);
-          });
         })
         .catch(function(e) { console.error('Fallback stats failed:', e); });
     })();

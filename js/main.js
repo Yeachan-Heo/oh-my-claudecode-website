@@ -33,40 +33,6 @@ function scheduleIdleWork(callback, options = { timeout: 2000 }) {
 }
 
 /**
- * Utility: Animate number counting
- * @param {HTMLElement} element - Element to animate
- * @param {number} target - Target number
- * @param {number} duration - Animation duration in ms
- * @param {string} suffix - Optional suffix (k, M, etc.)
- */
-function animateNumber(element, target, duration = 1000, suffix = '') {
-  if (!element || AppState.reducedMotion) {
-    element.textContent = target.toLocaleString() + suffix;
-    return;
-  }
-
-  const startTime = performance.now();
-  const startValue = 0;
-
-  function update(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-
-    // Easing function (ease-out-cubic)
-    const easeOut = 1 - Math.pow(1 - progress, 3);
-    const current = Math.floor(startValue + (target - startValue) * easeOut);
-
-    element.textContent = current.toLocaleString() + suffix;
-
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    }
-  }
-
-  requestAnimationFrame(update);
-}
-
-/**
  * Initialize Services
  * Preload cached data and set up service workers if available
  */
@@ -236,143 +202,28 @@ function animateTitleCharacters(titleElement) {
 
 /**
  * Stats Loading
- * Show skeletons, fetch stats with caching, animate number counting
+ * Fetch stats and update hero badges only
  */
 async function loadStats() {
-  const statsContainer = document.querySelector('.stats-container');
-  if (!statsContainer) return;
-
-  // Show skeleton placeholders
-  const skeletonGrid = Skeletons.statsGrid(4);
-  skeletonGrid.className = 'stats-skeletons stats-grid';
-  statsContainer.innerHTML = '';
-  statsContainer.appendChild(skeletonGrid);
-
   try {
-    // Fetch stats (uses caching internally)
     const stats = await statsService.get();
     AppState.statsLoaded = true;
 
-    // Render stats with animation
-    renderStats(statsContainer, stats);
+    // Update hero stat badges
+    const heroStars = document.getElementById('hero-stars');
+    const heroDownloads = document.getElementById('hero-downloads');
+    const heroVersion = document.getElementById('hero-version');
+
+    const fmt = (n) => n >= 1000000 ? (n / 1000000).toFixed(1) + 'M' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n.toString();
+
+    if (heroStars) heroStars.textContent = stats.stars ? fmt(stats.stars) : '---';
+    if (heroDownloads) heroDownloads.textContent = stats.downloads ? fmt(stats.downloads) : '---';
+    if (heroVersion) heroVersion.textContent = stats.version || '---';
   } catch (error) {
     console.error('[Main] Failed to load stats:', error);
-    renderStatsError(statsContainer);
   }
 }
 
-/**
- * Render stats cards with number animation
- * @param {HTMLElement} container - Container element
- * @param {Object} stats - Stats data object
- */
-function renderStats(container, stats) {
-  const statsData = [
-    {
-      label: 'GitHub Stars',
-      value: stats.stars || 0,
-      icon: 'star',
-      suffix: '',
-    },
-    {
-      label: 'Monthly Downloads',
-      value: stats.downloads || 0,
-      icon: 'download',
-      suffix: '',
-    },
-    {
-      label: 'Agents',
-      value: stats.agents || 33,
-      icon: 'users',
-      suffix: '',
-    },
-    {
-      label: 'Latest Version',
-      value: stats.version || '3.10.3',
-      icon: 'tag',
-      isText: true,
-    },
-  ];
-
-  container.innerHTML = `
-    <div class="stats-grid">
-      ${statsData
-        .map(
-          (stat, index) => `
-        <div class="stat-card" data-reveal style="--reveal-delay: ${index * 100}ms">
-          <div class="stat-card__icon">
-            <svg class="icon icon--${stat.icon}" aria-hidden="true">
-              <use href="#icon-${stat.icon}"></use>
-            </svg>
-          </div>
-          <div class="stat-card__value" data-value="${stat.value}" data-suffix="${stat.suffix}" ${stat.isText ? 'data-text="true"' : ''}>
-            ${stat.isText ? stat.value : '0'}
-          </div>
-          <div class="stat-card__label">${stat.label}</div>
-        </div>
-      `
-        )
-        .join('')}
-    </div>
-    <div class="stats-updated">
-      Updated ${statsService.getRelativeTime(stats.updatedAt)}
-    </div>
-  `;
-
-  // Animate numbers after render
-  if (!AppState.reducedMotion) {
-    container.querySelectorAll('.stat-card__value').forEach((el, index) => {
-      if (el.dataset.text) return; // Skip text values (version)
-
-      const value = parseInt(el.dataset.value, 10) || 0;
-      const suffix = el.dataset.suffix || '';
-
-      // Stagger animations
-      setTimeout(() => {
-        animateNumber(el, value, 1500, suffix);
-      }, index * 150);
-    });
-  } else {
-    // Show final values immediately
-    container.querySelectorAll('.stat-card__value').forEach((el) => {
-      if (!el.dataset.text) {
-        const value = parseInt(el.dataset.value, 10) || 0;
-        const suffix = el.dataset.suffix || '';
-        el.textContent = value.toLocaleString() + suffix;
-      }
-    });
-  }
-
-  // Update hero stat badges
-  const heroStars = document.getElementById('hero-stars');
-  const heroDownloads = document.getElementById('hero-downloads');
-  const heroVersion = document.getElementById('hero-version');
-
-  if (heroStars) heroStars.textContent = stats.stars ? (stats.stars >= 1000 ? (stats.stars / 1000).toFixed(1) + 'k' : stats.stars.toString()) : '---';
-  if (heroDownloads) heroDownloads.textContent = stats.downloads ? (stats.downloads >= 1000 ? (stats.downloads / 1000).toFixed(1) + 'k' : stats.downloads.toString()) : '---';
-  if (heroVersion) heroVersion.textContent = stats.version || '---';
-
-  // Initialize scroll reveal for new elements
-  if (FEATURES.scrollReveal) {
-    observeElement(container, {
-      visibleClass: 'revealed',
-      once: true,
-    });
-  }
-}
-
-/**
- * Render error state for stats
- * @param {HTMLElement} container - Container element
- */
-function renderStatsError(container) {
-  container.innerHTML = `
-    <div class="stats-error">
-      <p>Unable to load stats. Please try again later.</p>
-      <button class="btn btn--secondary" onclick="location.reload()">Retry</button>
-    </div>
-  `;
-}
 
 /**
  * Event Listeners
