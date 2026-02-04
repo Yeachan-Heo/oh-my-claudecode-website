@@ -385,3 +385,7 @@ if (typeof module !== 'undefined' && module.exports) {
 } else if (typeof window !== 'undefined') {
   window.StorageService = StorageService;
 }
+
+// ES module exports
+export const storageService = StorageService;
+export default StorageService;

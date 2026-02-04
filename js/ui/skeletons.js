@@ -516,3 +516,7 @@ if (typeof module !== 'undefined' && module.exports) {
 } else if (typeof window !== 'undefined') {
   window.Skeletons = Skeletons;
 }
+
+// ES module exports
+export { Skeletons };
+export default Skeletons;

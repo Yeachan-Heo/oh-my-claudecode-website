@@ -295,9 +295,14 @@
 
     .hero__illustration {
       width: 100%;
-      max-width: 500px;
-      aspect-ratio: 1;
+      max-width: 340px;
       position: relative;
+    }
+
+    .hero__illustration img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
     }
 
     .hero__illustration svg {
@@ -1081,7 +1086,7 @@
       <div class="hero__visual">
         <div class="hero__illustration" style="position: relative;">
           <!-- Character Image -->
-          <img src="omc-character.jpg" alt="Oh My ClaudeCode character" width="400" height="400" style="border-radius: 16px; position: relative; z-index: 1; box-shadow: 0 0 60px rgba(220, 38, 38, 0.3);" loading="eager">
+          <img src="omc-character.jpg" alt="Oh My ClaudeCode character" width="1408" height="3040" style="border-radius: 16px; position: relative; z-index: 1; box-shadow: 0 0 60px rgba(220, 38, 38, 0.3);" loading="eager">
           <!-- Orbiting decoration overlay -->
           <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
             <defs>

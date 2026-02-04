@@ -3,7 +3,7 @@
  * Initializes all services, UI components, and event handlers
  */
 
-import { CONFIG, FEATURES, prefersReducedMotion } from './config.js';
+import { APP_CONFIG as CONFIG, FEATURES, prefersReducedMotion, UI_CONFIG } from './config.js';
 import { statsService } from './services/statsService.js';
 import { storageService } from './services/storageService.js';
 import { initScrollReveal, observeElement, staggerReveal } from './ui/scrollReveal.js';
@@ -539,7 +539,7 @@ function setupSmoothScroll() {
 
       event.preventDefault();
 
-      const headerOffset = CONFIG.UI_CONFIG?.headerHeight || 64;
+      const headerOffset = UI_CONFIG?.headerHeight || 64;
       const elementPosition = targetElement.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
