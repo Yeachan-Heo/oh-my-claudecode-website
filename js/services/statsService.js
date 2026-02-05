@@ -111,16 +111,17 @@ class StatsService {
       }
 
       // Fallback: fetch from APIs directly
-      const [githubData, npmData] = await Promise.all([
+      const [githubData, npmData, releaseData] = await Promise.all([
         this.fetchGitHubStats(),
         this.fetchNpmStats(),
+        this.fetchGitHubReleases(),
       ]);
 
       const data = {
         stars: githubData.stargazers_count || 0,
         downloads: npmData.downloads || 0,
         agents: 33, // Known count from documentation
-        version: githubData.tag_name?.replace(/^v/, '') || '0.0.0',
+        version: releaseData.tag_name?.replace(/^v/, '') || '0.0.0',
         updatedAt: new Date().toISOString(),
       };
 
@@ -207,6 +208,25 @@ class StatsService {
 
     if (!response.ok) {
       throw new Error(`npm API error: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  /**
+   * Fetch latest GitHub release for version
+   * @private
+   * @returns {Promise<Object>}
+   */
+  async fetchGitHubReleases() {
+    const response = await fetch(API_ENDPOINTS.github.releases, {
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub Releases API error: ${response.status}`);
     }
 
     return response.json();

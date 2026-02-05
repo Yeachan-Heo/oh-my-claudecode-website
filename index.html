@@ -1033,6 +1033,16 @@
   to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* Counter-rotate cards to keep them upright while ring rotates */
+.ai-orbit__ring .ai-card {
+  animation: orbit-counter-rotate 30s linear infinite;
+}
+
+@keyframes orbit-counter-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
 .ai-orbit__item {
   position: absolute;
 }
