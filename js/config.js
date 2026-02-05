@@ -30,8 +30,8 @@ export const API_ENDPOINTS = {
  * Cache Configuration
  */
 export const CACHE_CONFIG = {
-  /** Cache duration in milliseconds (5 minutes) */
-  duration: 5 * 60 * 1000,
+  /** Cache duration in milliseconds (30 seconds) */
+  duration: 30 * 1000,
 
   /** localStorage key prefix */
   storageKey: 'omc_cache',

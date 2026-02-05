@@ -34,34 +34,11 @@ class StatsService {
   }
 
   /**
-   * Get stats with caching (stale-while-revalidate pattern)
+   * Get stats - always fetches fresh data from live APIs
    * @returns {Promise<StatsData>} Stats data
    */
   async get() {
-    // Check memory cache first (fastest)
-    if (this.memoryCache && this.isCacheValid(this.memoryCacheTime)) {
-      // Trigger background refresh if cache is stale
-      if (this.isCacheStale(this.memoryCacheTime)) {
-        this.refreshInBackground();
-      }
-      return this.memoryCache;
-    }
-
-    // Check localStorage cache
-    const localCache = this.getLocalCache();
-    if (localCache) {
-      // Update memory cache
-      this.memoryCache = localCache.data;
-      this.memoryCacheTime = localCache.timestamp;
-
-      // Trigger background refresh if cache is stale
-      if (this.isCacheStale(localCache.timestamp)) {
-        this.refreshInBackground();
-      }
-      return localCache.data;
-    }
-
-    // No valid cache - fetch fresh data
+    // Always fetch fresh data from APIs
     return this.fetchFresh();
   }
 
