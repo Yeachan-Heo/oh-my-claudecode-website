@@ -102,41 +102,36 @@ class StatsService {
    */
   async doFetch() {
     try {
-      // Fetch local stats and GitHub release in parallel
-      const [localStats, releaseData] = await Promise.all([
-        this.fetchLocalStats().catch(() => null),
+      // Fetch ALL data from live APIs in parallel
+      const [githubData, npmData, releaseData] = await Promise.all([
+        this.fetchGitHubStats().catch(() => null),
+        this.fetchNpmStats().catch(() => null),
         this.fetchGitHubReleases().catch(() => null),
       ]);
 
-      // Get version from GitHub releases (always preferred)
-      const version = releaseData?.tag_name?.replace(/^v/, '') ||
-                      localStats?.version ||
-                      '0.0.0';
-
-      // Build data from local stats with live version
       const data = {
-        stars: localStats?.stars || 0,
-        downloads: localStats?.downloads || 0,
-        agents: localStats?.agents || 33,
-        version: version,
+        stars: githubData?.stargazers_count || 0,
+        downloads: npmData?.downloads || 0,
+        agents: 33, // Known count from documentation
+        version: releaseData?.tag_name?.replace(/^v/, '') || '0.0.0',
         updatedAt: new Date().toISOString(),
       };
 
-      // If no local stats, try fetching from APIs
-      if (!localStats) {
-        try {
-          const [githubData, npmData] = await Promise.all([
-            this.fetchGitHubStats(),
-            this.fetchNpmStats(),
-          ]);
-          data.stars = githubData.stargazers_count || 0;
-          data.downloads = npmData.downloads || 0;
-        } catch (e) {
-          // Use fallback values
-          data.stars = 4493;
-          data.downloads = 19534;
+      // If any API failed, try to fill gaps from local stats
+      if (!githubData || !npmData || !releaseData) {
+        const localStats = await this.fetchLocalStats().catch(() => null);
+        if (localStats) {
+          if (!githubData) data.stars = localStats.stars || data.stars;
+          if (!npmData) data.downloads = localStats.downloads || data.downloads;
+          if (!releaseData) data.version = localStats.version || data.version;
+          data.agents = localStats.agents || data.agents;
         }
       }
+
+      // If still missing critical data, use hardcoded fallbacks
+      if (data.stars === 0) data.stars = 4493;
+      if (data.downloads === 0) data.downloads = 19534;
+      if (data.version === '0.0.0') data.version = '4.0.2';
 
       this.updateCache(data);
       return data;
