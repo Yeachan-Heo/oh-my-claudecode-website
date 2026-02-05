@@ -589,7 +589,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.0</span>
+        <span class="sidebar-brand__version">v4.0.0</span>
       </a>
 
       <!-- Search -->
@@ -681,6 +681,19 @@
             <li><a href="#default-mode" class="sidebar-link" data-section="default-mode">Default Mode</a></li>
             <li><a href="#hud-config" class="sidebar-link" data-section="hud-config">HUD Configuration</a></li>
             <li><a href="#mcp-setup" class="sidebar-link" data-section="mcp-setup">MCP Server Setup</a></li>
+          </ul>
+        </div>
+
+        <!-- MCP Tools -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">MCP Tools</div>
+          <ul class="sidebar-nav">
+            <li><a href="#mcp-overview" class="sidebar-link" data-section="mcp-overview">Overview</a></li>
+            <li><a href="#external-ai" class="sidebar-link" data-section="external-ai">External AI (Gemini/Codex)</a></li>
+            <li><a href="#lsp-tools" class="sidebar-link" data-section="lsp-tools">LSP Tools</a></li>
+            <li><a href="#ast-tools" class="sidebar-link" data-section="ast-tools">AST Grep</a></li>
+            <li><a href="#python-repl" class="sidebar-link" data-section="python-repl">Python REPL</a></li>
+            <li><a href="#job-management" class="sidebar-link" data-section="job-management">Job Management</a></li>
           </ul>
         </div>
 
@@ -1695,6 +1708,19 @@ Build me a dashboard that shows real-time analytics</code></pre>
           </ul>
         </section>
 
+        <!-- MCP Tools -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">MCP Tools</div>
+          <ul class="sidebar-nav">
+            <li><a href="#mcp-overview" class="sidebar-link" data-section="mcp-overview">Overview</a></li>
+            <li><a href="#external-ai" class="sidebar-link" data-section="external-ai">External AI (Gemini/Codex)</a></li>
+            <li><a href="#lsp-tools" class="sidebar-link" data-section="lsp-tools">LSP Tools</a></li>
+            <li><a href="#ast-tools" class="sidebar-link" data-section="ast-tools">AST Grep</a></li>
+            <li><a href="#python-repl" class="sidebar-link" data-section="python-repl">Python REPL</a></li>
+            <li><a href="#job-management" class="sidebar-link" data-section="job-management">Job Management</a></li>
+          </ul>
+        </div>
+
         <!-- Hooks System -->
         <section id="hooks-system" data-section>
           <h2><span class="anchor-link">#</span>Hooks System</h2>
@@ -1818,6 +1844,325 @@ Build me a dashboard that shows real-time analytics</code></pre>
           </div>
 
           <p>State files control hook behavior. The <code>/cancel</code> skill removes these files to allow graceful termination.</p>
+        </section>
+
+        <!-- MCP Overview -->
+        <section id="mcp-overview" data-section>
+          <h2><span class="anchor-link">#</span>MCP Tools Overview</h2>
+          <p>OMC v4.0.0 introduces powerful MCP (Model Context Protocol) tools that extend Claude's capabilities with external AI consultation, language server integration, and more.</p>
+
+          <div class="feature-grid">
+            <div class="feature-item">
+              <div class="feature-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"></path>
+                </svg>
+              </div>
+              <div class="feature-item__title">External AI</div>
+              <div class="feature-item__desc">Consult Gemini and Codex for specialized tasks</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="4 17 10 11 4 5"></polyline>
+                  <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>
+              </div>
+              <div class="feature-item__title">LSP Integration</div>
+              <div class="feature-item__desc">Type info, definitions, references, diagnostics</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5"></path>
+                </svg>
+              </div>
+              <div class="feature-item__title">AST Grep</div>
+              <div class="feature-item__desc">Structural code search and replace</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <div class="feature-item__title">Python REPL</div>
+              <div class="feature-item__desc">Persistent environment for data analysis</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- External AI -->
+        <section id="external-ai" data-section>
+          <h3><span class="anchor-link">#</span>External AI Consultation (Gemini &amp; Codex)</h3>
+
+          <p>OMC can optionally consult external AI models for specialized tasks:</p>
+
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Provider</th>
+                <th>Best For</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ask_codex</code></td>
+                <td>OpenAI (gpt-5.2)</td>
+                <td>Code analysis, planning validation, architecture review</td>
+              </tr>
+              <tr>
+                <td><code>ask_gemini</code></td>
+                <td>Google (gemini-3-pro-preview)</td>
+                <td>Design consistency, documentation, visual analysis (1M context)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Agent Roles</h4>
+
+          <p><strong>Codex roles:</strong> <code>architect</code>, <code>planner</code>, <code>critic</code>, <code>analyst</code>, <code>code-reviewer</code>, <code>security-reviewer</code>, <code>tdd-guide</code></p>
+
+          <p><strong>Gemini roles:</strong> <code>designer</code>, <code>writer</code>, <code>vision</code></p>
+
+          <h4>MCP-Direct Replacement Pattern</h4>
+
+          <p>Instead of spawning Claude agents for analysis tasks, call MCPs directly:</p>
+
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Task Domain</th>
+                <th>MCP Tool</th>
+                <th>Replaces Agent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Architecture analysis</td>
+                <td><code>ask_codex</code> (architect role)</td>
+                <td>architect agents</td>
+              </tr>
+              <tr>
+                <td>Planning</td>
+                <td><code>ask_codex</code> (planner role)</td>
+                <td>planner agent</td>
+              </tr>
+              <tr>
+                <td>Code review</td>
+                <td><code>ask_codex</code> (code-reviewer role)</td>
+                <td>code-reviewer agents</td>
+              </tr>
+              <tr>
+                <td>UI/UX design</td>
+                <td><code>ask_gemini</code> (designer role)</td>
+                <td>designer agents</td>
+              </tr>
+              <tr>
+                <td>Documentation</td>
+                <td><code>ask_gemini</code> (writer role)</td>
+                <td>writer agent</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout-info">
+            <div class="callout-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 16v-4"></path>
+                <path d="M12 8h.01"></path>
+              </svg>
+              Graceful Fallback
+            </div>
+            <p>If external MCPs are unavailable, OMC automatically falls back to Claude agents. No configuration needed.</p>
+          </div>
+        </section>
+
+        <!-- LSP Tools -->
+        <section id="lsp-tools" data-section>
+          <h3><span class="anchor-link">#</span>LSP Tools</h3>
+
+          <p>Language Server Protocol integration provides IDE-like features:</p>
+
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>lsp_hover</code></td>
+                <td>Get type info and documentation at a position</td>
+              </tr>
+              <tr>
+                <td><code>lsp_goto_definition</code></td>
+                <td>Jump to where a symbol is defined</td>
+              </tr>
+              <tr>
+                <td><code>lsp_find_references</code></td>
+                <td>Find all usages of a symbol</td>
+              </tr>
+              <tr>
+                <td><code>lsp_document_symbols</code></td>
+                <td>Get file outline (functions, classes, etc.)</td>
+              </tr>
+              <tr>
+                <td><code>lsp_workspace_symbols</code></td>
+                <td>Search symbols across the workspace</td>
+              </tr>
+              <tr>
+                <td><code>lsp_diagnostics</code></td>
+                <td>Get errors and warnings for a file</td>
+              </tr>
+              <tr>
+                <td><code>lsp_diagnostics_directory</code></td>
+                <td>Project-wide type checking (tsc --noEmit)</td>
+              </tr>
+              <tr>
+                <td><code>lsp_rename</code></td>
+                <td>Rename a symbol across all files</td>
+              </tr>
+              <tr>
+                <td><code>lsp_code_actions</code></td>
+                <td>Get available refactorings and quick fixes</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- AST Tools -->
+        <section id="ast-tools" data-section>
+          <h3><span class="anchor-link">#</span>AST Grep</h3>
+
+          <p>Structural code search and replace using AST patterns - more precise than text search.</p>
+
+          <h4>Pattern Syntax</h4>
+          <ul>
+            <li><code>$NAME</code> - matches any single AST node</li>
+            <li><code>$$$ARGS</code> - matches multiple nodes (for arguments, list items)</li>
+          </ul>
+
+          <h4>Example Patterns</h4>
+          <div class="code-block-wrapper">
+            <div class="code-block-header">
+              <span class="code-lang">TEXT</span>
+            </div>
+            <pre><code># Find all function declarations
+function $NAME($$$ARGS)
+
+# Find all console.log calls
+console.log($MSG)
+
+# Find null equality checks
+$X === null
+
+# Find imports from a specific module
+import $$$IMPORTS from '$MODULE'</code></pre>
+          </div>
+
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ast_grep_search</code></td>
+                <td>Search for AST patterns in code</td>
+              </tr>
+              <tr>
+                <td><code>ast_grep_replace</code></td>
+                <td>Replace patterns (use <code>dryRun=false</code> to apply)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Python REPL -->
+        <section id="python-repl" data-section>
+          <h3><span class="anchor-link">#</span>Python REPL</h3>
+
+          <p>Persistent Python environment for data analysis and scientific computing.</p>
+
+          <h4>Features</h4>
+          <ul>
+            <li>Variables persist between calls within a session</li>
+            <li>Pre-installed: pandas, numpy, matplotlib</li>
+            <li>Actions: <code>execute</code>, <code>interrupt</code>, <code>reset</code>, <code>get_state</code></li>
+          </ul>
+
+          <div class="code-block-wrapper">
+            <div class="code-block-header">
+              <span class="code-lang">PYTHON</span>
+            </div>
+            <pre><code># First call
+import pandas as pd
+df = pd.read_csv('data.csv')
+
+# Second call (df is still available)
+df.describe()</code></pre>
+          </div>
+        </section>
+
+        <!-- Job Management -->
+        <section id="job-management" data-section>
+          <h3><span class="anchor-link">#</span>Background Job Management</h3>
+
+          <p>External AI consultations can run in the background for better parallelism.</p>
+
+          <h4>Background Orchestration Pattern</h4>
+          <ol>
+            <li><strong>SPAWN</strong> - Launch with <code>background: true</code></li>
+            <li><strong>CHECK</strong> - Non-blocking status with <code>check_job_status</code></li>
+            <li><strong>AWAIT</strong> - Block when needed with <code>wait_for_job</code></li>
+          </ol>
+
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>check_job_status</code></td>
+                <td>Non-blocking status check</td>
+              </tr>
+              <tr>
+                <td><code>wait_for_job</code></td>
+                <td>Block until completion (up to 1 hour)</td>
+              </tr>
+              <tr>
+                <td><code>list_jobs</code></td>
+                <td>List background jobs by status</td>
+              </tr>
+              <tr>
+                <td><code>kill_job</code></td>
+                <td>Terminate a running job</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout-warning">
+            <div class="callout-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              Dependency Rule
+            </div>
+            <p>If a downstream decision depends on MCP output, you MUST await before finalizing that decision.</p>
+          </div>
         </section>
 
         <!-- Verification Tiers -->

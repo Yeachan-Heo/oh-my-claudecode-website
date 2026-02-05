@@ -990,6 +990,293 @@
       margin: 0 auto;
       padding: 0 1rem;
     }
+/* Multi-AI Section */
+.multi-ai-section {
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.multi-ai-visual {
+  max-width: 500px;
+  margin: 0 auto 4rem;
+}
+
+.ai-orbit {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.ai-orbit__center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.ai-orbit__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  transform: translate(-50%, -50%);
+  border: 1px dashed var(--border-color);
+  border-radius: 50%;
+  animation: orbit-rotate 30s linear infinite;
+}
+
+ @keyframes orbit-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.ai-orbit__item {
+  position: absolute;
+  animation: orbit-counter-rotate 30s linear infinite;
+}
+
+ @keyframes orbit-counter-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+.ai-orbit__item--1 {
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ai-orbit__item--2 {
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+
+.ai-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-card--claude {
+  padding: 2rem;
+}
+
+.ai-card--claude::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+}
+
+.ai-card--gemini {
+  background: rgba(66, 133, 244, 0.1);
+  border-color: rgba(66, 133, 244, 0.3);
+}
+
+.ai-card--codex {
+  background: rgba(16, 163, 127, 0.1);
+  border-color: rgba(16, 163, 127, 0.3);
+}
+
+.ai-card__icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.ai-card--claude .ai-card__icon { background: linear-gradient(135deg, #dc2626, #991b1b); }
+.ai-card--gemini .ai-card__icon { background: linear-gradient(135deg, #4285F4, #1A73E8); color: white; }
+.ai-card--codex .ai-card__icon { background: linear-gradient(135deg, #10A37F, #059669); color: white; }
+
+.ai-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.ai-card__role {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ai-card__label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.ai-card__desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.multi-ai-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+ @media (max-width: 968px) {
+  .multi-ai-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .multi-ai-visual {
+    max-width: 300px;
+  }
+}
+
+.ai-feature-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.ai-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.ai-feature-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ai-feature-card__header svg {
+  flex-shrink: 0;
+}
+
+.ai-feature-card__header--gemini svg { color: #4285F4; }
+.ai-feature-card__header--codex svg { color: #10A37F; }
+.ai-feature-card__header--claude svg { color: #dc2626; }
+
+.ai-feature-card__header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ai-feature-card__desc {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.ai-feature-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ai-feature-card__list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.ai-feature-card__list li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* MCP Section */
+.mcp-section {
+  background: var(--bg-secondary);
+}
+
+.mcp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+ @media (max-width: 1024px) {
+  .mcp-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+ @media (max-width: 640px) {
+  .mcp-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mcp-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.mcp-card:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+.mcp-card__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.mcp-card__icon--lsp { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+.mcp-card__icon--ast { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.mcp-card__icon--python { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.mcp-card__icon--state { background: linear-gradient(135deg, #22c55e, #16a34a); }
+
+.mcp-card__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.mcp-card__description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
   </style>
 </head>
 <body>
@@ -1083,6 +1370,39 @@
       <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
       <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
     </symbol>
+    <symbol id="icon-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+      <path d="M5 3v4"></path>
+      <path d="M19 17v4"></path>
+      <path d="M3 5h4"></path>
+      <path d="M17 19h4"></path>
+    </symbol>
+    <symbol id="icon-code-analysis" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="16 18 22 12 16 6"></polyline>
+      <polyline points="8 6 2 12 8 18"></polyline>
+      <line x1="12" y1="2" x2="12" y2="22"></line>
+    </symbol>
+    <symbol id="icon-tree" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22v-7"></path>
+      <path d="M9 22h6"></path>
+      <path d="M12 15l-4-4 2.5-2.5L12 10l1.5-1.5L16 11z"></path>
+      <circle cx="12" cy="6" r="3"></circle>
+      <path d="M6 11l-2 2"></path>
+      <path d="M18 11l2 2"></path>
+    </symbol>
+    <symbol id="icon-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+      <path d="M3 5v14a9 3 0 0 0 18 0V5"></path>
+      <path d="M3 12a9 3 0 0 0 18 0"></path>
+    </symbol>
+    <symbol id="icon-conductor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polygon points="12 6 12 12 16 14"></polygon>
+      <path d="M12 2v2"></path>
+      <path d="M12 20v2"></path>
+      <path d="M2 12h2"></path>
+      <path d="M20 12h2"></path>
+    </symbol>
   </svg>
 
   <!-- Mobile menu overlay -->
@@ -1109,6 +1429,7 @@
 
       <div class="nav__links" id="nav-links">
         <a href="#features" class="nav__link">Features</a>
+        <a href="#multi-ai" class="nav__link">Multi-AI</a>
         <a href="#installation" class="nav__link">Installation</a>
         <a href="#agents" class="nav__link">Agents</a>
         <a href="docs.html" class="nav__link">Documentation</a>
@@ -1131,7 +1452,7 @@
           <span class="gradient-text">A weapon, not a tool</span>
         </p>
         <p class="hero__description hero-entrance hero-entrance--3">
-          Multi-agent orchestration plugin for Claude Code. 33 specialized agents, 40+ skills, full autonomous execution from idea to working code.
+          Multi-AI orchestration plugin for Claude Code. Coordinate Claude, Gemini, and Codex with 33 specialized agents, 40+ skills, and MCP-powered tools.
         </p>
         <div class="hero-stats hero-entrance hero-entrance--3" style="--reveal-delay: 150ms">
           <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="hero-stat-badge" target="_blank" rel="noopener" aria-label="GitHub Stars">
@@ -1191,6 +1512,101 @@
     </div>
   </section>
 
+<!-- Multi-AI Integration Section -->
+<section id="multi-ai" class="section multi-ai-section" aria-labelledby="multi-ai-title">
+  <div class="section__header" data-reveal="fade-up">
+    <h2 id="multi-ai-title" class="section__title">Multi-AI Orchestration</h2>
+    <p class="section__subtitle">Claude coordinates with Gemini and Codex for specialized tasks. Optional but powerful.</p>
+  </div>
+
+  <div class="multi-ai-visual" data-reveal="fade-up" data-reveal-delay="100">
+    <div class="ai-orbit">
+      <div class="ai-orbit__center">
+        <div class="ai-card ai-card--claude">
+          <div class="ai-card__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="ai-card__title">Claude</h3>
+          <p class="ai-card__role">The Conductor</p>
+        </div>
+      </div>
+      <div class="ai-orbit__ring">
+        <div class="ai-card ai-card--gemini ai-orbit__item ai-orbit__item--1">
+          <div class="ai-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"></path>
+              <path d="M5 19l1 3 1-3 3-1-3-1-1-3-1 3-3 1 3 1z"></path>
+              <path d="M18 14l.5 1.5 1.5.5-1.5.5-.5 1.5-.5-1.5-1.5-.5 1.5-.5.5-1.5z"></path>
+            </svg>
+          </div>
+          <span class="ai-card__label">Gemini</span>
+          <span class="ai-card__desc">Design &amp; Vision</span>
+        </div>
+        <div class="ai-card ai-card--codex ai-orbit__item ai-orbit__item--2">
+          <div class="ai-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+            </svg>
+          </div>
+          <span class="ai-card__label">Codex</span>
+          <span class="ai-card__desc">Analysis &amp; Review</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="multi-ai-grid" data-reveal="stagger">
+    <article class="ai-feature-card" data-reveal="fade-up">
+      <div class="ai-feature-card__header ai-feature-card__header--gemini">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"></path>
+        </svg>
+        <h3>Gemini MCP</h3>
+      </div>
+      <p class="ai-feature-card__desc">1M token context window for comprehensive design review and UI consistency across your entire codebase.</p>
+      <ul class="ai-feature-card__list">
+        <li>UI/UX design review</li>
+        <li>Documentation writing</li>
+        <li>Visual/image analysis</li>
+      </ul>
+    </article>
+
+    <article class="ai-feature-card" data-reveal="fade-up" data-reveal-delay="100">
+      <div class="ai-feature-card__header ai-feature-card__header--codex">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <h3>Codex MCP</h3>
+      </div>
+      <p class="ai-feature-card__desc">Deep code analysis and architecture validation with OpenAI's most capable reasoning model.</p>
+      <ul class="ai-feature-card__list">
+        <li>Architecture review</li>
+        <li>Security analysis</li>
+        <li>Code review validation</li>
+      </ul>
+    </article>
+
+    <article class="ai-feature-card" data-reveal="fade-up" data-reveal-delay="200">
+      <div class="ai-feature-card__header ai-feature-card__header--claude">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <h3>Smart Routing</h3>
+      </div>
+      <p class="ai-feature-card__desc">Claude automatically routes tasks to the right AI. Design work goes to Gemini, analysis to Codex.</p>
+      <ul class="ai-feature-card__list">
+        <li>Automatic task routing</li>
+        <li>Graceful fallbacks</li>
+        <li>Background orchestration</li>
+      </ul>
+    </article>
+  </div>
+</section>
 
   <!-- Installation Section -->
   <section id="installation" class="section install-section" aria-labelledby="install-title">
@@ -1313,6 +1729,63 @@
       </article>
     </div>
   </section>
+
+<!-- MCP Tools Section -->
+<section id="mcp-tools" class="section mcp-section" aria-labelledby="mcp-title">
+  <div class="section__header" data-reveal="fade-up">
+    <h2 id="mcp-title" class="section__title">Powerful MCP Tools</h2>
+    <p class="section__subtitle">Language server integration, structural code analysis, and persistent state - all built in.</p>
+  </div>
+
+  <div class="mcp-grid" data-reveal="stagger">
+    <article class="mcp-card" data-reveal="fade-up">
+      <div class="mcp-card__icon mcp-card__icon--lsp">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="4 17 10 11 4 5"></polyline>
+          <line x1="12" y1="19" x2="20" y2="19"></line>
+        </svg>
+      </div>
+      <h3 class="mcp-card__title">LSP Integration</h3>
+      <p class="mcp-card__description">Hover info, go-to-definition, find references, and project-wide type checking with any language server.</p>
+    </article>
+
+    <article class="mcp-card" data-reveal="fade-up" data-reveal-delay="100">
+      <div class="mcp-card__icon mcp-card__icon--ast">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+          <path d="M2 17l10 5 10-5"></path>
+          <path d="M2 12l10 5 10-5"></path>
+        </svg>
+      </div>
+      <h3 class="mcp-card__title">AST Grep</h3>
+      <p class="mcp-card__description">Structural code search and replace. Find patterns by syntax, not just text matching.</p>
+    </article>
+
+    <article class="mcp-card" data-reveal="fade-up" data-reveal-delay="200">
+      <div class="mcp-card__icon mcp-card__icon--python">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      </div>
+      <h3 class="mcp-card__title">Python REPL</h3>
+      <p class="mcp-card__description">Persistent Python environment with pandas, numpy, and matplotlib for data analysis.</p>
+    </article>
+
+    <article class="mcp-card" data-reveal="fade-up" data-reveal-delay="300">
+      <div class="mcp-card__icon mcp-card__icon--state">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+        </svg>
+      </div>
+      <h3 class="mcp-card__title">State &amp; Memory</h3>
+      <p class="mcp-card__description">Notepad, project memory, and session state that persists across conversations.</p>
+    </article>
+  </div>
+</section>
 
   <!-- Magic Keywords Section -->
   <section class="section keywords-section" aria-labelledby="keywords-title">
@@ -1521,7 +1994,7 @@
 
       <div class="footer__bottom">
         <p class="footer__copyright">
-          &copy; 2024-2025 oh-my-claudecode. MIT License.
+          &copy; 2024-2026 oh-my-claudecode. MIT License.
         </p>
         <div class="footer__social">
           <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="footer__social-link" target="_blank" rel="noopener" aria-label="GitHub">
