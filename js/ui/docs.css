@@ -359,7 +359,7 @@
    MAIN CONTENT
    ============================================ */
 .docs-main {
-  margin-left: var(--docs-sidebar-width);
+  grid-column: 2;
   padding: 2rem;
 }
 
