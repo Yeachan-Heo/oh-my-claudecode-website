@@ -102,40 +102,53 @@ class StatsService {
    */
   async doFetch() {
     try {
-      // Try local pre-computed stats first
-      const localStats = await this.fetchLocalStats();
-
-      if (localStats) {
-        this.updateCache(localStats);
-        return localStats;
-      }
-
-      // Fallback: fetch from APIs directly
-      const [githubData, npmData, releaseData] = await Promise.all([
-        this.fetchGitHubStats(),
-        this.fetchNpmStats(),
-        this.fetchGitHubReleases(),
+      // Fetch local stats and GitHub release in parallel
+      const [localStats, releaseData] = await Promise.all([
+        this.fetchLocalStats().catch(() => null),
+        this.fetchGitHubReleases().catch(() => null),
       ]);
 
+      // Get version from GitHub releases (always preferred)
+      const version = releaseData?.tag_name?.replace(/^v/, '') ||
+                      localStats?.version ||
+                      '0.0.0';
+
+      // Build data from local stats with live version
       const data = {
-        stars: githubData.stargazers_count || 0,
-        downloads: npmData.downloads || 0,
-        agents: 33, // Known count from documentation
-        version: releaseData.tag_name?.replace(/^v/, '') || '0.0.0',
+        stars: localStats?.stars || 0,
+        downloads: localStats?.downloads || 0,
+        agents: localStats?.agents || 33,
+        version: version,
         updatedAt: new Date().toISOString(),
       };
+
+      // If no local stats, try fetching from APIs
+      if (!localStats) {
+        try {
+          const [githubData, npmData] = await Promise.all([
+            this.fetchGitHubStats(),
+            this.fetchNpmStats(),
+          ]);
+          data.stars = githubData.stargazers_count || 0;
+          data.downloads = npmData.downloads || 0;
+        } catch (e) {
+          // Use fallback values
+          data.stars = 4493;
+          data.downloads = 19534;
+        }
+      }
 
       this.updateCache(data);
       return data;
     } catch (error) {
       console.error('Failed to fetch stats:', error);
 
-      // Return fallback data if fetch fails
+      // Return fallback data if everything fails
       return {
         stars: 4493,
         downloads: 19534,
         agents: 33,
-        version: '3.10.3',
+        version: '4.0.2',
         updatedAt: new Date().toISOString(),
       };
     }
