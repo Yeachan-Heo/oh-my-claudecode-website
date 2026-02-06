@@ -203,12 +203,5 @@ class SidebarSpy {
   }
 }
 
-// Auto-initialize on DOM ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => new SidebarSpy());
-} else {
-  new SidebarSpy();
-}
-
 export { SidebarSpy };
 export default SidebarSpy;
