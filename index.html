@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="oh-my-claudecode - A weapon, not a tool. Multi-agent orchestration plugin for Claude Code with 33 specialized agents and 40+ skills.">
+  <meta name="description" content="oh-my-claudecode - A weapon, not a tool. Multi-agent orchestration plugin for Claude Code with 28 specialized agents and 40+ skills.">
   <meta name="keywords" content="Claude Code, AI agents, multi-agent, orchestration, automation, CLI, developer tools">
   <meta name="author" content="oh-my-claudecode">
 
@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/">
   <meta property="og:title" content="oh-my-claudecode - A weapon, not a tool">
-  <meta property="og:description" content="Multi-agent orchestration plugin for Claude Code. 33 specialized agents, 40+ skills, full autonomous execution.">
+  <meta property="og:description" content="Multi-agent orchestration plugin for Claude Code. 28 specialized agents, 40+ skills, full autonomous execution.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
@@ -19,7 +19,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="oh-my-claudecode - A weapon, not a tool">
-  <meta name="twitter:description" content="Multi-agent orchestration plugin for Claude Code. 33 specialized agents, 40+ skills.">
+  <meta name="twitter:description" content="Multi-agent orchestration plugin for Claude Code. 28 specialized agents, 40+ skills.">
   <meta name="twitter:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>oh-my-claudecode - A weapon, not a tool</title>
@@ -696,11 +696,17 @@
 
     .tiers-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 1.5rem;
     }
 
-    @media (max-width: 968px) {
+    @media (max-width: 1200px) {
+      .tiers-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
       .tiers-grid {
         grid-template-columns: 1fr;
       }
@@ -713,7 +719,20 @@
       padding: 2rem;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
+
+    .tier-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .tier-card--build:hover { border-color: rgba(59, 130, 246, 0.5); }
+    .tier-card--review:hover { border-color: rgba(139, 92, 246, 0.5); }
+    .tier-card--domain:hover { border-color: rgba(245, 158, 11, 0.5); }
+    .tier-card--product:hover { border-color: rgba(34, 197, 94, 0.5); }
 
     .tier-card::before {
       content: '';
@@ -724,9 +743,10 @@
       height: 4px;
     }
 
-    .tier-card--low::before { background: #22c55e; }
-    .tier-card--medium::before { background: #f59e0b; }
-    .tier-card--high::before { background: #ef4444; }
+    .tier-card--build::before { background: #3b82f6; }
+    .tier-card--review::before { background: #8b5cf6; }
+    .tier-card--domain::before { background: #f59e0b; }
+    .tier-card--product::before { background: #22c55e; }
 
     .tier-card__header {
       display: flex;
@@ -744,19 +764,24 @@
       letter-spacing: 0.05em;
     }
 
-    .tier-card--low .tier-card__badge {
+    .tier-card--build .tier-card__badge {
+      background: rgba(59, 130, 246, 0.15);
+      color: #3b82f6;
+    }
+
+    .tier-card--review .tier-card__badge {
+      background: rgba(139, 92, 246, 0.15);
+      color: #8b5cf6;
+    }
+
+    .tier-card--domain .tier-card__badge {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+
+    .tier-card--product .tier-card__badge {
       background: rgba(34, 197, 94, 0.15);
       color: #22c55e;
-    }
-
-    .tier-card--medium .tier-card__badge {
-      background: rgba(245, 158, 11, 0.15);
-      color: #f59e0b;
-    }
-
-    .tier-card--high .tier-card__badge {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
     }
 
     .tier-card__model {
@@ -774,6 +799,41 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
+      flex-grow: 1;
+      align-content: flex-start;
+    }
+
+    .tier-card__desc {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+
+    .section__note {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-tertiary);
+      font-size: 0.9375rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .section__note strong {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .section__note code {
+      font-family: var(--font-family-mono);
+      font-size: 0.8125rem;
+      background: var(--bg-tertiary);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
     }
 
     .agent-tag {
@@ -790,6 +850,27 @@
     .agent-tag:hover {
       border-color: var(--accent-color);
       color: var(--text-primary);
+    }
+
+    /* Lane-specific tag hover colors */
+    .tier-card--build .agent-tag:hover {
+      border-color: #3b82f6;
+      color: #eff6ff;
+    }
+
+    .tier-card--review .agent-tag:hover {
+      border-color: #8b5cf6;
+      color: #f5f3ff;
+    }
+
+    .tier-card--domain .agent-tag:hover {
+      border-color: #f59e0b;
+      color: #fffbeb;
+    }
+
+    .tier-card--product .agent-tag:hover {
+      border-color: #22c55e;
+      color: #f0fdf4;
     }
 
     /* Documentation preview */
@@ -1456,7 +1537,7 @@
           <span class="gradient-text">A weapon, not a tool</span>
         </p>
         <p class="hero__description hero-entrance hero-entrance--3">
-          Multi-AI orchestration plugin for Claude Code. Coordinate Claude, Gemini, and Codex with 33 specialized agents, 40+ skills, and MCP-powered tools.
+          Multi-AI orchestration plugin for Claude Code. Coordinate Claude, Gemini, and Codex with 28 specialized agents, 40+ skills, and MCP-powered tools.
         </p>
         <div class="hero-stats hero-entrance hero-entrance--3" style="--reveal-delay: 150ms">
           <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="hero-stat-badge" target="_blank" rel="noopener" aria-label="GitHub Stars">
@@ -1708,7 +1789,15 @@
         <p class="feature-card__description">N coordinated agents working on a shared task list. True collaborative multi-agent execution.</p>
       </article>
 
-      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="500">
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="450">
+        <div class="feature-card__icon">
+          <svg width="24" height="24"><use href="#icon-users"></use></svg>
+        </div>
+        <h3 class="feature-card__title">Team</h3>
+        <p class="feature-card__description">N coordinated agents on a shared task list using Claude Code native teams. Real-time messaging and task coordination.</p>
+      </article>
+
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="550">
         <div class="feature-card__icon">
           <svg width="24" height="24"><use href="#icon-git-merge"></use></svg>
         </div>
@@ -1716,7 +1805,7 @@
         <p class="feature-card__description">Sequential agent chaining with data passing. Build complex workflows with specialized stages.</p>
       </article>
 
-      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="600">
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="650">
         <div class="feature-card__icon">
           <svg width="24" height="24"><use href="#icon-leaf"></use></svg>
         </div>
@@ -1724,7 +1813,7 @@
         <p class="feature-card__description">Token-efficient parallel execution with smart Haiku/Sonnet routing. Save tokens without sacrificing quality.</p>
       </article>
 
-      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="700">
+      <article class="feature-card" data-reveal="fade-up" data-reveal-delay="750">
         <div class="feature-card__icon">
           <svg width="24" height="24"><use href="#icon-compass"></use></svg>
         </div>
@@ -1843,69 +1932,99 @@
             <td>Coordinated multi-agent</td>
             <td>"swarm: implement all features"</td>
           </tr>
+          <tr>
+            <td><code>team</code></td>
+            <td>Coordinated native teams</td>
+            <td>"team 5:executor fix all errors"</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- Agent Tiers Section -->
+  <!-- Agent Lanes Section -->
   <section id="agents" class="section agents-section" aria-labelledby="agents-title">
     <div class="section__header" data-reveal="fade-up">
-      <h2 id="agents-title" class="section__title">33 Specialized Agents</h2>
-      <p class="section__subtitle">Each agent is optimized for specific tasks with the right model tier.</p>
+      <h2 id="agents-title" class="section__title">28 Specialized Agents</h2>
+      <p class="section__subtitle">Unified agents organized by domain. Use the model parameter to match complexity.</p>
     </div>
 
     <div class="tiers-grid" data-reveal="stagger">
-      <article class="tier-card tier-card--low" data-reveal="fade-up">
+      <article class="tier-card tier-card--build" data-reveal="fade-up">
         <div class="tier-card__header">
-          <span class="tier-card__badge">LOW</span>
-          <span class="tier-card__model">Haiku</span>
+          <span class="tier-card__badge">BUILD</span>
+          <span class="tier-card__model">Analysis</span>
         </div>
-        <h3 class="tier-card__title">Fast & Focused</h3>
+        <h3 class="tier-card__title">Build &amp; Analysis</h3>
         <div class="tier-card__agents">
-          <span class="agent-tag">architect-low</span>
-          <span class="agent-tag">executor-low</span>
           <span class="agent-tag">explore</span>
-          <span class="agent-tag">researcher-low</span>
-          <span class="agent-tag">writer-low</span>
-          <span class="agent-tag">critic-low</span>
-        </div>
-      </article>
-
-      <article class="tier-card tier-card--medium" data-reveal="fade-up" data-reveal-delay="100">
-        <div class="tier-card__header">
-          <span class="tier-card__badge">MEDIUM</span>
-          <span class="tier-card__model">Sonnet</span>
-        </div>
-        <h3 class="tier-card__title">Balanced Power</h3>
-        <div class="tier-card__agents">
-          <span class="agent-tag">executor</span>
-          <span class="agent-tag">designer</span>
-          <span class="agent-tag">researcher</span>
-          <span class="agent-tag">scientist</span>
-          <span class="agent-tag">writer</span>
-          <span class="agent-tag">oracle</span>
-          <span class="agent-tag">explore-medium</span>
-          <span class="agent-tag">vision</span>
-        </div>
-      </article>
-
-      <article class="tier-card tier-card--high" data-reveal="fade-up" data-reveal-delay="200">
-        <div class="tier-card__header">
-          <span class="tier-card__badge">HIGH</span>
-          <span class="tier-card__model">Opus</span>
-        </div>
-        <h3 class="tier-card__title">Deep Reasoning</h3>
-        <div class="tier-card__agents">
-          <span class="agent-tag">architect</span>
-          <span class="agent-tag">executor-high</span>
-          <span class="agent-tag">planner</span>
-          <span class="agent-tag">critic</span>
           <span class="agent-tag">analyst</span>
-          <span class="agent-tag">scientist-high</span>
+          <span class="agent-tag">planner</span>
+          <span class="agent-tag">architect</span>
+          <span class="agent-tag">debugger</span>
+          <span class="agent-tag">executor</span>
+          <span class="agent-tag">deep-executor</span>
+          <span class="agent-tag">verifier</span>
         </div>
+        <p class="tier-card__desc">Core workflow from exploration to verification</p>
+      </article>
+
+      <article class="tier-card tier-card--review" data-reveal="fade-up" data-reveal-delay="100">
+        <div class="tier-card__header">
+          <span class="tier-card__badge">REVIEW</span>
+          <span class="tier-card__model">Quality</span>
+        </div>
+        <h3 class="tier-card__title">Review Lane</h3>
+        <div class="tier-card__agents">
+          <span class="agent-tag">style-reviewer</span>
+          <span class="agent-tag">quality-reviewer</span>
+          <span class="agent-tag">api-reviewer</span>
+          <span class="agent-tag">security-reviewer</span>
+          <span class="agent-tag">performance-reviewer</span>
+          <span class="agent-tag">code-reviewer</span>
+        </div>
+        <p class="tier-card__desc">Multi-dimensional code quality checks</p>
+      </article>
+
+      <article class="tier-card tier-card--domain" data-reveal="fade-up" data-reveal-delay="200">
+        <div class="tier-card__header">
+          <span class="tier-card__badge">DOMAIN</span>
+          <span class="tier-card__model">Specialists</span>
+        </div>
+        <h3 class="tier-card__title">Domain Specialists</h3>
+        <div class="tier-card__agents">
+          <span class="agent-tag">dependency-expert</span>
+          <span class="agent-tag">test-engineer</span>
+          <span class="agent-tag">quality-strategist</span>
+          <span class="agent-tag">build-fixer</span>
+          <span class="agent-tag">designer</span>
+          <span class="agent-tag">writer</span>
+          <span class="agent-tag">qa-tester</span>
+          <span class="agent-tag">scientist</span>
+          <span class="agent-tag">git-master</span>
+        </div>
+        <p class="tier-card__desc">Deep expertise for specialized tasks</p>
+      </article>
+
+      <article class="tier-card tier-card--product" data-reveal="fade-up" data-reveal-delay="300">
+        <div class="tier-card__header">
+          <span class="tier-card__badge">PRODUCT</span>
+          <span class="tier-card__model">Strategy</span>
+        </div>
+        <h3 class="tier-card__title">Product Lane</h3>
+        <div class="tier-card__agents">
+          <span class="agent-tag">product-manager</span>
+          <span class="agent-tag">ux-researcher</span>
+          <span class="agent-tag">information-architect</span>
+          <span class="agent-tag">product-analyst</span>
+        </div>
+        <p class="tier-card__desc">Product thinking and user research</p>
       </article>
     </div>
+
+    <p class="section__note" data-reveal="fade-up" data-reveal-delay="400">
+      Plus <strong>Coordination</strong> agents: <code>critic</code> and <code>vision</code> for plan challenges and image analysis.
+    </p>
   </section>
 
   <!-- Zero Learning Curve Section -->
@@ -1921,7 +2040,7 @@
           <svg width="24" height="24"><use href="#icon-zap"></use></svg>
         </div>
         <h3 class="doc-card__title">Just Talk</h3>
-        <p class="doc-card__description">"Build me a REST API" - that's it. Autopilot detects your intent and orchestrates 33 agents automatically.</p>
+        <p class="doc-card__description">"Build me a REST API" - that's it. Autopilot detects your intent and orchestrates 28 agents automatically.</p>
       </div>
 
       <div class="doc-card" data-reveal="fade-up" data-reveal-delay="100">

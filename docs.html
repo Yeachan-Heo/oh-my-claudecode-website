@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode - 33 agents, 8 execution modes, 40+ skills.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode - 28 agents, 9 execution modes, 40+ skills.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
@@ -17,7 +17,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Documentation | Oh My Claudecode">
-  <meta name="twitter:description" content="Complete documentation for oh-my-claudecode - 33 agents, 8 execution modes, 40+ skills.">
+  <meta name="twitter:description" content="Complete documentation for oh-my-claudecode - 28 agents, 9 execution modes, 40+ skills.">
   <meta name="twitter:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
@@ -252,6 +252,7 @@
     .mode-card__icon--swarm { background: linear-gradient(135deg, #f59e0b, #d97706); }
     .mode-card__icon--pipeline { background: linear-gradient(135deg, #22c55e, #16a34a); }
     .mode-card__icon--ecomode { background: linear-gradient(135deg, #10b981, #059669); }
+    .mode-card__icon--team { background: linear-gradient(135deg, #14b8a6, #0d9488); }
     .mode-card__icon--ultraqa { background: linear-gradient(135deg, #ec4899, #db2777); }
 
     .mode-card__title {
@@ -589,7 +590,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.0.2</span>
+        <span class="sidebar-brand__version">v4.1.0</span>
       </a>
 
       <!-- Search -->
@@ -619,6 +620,7 @@
           <div class="sidebar-title">Getting Started</div>
           <ul class="sidebar-nav">
             <li><a href="#introduction" class="sidebar-link" data-section="introduction">Introduction</a></li>
+            <li><a href="#whats-new" class="sidebar-link" data-section="whats-new">What's New in v4.1.0</a></li>
             <li><a href="#installation" class="sidebar-link" data-section="installation">Installation</a></li>
             <li><a href="#quick-start" class="sidebar-link" data-section="quick-start">Quick Start</a></li>
             <li><a href="#philosophy" class="sidebar-link" data-section="philosophy">Conductor Philosophy</a></li>
@@ -645,6 +647,7 @@
             </button>
             <ul class="submenu sidebar-nav">
               <li><a href="#ultrapilot" class="sidebar-link" data-section="ultrapilot">Ultrapilot</a></li>
+              <li><a href="#team" class="sidebar-link" data-section="team">Team</a></li>
               <li><a href="#swarm" class="sidebar-link" data-section="swarm">Swarm</a></li>
               <li><a href="#pipeline" class="sidebar-link" data-section="pipeline">Pipeline</a></li>
               <li><a href="#ultraqa" class="sidebar-link" data-section="ultraqa">UltraQA</a></li>
@@ -657,7 +660,7 @@
           <div class="sidebar-title">Agent Reference</div>
           <ul class="sidebar-nav">
             <li><a href="#agent-overview" class="sidebar-link" data-section="agent-overview">Overview</a></li>
-            <li><a href="#agent-tiers" class="sidebar-link" data-section="agent-tiers">Agent Tiers</a></li>
+            <li><a href="#agent-tiers" class="sidebar-link" data-section="agent-tiers">Agent Lanes</a></li>
             <li><a href="#agent-selection" class="sidebar-link" data-section="agent-selection">Selection Guide</a></li>
             <li><a href="#agent-domains" class="sidebar-link" data-section="agent-domains">Domains</a></li>
           </ul>
@@ -745,7 +748,7 @@
                   <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
               </div>
-              <div class="feature-item__title">33 Specialized Agents</div>
+              <div class="feature-item__title">28 Specialized Agents</div>
               <div class="feature-item__desc">From architects to designers, each agent excels at specific tasks</div>
             </div>
             <div class="feature-item">
@@ -776,6 +779,69 @@
               <div class="feature-item__title">Automatic Mode Selection</div>
               <div class="feature-item__desc">Detects your intent and activates the right mode</div>
             </div>
+          </div>
+        </section>
+
+        <!-- What's New in v4.1.0 -->
+        <section id="whats-new" data-section>
+          <h2><span class="anchor-link">#</span>What's New in v4.1.0</h2>
+
+          <div class="feature-grid">
+            <div class="feature-item">
+              <div class="feature-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="feature-item__title">Agent Architecture Reform</div>
+              <div class="feature-item__desc">Unified 28 agents replacing old tiered system. No more -low/-medium/-high suffixes -- each agent has one name and a default model.</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <circle cx="6" cy="6" r="2"></circle>
+                  <circle cx="18" cy="6" r="2"></circle>
+                  <circle cx="6" cy="18" r="2"></circle>
+                  <circle cx="18" cy="18" r="2"></circle>
+                </svg>
+              </div>
+              <div class="feature-item__title">Team Coordination System</div>
+              <div class="feature-item__desc">Native Claude Code team support with TeamCreate, SendMessage, and TaskCreate for real-time multi-agent coordination.</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <div class="feature-item__title">System Prompt Modernization</div>
+              <div class="feature-item__desc">Optimized for Claude Opus 4.6 with streamlined operating principles and clearer delegation rules.</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+              </div>
+              <div class="feature-item__title">Skill Consolidation</div>
+              <div class="feature-item__desc">Cleaner command surface: <code>ralplan</code> is now <code>/plan --consensus</code>, <code>review</code> is <code>/plan --review</code>, and utility skills merged.</div>
+            </div>
+          </div>
+
+          <div class="callout callout-success">
+            <div class="callout-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              Reliability Improvements
+            </div>
+            <p>v4.1.0 includes better state management, improved error handling, and more robust hook processing for all execution modes.</p>
           </div>
         </section>
 
@@ -935,17 +1001,17 @@
               <tr>
                 <td>Single-line code change</td>
                 <td>NEVER</td>
-                <td>executor-low</td>
+                <td>executor</td>
               </tr>
               <tr>
                 <td>Multi-file changes</td>
                 <td>NEVER</td>
-                <td>executor / executor-high</td>
+                <td>executor / deep-executor</td>
               </tr>
               <tr>
                 <td>Complex debugging</td>
                 <td>NEVER</td>
-                <td>architect</td>
+                <td>debugger</td>
               </tr>
               <tr>
                 <td>UI/frontend work</td>
@@ -1184,6 +1250,61 @@ Build me a dashboard that shows real-time analytics</code></pre>
           </div>
         </section>
 
+        <!-- Team -->
+        <section id="team" data-section>
+          <h3><span class="anchor-link">#</span>Team</h3>
+
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <div class="mode-card__icon mode-card__icon--team">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="mode-card__title">Team</h4>
+                <span class="mode-card__keyword">team</span>
+                <span class="mode-card__keyword">coordinated team</span>
+              </div>
+            </div>
+            <p class="mode-card__description">
+              N coordinated agents on a shared task list using Claude Code native teams.
+              Team lead creates the team, assigns tasks, and monitors progress with real-time messaging.
+            </p>
+            <ul class="mode-card__features">
+              <li>TeamCreate/SendMessage/TaskCreate tools for coordination</li>
+              <li>Real-time inter-agent messaging</li>
+              <li>Built-in task dependencies (blocks/blockedBy)</li>
+              <li>Graceful shutdown protocol</li>
+              <li>Team lead orchestrates specialized teammates</li>
+            </ul>
+          </div>
+
+          <h4>Architecture</h4>
+          <p>The team lifecycle follows a structured pattern:</p>
+          <ol>
+            <li><strong>TeamCreate</strong> - Team lead creates a named team</li>
+            <li><strong>TaskCreate</strong> - Create tasks with descriptions and dependencies</li>
+            <li><strong>Spawn teammates</strong> - Each teammate claims and works on tasks</li>
+            <li><strong>Monitor</strong> - Team lead coordinates via SendMessage</li>
+            <li><strong>Shutdown</strong> - Graceful shutdown_request to all teammates</li>
+          </ol>
+
+          <h4>Example Usage</h4>
+          <div class="code-block-wrapper">
+            <div class="code-block-header">
+              <span class="code-lang">TEXT</span>
+            </div>
+            <pre><code>/oh-my-claudecode:team 5:executor "fix all TypeScript errors"
+
+# Or with mixed agent types:
+/oh-my-claudecode:team 3:executor,2:test-engineer "implement and test the auth module"</code></pre>
+          </div>
+        </section>
+
         <!-- Swarm -->
         <section id="swarm" data-section>
           <h3><span class="anchor-link">#</span>Swarm</h3>
@@ -1291,42 +1412,221 @@ Build me a dashboard that shows real-time analytics</code></pre>
         <!-- Agent Overview -->
         <section id="agent-overview" data-section>
           <h2><span class="anchor-link">#</span>Agent Overview</h2>
-          <p>OMC includes 33 specialized agents organized by domain and complexity tier. Each agent excels at specific tasks and uses the appropriate model.</p>
+          <p>OMC includes 28 specialized agents organized into functional lanes. Each agent excels at specific tasks and uses the appropriate model (haiku, sonnet, or opus).</p>
         </section>
 
-        <!-- Agent Tiers -->
+        <!-- Agent Lanes -->
         <section id="agent-tiers" data-section>
-          <h3><span class="anchor-link">#</span>Agent Tiers</h3>
+          <h3><span class="anchor-link">#</span>Agent Lanes</h3>
 
-          <p>Agents are organized into three tiers based on the model they use:</p>
+          <p>Agents are organized into functional lanes. Each agent has a default model (haiku, sonnet, or opus) optimized for its role:</p>
 
+          <h4>Build/Analysis Lane</h4>
           <table class="agent-table">
             <thead>
               <tr>
-                <th>Tier</th>
+                <th>Agent</th>
                 <th>Model</th>
-                <th>Use Case</th>
-                <th>Token Cost</th>
+                <th>Purpose</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="tier-badge tier-badge--low">LOW</span></td>
-                <td>Haiku</td>
-                <td>Simple lookups, basic operations</td>
-                <td>Lowest</td>
+                <td><code>explore</code></td>
+                <td><span class="tier-badge tier-badge--low">Haiku</span></td>
+                <td>Internal codebase discovery, symbol/file mapping</td>
               </tr>
               <tr>
-                <td><span class="tier-badge tier-badge--medium">MEDIUM</span></td>
-                <td>Sonnet</td>
-                <td>Standard development work</td>
-                <td>Medium</td>
+                <td><code>analyst</code></td>
+                <td><span class="tier-badge tier-badge--high">Opus</span></td>
+                <td>Requirements clarity, acceptance criteria, hidden constraints</td>
               </tr>
               <tr>
-                <td><span class="tier-badge tier-badge--high">HIGH</span></td>
-                <td>Opus</td>
-                <td>Complex reasoning, architecture</td>
-                <td>Highest</td>
+                <td><code>planner</code></td>
+                <td><span class="tier-badge tier-badge--high">Opus</span></td>
+                <td>Task sequencing, execution plans, risk flags</td>
+              </tr>
+              <tr>
+                <td><code>architect</code></td>
+                <td><span class="tier-badge tier-badge--high">Opus</span></td>
+                <td>System design, boundaries, interfaces, long-horizon tradeoffs</td>
+              </tr>
+              <tr>
+                <td><code>debugger</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Root-cause analysis, regression isolation, failure diagnosis</td>
+              </tr>
+              <tr>
+                <td><code>executor</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Code implementation, refactoring, feature work</td>
+              </tr>
+              <tr>
+                <td><code>deep-executor</code></td>
+                <td><span class="tier-badge tier-badge--high">Opus</span></td>
+                <td>Complex autonomous goal-oriented tasks</td>
+              </tr>
+              <tr>
+                <td><code>verifier</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Completion evidence, claim validation, test adequacy</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Review Lane</h4>
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Model</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>style-reviewer</code></td>
+                <td><span class="tier-badge tier-badge--low">Haiku</span></td>
+                <td>Formatting, naming, idioms, lint conventions</td>
+              </tr>
+              <tr>
+                <td><code>quality-reviewer</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Logic defects, maintainability, anti-patterns</td>
+              </tr>
+              <tr>
+                <td><code>api-reviewer</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>API contracts, versioning, backward compatibility</td>
+              </tr>
+              <tr>
+                <td><code>security-reviewer</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Vulnerabilities, trust boundaries, authn/authz</td>
+              </tr>
+              <tr>
+                <td><code>performance-reviewer</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Hotspots, complexity, memory/latency optimization</td>
+              </tr>
+              <tr>
+                <td><code>code-reviewer</code></td>
+                <td><span class="tier-badge tier-badge--high">Opus</span></td>
+                <td>Comprehensive review across concerns</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Domain Specialists</h4>
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Model</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>dependency-expert</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>External SDK/API/package evaluation</td>
+              </tr>
+              <tr>
+                <td><code>test-engineer</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Test strategy, coverage, flaky-test hardening</td>
+              </tr>
+              <tr>
+                <td><code>quality-strategist</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Quality strategy, release readiness, risk assessment</td>
+              </tr>
+              <tr>
+                <td><code>build-fixer</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Build/toolchain/type failures</td>
+              </tr>
+              <tr>
+                <td><code>designer</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>UX/UI architecture, interaction design</td>
+              </tr>
+              <tr>
+                <td><code>writer</code></td>
+                <td><span class="tier-badge tier-badge--low">Haiku</span></td>
+                <td>Docs, migration notes, user guidance</td>
+              </tr>
+              <tr>
+                <td><code>qa-tester</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Interactive CLI/service runtime validation</td>
+              </tr>
+              <tr>
+                <td><code>scientist</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Data/statistical analysis</td>
+              </tr>
+              <tr>
+                <td><code>git-master</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Commit strategy, history hygiene</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Product Lane</h4>
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Model</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>product-manager</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Problem framing, personas/JTBD, PRDs</td>
+              </tr>
+              <tr>
+                <td><code>ux-researcher</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Heuristic audits, usability, accessibility</td>
+              </tr>
+              <tr>
+                <td><code>information-architect</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Taxonomy, navigation, findability</td>
+              </tr>
+              <tr>
+                <td><code>product-analyst</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Product metrics, funnel analysis, experiments</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Coordination</h4>
+          <table class="agent-table">
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Model</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>critic</code></td>
+                <td><span class="tier-badge tier-badge--high">Opus</span></td>
+                <td>Plan/design critical challenge</td>
+              </tr>
+              <tr>
+                <td><code>vision</code></td>
+                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
+                <td>Image/screenshot/diagram analysis</td>
               </tr>
             </tbody>
           </table>
@@ -1336,69 +1636,81 @@ Build me a dashboard that shows real-time analytics</code></pre>
         <section id="agent-selection" data-section>
           <h3><span class="anchor-link">#</span>Agent Selection Guide</h3>
 
+          <p>Choose the right agent based on your task. Each agent has a fixed default model, but you can override it with the <code>model</code> parameter when delegating.</p>
+
           <table class="agent-table">
             <thead>
               <tr>
-                <th>Domain</th>
-                <th>LOW (Haiku)</th>
-                <th>MEDIUM (Sonnet)</th>
-                <th>HIGH (Opus)</th>
+                <th>Task</th>
+                <th>Recommended Agent</th>
+                <th>Lane</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Analysis</strong></td>
-                <td><code>architect-low</code></td>
-                <td><code>architect-medium</code></td>
-                <td><code>architect</code></td>
-              </tr>
-              <tr>
-                <td><strong>Execution</strong></td>
-                <td><code>executor-low</code></td>
-                <td><code>executor</code></td>
-                <td><code>executor-high</code></td>
-              </tr>
-              <tr>
-                <td><strong>Search</strong></td>
+                <td>Quick file/symbol lookup</td>
                 <td><code>explore</code></td>
-                <td><code>explore-medium</code></td>
-                <td><code>explore-high</code></td>
+                <td>Build/Analysis</td>
               </tr>
               <tr>
-                <td><strong>Research</strong></td>
-                <td><code>researcher-low</code></td>
-                <td><code>researcher</code></td>
-                <td>-</td>
+                <td>Implement a feature</td>
+                <td><code>executor</code></td>
+                <td>Build/Analysis</td>
               </tr>
               <tr>
-                <td><strong>Frontend</strong></td>
-                <td><code>designer-low</code></td>
+                <td>Complex autonomous refactor</td>
+                <td><code>deep-executor</code></td>
+                <td>Build/Analysis</td>
+              </tr>
+              <tr>
+                <td>Debug a failing test</td>
+                <td><code>debugger</code></td>
+                <td>Build/Analysis</td>
+              </tr>
+              <tr>
+                <td>System design decisions</td>
+                <td><code>architect</code></td>
+                <td>Build/Analysis</td>
+              </tr>
+              <tr>
+                <td>Comprehensive code review</td>
+                <td><code>code-reviewer</code></td>
+                <td>Review</td>
+              </tr>
+              <tr>
+                <td>Security audit</td>
+                <td><code>security-reviewer</code></td>
+                <td>Review</td>
+              </tr>
+              <tr>
+                <td>Write tests</td>
+                <td><code>test-engineer</code></td>
+                <td>Domain Specialists</td>
+              </tr>
+              <tr>
+                <td>UI/UX work</td>
                 <td><code>designer</code></td>
-                <td><code>designer-high</code></td>
+                <td>Domain Specialists</td>
               </tr>
               <tr>
-                <td><strong>Testing</strong></td>
-                <td>-</td>
-                <td><code>qa-tester</code></td>
-                <td><code>qa-tester-high</code></td>
-              </tr>
-              <tr>
-                <td><strong>Planning</strong></td>
-                <td>-</td>
-                <td>-</td>
-                <td><code>planner</code>, <code>critic</code>, <code>analyst</code></td>
-              </tr>
-              <tr>
-                <td><strong>Documentation</strong></td>
+                <td>Documentation</td>
                 <td><code>writer</code></td>
-                <td>-</td>
-                <td>-</td>
+                <td>Domain Specialists</td>
               </tr>
               <tr>
-                <td><strong>Data Science</strong></td>
-                <td><code>scientist-low</code></td>
+                <td>External SDK evaluation</td>
+                <td><code>dependency-expert</code></td>
+                <td>Domain Specialists</td>
+              </tr>
+              <tr>
+                <td>Product requirements</td>
+                <td><code>product-manager</code></td>
+                <td>Product</td>
+              </tr>
+              <tr>
+                <td>Data analysis</td>
                 <td><code>scientist</code></td>
-                <td><code>scientist-high</code></td>
+                <td>Domain Specialists</td>
               </tr>
             </tbody>
           </table>
@@ -1409,49 +1721,75 @@ Build me a dashboard that shows real-time analytics</code></pre>
           <h3><span class="anchor-link">#</span>Agent Domains</h3>
 
           <details data-accordion>
-            <summary>Analysis Agents (architect-*)</summary>
+            <summary>Build/Analysis Lane</summary>
             <div class="accordion-content-wrapper">
-              <p>Analyze code structure, verify implementations, debug complex issues.</p>
+              <p>Core agents for exploring, planning, building, and verifying code.</p>
               <ul>
-                <li><code>architect-low</code> - Quick verification checks</li>
-                <li><code>architect-medium</code> - Standard code review</li>
-                <li><code>architect</code> - Complex architectural analysis</li>
+                <li><code>explore</code> - Internal codebase discovery, symbol/file mapping</li>
+                <li><code>analyst</code> - Requirements clarity, acceptance criteria</li>
+                <li><code>planner</code> - Task sequencing, execution plans, risk flags</li>
+                <li><code>architect</code> - System design, boundaries, interfaces</li>
+                <li><code>debugger</code> - Root-cause analysis, regression isolation</li>
+                <li><code>executor</code> - Code implementation, refactoring, feature work</li>
+                <li><code>deep-executor</code> - Complex autonomous goal-oriented tasks</li>
+                <li><code>verifier</code> - Completion evidence, claim validation</li>
               </ul>
             </div>
           </details>
 
           <details data-accordion>
-            <summary>Execution Agents (executor-*)</summary>
+            <summary>Review Lane</summary>
             <div class="accordion-content-wrapper">
-              <p>Implement features, fix bugs, write code.</p>
+              <p>Specialized reviewers for different aspects of code quality.</p>
               <ul>
-                <li><code>executor-low</code> - Single-line changes, simple fixes</li>
-                <li><code>executor</code> - Multi-file implementations</li>
-                <li><code>executor-high</code> - Complex refactoring, architectural changes</li>
+                <li><code>style-reviewer</code> - Formatting, naming, idioms, lint conventions</li>
+                <li><code>quality-reviewer</code> - Logic defects, maintainability, anti-patterns</li>
+                <li><code>api-reviewer</code> - API contracts, versioning, backward compatibility</li>
+                <li><code>security-reviewer</code> - Vulnerabilities, trust boundaries, authn/authz</li>
+                <li><code>performance-reviewer</code> - Hotspots, complexity, memory/latency</li>
+                <li><code>code-reviewer</code> - Comprehensive review across all concerns</li>
               </ul>
             </div>
           </details>
 
           <details data-accordion>
-            <summary>Search Agents (explore-*)</summary>
+            <summary>Domain Specialists</summary>
             <div class="accordion-content-wrapper">
-              <p>Navigate and understand codebases.</p>
+              <p>Focused experts for specific technical domains.</p>
               <ul>
-                <li><code>explore</code> - Quick file/function lookup</li>
-                <li><code>explore-medium</code> - Cross-file analysis</li>
-                <li><code>explore-high</code> - Deep codebase understanding</li>
+                <li><code>dependency-expert</code> - External SDK/API/package evaluation</li>
+                <li><code>test-engineer</code> - Test strategy, coverage, flaky-test hardening</li>
+                <li><code>quality-strategist</code> - Quality strategy, release readiness</li>
+                <li><code>build-fixer</code> - Build/toolchain/type failures</li>
+                <li><code>designer</code> - UX/UI architecture, interaction design</li>
+                <li><code>writer</code> - Docs, migration notes, user guidance</li>
+                <li><code>qa-tester</code> - Interactive CLI/service runtime validation</li>
+                <li><code>scientist</code> - Data/statistical analysis</li>
+                <li><code>git-master</code> - Commit strategy, history hygiene</li>
               </ul>
             </div>
           </details>
 
           <details data-accordion>
-            <summary>Frontend Agents (designer-*)</summary>
+            <summary>Product Lane</summary>
             <div class="accordion-content-wrapper">
-              <p>UI/UX implementation, component design, styling.</p>
+              <p>Product-focused agents for discovery, research, and analysis.</p>
               <ul>
-                <li><code>designer-low</code> - Simple styling changes</li>
-                <li><code>designer</code> - Component implementation</li>
-                <li><code>designer-high</code> - Complex UI architecture</li>
+                <li><code>product-manager</code> - Problem framing, personas/JTBD, PRDs</li>
+                <li><code>ux-researcher</code> - Heuristic audits, usability, accessibility</li>
+                <li><code>information-architect</code> - Taxonomy, navigation, findability</li>
+                <li><code>product-analyst</code> - Product metrics, funnel analysis, experiments</li>
+              </ul>
+            </div>
+          </details>
+
+          <details data-accordion>
+            <summary>Coordination</summary>
+            <div class="accordion-content-wrapper">
+              <p>Cross-cutting agents for critique and visual analysis.</p>
+              <ul>
+                <li><code>critic</code> - Plan/design critical challenge</li>
+                <li><code>vision</code> - Image/screenshot/diagram analysis</li>
               </ul>
             </div>
           </details>
@@ -1498,8 +1836,13 @@ Build me a dashboard that shows real-time analytics</code></pre>
               </tr>
               <tr>
                 <td><code>ralplan</code></td>
-                <td>Iterative planning</td>
+                <td>Consensus planning (alias for <code>/plan --consensus</code>)</td>
                 <td>"ralplan this feature"</td>
+              </tr>
+              <tr>
+                <td><code>team</code></td>
+                <td>Coordinated team agents</td>
+                <td>"team: fix all errors with 5 agents"</td>
               </tr>
               <tr>
                 <td><code>ultrapilot</code></td>
@@ -1533,16 +1876,17 @@ Build me a dashboard that shows real-time analytics</code></pre>
             <li><code>/oh-my-claudecode:ultrawork</code> - Maximum parallelism</li>
             <li><code>/oh-my-claudecode:ecomode</code> - Token-efficient mode</li>
             <li><code>/oh-my-claudecode:ultrapilot</code> - Parallel autopilot</li>
-            <li><code>/oh-my-claudecode:swarm</code> - Coordinated agents</li>
+            <li><code>/oh-my-claudecode:team</code> - Coordinated team of N agents</li>
+            <li><code>/oh-my-claudecode:swarm</code> - Coordinated agents (SQLite-based)</li>
             <li><code>/oh-my-claudecode:pipeline</code> - Sequential chaining</li>
             <li><code>/oh-my-claudecode:ultraqa</code> - QA cycling</li>
           </ul>
 
           <h4>Planning Skills</h4>
           <ul>
-            <li><code>/oh-my-claudecode:plan</code> - Planning interview</li>
-            <li><code>/oh-my-claudecode:ralplan</code> - Iterative planning</li>
-            <li><code>/oh-my-claudecode:review</code> - Code review</li>
+            <li><code>/oh-my-claudecode:plan</code> - Planning interview (supports <code>--consensus</code> and <code>--review</code> flags)</li>
+            <li><code>/oh-my-claudecode:ralplan</code> - Alias for <code>/plan --consensus</code></li>
+            <li><code>/oh-my-claudecode:review</code> - Alias for <code>/plan --review</code></li>
             <li><code>/oh-my-claudecode:analyze</code> - Deep analysis</li>
           </ul>
 
@@ -1550,9 +1894,10 @@ Build me a dashboard that shows real-time analytics</code></pre>
           <ul>
             <li><code>/oh-my-claudecode:cancel</code> - Stop current operation</li>
             <li><code>/oh-my-claudecode:note</code> - Add to notepad</li>
-            <li><code>/oh-my-claudecode:help</code> - Show all skills</li>
+            <li><code>/oh-my-claudecode:help</code> - Show all skills (includes <code>learn-about-omc</code>)</li>
             <li><code>/oh-my-claudecode:doctor</code> - Diagnose issues</li>
             <li><code>/oh-my-claudecode:hud</code> - HUD statusline</li>
+            <li><code>/oh-my-claudecode:skill</code> - Manage skills (includes <code>local-skills-setup</code>)</li>
           </ul>
         </section>
 
@@ -1578,7 +1923,7 @@ Build me a dashboard that shows real-time analytics</code></pre>
           <ul>
             <li>autopilot, ultrapilot</li>
             <li>ralph, ultrawork, ultraqa</li>
-            <li>swarm, pipeline</li>
+            <li>team, swarm, pipeline</li>
             <li>Planning interviews</li>
           </ul>
 
@@ -1836,7 +2181,7 @@ Build me a dashboard that shows real-time analytics</code></pre>
         <!-- MCP Overview -->
         <section id="mcp-overview" data-section>
           <h2><span class="anchor-link">#</span>MCP Tools Overview</h2>
-          <p>OMC v4.0.2 introduces powerful MCP (Model Context Protocol) tools that extend Claude's capabilities with external AI consultation, language server integration, and more.</p>
+          <p>OMC v4.1.0 includes powerful MCP (Model Context Protocol) tools that extend Claude's capabilities with external AI consultation, language server integration, and more.</p>
 
           <div class="feature-grid">
             <div class="feature-item">
@@ -1898,7 +2243,7 @@ Build me a dashboard that shows real-time analytics</code></pre>
             <tbody>
               <tr>
                 <td><code>ask_codex</code></td>
-                <td>OpenAI (gpt-5.2)</td>
+                <td>OpenAI (gpt-5.3-codex)</td>
                 <td>Code analysis, planning validation, architecture review</td>
               </tr>
               <tr>
@@ -2170,17 +2515,17 @@ df.describe()</code></pre>
               <tr>
                 <td><span class="tier-badge tier-badge--low">LIGHT</span></td>
                 <td>&lt;5 files, &lt;100 lines, full tests</td>
-                <td>architect-low (haiku)</td>
+                <td>verifier (haiku)</td>
               </tr>
               <tr>
                 <td><span class="tier-badge tier-badge--medium">STANDARD</span></td>
                 <td>Default</td>
-                <td>architect-medium (sonnet)</td>
+                <td>verifier (sonnet)</td>
               </tr>
               <tr>
                 <td><span class="tier-badge tier-badge--high">THOROUGH</span></td>
                 <td>&gt;20 files, security/architectural</td>
-                <td>architect (opus)</td>
+                <td>verifier (opus)</td>
               </tr>
             </tbody>
           </table>
