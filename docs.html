@@ -9,2565 +9,883 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode - 28 agents, 9 execution modes, 40+ skills.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.1.0 - 28 agents, 10 execution modes, 25+ MCP tools.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Documentation | Oh My Claudecode">
-  <meta name="twitter:description" content="Complete documentation for oh-my-claudecode - 28 agents, 9 execution modes, 40+ skills.">
-  <meta name="twitter:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
+  <!-- Design System -->
   <link rel="stylesheet" href="css/design-system.css">
-  <link rel="stylesheet" href="js/ui/docs.css">
 
   <style>
-    /* Documentation-specific overrides for dark theme */
+    /* =========================================
+       DOCS LAYOUT & THEME OVERRIDES
+       ========================================= */
     :root {
-      --docs-bg: var(--bg-primary);
-      --docs-bg-secondary: var(--bg-secondary);
-      --docs-bg-tertiary: var(--bg-tertiary);
-      --docs-text: var(--text-primary);
-      --docs-text-secondary: var(--text-secondary);
-      --docs-text-muted: var(--text-tertiary);
-      --docs-border: var(--border-default);
-      --docs-border-light: var(--border-subtle);
-      --docs-primary: var(--accent-primary);
-      --docs-primary-light: rgba(220, 38, 38, 0.1);
-      --docs-primary-dark: var(--accent-primary-pressed);
-      --docs-sidebar-width: 280px;
-      --docs-header-height: 0px;
+      --sidebar-width: 280px;
+      --header-height-mobile: 60px;
+      --content-max-width: 960px;
     }
 
-    /* Mobile menu button */
-    .mobile-menu-btn {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 1002;
-      width: 44px;
-      height: 44px;
-      padding: 10px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      touch-action: manipulation;
-      transition: background 0.2s ease;
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
     }
 
-    .mobile-menu-btn:hover {
-      background: var(--bg-tertiary);
+    /* Layout */
+    .docs-layout {
+      display: flex;
+      min-height: 100vh;
     }
 
-    .mobile-menu-btn__line {
-      width: 100%;
-      height: 2px;
-      background: var(--text-primary);
-      transition: all 0.3s ease;
-      border-radius: 2px;
-    }
-
-    /* Hamburger animation to X */
-    .mobile-menu-btn.active .mobile-menu-btn__line:nth-child(1) {
-      transform: translateY(7px) rotate(45deg);
-    }
-
-    .mobile-menu-btn.active .mobile-menu-btn__line:nth-child(2) {
-      opacity: 0;
-    }
-
-    .mobile-menu-btn.active .mobile-menu-btn__line:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg);
-    }
-
-    /* Sidebar overlay */
-    .sidebar-overlay {
+    .docs-sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-default);
+      overflow-y: auto;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .docs-main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      min-width: 0;
+      padding: 2rem 4rem;
+    }
+
+    .docs-content {
+      max-width: var(--content-max-width);
+      margin: 0 auto;
+      padding-bottom: 4rem;
+    }
+
+    /* Typography Overrides */
+    .docs-content h1 {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-default);
+      padding-bottom: 1rem;
+    }
+
+    .docs-content h2 {
+      margin-top: 3.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-default);
+      position: relative;
+    }
+
+    .docs-content h3 {
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .docs-content h4 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .docs-content p, .docs-content ul, .docs-content ol {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+    }
+
+    .docs-content ul, .docs-content ol {
+      padding-left: 1.5rem;
+    }
+
+    .docs-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    .docs-content code {
+      font-size: 0.85em;
+    }
+
+    /* Anchor Links */
+    .anchor-link {
+      position: absolute;
+      left: -1.25rem;
       opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-      z-index: 1000;
+      color: var(--accent-primary);
+      text-decoration: none;
+      transition: opacity 0.2s;
+      font-weight: 400;
     }
 
-    .sidebar-overlay.active {
+    h2:hover .anchor-link,
+    h3:hover .anchor-link {
       opacity: 1;
-      visibility: visible;
     }
 
-    @media (max-width: 1024px) {
-      .mobile-menu-btn {
-        display: flex;
-      }
-
-      .docs-sidebar {
-        transform: translateX(-100%);
-        z-index: 1001;
-      }
-
-      .docs-sidebar.open {
-        transform: translateX(0);
-      }
-    }
-
-    /* Sidebar brand */
+    /* Sidebar Components */
     .sidebar-brand {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 1.5rem 1rem;
-      border-bottom: 1px solid var(--docs-border);
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-default);
       text-decoration: none;
-    }
-
-    .sidebar-brand:hover {
-      text-decoration: none;
+      color: var(--text-primary);
     }
 
     .sidebar-brand__icon {
       width: 36px;
       height: 36px;
       background: linear-gradient(135deg, var(--accent-primary), #991b1b);
-      border-radius: var(--radius-lg);
+      border-radius: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: 700;
-      font-size: 1rem;
-    }
-
-    .sidebar-brand__text {
-      font-weight: 600;
-      font-size: 1rem;
-      color: var(--text-primary);
+      font-size: 0.9rem;
     }
 
     .sidebar-brand__version {
       font-size: 0.75rem;
-      color: var(--text-tertiary);
-      margin-left: 0.5rem;
-      padding: 0.125rem 0.375rem;
       background: var(--bg-tertiary);
-      border-radius: var(--radius-sm);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text-secondary);
+      margin-left: auto;
+      border: 1px solid var(--border-default);
     }
 
-    /* Callout styles for dark mode */
+    .sidebar-search {
+      padding: 1rem 1.5rem 0.5rem;
+      position: sticky;
+      top: 0;
+      background: var(--bg-secondary);
+      z-index: 10;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+    }
+
+    .sidebar-nav {
+      padding: 1rem 1.5rem 2rem;
+    }
+
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-tertiary);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      padding-left: 0.75rem;
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: 0.4rem 0.75rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-link:hover {
+      color: var(--text-primary);
+      background: var(--surface-hover);
+      text-decoration: none;
+    }
+
+    .sidebar-link.active {
+      color: var(--accent-primary);
+      background: rgba(220, 38, 38, 0.05);
+      border-left-color: var(--accent-primary);
+      font-weight: 500;
+    }
+
+    /* Collapsible */
+    .collapsible { margin-bottom: 0.25rem; }
+    .collapsible-toggle {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .collapsible-toggle:hover { color: var(--text-primary); }
+    .submenu { padding-left: 0.75rem; list-style: none !important; }
+
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border: 1px solid var(--border-default);
+      border-radius: 0.5rem;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-default);
+    }
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-default);
+      color: var(--text-secondary);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface-hover); }
+
+    /* Callouts */
     .callout {
       padding: 1rem 1.25rem;
       margin: 1.5rem 0;
-      border-radius: var(--radius-lg);
+      border-radius: 0.5rem;
       border-left: 4px solid;
-      background: var(--bg-secondary);
+      background: var(--bg-tertiary);
     }
+    .callout-title { font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary); }
+    .callout p { margin: 0; }
+    .callout.warning { border-color: var(--accent-warning); background: rgba(245, 158, 11, 0.05); }
+    .callout.info { border-color: var(--accent-info); background: rgba(59, 130, 246, 0.05); }
 
-    .callout-info {
-      border-color: var(--accent-info);
-      background: rgba(59, 130, 246, 0.1);
-    }
-
-    .callout-warning {
-      border-color: var(--accent-warning);
-      background: rgba(245, 158, 11, 0.1);
-    }
-
-    .callout-danger {
-      border-color: var(--accent-error);
-      background: rgba(239, 68, 68, 0.1);
-    }
-
-    .callout-success {
-      border-color: var(--accent-success);
-      background: rgba(34, 197, 94, 0.1);
-    }
-
-    .callout-title {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+    /* Pipeline Diagram */
+    .pipeline-diagram {
       display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-default);
+      margin: 2rem 0;
+    }
+    .pipeline-stage {
+      display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 0.5rem;
-      color: var(--text-primary);
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: 0.5rem;
+      min-width: 100px;
     }
-
-    .callout p {
-      margin: 0;
+    .pipeline-stage__icon {
+      width: 28px;
+      height: 28px;
+      background: var(--surface-default);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--accent-primary);
+      border: 1px solid var(--border-default);
+    }
+    .pipeline-stage__label {
+      font-size: 0.85rem;
+      font-weight: 600;
       color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+    .pipeline-arrow {
+      color: var(--text-tertiary);
+      font-size: 1.25rem;
     }
 
-    /* Mode cards */
+    /* Mode Cards */
     .mode-card {
       background: var(--bg-secondary);
       border: 1px solid var(--border-default);
-      border-radius: var(--radius-xl);
+      border-radius: 0.75rem;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s;
     }
-
-    .mode-card:hover {
-      border-color: var(--border-hover);
-    }
-
-    .mode-card__header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
+    .mode-card:hover { border-color: var(--accent-primary); }
+    .mode-card__header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
     .mode-card__icon {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-lg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      flex-shrink: 0;
+      width: 48px; height: 48px; border-radius: 0.5rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; background: var(--bg-tertiary);
     }
-
-    .mode-card__icon--autopilot { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-    .mode-card__icon--ralph { background: linear-gradient(135deg, #dc2626, #991b1b); }
-    .mode-card__icon--ultrawork { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-    .mode-card__icon--ultrapilot { background: linear-gradient(135deg, #06b6d4, #0891b2); }
-    .mode-card__icon--swarm { background: linear-gradient(135deg, #f59e0b, #d97706); }
-    .mode-card__icon--pipeline { background: linear-gradient(135deg, #22c55e, #16a34a); }
-    .mode-card__icon--ecomode { background: linear-gradient(135deg, #10b981, #059669); }
-    .mode-card__icon--team { background: linear-gradient(135deg, #14b8a6, #0d9488); }
-    .mode-card__icon--ultraqa { background: linear-gradient(135deg, #ec4899, #db2777); }
-
-    .mode-card__title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0;
-    }
-
+    .mode-card__title { margin: 0; font-size: 1.1rem; color: var(--text-primary); }
     .mode-card__keyword {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-      background: var(--bg-tertiary);
-      border-radius: var(--radius-sm);
-      color: var(--accent-primary);
+      font-family: var(--font-mono); font-size: 0.75rem;
+      padding: 2px 6px; background: var(--surface-hover);
+      border-radius: 4px; color: var(--accent-primary);
     }
-
-    .mode-card__description {
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-      line-height: 1.6;
-    }
-
-    .mode-card__features {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
+    .mode-card__description { margin-bottom: 1rem; font-size: 0.95rem; }
+    .mode-card__features { list-style: none; padding: 0; margin: 0; }
     .mode-card__features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      padding: 0.375rem 0;
-      color: var(--text-secondary);
-      font-size: 0.875rem;
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      font-size: 0.85rem; margin-bottom: 0.25rem;
     }
-
     .mode-card__features li::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: var(--accent-primary);
-      border-radius: 50%;
-      margin-top: 0.5rem;
-      flex-shrink: 0;
+      content: '•'; color: var(--accent-primary); font-weight: bold;
     }
 
-    /* Agent tier table */
-    .agent-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.5rem 0;
-      font-size: 0.875rem;
-    }
-
-    .agent-table th,
-    .agent-table td {
-      padding: 0.75rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border-default);
-    }
-
-    .agent-table th {
+    /* Lane Cards */
+    .lane-card {
       background: var(--bg-secondary);
-      font-weight: 600;
-      color: var(--text-primary);
-      position: sticky;
-      top: 0;
-    }
-
-    .agent-table td {
-      color: var(--text-secondary);
-    }
-
-    .agent-table tr:hover td {
-      background: var(--bg-secondary);
-    }
-
-    .agent-table code {
-      font-size: 0.8125rem;
-      padding: 0.125rem 0.375rem;
-    }
-
-    .tier-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.125rem 0.5rem;
-      border-radius: var(--radius-full);
-      font-size: 0.6875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.025em;
-    }
-
-    .tier-badge--low {
-      background: rgba(34, 197, 94, 0.1);
-      color: #22c55e;
-    }
-
-    .tier-badge--medium {
-      background: rgba(59, 130, 246, 0.1);
-      color: #3b82f6;
-    }
-
-    .tier-badge--high {
-      background: rgba(139, 92, 246, 0.1);
-      color: #8b5cf6;
-    }
-
-    /* Keyword table */
-    .keyword-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.5rem 0;
-    }
-
-    .keyword-table th,
-    .keyword-table td {
-      padding: 0.75rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border-default);
-    }
-
-    .keyword-table th {
-      background: var(--bg-secondary);
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .keyword-table td {
-      color: var(--text-secondary);
-    }
-
-    .keyword-table code {
-      background: var(--bg-tertiary);
-      padding: 0.25rem 0.5rem;
-      border-radius: var(--radius-sm);
-      color: var(--accent-primary);
-      font-size: 0.8125rem;
-    }
-
-    /* Quick start section */
-    .quick-start {
-      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
       border: 1px solid var(--border-default);
-      border-radius: var(--radius-xl);
-      padding: 2rem;
-      margin: 2rem 0;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
     }
-
-    .quick-start__title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--text-primary);
+    .lane-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
     }
+    .lane-card--build::before { background: #3b82f6; }
+    .lane-card--review::before { background: #8b5cf6; }
+    .lane-card--domain::before { background: #f59e0b; }
+    .lane-card--product::before { background: #22c55e; }
+    .lane-card--coord::before { background: #ec4899; }
 
-    .quick-start__steps {
-      counter-reset: step;
-      list-style: none;
-      padding: 0;
+    .lane-card__badge {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      padding: 2px 6px; border-radius: 4px; letter-spacing: 0.05em;
     }
+    .lane-card--build .lane-card__badge { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .lane-card--review .lane-card__badge { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+    .lane-card--domain .lane-card__badge { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .lane-card--product .lane-card__badge { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+    .lane-card--coord .lane-card__badge { background: rgba(236, 72, 153, 0.1); color: #ec4899; }
 
-    .quick-start__steps li {
+    .lane-card__title { margin: 0.75rem 0 1rem; font-size: 1.1rem; }
+    .lane-card__agents { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .agent-tag {
+      font-family: var(--font-mono); font-size: 0.8rem;
+      background: var(--bg-tertiary); border: 1px solid var(--border-default);
+      padding: 4px 8px; border-radius: 4px; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .agent-tag small { color: var(--text-tertiary); font-size: 0.7rem; }
+
+    /* Quick Start Steps */
+    .quick-start-steps { list-style: none; padding: 0; counter-reset: step; }
+    .quick-start-steps li {
+      display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border-default);
       counter-increment: step;
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--border-subtle);
     }
-
-    .quick-start__steps li:last-child {
-      border-bottom: none;
+    .quick-start-steps li:last-child { border-bottom: none; }
+    .quick-start-steps li::before {
+      content: counter(step); width: 24px; height: 24px;
+      background: var(--accent-primary); color: white;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;
     }
+    .qs-content h4 { margin: 0 0 0.25rem 0; font-size: 0.95rem; }
+    .qs-content p { margin: 0; font-size: 0.85rem; }
 
-    .quick-start__steps li::before {
-      content: counter(step);
-      width: 28px;
-      height: 28px;
-      background: var(--accent-primary);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.875rem;
-      flex-shrink: 0;
+    /* Workflow Diagram */
+    .workflow {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+      background: var(--bg-tertiary); padding: 1rem; border-radius: 0.5rem;
+      font-family: var(--font-mono); font-size: 0.85rem; margin: 1rem 0;
     }
-
-    .quick-start__step-content {
-      flex: 1;
+    .workflow__step {
+      background: var(--bg-secondary); border: 1px solid var(--border-default);
+      padding: 0.25rem 0.5rem; border-radius: 0.25rem; color: var(--accent-primary);
     }
+    .workflow__arrow { color: var(--text-tertiary); }
 
-    .quick-start__step-title {
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
+    /* Mobile Responsive */
+    .mobile-menu-btn {
+      display: none; position: fixed; top: 1rem; left: 1rem; z-index: 100;
+      background: var(--bg-secondary); border: 1px solid var(--border-default);
+      padding: 0.5rem; border-radius: 0.5rem; cursor: pointer;
     }
+    .mobile-menu-btn svg { width: 24px; height: 24px; color: var(--text-primary); }
+    .sidebar-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 40; opacity: 0; visibility: hidden; transition: all 0.3s;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
 
-    .quick-start__step-desc {
-      color: var(--text-secondary);
-      font-size: 0.875rem;
+    @media (max-width: 1024px) {
+      .docs-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .docs-sidebar.open { transform: translateX(0); }
+      .docs-main { margin-left: 0; padding: 5rem 1.5rem 2rem; }
+      .mobile-menu-btn { display: block; }
     }
 
     /* Back to top */
     .back-to-top {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      width: 44px;
-      height: 44px;
-      background: var(--accent-primary);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-      z-index: 100;
+      position: fixed; bottom: 2rem; right: 2rem;
+      width: 40px; height: 40px; background: var(--accent-primary);
+      color: white; border: none; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s;
+      z-index: 90;
     }
+    .back-to-top.visible { opacity: 1; visibility: visible; }
+    .back-to-top:hover { transform: translateY(-2px); background: var(--accent-primary-hover); }
 
-    .back-to-top.visible {
-      opacity: 1;
-      visibility: visible;
+    /* Utility */
+    .skip-to-content {
+      position: absolute; top: -100px; left: 0; background: var(--accent-primary);
+      color: white; padding: 0.5rem 1rem; z-index: 200; transition: top 0.2s;
     }
-
-    .back-to-top:hover {
-      transform: translateY(-2px);
-      background: var(--accent-primary-hover);
+    .skip-to-content:focus { top: 0; }
+    .search-results {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: var(--bg-secondary); border: 1px solid var(--border-default);
+      border-radius: 0.5rem; max-height: 300px; overflow-y: auto;
+      z-index: 100; display: none; margin-top: 0.5rem;
     }
-
-    /* Section anchor links */
-    .docs-content h2[id],
-    .docs-content h3[id],
-    .docs-content h4[id] {
-      position: relative;
-      cursor: pointer;
-    }
-
-    .docs-content h2[id]:hover .anchor-link,
-    .docs-content h3[id]:hover .anchor-link,
-    .docs-content h4[id]:hover .anchor-link {
-      opacity: 1;
-    }
-
-    .anchor-link {
-      position: absolute;
-      left: -1.5rem;
-      color: var(--accent-primary);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      text-decoration: none;
-    }
-
-    /* Code examples */
-    .code-example {
-      margin: 1.5rem 0;
-    }
-
-    .code-example__label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-tertiary);
-      margin-bottom: 0.5rem;
-    }
-
-    /* Feature grid */
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-
-    .feature-item {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-    }
-
-    .feature-item__icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--accent-primary), #991b1b);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      margin-bottom: 1rem;
-    }
-
-    .feature-item__title {
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .feature-item__desc {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
+    .search-overlay { position: fixed; inset: 0; z-index: 9; display: none; }
   </style>
 </head>
 <body>
-  <!-- Skip to content -->
   <a href="#main-content" class="skip-to-content">Skip to main content</a>
-
-  <!-- Sidebar overlay for mobile -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-  <!-- Mobile menu button -->
-  <button class="mobile-menu-btn" aria-label="Toggle navigation" id="mobile-menu-btn" aria-expanded="false">
-    <span class="mobile-menu-btn__line"></span>
-    <span class="mobile-menu-btn__line"></span>
-    <span class="mobile-menu-btn__line"></span>
+  <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
   </button>
 
   <div class="docs-layout">
-    <!-- Sidebar -->
+    <!-- SIDEBAR -->
     <aside class="docs-sidebar" id="sidebar">
-      <!-- Brand -->
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
         <span class="sidebar-brand__version">v4.1.0</span>
       </a>
 
-      <!-- Search -->
-      <div class="docs-search">
+      <div class="sidebar-search">
         <div class="search-input-wrapper">
-          <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-          <input
-            type="search"
-            id="search-input"
-            class="search-input"
-            placeholder="Search docs..."
-            aria-label="Search documentation"
-            autocomplete="off"
-          />
-          <kbd class="search-shortcut">/</kbd>
+          <input type="search" id="search-input" class="search__input" placeholder="Search docs..." autocomplete="off">
+          <div id="search-results" class="search-results"></div>
         </div>
-        <div id="search-results" class="search-results" role="listbox" aria-label="Search results"></div>
       </div>
 
-      <!-- Navigation -->
-      <nav class="sidebar-nav" aria-label="Documentation navigation">
+      <nav class="sidebar-nav">
         <!-- Getting Started -->
         <div class="sidebar-section">
           <div class="sidebar-title">Getting Started</div>
-          <ul class="sidebar-nav">
-            <li><a href="#introduction" class="sidebar-link" data-section="introduction">Introduction</a></li>
-            <li><a href="#whats-new" class="sidebar-link" data-section="whats-new">What's New in v4.1.0</a></li>
-            <li><a href="#installation" class="sidebar-link" data-section="installation">Installation</a></li>
-            <li><a href="#quick-start" class="sidebar-link" data-section="quick-start">Quick Start</a></li>
-            <li><a href="#philosophy" class="sidebar-link" data-section="philosophy">Conductor Philosophy</a></li>
-          </ul>
+          <a href="#introduction" class="sidebar-link" data-section="introduction">Introduction</a>
+          <a href="#whats-new" class="sidebar-link" data-section="whats-new">What's New in v4.1.0</a>
+          <a href="#installation" class="sidebar-link" data-section="installation">Installation</a>
+          <a href="#quick-start" class="sidebar-link" data-section="quick-start">Quick Start</a>
+        </div>
+
+        <!-- Architecture -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Architecture</div>
+          <a href="#philosophy" class="sidebar-link" data-section="philosophy">Conductor Philosophy</a>
+          <a href="#team-architecture" class="sidebar-link" data-section="team-architecture">Team Architecture</a>
+          <a href="#model-routing" class="sidebar-link" data-section="model-routing">Model Routing</a>
+          <a href="#delegation" class="sidebar-link" data-section="delegation">Delegation Rules</a>
         </div>
 
         <!-- Execution Modes -->
         <div class="sidebar-section">
           <div class="sidebar-title">Execution Modes</div>
           <div class="collapsible">
-            <button class="collapsible-toggle" aria-expanded="true">
-              Core Modes
-            </button>
-            <ul class="submenu sidebar-nav">
-              <li><a href="#autopilot" class="sidebar-link" data-section="autopilot">Autopilot</a></li>
-              <li><a href="#ralph" class="sidebar-link" data-section="ralph">Ralph</a></li>
-              <li><a href="#ultrawork" class="sidebar-link" data-section="ultrawork">Ultrawork</a></li>
-              <li><a href="#ecomode" class="sidebar-link" data-section="ecomode">Ecomode</a></li>
-            </ul>
+            <button class="collapsible-toggle">Core Modes <span>▾</span></button>
+            <div class="submenu">
+              <a href="#autopilot" class="sidebar-link" data-section="autopilot">Autopilot</a>
+              <a href="#ralph" class="sidebar-link" data-section="ralph">Ralph</a>
+              <a href="#ultrawork" class="sidebar-link" data-section="ultrawork">Ultrawork</a>
+            </div>
           </div>
           <div class="collapsible">
-            <button class="collapsible-toggle" aria-expanded="true">
-              Advanced Modes
-            </button>
-            <ul class="submenu sidebar-nav">
-              <li><a href="#ultrapilot" class="sidebar-link" data-section="ultrapilot">Ultrapilot</a></li>
-              <li><a href="#team" class="sidebar-link" data-section="team">Team</a></li>
-              <li><a href="#swarm" class="sidebar-link" data-section="swarm">Swarm</a></li>
-              <li><a href="#pipeline" class="sidebar-link" data-section="pipeline">Pipeline</a></li>
-              <li><a href="#ultraqa" class="sidebar-link" data-section="ultraqa">UltraQA</a></li>
-            </ul>
+            <button class="collapsible-toggle">Advanced Modes <span>▾</span></button>
+            <div class="submenu">
+              <a href="#team" class="sidebar-link" data-section="team">Team</a>
+              <a href="#ultrapilot" class="sidebar-link" data-section="ultrapilot">Ultrapilot</a>
+              <a href="#swarm" class="sidebar-link" data-section="swarm">Swarm</a>
+              <a href="#pipeline" class="sidebar-link" data-section="pipeline">Pipeline</a>
+              <a href="#ultraqa" class="sidebar-link" data-section="ultraqa">UltraQA</a>
+              <a href="#plan" class="sidebar-link" data-section="plan">Plan</a>
+            </div>
           </div>
         </div>
 
-        <!-- Agent Reference -->
+        <!-- Agent Catalog -->
         <div class="sidebar-section">
-          <div class="sidebar-title">Agent Reference</div>
-          <ul class="sidebar-nav">
-            <li><a href="#agent-overview" class="sidebar-link" data-section="agent-overview">Overview</a></li>
-            <li><a href="#agent-tiers" class="sidebar-link" data-section="agent-tiers">Agent Lanes</a></li>
-            <li><a href="#agent-selection" class="sidebar-link" data-section="agent-selection">Selection Guide</a></li>
-            <li><a href="#agent-domains" class="sidebar-link" data-section="agent-domains">Domains</a></li>
-          </ul>
+          <div class="sidebar-title">Agent Catalog</div>
+          <a href="#agent-overview" class="sidebar-link" data-section="agent-overview">Overview</a>
+          <a href="#build-lane" class="sidebar-link" data-section="build-lane">Build & Analysis</a>
+          <a href="#review-lane" class="sidebar-link" data-section="review-lane">Review</a>
+          <a href="#domain-lane" class="sidebar-link" data-section="domain-lane">Domain Specialists</a>
+          <a href="#product-lane" class="sidebar-link" data-section="product-lane">Product</a>
+          <a href="#coordination-lane" class="sidebar-link" data-section="coordination-lane">Coordination</a>
+          <a href="#team-compositions" class="sidebar-link" data-section="team-compositions">Team Compositions</a>
         </div>
 
-        <!-- Skills & Commands -->
+        <!-- Tools & Config -->
         <div class="sidebar-section">
-          <div class="sidebar-title">Skills & Commands</div>
-          <ul class="sidebar-nav">
-            <li><a href="#magic-keywords" class="sidebar-link" data-section="magic-keywords">Magic Keywords</a></li>
-            <li><a href="#skills-reference" class="sidebar-link" data-section="skills-reference">Skills Reference</a></li>
-            <li><a href="#cancel-operations" class="sidebar-link" data-section="cancel-operations">Cancel Operations</a></li>
-          </ul>
-        </div>
-
-        <!-- Configuration -->
-        <div class="sidebar-section">
-          <div class="sidebar-title">Configuration</div>
-          <ul class="sidebar-nav">
-            <li><a href="#omc-setup" class="sidebar-link" data-section="omc-setup">OMC Setup</a></li>
-            <li><a href="#default-mode" class="sidebar-link" data-section="default-mode">Default Mode</a></li>
-            <li><a href="#hud-config" class="sidebar-link" data-section="hud-config">HUD Configuration</a></li>
-            <li><a href="#mcp-setup" class="sidebar-link" data-section="mcp-setup">MCP Server Setup</a></li>
-          </ul>
-        </div>
-
-        <!-- MCP Tools -->
-        <div class="sidebar-section">
-          <div class="sidebar-title">MCP Tools</div>
-          <ul class="sidebar-nav">
-            <li><a href="#mcp-overview" class="sidebar-link" data-section="mcp-overview">Overview</a></li>
-            <li><a href="#external-ai" class="sidebar-link" data-section="external-ai">External AI (Gemini/Codex)</a></li>
-            <li><a href="#lsp-tools" class="sidebar-link" data-section="lsp-tools">LSP Tools</a></li>
-            <li><a href="#ast-tools" class="sidebar-link" data-section="ast-tools">AST Grep</a></li>
-            <li><a href="#python-repl" class="sidebar-link" data-section="python-repl">Python REPL</a></li>
-            <li><a href="#job-management" class="sidebar-link" data-section="job-management">Job Management</a></li>
-          </ul>
-        </div>
-
-        <!-- Advanced Topics -->
-        <div class="sidebar-section">
-          <div class="sidebar-title">Advanced Topics</div>
-          <ul class="sidebar-nav">
-            <li><a href="#hooks-system" class="sidebar-link" data-section="hooks-system">Hooks System</a></li>
-            <li><a href="#notepad-system" class="sidebar-link" data-section="notepad-system">Notepad System</a></li>
-            <li><a href="#state-management" class="sidebar-link" data-section="state-management">State Management</a></li>
-            <li><a href="#verification-tiers" class="sidebar-link" data-section="verification-tiers">Verification Tiers</a></li>
-            <li><a href="#context-persistence" class="sidebar-link" data-section="context-persistence">Context Persistence</a></li>
-          </ul>
+          <div class="sidebar-title">Tools & Config</div>
+          <a href="#mcp-tools" class="sidebar-link" data-section="mcp-tools">MCP Tools</a>
+          <a href="#skills" class="sidebar-link" data-section="skills">Skills & Commands</a>
+          <a href="#state-memory" class="sidebar-link" data-section="state-memory">State & Memory</a>
+          <a href="#configuration" class="sidebar-link" data-section="configuration">Configuration</a>
         </div>
       </nav>
     </aside>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT -->
     <main class="docs-main" id="main-content">
       <div class="docs-content">
-
+        
         <!-- Introduction -->
         <section id="introduction" data-section>
           <h1>Oh My Claudecode Documentation</h1>
-          <p class="lead" style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem;">
-            Transform Claude Code into an intelligent multi-agent orchestration system. You become the conductor,
-            not the performer - delegating complex tasks to specialized AI agents.
+          <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem;">
+            Transform Claude Code into an intelligent multi-agent orchestration system. You become the conductor, not the performer.
           </p>
 
-          <div class="callout callout-info">
-            <div class="callout-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 16v-4"></path>
-                <path d="M12 8h.01"></path>
-              </svg>
-              New to OMC?
+          <div class="grid grid--2">
+            <div class="card">
+              <h3 style="margin-top:0">28 Specialized Agents</h3>
+              <p>Unified catalog of 28 agents across 5 functional lanes, using optimized models (Opus/Sonnet/Haiku).</p>
             </div>
-            <p>Just say what you want to build. Autopilot activates automatically and handles the rest. No commands needed.</p>
-          </div>
-
-          <div class="feature-grid">
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-              </div>
-              <div class="feature-item__title">28 Specialized Agents</div>
-              <div class="feature-item__desc">From architects to designers, each agent excels at specific tasks</div>
+            <div class="card">
+              <h3 style="margin-top:0">10 Execution Modes</h3>
+              <p>From Autopilot for full autonomy to Team mode for native coordination and Ralph for persistence.</p>
             </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                </svg>
-              </div>
-              <div class="feature-item__title">Parallel Execution</div>
-              <div class="feature-item__desc">Run multiple agents simultaneously for maximum speed</div>
+            <div class="card">
+              <h3 style="margin-top:0">25+ MCP Tools</h3>
+              <p>Integrated toolchain with Language Servers, AST grep, Python REPL, and external AI models.</p>
             </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-              </div>
-              <div class="feature-item__title">Smart Verification</div>
-              <div class="feature-item__desc">Architect agents verify all work before completion</div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-              </div>
-              <div class="feature-item__title">Automatic Mode Selection</div>
-              <div class="feature-item__desc">Detects your intent and activates the right mode</div>
+            <div class="card">
+              <h3 style="margin-top:0">Native Teams</h3>
+              <p>Leverage Claude Code's native team capabilities with a staged execution pipeline.</p>
             </div>
           </div>
         </section>
 
-        <!-- What's New in v4.1.0 -->
+        <!-- What's New -->
         <section id="whats-new" data-section>
           <h2><span class="anchor-link">#</span>What's New in v4.1.0</h2>
-
-          <div class="feature-grid">
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-              </div>
-              <div class="feature-item__title">Agent Architecture Reform</div>
-              <div class="feature-item__desc">Unified 28 agents replacing old tiered system. No more -low/-medium/-high suffixes -- each agent has one name and a default model.</div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <circle cx="6" cy="6" r="2"></circle>
-                  <circle cx="18" cy="6" r="2"></circle>
-                  <circle cx="6" cy="18" r="2"></circle>
-                  <circle cx="18" cy="18" r="2"></circle>
-                </svg>
-              </div>
-              <div class="feature-item__title">Team Coordination System</div>
-              <div class="feature-item__desc">Native Claude Code team support with TeamCreate, SendMessage, and TaskCreate for real-time multi-agent coordination.</div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                </svg>
-              </div>
-              <div class="feature-item__title">System Prompt Modernization</div>
-              <div class="feature-item__desc">Optimized for Claude Opus 4.6 with streamlined operating principles and clearer delegation rules.</div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-              </div>
-              <div class="feature-item__title">Skill Consolidation</div>
-              <div class="feature-item__desc">Cleaner command surface: <code>ralplan</code> is now <code>/plan --consensus</code>, <code>review</code> is <code>/plan --review</code>, and utility skills merged.</div>
-            </div>
+          
+          <div class="callout info">
+            <div class="callout-title">Major Architecture Shift</div>
+            <p>v4.1.0 introduces a team-oriented architecture with a native staged pipeline and a unified agent catalog.</p>
           </div>
 
-          <div class="callout callout-success">
-            <div class="callout-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-              Reliability Improvements
-            </div>
-            <p>v4.1.0 includes better state management, improved error handling, and more robust hook processing for all execution modes.</p>
-          </div>
+          <ul style="list-style-type: disc;">
+            <li><strong>Team-Oriented Architecture:</strong> Native Claude Code teams with staged pipeline (team-plan &rarr; team-prd &rarr; team-exec &rarr; team-verify &rarr; team-fix).</li>
+            <li><strong>Agent Catalog Reform:</strong> Unified 28 agents replacing the tiered system. No more <code>-low</code>/<code>-medium</code> suffixes. Clean roles with model routing.</li>
+            <li><strong>MCP Provider Upgrades:</strong> Codex now uses <code>gpt-5.3-codex</code>, Gemini uses <code>gemini-3-pro-preview</code> with 1M token context.</li>
+            <li><strong>System Prompt Modernization:</strong> Optimized for Claude Opus 4.6 with streamlined operating principles.</li>
+            <li><strong>Skill Consolidation:</strong> <code>ralplan</code> merged into <code>/plan --consensus</code>, <code>review</code> merged into <code>/plan --review</code>.</li>
+          </ul>
         </section>
 
         <!-- Installation -->
         <section id="installation" data-section>
           <h2><span class="anchor-link">#</span>Installation</h2>
-          <p>Install Oh My Claudecode globally using npx:</p>
-
           <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">BASH</span>
-              <button class="copy-btn" aria-label="Copy code">
-                <svg class="icon-copy" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-              </button>
-            </div>
-            <pre><code class="language-bash">npx oh-my-claudecode@latest init</code></pre>
-          </div>
+            <div class="code-block-header"><span class="code-lang">BASH</span></div>
+            <pre><code># 1. Add the plugin
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
 
-          <p>This command will:</p>
-          <ul>
-            <li>Install the OMC plugin to your Claude Code configuration</li>
-            <li>Set up necessary hooks and state directories</li>
-            <li>Configure default execution preferences</li>
-            <li>Optionally install the HUD statusline</li>
-          </ul>
+# 2. Install it
+/plugin install oh-my-claudecode
 
-          <h3>Requirements</h3>
-          <ul>
-            <li>Claude Code CLI installed and configured</li>
-            <li>Node.js 18+ (for MCP server features)</li>
-            <li>Git (for version control features)</li>
-          </ul>
-
-          <h3>Verify Installation</h3>
-          <p>Run the doctor command to verify everything is set up correctly:</p>
-
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">BASH</span>
-              <button class="copy-btn" aria-label="Copy code">
-                <svg class="icon-copy" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-              </button>
-            </div>
-            <pre><code class="language-bash">/oh-my-claudecode:doctor</code></pre>
+# 3. Run setup wizard
+/oh-my-claudecode:omc-setup</code></pre>
           </div>
         </section>
 
         <!-- Quick Start -->
         <section id="quick-start" data-section>
           <h2><span class="anchor-link">#</span>Quick Start</h2>
+          <p>OMC uses "Magic Keywords" to detect your intent. Just describe what you want to do.</p>
 
-          <div class="quick-start">
-            <div class="quick-start__title">Get Started in 3 Steps</div>
-            <ol class="quick-start__steps">
-              <li>
-                <div class="quick-start__step-content">
-                  <div class="quick-start__step-title">Install OMC</div>
-                  <div class="quick-start__step-desc">Run <code>npx oh-my-claudecode@latest init</code> in your terminal</div>
-                </div>
-              </li>
-              <li>
-                <div class="quick-start__step-content">
-                  <div class="quick-start__step-title">Start Claude Code</div>
-                  <div class="quick-start__step-desc">Open any project with Claude Code as usual</div>
-                </div>
-              </li>
-              <li>
-                <div class="quick-start__step-content">
-                  <div class="quick-start__step-title">Just Ask</div>
-                  <div class="quick-start__step-desc">Say "Build me a REST API for managing tasks" - autopilot handles the rest</div>
-                </div>
-              </li>
-            </ol>
-          </div>
-
-          <h3>Example Prompts</h3>
-          <p>Here are some example prompts that automatically trigger the right mode:</p>
-
-          <table class="keyword-table">
-            <thead>
-              <tr>
-                <th>Prompt</th>
-                <th>What Happens</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>"Build me a todo app with React"</td>
-                <td>Autopilot activates for full autonomous execution</td>
-              </tr>
-              <tr>
-                <td>"Refactor this module until it's clean"</td>
-                <td>Ralph mode - persistent until architect verification passes</td>
-              </tr>
-              <tr>
-                <td>"ulw fix all TypeScript errors"</td>
-                <td>Ultrawork - maximum parallelism with smart model routing</td>
-              </tr>
-              <tr>
-                <td>"Plan the new authentication system"</td>
-                <td>Planning interview begins to gather requirements</td>
-              </tr>
-            </tbody>
-          </table>
+          <ul class="quick-start-steps">
+            <li>
+              <div class="qs-content">
+                <h4>Autonomous Building</h4>
+                <p><code>"autopilot build a React dashboard"</code> &mdash; Full autonomous execution from idea to code.</p>
+              </div>
+            </li>
+            <li>
+              <div class="qs-content">
+                <h4>Refactoring</h4>
+                <p><code>"ralph refactor the API"</code> &mdash; Persists until verified clean ("The boulder never stops").</p>
+              </div>
+            </li>
+            <li>
+              <div class="qs-content">
+                <h4>Parallel Work</h4>
+                <p><code>"ulw fix all typescript errors"</code> &mdash; Runs multiple agents in parallel for speed.</p>
+              </div>
+            </li>
+            <li>
+              <div class="qs-content">
+                <h4>Native Teams</h4>
+                <p><code>"team 5:executor refactor backend"</code> &mdash; Spawns a team of 5 agents coordinated by a lead.</p>
+              </div>
+            </li>
+            <li>
+              <div class="qs-content">
+                <h4>Planning</h4>
+                <p><code>"plan the auth system"</code> &mdash; Starts an interactive planning interview.</p>
+              </div>
+            </li>
+          </ul>
         </section>
 
-        <!-- Philosophy -->
+        <!-- Architecture -->
         <section id="philosophy" data-section>
           <h2><span class="anchor-link">#</span>Conductor Philosophy</h2>
+          <p>The core principle of OMC is: <strong>You are the conductor, not the performer.</strong></p>
 
-          <p>The core principle of OMC is simple: <strong>you are the conductor, not the performer.</strong></p>
-
-          <div class="callout callout-warning">
-            <div class="callout-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                <line x1="12" y1="9" x2="12" y2="13"></line>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </svg>
-              Key Rule
-            </div>
-            <p>ALWAYS delegate substantive work to specialized agents. NEVER do code changes directly.</p>
+          <div class="callout warning">
+            <div class="callout-title">Golden Rule</div>
+            <p>NEVER make code changes directly. ALWAYS delegate to specialized agents. Your role is to guide, review, and orchestrate.</p>
           </div>
-
-          <h3>What You Do vs. What Agents Do</h3>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Action</th>
-                <th>YOU Do Directly</th>
-                <th>DELEGATE to Agent</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Read files for context</td>
-                <td>Yes</td>
-                <td>-</td>
-              </tr>
-              <tr>
-                <td>Quick status checks</td>
-                <td>Yes</td>
-                <td>-</td>
-              </tr>
-              <tr>
-                <td>Communicate with user</td>
-                <td>Yes</td>
-                <td>-</td>
-              </tr>
-              <tr>
-                <td>Single-line code change</td>
-                <td>NEVER</td>
-                <td>executor</td>
-              </tr>
-              <tr>
-                <td>Multi-file changes</td>
-                <td>NEVER</td>
-                <td>executor / deep-executor</td>
-              </tr>
-              <tr>
-                <td>Complex debugging</td>
-                <td>NEVER</td>
-                <td>debugger</td>
-              </tr>
-              <tr>
-                <td>UI/frontend work</td>
-                <td>NEVER</td>
-                <td>designer</td>
-              </tr>
-              <tr>
-                <td>Documentation</td>
-                <td>NEVER</td>
-                <td>writer</td>
-              </tr>
-            </tbody>
-          </table>
+          <p>Agents have specialized roles. The <strong>architect</strong> sees the big picture, the <strong>executor</strong> writes the code, and the <strong>verifier</strong> proves it works. Respecting this division ensures higher quality output.</p>
         </section>
 
-        <!-- Execution Modes Section -->
+        <section id="team-architecture" data-section>
+          <h2><span class="anchor-link">#</span>Team Architecture</h2>
+          <p>v4.1 leverages a native staged pipeline for teams. Transitions are strictly defined to ensure quality gates.</p>
+
+          <div class="pipeline-diagram">
+            <div class="pipeline-stage">
+              <div class="pipeline-stage__icon">1</div>
+              <div class="pipeline-stage__label">team-plan</div>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-stage">
+              <div class="pipeline-stage__icon">2</div>
+              <div class="pipeline-stage__label">team-prd</div>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-stage">
+              <div class="pipeline-stage__icon">3</div>
+              <div class="pipeline-stage__label">team-exec</div>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-stage">
+              <div class="pipeline-stage__icon">4</div>
+              <div class="pipeline-stage__label">team-verify</div>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-stage">
+              <div class="pipeline-stage__icon">5</div>
+              <div class="pipeline-stage__label">team-fix</div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>From</th><th>To</th><th>Trigger Condition</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>team-plan</td><td>team-prd</td><td>Planning and decomposition complete</td></tr>
+                <tr><td>team-prd</td><td>team-exec</td><td>Acceptance criteria explicitly defined</td></tr>
+                <tr><td>team-exec</td><td>team-verify</td><td>All tasks reach terminal state</td></tr>
+                <tr><td>team-verify</td><td>team-fix / complete</td><td>Verification outcome</td></tr>
+                <tr><td>team-fix</td><td>team-exec / team-verify</td><td>Fix strategies defined</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="model-routing" data-section>
+          <h3><span class="anchor-link">#</span>Model Routing</h3>
+          <p>OMC intelligently routes tasks to the most appropriate model tier to balance cost and capability.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Complexity</th><th>Model</th><th>Use Case</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Simple</strong></td><td>Haiku</td><td>Lookups, formatting, simple docs ("What does this return?")</td></tr>
+                <tr><td><strong>Standard</strong></td><td>Sonnet</td><td>Implementation, tests, refactoring ("Add error handling")</td></tr>
+                <tr><td><strong>Complex</strong></td><td>Opus</td><td>Architecture, deep debugging, planning ("Refactor auth system")</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="delegation" data-section>
+          <h3><span class="anchor-link">#</span>Delegation Rules</h3>
+          <ul style="list-style-type: none; padding: 0;">
+            <li style="margin-bottom: 1rem;">
+              <strong>✅ Delegate:</strong> Multi-file implementations, refactors, debugging, reviews, planning, research, verification.
+            </li>
+            <li>
+              <strong>🛑 Do It Yourself:</strong> Small clarifications, quick status checks, single-command operations. Direct writes are OK for <code>.omc/</code>, <code>.claude/</code> config files.
+            </li>
+          </ul>
+        </section>
+
+        <!-- Execution Modes -->
         <section id="execution-modes" data-section>
           <h2><span class="anchor-link">#</span>Execution Modes</h2>
-          <p>OMC provides several execution modes optimized for different scenarios. Each mode has unique characteristics for handling complexity, parallelism, and verification.</p>
-        </section>
-
-        <!-- Autopilot -->
-        <section id="autopilot" data-section>
-          <h3><span class="anchor-link">#</span>Autopilot</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--autopilot">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
-                </svg>
+          
+          <div id="autopilot">
+            <div class="mode-card">
+              <div class="mode-card__header">
+                <div class="mode-card__icon">🤖</div>
+                <div>
+                  <h3 class="mode-card__title">Autopilot</h3>
+                  <span class="mode-card__keyword">autopilot</span>
+                </div>
               </div>
-              <div>
-                <h4 class="mode-card__title">Autopilot</h4>
-                <span class="mode-card__keyword">autopilot</span>
-                <span class="mode-card__keyword">build me</span>
-                <span class="mode-card__keyword">I want a</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              The flagship experience and recommended starting point. Autopilot provides fully autonomous execution
-              from high-level idea to working, tested code with no manual intervention required.
-            </p>
-            <ul class="mode-card__features">
-              <li>Automatic planning and requirements gathering</li>
-              <li>Parallel execution with multiple specialized agents</li>
-              <li>Continuous verification and testing</li>
-              <li>Self-correction loop until completion</li>
-              <li>Combines best of ralph, ultrawork, and plan modes</li>
-            </ul>
-          </div>
-
-          <h4>Example Usage</h4>
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code>autopilot: Build a REST API for user management with JWT authentication
-
-# Or simply:
-Build me a dashboard that shows real-time analytics</code></pre>
-          </div>
-        </section>
-
-        <!-- Ralph -->
-        <section id="ralph" data-section>
-          <h3><span class="anchor-link">#</span>Ralph</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--ralph">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                  <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                  <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                </svg>
-              </div>
-              <div>
-                <h4 class="mode-card__title">Ralph</h4>
-                <span class="mode-card__keyword">ralph</span>
-                <span class="mode-card__keyword">don't stop</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              Persistence mode - the boulder never stops rolling. Ralph continues working until architect
-              verification passes, automatically including ultrawork's parallelism.
-            </p>
-            <ul class="mode-card__features">
-              <li>Never stops until architect verification passes</li>
-              <li>Includes ultrawork parallelism automatically</li>
-              <li>Ideal for complex refactoring and large changes</li>
-              <li>Self-healing: fixes issues as they arise</li>
-              <li>Requires explicit <code>/cancel</code> to stop</li>
-            </ul>
-          </div>
-
-          <div class="callout callout-info">
-            <div class="callout-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 16v-4"></path>
-                <path d="M12 8h.01"></path>
-              </svg>
-              Ralph includes Ultrawork
-            </div>
-            <p>When you activate ralph mode, it automatically includes ultrawork's parallel execution. No need to combine keywords.</p>
-          </div>
-        </section>
-
-        <!-- Ultrawork -->
-        <section id="ultrawork" data-section>
-          <h3><span class="anchor-link">#</span>Ultrawork</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--ultrawork">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                </svg>
-              </div>
-              <div>
-                <h4 class="mode-card__title">Ultrawork</h4>
-                <span class="mode-card__keyword">ulw</span>
-                <span class="mode-card__keyword">ultrawork</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              Maximum parallelism mode with aggressive agent delegation and smart model routing.
-              Uses the right model tier (haiku/sonnet/opus) for each subtask.
-            </p>
-            <ul class="mode-card__features">
-              <li>Aggressive parallel agent delegation</li>
-              <li>Smart model routing based on task complexity</li>
-              <li>Background execution for long-running tasks</li>
-              <li>Verification checklist before completion</li>
-              <li>Up to 5 concurrent background tasks</li>
-            </ul>
-          </div>
-
-          <h4>Model Routing</h4>
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Task Complexity</th>
-                <th>Model</th>
-                <th>When to Use</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Simple lookup</td>
-                <td><span class="tier-badge tier-badge--low">Haiku</span></td>
-                <td>"What does this return?", "Find definition of X"</td>
-              </tr>
-              <tr>
-                <td>Standard work</td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>"Add error handling", "Implement feature"</td>
-              </tr>
-              <tr>
-                <td>Complex reasoning</td>
-                <td><span class="tier-badge tier-badge--high">Opus</span></td>
-                <td>"Debug race condition", "Refactor architecture"</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Ecomode -->
-        <section id="ecomode" data-section>
-          <h3><span class="anchor-link">#</span>Ecomode</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--ecomode">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                  <path d="M2 17l10 5 10-5"></path>
-                  <path d="M2 12l10 5 10-5"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="mode-card__title">Ecomode</h4>
-                <span class="mode-card__keyword">eco</span>
-                <span class="mode-card__keyword">ecomode</span>
-                <span class="mode-card__keyword">budget</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              Token-efficient execution mode that routes to Haiku/Sonnet automatically.
-              A modifier for other modes - saves tokens without sacrificing quality.
-            </p>
-            <ul class="mode-card__features">
-              <li>Routes to cheaper models automatically</li>
-              <li>Budget-conscious execution</li>
-              <li>Can combine with other modes</li>
-              <li>Wins over ultrawork if both specified</li>
-              <li>Ideal for routine tasks and batch operations</li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- Ultrapilot -->
-        <section id="ultrapilot" data-section>
-          <h3><span class="anchor-link">#</span>Ultrapilot</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--ultrapilot">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
-                  <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
-                  <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
-                  <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="mode-card__title">Ultrapilot</h4>
-                <span class="mode-card__keyword">ultrapilot</span>
-                <span class="mode-card__keyword">parallel build</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              Parallel autopilot - 3-5x faster than standard autopilot. Uses file ownership partitioning
-              to allow multiple agents to work simultaneously without conflicts.
-            </p>
-            <ul class="mode-card__features">
-              <li>File ownership partitioning prevents conflicts</li>
-              <li>3-5x faster than standard autopilot</li>
-              <li>Up to 5 parallel executor agents</li>
-              <li>Automatic work distribution</li>
-              <li>Coordinated verification at completion</li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- Team -->
-        <section id="team" data-section>
-          <h3><span class="anchor-link">#</span>Team</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--team">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-              </div>
-              <div>
-                <h4 class="mode-card__title">Team</h4>
-                <span class="mode-card__keyword">team</span>
-                <span class="mode-card__keyword">coordinated team</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              N coordinated agents on a shared task list using Claude Code native teams.
-              Team lead creates the team, assigns tasks, and monitors progress with real-time messaging.
-            </p>
-            <ul class="mode-card__features">
-              <li>TeamCreate/SendMessage/TaskCreate tools for coordination</li>
-              <li>Real-time inter-agent messaging</li>
-              <li>Built-in task dependencies (blocks/blockedBy)</li>
-              <li>Graceful shutdown protocol</li>
-              <li>Team lead orchestrates specialized teammates</li>
-            </ul>
-          </div>
-
-          <h4>Architecture</h4>
-          <p>The team lifecycle follows a structured pattern:</p>
-          <ol>
-            <li><strong>TeamCreate</strong> - Team lead creates a named team</li>
-            <li><strong>TaskCreate</strong> - Create tasks with descriptions and dependencies</li>
-            <li><strong>Spawn teammates</strong> - Each teammate claims and works on tasks</li>
-            <li><strong>Monitor</strong> - Team lead coordinates via SendMessage</li>
-            <li><strong>Shutdown</strong> - Graceful shutdown_request to all teammates</li>
-          </ol>
-
-          <h4>Example Usage</h4>
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code>/oh-my-claudecode:team 5:executor "fix all TypeScript errors"
-
-# Or with mixed agent types:
-/oh-my-claudecode:team 3:executor,2:test-engineer "implement and test the auth module"</code></pre>
-          </div>
-        </section>
-
-        <!-- Swarm -->
-        <section id="swarm" data-section>
-          <h3><span class="anchor-link">#</span>Swarm</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--swarm">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <circle cx="6" cy="6" r="2"></circle>
-                  <circle cx="18" cy="6" r="2"></circle>
-                  <circle cx="6" cy="18" r="2"></circle>
-                  <circle cx="18" cy="18" r="2"></circle>
-                  <line x1="12" y1="9" x2="12" y2="3"></line>
-                  <line x1="9" y1="12" x2="3" y2="12"></line>
-                  <line x1="15" y1="12" x2="21" y2="12"></line>
-                  <line x1="12" y1="15" x2="12" y2="21"></line>
-                </svg>
-              </div>
-              <div>
-                <h4 class="mode-card__title">Swarm</h4>
-                <span class="mode-card__keyword">swarm</span>
-                <span class="mode-card__keyword">coordinated agents</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              N agents working on a shared task pool with SQLite-based atomic task claiming.
-              Perfect for large task lists that need coordinated execution.
-            </p>
-            <ul class="mode-card__features">
-              <li>SQLite-based atomic task claiming</li>
-              <li>N agents on shared task pool</li>
-              <li>No duplicate work - atomic claims</li>
-              <li>Great for large task lists</li>
-              <li>Self-organizing coordination</li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- Pipeline -->
-        <section id="pipeline" data-section>
-          <h3><span class="anchor-link">#</span>Pipeline</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--pipeline">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="22" y1="12" x2="2" y2="12"></line>
-                  <polyline points="15 5 22 12 15 19"></polyline>
-                  <polyline points="9 19 2 12 9 5"></polyline>
-                </svg>
-              </div>
-              <div>
-                <h4 class="mode-card__title">Pipeline</h4>
-                <span class="mode-card__keyword">pipeline</span>
-                <span class="mode-card__keyword">chain agents</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              Sequential agent chaining with data passing between stages.
-              Create complex workflows with preset pipelines or custom stage definitions.
-            </p>
-            <ul class="mode-card__features">
-              <li>Stage-based sequential execution</li>
-              <li>Data passing between stages</li>
-              <li>Preset pipelines available</li>
-              <li>Custom stage definitions</li>
-              <li>Error handling at each stage</li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- UltraQA -->
-        <section id="ultraqa" data-section>
-          <h3><span class="anchor-link">#</span>UltraQA</h3>
-
-          <div class="mode-card">
-            <div class="mode-card__header">
-              <div class="mode-card__icon mode-card__icon--ultraqa">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-              </div>
-              <div>
-                <h4 class="mode-card__title">UltraQA</h4>
-                <span class="mode-card__keyword">ultraqa</span>
-                <span class="mode-card__keyword">qa cycle</span>
-              </div>
-            </div>
-            <p class="mode-card__description">
-              Quality assurance cycling mode that repeatedly tests, verifies, and fixes until
-              the specified goal is met. Perfect for ensuring code quality.
-            </p>
-            <ul class="mode-card__features">
-              <li>Test, verify, fix, repeat cycle</li>
-              <li>Continues until goal met</li>
-              <li>Automatic issue detection</li>
-              <li>Self-correcting fixes</li>
-              <li>Comprehensive verification</li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- Agent Overview -->
-        <section id="agent-overview" data-section>
-          <h2><span class="anchor-link">#</span>Agent Overview</h2>
-          <p>OMC includes 28 specialized agents organized into functional lanes. Each agent excels at specific tasks and uses the appropriate model (haiku, sonnet, or opus).</p>
-        </section>
-
-        <!-- Agent Lanes -->
-        <section id="agent-tiers" data-section>
-          <h3><span class="anchor-link">#</span>Agent Lanes</h3>
-
-          <p>Agents are organized into functional lanes. Each agent has a default model (haiku, sonnet, or opus) optimized for its role:</p>
-
-          <h4>Build/Analysis Lane</h4>
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Model</th>
-                <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>explore</code></td>
-                <td><span class="tier-badge tier-badge--low">Haiku</span></td>
-                <td>Internal codebase discovery, symbol/file mapping</td>
-              </tr>
-              <tr>
-                <td><code>analyst</code></td>
-                <td><span class="tier-badge tier-badge--high">Opus</span></td>
-                <td>Requirements clarity, acceptance criteria, hidden constraints</td>
-              </tr>
-              <tr>
-                <td><code>planner</code></td>
-                <td><span class="tier-badge tier-badge--high">Opus</span></td>
-                <td>Task sequencing, execution plans, risk flags</td>
-              </tr>
-              <tr>
-                <td><code>architect</code></td>
-                <td><span class="tier-badge tier-badge--high">Opus</span></td>
-                <td>System design, boundaries, interfaces, long-horizon tradeoffs</td>
-              </tr>
-              <tr>
-                <td><code>debugger</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Root-cause analysis, regression isolation, failure diagnosis</td>
-              </tr>
-              <tr>
-                <td><code>executor</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Code implementation, refactoring, feature work</td>
-              </tr>
-              <tr>
-                <td><code>deep-executor</code></td>
-                <td><span class="tier-badge tier-badge--high">Opus</span></td>
-                <td>Complex autonomous goal-oriented tasks</td>
-              </tr>
-              <tr>
-                <td><code>verifier</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Completion evidence, claim validation, test adequacy</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h4>Review Lane</h4>
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Model</th>
-                <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>style-reviewer</code></td>
-                <td><span class="tier-badge tier-badge--low">Haiku</span></td>
-                <td>Formatting, naming, idioms, lint conventions</td>
-              </tr>
-              <tr>
-                <td><code>quality-reviewer</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Logic defects, maintainability, anti-patterns</td>
-              </tr>
-              <tr>
-                <td><code>api-reviewer</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>API contracts, versioning, backward compatibility</td>
-              </tr>
-              <tr>
-                <td><code>security-reviewer</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Vulnerabilities, trust boundaries, authn/authz</td>
-              </tr>
-              <tr>
-                <td><code>performance-reviewer</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Hotspots, complexity, memory/latency optimization</td>
-              </tr>
-              <tr>
-                <td><code>code-reviewer</code></td>
-                <td><span class="tier-badge tier-badge--high">Opus</span></td>
-                <td>Comprehensive review across concerns</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h4>Domain Specialists</h4>
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Model</th>
-                <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>dependency-expert</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>External SDK/API/package evaluation</td>
-              </tr>
-              <tr>
-                <td><code>test-engineer</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Test strategy, coverage, flaky-test hardening</td>
-              </tr>
-              <tr>
-                <td><code>quality-strategist</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Quality strategy, release readiness, risk assessment</td>
-              </tr>
-              <tr>
-                <td><code>build-fixer</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Build/toolchain/type failures</td>
-              </tr>
-              <tr>
-                <td><code>designer</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>UX/UI architecture, interaction design</td>
-              </tr>
-              <tr>
-                <td><code>writer</code></td>
-                <td><span class="tier-badge tier-badge--low">Haiku</span></td>
-                <td>Docs, migration notes, user guidance</td>
-              </tr>
-              <tr>
-                <td><code>qa-tester</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Interactive CLI/service runtime validation</td>
-              </tr>
-              <tr>
-                <td><code>scientist</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Data/statistical analysis</td>
-              </tr>
-              <tr>
-                <td><code>git-master</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Commit strategy, history hygiene</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h4>Product Lane</h4>
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Model</th>
-                <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>product-manager</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Problem framing, personas/JTBD, PRDs</td>
-              </tr>
-              <tr>
-                <td><code>ux-researcher</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Heuristic audits, usability, accessibility</td>
-              </tr>
-              <tr>
-                <td><code>information-architect</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Taxonomy, navigation, findability</td>
-              </tr>
-              <tr>
-                <td><code>product-analyst</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Product metrics, funnel analysis, experiments</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h4>Coordination</h4>
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Model</th>
-                <th>Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>critic</code></td>
-                <td><span class="tier-badge tier-badge--high">Opus</span></td>
-                <td>Plan/design critical challenge</td>
-              </tr>
-              <tr>
-                <td><code>vision</code></td>
-                <td><span class="tier-badge tier-badge--medium">Sonnet</span></td>
-                <td>Image/screenshot/diagram analysis</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Agent Selection -->
-        <section id="agent-selection" data-section>
-          <h3><span class="anchor-link">#</span>Agent Selection Guide</h3>
-
-          <p>Choose the right agent based on your task. Each agent has a fixed default model, but you can override it with the <code>model</code> parameter when delegating.</p>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Task</th>
-                <th>Recommended Agent</th>
-                <th>Lane</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Quick file/symbol lookup</td>
-                <td><code>explore</code></td>
-                <td>Build/Analysis</td>
-              </tr>
-              <tr>
-                <td>Implement a feature</td>
-                <td><code>executor</code></td>
-                <td>Build/Analysis</td>
-              </tr>
-              <tr>
-                <td>Complex autonomous refactor</td>
-                <td><code>deep-executor</code></td>
-                <td>Build/Analysis</td>
-              </tr>
-              <tr>
-                <td>Debug a failing test</td>
-                <td><code>debugger</code></td>
-                <td>Build/Analysis</td>
-              </tr>
-              <tr>
-                <td>System design decisions</td>
-                <td><code>architect</code></td>
-                <td>Build/Analysis</td>
-              </tr>
-              <tr>
-                <td>Comprehensive code review</td>
-                <td><code>code-reviewer</code></td>
-                <td>Review</td>
-              </tr>
-              <tr>
-                <td>Security audit</td>
-                <td><code>security-reviewer</code></td>
-                <td>Review</td>
-              </tr>
-              <tr>
-                <td>Write tests</td>
-                <td><code>test-engineer</code></td>
-                <td>Domain Specialists</td>
-              </tr>
-              <tr>
-                <td>UI/UX work</td>
-                <td><code>designer</code></td>
-                <td>Domain Specialists</td>
-              </tr>
-              <tr>
-                <td>Documentation</td>
-                <td><code>writer</code></td>
-                <td>Domain Specialists</td>
-              </tr>
-              <tr>
-                <td>External SDK evaluation</td>
-                <td><code>dependency-expert</code></td>
-                <td>Domain Specialists</td>
-              </tr>
-              <tr>
-                <td>Product requirements</td>
-                <td><code>product-manager</code></td>
-                <td>Product</td>
-              </tr>
-              <tr>
-                <td>Data analysis</td>
-                <td><code>scientist</code></td>
-                <td>Domain Specialists</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Agent Domains -->
-        <section id="agent-domains" data-section>
-          <h3><span class="anchor-link">#</span>Agent Domains</h3>
-
-          <details data-accordion>
-            <summary>Build/Analysis Lane</summary>
-            <div class="accordion-content-wrapper">
-              <p>Core agents for exploring, planning, building, and verifying code.</p>
-              <ul>
-                <li><code>explore</code> - Internal codebase discovery, symbol/file mapping</li>
-                <li><code>analyst</code> - Requirements clarity, acceptance criteria</li>
-                <li><code>planner</code> - Task sequencing, execution plans, risk flags</li>
-                <li><code>architect</code> - System design, boundaries, interfaces</li>
-                <li><code>debugger</code> - Root-cause analysis, regression isolation</li>
-                <li><code>executor</code> - Code implementation, refactoring, feature work</li>
-                <li><code>deep-executor</code> - Complex autonomous goal-oriented tasks</li>
-                <li><code>verifier</code> - Completion evidence, claim validation</li>
+              <p class="mode-card__description">The flagship mode. Full autonomous execution from idea to delivered code. Self-correcting loop.</p>
+              <ul class="mode-card__features">
+                <li>Expansion (Analyst + Architect)</li>
+                <li>Planning (Architect + Critic)</li>
+                <li>Execution (Ralph + Ultrawork)</li>
+                <li>QA Cycling (UltraQA)</li>
               </ul>
             </div>
-          </details>
+          </div>
 
-          <details data-accordion>
-            <summary>Review Lane</summary>
-            <div class="accordion-content-wrapper">
-              <p>Specialized reviewers for different aspects of code quality.</p>
-              <ul>
-                <li><code>style-reviewer</code> - Formatting, naming, idioms, lint conventions</li>
-                <li><code>quality-reviewer</code> - Logic defects, maintainability, anti-patterns</li>
-                <li><code>api-reviewer</code> - API contracts, versioning, backward compatibility</li>
-                <li><code>security-reviewer</code> - Vulnerabilities, trust boundaries, authn/authz</li>
-                <li><code>performance-reviewer</code> - Hotspots, complexity, memory/latency</li>
-                <li><code>code-reviewer</code> - Comprehensive review across all concerns</li>
+          <div id="ralph">
+            <div class="mode-card">
+              <div class="mode-card__header">
+                <div class="mode-card__icon">🔄</div>
+                <div>
+                  <h3 class="mode-card__title">Ralph</h3>
+                  <span class="mode-card__keyword">ralph</span>
+                </div>
+              </div>
+              <p class="mode-card__description">"The boulder never stops." Persistence mode. Keeps working until the Architect verifies the goal is met.</p>
+              <ul class="mode-card__features">
+                <li>Infinite persistence loop</li>
+                <li>Includes Ultrawork automatically</li>
+                <li>Strong verification requirements</li>
               </ul>
             </div>
-          </details>
+          </div>
 
-          <details data-accordion>
-            <summary>Domain Specialists</summary>
-            <div class="accordion-content-wrapper">
-              <p>Focused experts for specific technical domains.</p>
-              <ul>
-                <li><code>dependency-expert</code> - External SDK/API/package evaluation</li>
-                <li><code>test-engineer</code> - Test strategy, coverage, flaky-test hardening</li>
-                <li><code>quality-strategist</code> - Quality strategy, release readiness</li>
-                <li><code>build-fixer</code> - Build/toolchain/type failures</li>
-                <li><code>designer</code> - UX/UI architecture, interaction design</li>
-                <li><code>writer</code> - Docs, migration notes, user guidance</li>
-                <li><code>qa-tester</code> - Interactive CLI/service runtime validation</li>
-                <li><code>scientist</code> - Data/statistical analysis</li>
-                <li><code>git-master</code> - Commit strategy, history hygiene</li>
+          <div id="ultrawork">
+            <div class="mode-card">
+              <div class="mode-card__header">
+                <div class="mode-card__icon">⚡</div>
+                <div>
+                  <h3 class="mode-card__title">Ultrawork</h3>
+                  <span class="mode-card__keyword">ulw</span>
+                </div>
+              </div>
+              <p class="mode-card__description">Maximum parallelism. Aggressively delegates subtasks to multiple background agents.</p>
+              <ul class="mode-card__features">
+                <li>Up to 5+ concurrent agents</li>
+                <li>Smart model routing</li>
+                <li>Non-blocking background execution</li>
               </ul>
             </div>
-          </details>
-
-          <details data-accordion>
-            <summary>Product Lane</summary>
-            <div class="accordion-content-wrapper">
-              <p>Product-focused agents for discovery, research, and analysis.</p>
-              <ul>
-                <li><code>product-manager</code> - Problem framing, personas/JTBD, PRDs</li>
-                <li><code>ux-researcher</code> - Heuristic audits, usability, accessibility</li>
-                <li><code>information-architect</code> - Taxonomy, navigation, findability</li>
-                <li><code>product-analyst</code> - Product metrics, funnel analysis, experiments</li>
-              </ul>
-            </div>
-          </details>
-
-          <details data-accordion>
-            <summary>Coordination</summary>
-            <div class="accordion-content-wrapper">
-              <p>Cross-cutting agents for critique and visual analysis.</p>
-              <ul>
-                <li><code>critic</code> - Plan/design critical challenge</li>
-                <li><code>vision</code> - Image/screenshot/diagram analysis</li>
-              </ul>
-            </div>
-          </details>
+          </div>
+          <h3 id="team-compositions"><span class="anchor-link">#</span>Team Compositions</h3>
+          <div class="workflow">
+            <strong>Feature Dev:</strong>
+            <span class="workflow__step">analyst</span> <span class="workflow__arrow">&rarr;</span>
+            <span class="workflow__step">planner</span> <span class="workflow__arrow">&rarr;</span>
+            <span class="workflow__step">executor</span> <span class="workflow__arrow">&rarr;</span>
+            <span class="workflow__step">test-engineer</span> <span class="workflow__arrow">&rarr;</span>
+            <span class="workflow__step">verifier</span>
+          </div>
+          <div class="workflow">
+            <strong>Bug Fix:</strong>
+            <span class="workflow__step">explore</span> <span class="workflow__arrow">&rarr;</span>
+            <span class="workflow__step">debugger</span> <span class="workflow__arrow">&rarr;</span>
+            <span class="workflow__step">executor</span> <span class="workflow__arrow">&rarr;</span>
+            <span class="workflow__step">verifier</span>
+          </div>
         </section>
 
-        <!-- Magic Keywords -->
-        <section id="magic-keywords" data-section>
-          <h2><span class="anchor-link">#</span>Magic Keywords</h2>
-          <p>Magic keywords are shortcuts that trigger specific modes. They can be used anywhere in your prompt.</p>
-
-          <table class="keyword-table">
-            <thead>
-              <tr>
-                <th>Keyword</th>
-                <th>Effect</th>
-                <th>Example</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>autopilot</code></td>
-                <td>Full autonomous execution</td>
-                <td>"autopilot: build a todo app"</td>
-              </tr>
-              <tr>
-                <td><code>ralph</code></td>
-                <td>Persistence mode</td>
-                <td>"ralph: refactor auth"</td>
-              </tr>
-              <tr>
-                <td><code>ulw</code></td>
-                <td>Maximum parallelism</td>
-                <td>"ulw fix all errors"</td>
-              </tr>
-              <tr>
-                <td><code>eco</code></td>
-                <td>Token-efficient mode</td>
-                <td>"eco fix all errors"</td>
-              </tr>
-              <tr>
-                <td><code>plan</code></td>
-                <td>Planning interview</td>
-                <td>"plan the new API"</td>
-              </tr>
-              <tr>
-                <td><code>ralplan</code></td>
-                <td>Consensus planning (alias for <code>/plan --consensus</code>)</td>
-                <td>"ralplan this feature"</td>
-              </tr>
-              <tr>
-                <td><code>team</code></td>
-                <td>Coordinated team agents</td>
-                <td>"team: fix all errors with 5 agents"</td>
-              </tr>
-              <tr>
-                <td><code>ultrapilot</code></td>
-                <td>Parallel autopilot</td>
-                <td>"ultrapilot: build dashboard"</td>
-              </tr>
-              <tr>
-                <td><code>swarm</code></td>
-                <td>Coordinated agents</td>
-                <td>"swarm: process all files"</td>
-              </tr>
-              <tr>
-                <td><code>pipeline</code></td>
-                <td>Sequential chaining</td>
-                <td>"pipeline: analyze, fix, test"</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Skills Reference -->
-        <section id="skills-reference" data-section>
-          <h3><span class="anchor-link">#</span>Skills Reference</h3>
-
-          <p>Skills are invoked with the <code>/oh-my-claudecode:</code> prefix.</p>
-
-          <h4>Execution Skills</h4>
+        <!-- MCP Tools -->
+        <section id="mcp-tools" data-section>
+          <h2><span class="anchor-link">#</span>MCP Tools</h2>
+          
+          <h3>External AI</h3>
           <ul>
-            <li><code>/oh-my-claudecode:autopilot</code> - Full autonomous execution</li>
-            <li><code>/oh-my-claudecode:ralph</code> - Persistence mode</li>
-            <li><code>/oh-my-claudecode:ultrawork</code> - Maximum parallelism</li>
-            <li><code>/oh-my-claudecode:ecomode</code> - Token-efficient mode</li>
-            <li><code>/oh-my-claudecode:ultrapilot</code> - Parallel autopilot</li>
-            <li><code>/oh-my-claudecode:team</code> - Coordinated team of N agents</li>
-            <li><code>/oh-my-claudecode:swarm</code> - Coordinated agents (SQLite-based)</li>
-            <li><code>/oh-my-claudecode:pipeline</code> - Sequential chaining</li>
-            <li><code>/oh-my-claudecode:ultraqa</code> - QA cycling</li>
+            <li><strong>Codex (gpt-5.3-codex):</strong> Architectural reasoning, deep review, security analysis.</li>
+            <li><strong>Gemini (gemini-3-pro-preview):</strong> Visual analysis, UI design, 1M token context.</li>
           </ul>
 
-          <h4>Planning Skills</h4>
+          <h3>Code Intelligence</h3>
+          <p><strong>LSP Tools:</strong> <code>lsp_hover</code>, <code>lsp_goto_definition</code>, <code>lsp_find_references</code>, <code>lsp_diagnostics</code>, <code>lsp_rename</code>.</p>
+          <p><strong>AST Grep:</strong> <code>ast_grep_search</code>, <code>ast_grep_replace</code> for structural refactoring.</p>
+
+          <h3>Utilities</h3>
+          <p><strong>Python REPL:</strong> Persistent environment for data analysis.</p>
+          <p><strong>Job Management:</strong> <code>check_job_status</code>, <code>wait_for_job</code>, <code>list_jobs</code>, <code>kill_job</code>.</p>
+        </section>
+
+        <!-- Skills & Commands -->
+        <section id="skills" data-section>
+          <h2><span class="anchor-link">#</span>Skills & Commands</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Keyword</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td><code>autopilot</code></td><td>Autonomous execution</td><td>"autopilot build a login page"</td></tr>
+                <tr><td><code>ralph</code></td><td>Persistence mode</td><td>"ralph refactor the API"</td></tr>
+                <tr><td><code>ulw</code></td><td>Ultrawork (Parallel)</td><td>"ulw fix these 5 bugs"</td></tr>
+                <tr><td><code>team</code></td><td>Native Team</td><td>"team 3:executor build it"</td></tr>
+                <tr><td><code>plan</code></td><td>Strategic planning</td><td>"plan the migration"</td></tr>
+                <tr><td><code>ask codex</code></td><td>Consult Codex</td><td>"ask codex to review this"</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><strong>Utility Skills:</strong> <code>/oh-my-claudecode:cancel</code>, <code>note</code>, <code>omc-setup</code>, <code>hud</code>, <code>doctor</code>.</p>
+        </section>
+
+        <!-- State & Memory -->
+        <section id="state-memory" data-section>
+          <h2><span class="anchor-link">#</span>State & Memory</h2>
+          
+          <h3>Notepad System</h3>
+          <p>Located at <code>.omc/notepad.md</code>. Resilient memory surviving context pruning.</p>
           <ul>
-            <li><code>/oh-my-claudecode:plan</code> - Planning interview (supports <code>--consensus</code> and <code>--review</code> flags)</li>
-            <li><code>/oh-my-claudecode:ralplan</code> - Alias for <code>/plan --consensus</code></li>
-            <li><code>/oh-my-claudecode:review</code> - Alias for <code>/plan --review</code></li>
-            <li><code>/oh-my-claudecode:analyze</code> - Deep analysis</li>
+            <li><strong>Priority:</strong> Always injected into context.</li>
+            <li><strong>Working:</strong> Auto-pruned after 7 days.</li>
+            <li><strong>Manual:</strong> Never pruned.</li>
           </ul>
 
-          <h4>Utility Skills</h4>
+          <h3>Project Memory</h3>
+          <p>Located at <code>.omc/project-memory.json</code>. Stores tech stack, conventions, and architectural directives.</p>
+        </section>
+
+        <!-- Configuration -->
+        <section id="configuration" data-section>
+          <h2><span class="anchor-link">#</span>Configuration</h2>
+          <p>Run <code>/oh-my-claudecode:omc-setup</code> to configure defaults.</p>
+          <p><strong>Worktree Paths:</strong></p>
           <ul>
-            <li><code>/oh-my-claudecode:cancel</code> - Stop current operation</li>
-            <li><code>/oh-my-claudecode:note</code> - Add to notepad</li>
-            <li><code>/oh-my-claudecode:help</code> - Show all skills (includes <code>learn-about-omc</code>)</li>
-            <li><code>/oh-my-claudecode:doctor</code> - Diagnose issues</li>
-            <li><code>/oh-my-claudecode:hud</code> - HUD statusline</li>
-            <li><code>/oh-my-claudecode:skill</code> - Manage skills (includes <code>local-skills-setup</code>)</li>
-          </ul>
-        </section>
-
-        <!-- Cancel Operations -->
-        <section id="cancel-operations" data-section>
-          <h3><span class="anchor-link">#</span>Cancel Operations</h3>
-
-          <p>Use the unified <code>/oh-my-claudecode:cancel</code> skill to stop any execution mode.</p>
-
-          <div class="callout callout-warning">
-            <div class="callout-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                <line x1="12" y1="9" x2="12" y2="13"></line>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </svg>
-              Why /cancel matters
-            </div>
-            <p>Execution modes use hooks that block premature stopping. These hooks check for state files. Running <code>/cancel</code> cleanly removes these files, allowing the session to end gracefully.</p>
-          </div>
-
-          <p>The cancel skill automatically detects and cancels:</p>
-          <ul>
-            <li>autopilot, ultrapilot</li>
-            <li>ralph, ultrawork, ultraqa</li>
-            <li>team, swarm, pipeline</li>
-            <li>Planning interviews</li>
-          </ul>
-
-          <p>If <code>/cancel</code> doesn't work, use:</p>
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code>/oh-my-claudecode:cancel --force</code></pre>
-          </div>
-        </section>
-
-        <!-- OMC Setup -->
-        <section id="omc-setup" data-section>
-          <h2><span class="anchor-link">#</span>OMC Setup</h2>
-          <p>Run the setup wizard to configure OMC:</p>
-
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code>/oh-my-claudecode:omc-setup</code></pre>
-          </div>
-
-          <p>The wizard configures:</p>
-          <ul>
-            <li>Default execution mode preference</li>
-            <li>HUD statusline installation</li>
-            <li>MCP server configuration</li>
-            <li>Task tool selection (built-in, beads, or beads-rust)</li>
-          </ul>
-        </section>
-
-        <!-- Default Mode -->
-        <section id="default-mode" data-section>
-          <h3><span class="anchor-link">#</span>Default Execution Mode</h3>
-
-          <p>Configure which mode activates when you say "fast" or "parallel" without specifying a mode.</p>
-
-          <p>The configuration file is at <code>~/.claude/.omc-config.json</code>:</p>
-
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">JSON</span>
-            </div>
-            <pre><code class="language-json">{
-  "defaultExecutionMode": "ultrawork"  // or "ecomode"
-}</code></pre>
-          </div>
-
-          <h4>Priority Resolution</h4>
-          <table class="keyword-table">
-            <thead>
-              <tr>
-                <th>Priority</th>
-                <th>Condition</th>
-                <th>Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1 (highest)</td>
-                <td>Both explicit keywords present</td>
-                <td><code>ecomode</code> wins</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Single explicit keyword</td>
-                <td>That mode wins</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Generic "fast"/"parallel" only</td>
-                <td>Read from config</td>
-              </tr>
-              <tr>
-                <td>4 (lowest)</td>
-                <td>No config file</td>
-                <td>Default to <code>ultrawork</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- HUD Config -->
-        <section id="hud-config" data-section>
-          <h3><span class="anchor-link">#</span>HUD Configuration</h3>
-
-          <p>The HUD (Heads-Up Display) shows real-time status in your terminal.</p>
-
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code>/oh-my-claudecode:hud setup</code></pre>
-          </div>
-
-          <p>HUD shows:</p>
-          <ul>
-            <li>Current active mode</li>
-            <li>Agent status and count</li>
-            <li>Task progress</li>
-            <li>Token usage</li>
-          </ul>
-        </section>
-
-        <!-- MCP Setup -->
-        <section id="mcp-setup" data-section>
-          <h3><span class="anchor-link">#</span>MCP Server Setup</h3>
-
-          <p>OMC includes MCP (Model Context Protocol) servers for advanced features.</p>
-
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code>/oh-my-claudecode:mcp-setup</code></pre>
-          </div>
-
-          <p>Available MCP tools:</p>
-          <ul>
-            <li>LSP tools (hover, definition, references, diagnostics)</li>
-            <li>AST grep (search, replace) for structural patterns</li>
-            <li>Python REPL for data analysis</li>
-            <li>State management tools</li>
-            <li>Notepad and project memory tools</li>
-          </ul>
-        </section>
-
-        <!-- Hooks System -->
-        <section id="hooks-system" data-section>
-          <h2><span class="anchor-link">#</span>Hooks System</h2>
-
-          <p>Hooks are OMC extensions that inject context into conversations via <code>&lt;system-reminder&gt;</code> tags.</p>
-
-          <h3>Hook Events</h3>
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Event</th>
-                <th>When It Fires</th>
-                <th>What You See</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>SessionStart</td>
-                <td>Conversation begins</td>
-                <td>Priority context, mode restoration</td>
-              </tr>
-              <tr>
-                <td>UserPromptSubmit</td>
-                <td>After user message</td>
-                <td>Magic keyword detection, skill prompts</td>
-              </tr>
-              <tr>
-                <td>PreToolUse:{Tool}</td>
-                <td>Before tool executes</td>
-                <td>Guidance, warnings</td>
-              </tr>
-              <tr>
-                <td>PostToolUse:{Tool}</td>
-                <td>After tool completes</td>
-                <td>Delegation audit, verification prompts</td>
-              </tr>
-              <tr>
-                <td>Stop</td>
-                <td>Before session ends</td>
-                <td>Continuation prompts (in execution modes)</td>
-              </tr>
-              <tr>
-                <td>SubagentStart</td>
-                <td>Subagent spawned</td>
-                <td>Agent {type} started ({id})</td>
-              </tr>
-              <tr>
-                <td>SubagentStop</td>
-                <td>Subagent finishes</td>
-                <td>Agent {type} completed/failed ({id})</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Notepad System -->
-        <section id="notepad-system" data-section>
-          <h3><span class="anchor-link">#</span>Notepad System</h3>
-
-          <p>The notepad at <code>.omc/notepad.md</code> provides compaction-resilient memory with three tiers.</p>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Section</th>
-                <th>Behavior</th>
-                <th>Use For</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Priority Context</strong></td>
-                <td>ALWAYS loaded (max 500 chars)</td>
-                <td>Critical facts: "Project uses pnpm"</td>
-              </tr>
-              <tr>
-                <td><strong>Working Memory</strong></td>
-                <td>Auto-pruned after 7 days</td>
-                <td>Debugging breadcrumbs, temporary findings</td>
-              </tr>
-              <tr>
-                <td><strong>MANUAL</strong></td>
-                <td>Never auto-pruned</td>
-                <td>Team contacts, deployment info</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h4>Usage</h4>
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code>/oh-my-claudecode:note &lt;content&gt;              # Working Memory
-/oh-my-claudecode:note --priority &lt;content&gt;   # Priority Context
-/oh-my-claudecode:note --manual &lt;content&gt;     # MANUAL (never pruned)
-/oh-my-claudecode:note --show                 # Display notepad
-/oh-my-claudecode:note --prune                # Remove old entries</code></pre>
-          </div>
-        </section>
-
-        <!-- State Management -->
-        <section id="state-management" data-section>
-          <h3><span class="anchor-link">#</span>State Management</h3>
-
-          <p>All mutable OMC state belongs under <code>.omc/state/</code> in the worktree.</p>
-
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code>.omc/
-  state/
-    autopilot-state.json
-    ralph-state.json
-    ultrawork-state.json
-    swarm.db           # SQLite for swarm
-  notepad.md
-  logs/
-    delegation-audit.jsonl</code></pre>
-          </div>
-
-          <p>State files control hook behavior. The <code>/cancel</code> skill removes these files to allow graceful termination.</p>
-        </section>
-
-        <!-- MCP Overview -->
-        <section id="mcp-overview" data-section>
-          <h2><span class="anchor-link">#</span>MCP Tools Overview</h2>
-          <p>OMC v4.1.0 includes powerful MCP (Model Context Protocol) tools that extend Claude's capabilities with external AI consultation, language server integration, and more.</p>
-
-          <div class="feature-grid">
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"></path>
-                </svg>
-              </div>
-              <div class="feature-item__title">External AI</div>
-              <div class="feature-item__desc">Consult Gemini and Codex for specialized tasks</div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="4 17 10 11 4 5"></polyline>
-                  <line x1="12" y1="19" x2="20" y2="19"></line>
-                </svg>
-              </div>
-              <div class="feature-item__title">LSP Integration</div>
-              <div class="feature-item__desc">Type info, definitions, references, diagnostics</div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                  <path d="M2 17l10 5 10-5"></path>
-                </svg>
-              </div>
-              <div class="feature-item__title">AST Grep</div>
-              <div class="feature-item__desc">Structural code search and replace</div>
-            </div>
-            <div class="feature-item">
-              <div class="feature-item__icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="2" y="3" width="20" height="14" rx="2"></rect>
-                  <line x1="12" y1="17" x2="12" y2="21"></line>
-                </svg>
-              </div>
-              <div class="feature-item__title">Python REPL</div>
-              <div class="feature-item__desc">Persistent environment for data analysis</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- External AI -->
-        <section id="external-ai" data-section>
-          <h3><span class="anchor-link">#</span>External AI Consultation (Gemini &amp; Codex)</h3>
-
-          <p>OMC can optionally consult external AI models for specialized tasks:</p>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Tool</th>
-                <th>Provider</th>
-                <th>Best For</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>ask_codex</code></td>
-                <td>OpenAI (gpt-5.3-codex)</td>
-                <td>Code analysis, planning validation, architecture review</td>
-              </tr>
-              <tr>
-                <td><code>ask_gemini</code></td>
-                <td>Google (gemini-3-pro-preview)</td>
-                <td>Design consistency, documentation, visual analysis (1M context)</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h4>Agent Roles</h4>
-
-          <p><strong>Codex roles:</strong> <code>architect</code>, <code>planner</code>, <code>critic</code>, <code>analyst</code>, <code>code-reviewer</code>, <code>security-reviewer</code>, <code>tdd-guide</code></p>
-
-          <p><strong>Gemini roles:</strong> <code>designer</code>, <code>writer</code>, <code>vision</code></p>
-
-          <h4>MCP-Direct Replacement Pattern</h4>
-
-          <p>Instead of spawning Claude agents for analysis tasks, call MCPs directly:</p>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Task Domain</th>
-                <th>MCP Tool</th>
-                <th>Replaces Agent</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Architecture analysis</td>
-                <td><code>ask_codex</code> (architect role)</td>
-                <td>architect agents</td>
-              </tr>
-              <tr>
-                <td>Planning</td>
-                <td><code>ask_codex</code> (planner role)</td>
-                <td>planner agent</td>
-              </tr>
-              <tr>
-                <td>Code review</td>
-                <td><code>ask_codex</code> (code-reviewer role)</td>
-                <td>code-reviewer agents</td>
-              </tr>
-              <tr>
-                <td>UI/UX design</td>
-                <td><code>ask_gemini</code> (designer role)</td>
-                <td>designer agents</td>
-              </tr>
-              <tr>
-                <td>Documentation</td>
-                <td><code>ask_gemini</code> (writer role)</td>
-                <td>writer agent</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="callout callout-info">
-            <div class="callout-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 16v-4"></path>
-                <path d="M12 8h.01"></path>
-              </svg>
-              Graceful Fallback
-            </div>
-            <p>If external MCPs are unavailable, OMC automatically falls back to Claude agents. No configuration needed.</p>
-          </div>
-        </section>
-
-        <!-- LSP Tools -->
-        <section id="lsp-tools" data-section>
-          <h3><span class="anchor-link">#</span>LSP Tools</h3>
-
-          <p>Language Server Protocol integration provides IDE-like features:</p>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Tool</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>lsp_hover</code></td>
-                <td>Get type info and documentation at a position</td>
-              </tr>
-              <tr>
-                <td><code>lsp_goto_definition</code></td>
-                <td>Jump to where a symbol is defined</td>
-              </tr>
-              <tr>
-                <td><code>lsp_find_references</code></td>
-                <td>Find all usages of a symbol</td>
-              </tr>
-              <tr>
-                <td><code>lsp_document_symbols</code></td>
-                <td>Get file outline (functions, classes, etc.)</td>
-              </tr>
-              <tr>
-                <td><code>lsp_workspace_symbols</code></td>
-                <td>Search symbols across the workspace</td>
-              </tr>
-              <tr>
-                <td><code>lsp_diagnostics</code></td>
-                <td>Get errors and warnings for a file</td>
-              </tr>
-              <tr>
-                <td><code>lsp_diagnostics_directory</code></td>
-                <td>Project-wide type checking (tsc --noEmit)</td>
-              </tr>
-              <tr>
-                <td><code>lsp_rename</code></td>
-                <td>Rename a symbol across all files</td>
-              </tr>
-              <tr>
-                <td><code>lsp_code_actions</code></td>
-                <td>Get available refactorings and quick fixes</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- AST Tools -->
-        <section id="ast-tools" data-section>
-          <h3><span class="anchor-link">#</span>AST Grep</h3>
-
-          <p>Structural code search and replace using AST patterns - more precise than text search.</p>
-
-          <h4>Pattern Syntax</h4>
-          <ul>
-            <li><code>$NAME</code> - matches any single AST node</li>
-            <li><code>$$$ARGS</code> - matches multiple nodes (for arguments, list items)</li>
-          </ul>
-
-          <h4>Example Patterns</h4>
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">TEXT</span>
-            </div>
-            <pre><code># Find all function declarations
-function $NAME($$$ARGS)
-
-# Find all console.log calls
-console.log($MSG)
-
-# Find null equality checks
-$X === null
-
-# Find imports from a specific module
-import $$$IMPORTS from '$MODULE'</code></pre>
-          </div>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Tool</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>ast_grep_search</code></td>
-                <td>Search for AST patterns in code</td>
-              </tr>
-              <tr>
-                <td><code>ast_grep_replace</code></td>
-                <td>Replace patterns (use <code>dryRun=false</code> to apply)</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Python REPL -->
-        <section id="python-repl" data-section>
-          <h3><span class="anchor-link">#</span>Python REPL</h3>
-
-          <p>Persistent Python environment for data analysis and scientific computing.</p>
-
-          <h4>Features</h4>
-          <ul>
-            <li>Variables persist between calls within a session</li>
-            <li>Pre-installed: pandas, numpy, matplotlib</li>
-            <li>Actions: <code>execute</code>, <code>interrupt</code>, <code>reset</code>, <code>get_state</code></li>
-          </ul>
-
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">PYTHON</span>
-            </div>
-            <pre><code># First call
-import pandas as pd
-df = pd.read_csv('data.csv')
-
-# Second call (df is still available)
-df.describe()</code></pre>
-          </div>
-        </section>
-
-        <!-- Job Management -->
-        <section id="job-management" data-section>
-          <h3><span class="anchor-link">#</span>Background Job Management</h3>
-
-          <p>External AI consultations can run in the background for better parallelism.</p>
-
-          <h4>Background Orchestration Pattern</h4>
-          <ol>
-            <li><strong>SPAWN</strong> - Launch with <code>background: true</code></li>
-            <li><strong>CHECK</strong> - Non-blocking status with <code>check_job_status</code></li>
-            <li><strong>AWAIT</strong> - Block when needed with <code>wait_for_job</code></li>
-          </ol>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Tool</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>check_job_status</code></td>
-                <td>Non-blocking status check</td>
-              </tr>
-              <tr>
-                <td><code>wait_for_job</code></td>
-                <td>Block until completion (up to 1 hour)</td>
-              </tr>
-              <tr>
-                <td><code>list_jobs</code></td>
-                <td>List background jobs by status</td>
-              </tr>
-              <tr>
-                <td><code>kill_job</code></td>
-                <td>Terminate a running job</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="callout callout-warning">
-            <div class="callout-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                <line x1="12" y1="9" x2="12" y2="13"></line>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </svg>
-              Dependency Rule
-            </div>
-            <p>If a downstream decision depends on MCP output, you MUST await before finalizing that decision.</p>
-          </div>
-        </section>
-
-        <!-- Verification Tiers -->
-        <section id="verification-tiers" data-section>
-          <h3><span class="anchor-link">#</span>Verification Tiers</h3>
-
-          <p>Verification scales with task complexity:</p>
-
-          <table class="agent-table">
-            <thead>
-              <tr>
-                <th>Tier</th>
-                <th>When</th>
-                <th>Agent</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="tier-badge tier-badge--low">LIGHT</span></td>
-                <td>&lt;5 files, &lt;100 lines, full tests</td>
-                <td>verifier (haiku)</td>
-              </tr>
-              <tr>
-                <td><span class="tier-badge tier-badge--medium">STANDARD</span></td>
-                <td>Default</td>
-                <td>verifier (sonnet)</td>
-              </tr>
-              <tr>
-                <td><span class="tier-badge tier-badge--high">THOROUGH</span></td>
-                <td>&gt;20 files, security/architectural</td>
-                <td>verifier (opus)</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="callout callout-danger">
-            <div class="callout-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-              </svg>
-              Iron Law
-            </div>
-            <p>NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE. Always: IDENTIFY what proves the claim, RUN the verification, READ the output, then CLAIM with evidence.</p>
-          </div>
-        </section>
-
-        <!-- Context Persistence -->
-        <section id="context-persistence" data-section>
-          <h3><span class="anchor-link">#</span>Context Persistence</h3>
-
-          <p>Use <code>&lt;remember&gt;</code> tags to persist information across sessions:</p>
-
-          <div class="code-block-wrapper">
-            <div class="code-block-header">
-              <span class="code-lang">XML</span>
-            </div>
-            <pre><code class="language-xml">&lt;remember&gt;Important info here&lt;/remember&gt;           &lt;!-- 7 days --&gt;
-&lt;remember priority&gt;Critical info here&lt;/remember&gt;  &lt;!-- Permanent --&gt;</code></pre>
-          </div>
-
-          <p>What to capture:</p>
-          <ul>
-            <li>Architecture decisions</li>
-            <li>Error resolutions</li>
-            <li>User preferences</li>
-          </ul>
-
-          <p>What NOT to capture:</p>
-          <ul>
-            <li>Progress (use todos instead)</li>
-            <li>Info already in AGENTS.md</li>
+            <li><code>.omc/state/</code> - Mode state files</li>
+            <li><code>.omc/logs/</code> - Audit logs</li>
+            <li><code>.omc/plans/</code> - Planning documents</li>
           </ul>
         </section>
 
@@ -2582,19 +900,15 @@ df.describe()</code></pre>
     </svg>
   </button>
 
-  <!-- Search overlay -->
-  <div id="search-overlay" class="search-overlay" aria-hidden="true"></div>
+  <div id="search-overlay" class="search-overlay"></div>
 
-  <!-- Scripts -->
   <script type="module">
     import { SidebarSpy } from './js/ui/sidebarSpy.js';
     import { SearchService } from './js/ui/searchService.js';
     import { Accordion } from './js/ui/accordion.js';
     import { CodeBlocks } from './js/ui/codeBlocks.js';
 
-    // Initialize components
     document.addEventListener('DOMContentLoaded', () => {
-      // Sidebar spy for active section highlighting
       new SidebarSpy({
         sidebar: '.docs-sidebar',
         content: '.docs-content',
@@ -2602,7 +916,6 @@ df.describe()</code></pre>
         sections: '[data-section]'
       });
 
-      // Search service
       new SearchService({
         contentSelector: '.docs-content',
         searchInput: '#search-input',
@@ -2610,111 +923,36 @@ df.describe()</code></pre>
         overlay: '#search-overlay'
       });
 
-      // Accordion
       new Accordion();
-
-      // Code blocks with copy buttons
       new CodeBlocks();
 
-      // Mobile menu toggle
-      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      // Mobile Menu Logic
+      const mobileBtn = document.getElementById('mobile-menu-btn');
       const sidebar = document.getElementById('sidebar');
-      const sidebarOverlay = document.getElementById('sidebar-overlay');
-      const sidebarLinks = document.querySelectorAll('.sidebar-link');
-      const docsMain = document.querySelector('.docs-main');
+      const overlay = document.getElementById('sidebar-overlay');
+      
+      const toggleMenu = () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+      };
 
-      function toggleSidebar() {
-        const isOpen = sidebar?.classList.contains('open');
-
-        sidebar?.classList.toggle('open');
-        mobileMenuBtn?.classList.toggle('active');
-        sidebarOverlay?.classList.toggle('active');
-        mobileMenuBtn?.setAttribute('aria-expanded', !isOpen);
-
-        // Prevent body scroll when sidebar is open
-        document.body.style.overflow = isOpen ? '' : 'hidden';
-
-        // Focus management
-        if (!isOpen) {
-          docsMain?.setAttribute('inert', '');
-          sidebar?.querySelector('.sidebar-link')?.focus();
-        } else {
-          docsMain?.removeAttribute('inert');
-        }
-      }
-
-      function closeSidebar() {
-        sidebar?.classList.remove('open');
-        mobileMenuBtn?.classList.remove('active');
-        sidebarOverlay?.classList.remove('active');
-        mobileMenuBtn?.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-        docsMain?.removeAttribute('inert');
-        mobileMenuBtn?.focus();
-      }
-
-      mobileMenuBtn?.addEventListener('click', toggleSidebar);
-
-      // Close sidebar when clicking overlay
-      sidebarOverlay?.addEventListener('click', closeSidebar);
-
-      // Close sidebar when clicking a link
-      sidebarLinks.forEach(link => {
+      mobileBtn.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+      
+      // Close on link click (mobile)
+      document.querySelectorAll('.sidebar-link').forEach(link => {
         link.addEventListener('click', () => {
-          if (window.innerWidth <= 1024) {
-            closeSidebar();
-          }
+          if (window.innerWidth <= 1024) toggleMenu();
         });
       });
 
-      // Close sidebar when clicking outside on mobile
-      document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 1024) {
-          if (!e.target.closest('.docs-sidebar') && !e.target.closest('.mobile-menu-btn')) {
-            closeSidebar();
-          }
-        }
-      });
-
-      // Close sidebar on window resize to desktop size
-      window.addEventListener('resize', () => {
-        if (window.innerWidth > 1024) {
-          closeSidebar();
-        }
-      });
-
-      // Close sidebar on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar?.classList.contains('open')) {
-          closeSidebar();
-        }
-      });
-
-      // Back to top button
+      // Back to top
       const backToTop = document.getElementById('back-to-top');
-
       window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) {
-          backToTop?.classList.add('visible');
-        } else {
-          backToTop?.classList.remove('visible');
-        }
+        backToTop.classList.toggle('visible', window.scrollY > 500);
       });
-
-      backToTop?.addEventListener('click', () => {
+      backToTop.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-
-      // Collapsible sections handled by SidebarSpy.setupCollapsible()
-
-      // Anchor links on headings
-      const headingsWithId = document.querySelectorAll('.docs-content h2[id], .docs-content h3[id], .docs-content h4[id]');
-      headingsWithId.forEach(heading => {
-        heading.addEventListener('click', () => {
-          const url = `${window.location.pathname}#${heading.id}`;
-          navigator.clipboard.writeText(window.location.origin + url);
-          window.history.pushState(null, '', url);
-        });
       });
     });
   </script>
