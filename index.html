@@ -943,6 +943,161 @@
       transform: translateX(4px);
     }
 
+    /* What's New Section */
+    .whats-new-section {
+      padding: 5rem 2rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .whats-new-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-color);
+      background: rgba(220, 38, 38, 0.1);
+    }
+
+    .whats-new-badge__label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent-color-light);
+      text-transform: uppercase;
+    }
+
+    .whats-new-badge__version {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-family: var(--font-family-mono);
+    }
+
+    .whats-new-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+      margin-top: 2.5rem;
+    }
+
+    @media (max-width: 968px) {
+      .whats-new-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .whats-new-screenshot {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      aspect-ratio: 16/10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .whats-new-screenshot__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .whats-new-screenshot__fallback {
+      display: none;
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+    }
+
+    .whats-new-screenshot--missing .whats-new-screenshot__img {
+      display: none;
+    }
+
+    .whats-new-screenshot--missing .whats-new-screenshot__fallback {
+      display: block;
+    }
+
+    .whats-new-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .whats-new-card {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      transition: border-color 0.2s ease;
+    }
+
+    .whats-new-card:hover {
+      border-color: rgba(var(--accent-color-rgb), 0.4);
+    }
+
+    .whats-new-card__icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .whats-new-card__icon--breaking {
+      background: rgba(234, 179, 8, 0.15);
+      color: #eab308;
+    }
+
+    .whats-new-card__icon--feature {
+      background: rgba(var(--accent-color-rgb), 0.12);
+      color: var(--accent-color-light);
+    }
+
+    .whats-new-card__icon--security {
+      background: rgba(34, 197, 94, 0.12);
+      color: #22c55e;
+    }
+
+    .whats-new-card__title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .whats-new-card__desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .whats-new-card__desc code {
+      font-family: var(--font-family-mono);
+      font-size: 0.75rem;
+      background: var(--bg-tertiary);
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      color: var(--accent-color-light);
+    }
+
+    .whats-new-cta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding-top: 0.5rem;
+    }
+
     /* Footer */
     .footer {
       background: var(--bg-secondary);
@@ -1597,11 +1752,89 @@
     </div>
   </section>
 
+<!-- What's New in v4.4.0 Section -->
+<section id="whats-new" class="section whats-new-section" aria-labelledby="whats-new-title">
+  <div class="section__header" data-reveal="fade-up">
+    <div class="whats-new-badge">
+      <span class="whats-new-badge__label">NEW</span>
+      <span class="whats-new-badge__version">v4.4.0</span>
+    </div>
+    <h2 id="whats-new-title" class="section__title">What's New in 4.4.0</h2>
+    <p class="section__subtitle">tmux CLI Workers, On-Demand Execution &amp; Security Hardening — the biggest architectural shift since 4.0.</p>
+  </div>
+
+  <div class="whats-new-layout" data-reveal="fade-up" data-reveal-delay="100">
+    <!-- Screenshot placeholder — replace src when screenshot is provided -->
+    <div class="whats-new-screenshot" data-reveal="fade-up" data-reveal-delay="150">
+      <!-- SCREENSHOT_PLACEHOLDER: replace with actual screenshot -->
+      <img src="screenshot-4.4.0.png" alt="oh-my-claudecode v4.4.0 tmux workers in action" class="whats-new-screenshot__img" loading="lazy" onerror="this.parentElement.classList.add('whats-new-screenshot--missing')">
+      <div class="whats-new-screenshot__fallback">Screenshot coming soon</div>
+    </div>
+
+    <div class="whats-new-highlights">
+      <article class="whats-new-card" data-reveal="fade-up" data-reveal-delay="200">
+        <div class="whats-new-card__icon whats-new-card__icon--breaking">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div>
+          <h3 class="whats-new-card__title">Breaking: Codex/Gemini MCP removed</h3>
+          <p class="whats-new-card__desc">The <code>x</code> and <code>g</code> MCP providers are gone. Use <code>/omc-teams N:codex</code> or <code>/omc-teams N:gemini</code> to spawn CLI workers in tmux panes instead.</p>
+        </div>
+      </article>
+
+      <article class="whats-new-card" data-reveal="fade-up" data-reveal-delay="250">
+        <div class="whats-new-card__icon whats-new-card__icon--feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+        </div>
+        <div>
+          <h3 class="whats-new-card__title">tmux CLI Workers</h3>
+          <p class="whats-new-card__desc">Spawn <code>claude</code>, <code>codex</code>, or <code>gemini</code> CLI processes in visible tmux split-panes. File-based coordination — no inter-process messaging.</p>
+        </div>
+      </article>
+
+      <article class="whats-new-card" data-reveal="fade-up" data-reveal-delay="300">
+        <div class="whats-new-card__icon whats-new-card__icon--feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <h3 class="whats-new-card__title">On-Demand Worker Lifecycle</h3>
+          <p class="whats-new-card__desc">Workers spawn when a task arrives and die when it completes. No more idle workers consuming resources. Hard per-session timeout removed.</p>
+        </div>
+      </article>
+
+      <article class="whats-new-card" data-reveal="fade-up" data-reveal-delay="350">
+        <div class="whats-new-card__icon whats-new-card__icon--feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div>
+          <h3 class="whats-new-card__title">/ccg Tri-Model Skill</h3>
+          <p class="whats-new-card__desc">New <code>/ccg</code> skill fans out analytical work to Codex and design/UI work to Gemini simultaneously, then Claude synthesizes both results.</p>
+        </div>
+      </article>
+
+      <article class="whats-new-card" data-reveal="fade-up" data-reveal-delay="400">
+        <div class="whats-new-card__icon whats-new-card__icon--security">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <h3 class="whats-new-card__title">Security &amp; Stability</h3>
+          <p class="whats-new-card__desc">Job ID validation prevents path traversal. Session cleanup never kills your shell. Windows hook false-error labels fixed. HUD respects <code>CLAUDE_CONFIG_DIR</code>.</p>
+        </div>
+      </article>
+
+      <div class="whats-new-cta" data-reveal="fade-up" data-reveal-delay="450">
+        <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v4.4.0" class="btn btn--primary" target="_blank" rel="noopener">View Release Notes</a>
+        <a href="https://github.com/yeachan-heo/oh-my-claudecode/blob/main/CHANGELOG.md" class="btn btn--secondary" target="_blank" rel="noopener">Full Changelog</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Multi-AI Integration Section -->
 <section id="multi-ai" class="section multi-ai-section" aria-labelledby="multi-ai-title">
   <div class="section__header" data-reveal="fade-up">
     <h2 id="multi-ai-title" class="section__title">Multi-AI Orchestration</h2>
-    <p class="section__subtitle">Claude coordinates with Gemini and Codex for specialized tasks. Optional but powerful.</p>
+    <p class="section__subtitle">Claude, Codex, and Gemini CLI workers running in parallel tmux panes — each doing what it does best.</p>
   </div>
 
   <div class="multi-ai-visual" data-reveal="fade-up" data-reveal-delay="100">
@@ -1650,13 +1883,13 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"></path>
         </svg>
-        <h3>Gemini MCP</h3>
+        <h3>Gemini CLI Worker</h3>
       </div>
-      <p class="ai-feature-card__desc">1M token context window for comprehensive design review and UI consistency across your entire codebase.</p>
+      <p class="ai-feature-card__desc">Spawns a real <code>gemini</code> CLI process in a tmux pane. 1M token context for design review and UI work across your entire codebase.</p>
       <ul class="ai-feature-card__list">
         <li>UI/UX design review</li>
         <li>Documentation writing</li>
-        <li>Visual/image analysis</li>
+        <li>Large-context file analysis</li>
       </ul>
     </article>
 
@@ -1666,9 +1899,9 @@
           <polyline points="16 18 22 12 16 6"></polyline>
           <polyline points="8 6 2 12 8 18"></polyline>
         </svg>
-        <h3>Codex MCP</h3>
+        <h3>Codex CLI Worker</h3>
       </div>
-      <p class="ai-feature-card__desc">Deep code analysis and architecture validation with OpenAI's most capable reasoning model.</p>
+      <p class="ai-feature-card__desc">Spawns a real <code>codex</code> CLI process in a tmux pane. Deep code analysis, architecture validation, and security review.</p>
       <ul class="ai-feature-card__list">
         <li>Architecture review</li>
         <li>Security analysis</li>
@@ -1681,13 +1914,13 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
         </svg>
-        <h3>Smart Routing</h3>
+        <h3>Claude Orchestrates</h3>
       </div>
-      <p class="ai-feature-card__desc">Claude automatically routes tasks to the right AI. Design work goes to Gemini, analysis to Codex.</p>
+      <p class="ai-feature-card__desc">Claude decomposes tasks, fans out work to tmux workers via <code>/omc-teams</code> or <code>/ccg</code>, and synthesizes results — no MCP servers required.</p>
       <ul class="ai-feature-card__list">
-        <li>Automatic task routing</li>
+        <li>On-demand worker spawn</li>
         <li>Graceful fallbacks</li>
-        <li>Background orchestration</li>
+        <li>Result synthesis</li>
       </ul>
     </article>
   </div>
