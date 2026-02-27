@@ -73,30 +73,47 @@ class CodeBlocks {
     // Detect language
     const lang = this.detectLanguage(codeElement);
 
-    // Wrap in container
-    const wrapper = document.createElement('div');
-    wrapper.className = 'code-block-wrapper';
-    pre.parentNode.insertBefore(wrapper, pre);
-    wrapper.appendChild(pre);
+    // Check if already wrapped (e.g. manually in HTML)
+    const existingWrapper = pre.parentElement?.classList.contains('code-block-wrapper')
+      ? pre.parentElement
+      : null;
 
-    // Add header with language and copy button
-    const header = document.createElement('div');
-    header.className = 'code-block-header';
+    let wrapper;
+    if (existingWrapper) {
+      wrapper = existingWrapper;
 
-    // Language label
-    if (this.showLang && lang) {
-      const langLabel = document.createElement('span');
-      langLabel.className = this.langClass;
-      langLabel.textContent = lang;
-      langLabel.setAttribute('aria-label', `Language: ${lang}`);
-      header.appendChild(langLabel);
+      // Add copy button to existing header if present
+      const existingHeader = wrapper.querySelector('.code-block-header');
+      if (existingHeader) {
+        const copyBtn = this.createCopyButton(codeElement);
+        existingHeader.appendChild(copyBtn);
+      }
+    } else {
+      // Wrap in container
+      wrapper = document.createElement('div');
+      wrapper.className = 'code-block-wrapper';
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+
+      // Add header with language and copy button
+      const header = document.createElement('div');
+      header.className = 'code-block-header';
+
+      // Language label
+      if (this.showLang && lang) {
+        const langLabel = document.createElement('span');
+        langLabel.className = this.langClass;
+        langLabel.textContent = lang;
+        langLabel.setAttribute('aria-label', `Language: ${lang}`);
+        header.appendChild(langLabel);
+      }
+
+      // Copy button
+      const copyBtn = this.createCopyButton(codeElement);
+      header.appendChild(copyBtn);
+
+      wrapper.insertBefore(header, pre);
     }
-
-    // Copy button
-    const copyBtn = this.createCopyButton(codeElement);
-    header.appendChild(copyBtn);
-
-    wrapper.insertBefore(header, pre);
 
     // Add line numbers if enabled
     if (this.lineNumbers) {
@@ -231,7 +248,7 @@ class CodeBlocks {
     for (let i = 1; i <= lineCount; i++) {
       numbersHtml += `<span class="${this.lineNumberClass}">${i}</span>\n`;
     }
-    lineNumbersEl.textContent = numbersHtml.trim();
+    lineNumbersEl.innerHTML = numbersHtml.trim();
 
     // Wrap code in table-like structure
     const wrapper = document.createElement('div');
