@@ -1419,12 +1419,14 @@ omc hud --watch --interval 1000</code></pre>
               <span class="workflow__step">/ralplan</span>
               <span class="workflow__arrow">&rarr;</span>
               <span class="workflow__step">/teams</span>
+              <span class="workflow__arrow">or</span>
+              <span class="workflow__step">/omc-teams</span>
               <span class="workflow__arrow">&rarr;</span>
               <span class="workflow__step">/ralph</span>
             </div>
             <ul class="mode-card__features">
               <li><code>/ralplan</code> reviews your PRD and builds a consensus plan (Planner + Architect + Critic agree).</li>
-              <li><code>/teams</code> spawns multiple Claude agents to build in parallel.</li>
+              <li><code>/teams</code> spawns multiple Claude agents to build in parallel. Use <code>/omc-teams</code> instead if you need Codex or Gemini CLI workers.</li>
               <li><code>/ralph</code> keeps going until the architect verifies everything works.</li>
             </ul>
           </div>
