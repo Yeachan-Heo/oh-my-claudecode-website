@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.3.3 - 30 agents, 10 execution modes, 25+ MCP tools.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.5.1 - 30 agents, 10 execution modes, 25+ MCP tools.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
@@ -52,7 +52,7 @@
       background-color: var(--bg-secondary);
       border-right: 1px solid var(--border-default);
       overflow-y: auto;
-      z-index: 50;
+      z-index: 101;
       display: flex;
       flex-direction: column;
     }
@@ -425,6 +425,7 @@
       display: none; position: fixed; top: 1rem; left: 1rem; z-index: 100;
       background: var(--bg-secondary); border: 1px solid var(--border-default);
       padding: 0.5rem; border-radius: 0.5rem; cursor: pointer;
+      touch-action: manipulation;
     }
     .mobile-menu-btn svg { width: 24px; height: 24px; color: var(--text-primary); }
     .sidebar-overlay {
@@ -435,7 +436,7 @@
     .sidebar-overlay.active { opacity: 1; visibility: visible; }
 
     @media (max-width: 1024px) {
-      .docs-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .docs-sidebar { transform: translateX(-100%); }
       .docs-sidebar.open { transform: translateX(0); }
       .docs-main { margin-left: 0; padding: 5rem 1.5rem 2rem; }
       .mobile-menu-btn { display: block; }
@@ -481,7 +482,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.3.3</span>
+        <span class="sidebar-brand__version">v4.5.1</span>
       </a>
 
       <div class="sidebar-search">
@@ -496,7 +497,7 @@
         <div class="sidebar-section">
           <div class="sidebar-title">Getting Started</div>
           <a href="#introduction" class="sidebar-link" data-section="introduction">Introduction</a>
-          <a href="#whats-new" class="sidebar-link" data-section="whats-new">What's New in v4.3.3</a>
+          <a href="#release-notes" class="sidebar-link" data-section="release-notes">Release Notes</a>
           <a href="#installation" class="sidebar-link" data-section="installation">Installation</a>
           <a href="#quick-start" class="sidebar-link" data-section="quick-start">Quick Start</a>
         </div>
@@ -554,6 +555,41 @@
           <a href="#state-memory" class="sidebar-link" data-section="state-memory">State & Memory</a>
           <a href="#configuration" class="sidebar-link" data-section="configuration">Configuration</a>
         </div>
+
+        <!-- CLI Reference -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">CLI Reference</div>
+          <a href="#cli-getting-started" class="sidebar-link" data-section="cli-getting-started">Getting Started</a>
+          <a href="#cli-commands" class="sidebar-link" data-section="cli-commands">Core Commands</a>
+          <a href="#cli-launch-flags" class="sidebar-link" data-section="cli-launch-flags">Launch Flags</a>
+          <a href="#cli-teleport" class="sidebar-link" data-section="cli-teleport">Teleport</a>
+          <a href="#cli-wait" class="sidebar-link" data-section="cli-wait">Wait</a>
+          <a href="#cli-profiles" class="sidebar-link" data-section="cli-profiles">Notification Profiles</a>
+          <a href="#cli-other" class="sidebar-link" data-section="cli-other">Other Commands</a>
+        </div>
+
+        <!-- Notifications -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Notifications</div>
+          <a href="#notify-overview" class="sidebar-link" data-section="notify-overview">Overview</a>
+          <a href="#notify-setup" class="sidebar-link" data-section="notify-setup">Quick Setup</a>
+          <a href="#notify-platforms" class="sidebar-link" data-section="notify-platforms">Platforms</a>
+          <a href="#notify-events" class="sidebar-link" data-section="notify-events">Events</a>
+          <a href="#notify-verbosity" class="sidebar-link" data-section="notify-verbosity">Verbosity</a>
+          <a href="#notify-env-vars" class="sidebar-link" data-section="notify-env-vars">Environment Variables</a>
+          <a href="#notify-templates" class="sidebar-link" data-section="notify-templates">Templates</a>
+          <a href="#notify-example-config" class="sidebar-link" data-section="notify-example-config">Example Config</a>
+          <a href="#notify-reply" class="sidebar-link" data-section="notify-reply">Reply Injection</a>
+        </div>
+
+        <!-- Workflows -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Workflows</div>
+          <a href="#wf-full-auto" class="sidebar-link" data-section="wf-full-auto">Full-Auto from PRD</a>
+          <a href="#wf-no-brainer" class="sidebar-link" data-section="wf-no-brainer">No-Brainer</a>
+          <a href="#wf-fix-debug" class="sidebar-link" data-section="wf-fix-debug">Fix / Debugging</a>
+          <a href="#wf-parallel-issues" class="sidebar-link" data-section="wf-parallel-issues">Parallel Issues</a>
+        </div>
       </nav>
     </aside>
 
@@ -588,22 +624,95 @@
           </div>
         </section>
 
-        <!-- What's New -->
-        <section id="whats-new" data-section>
-          <h2><span class="anchor-link">#</span>What's New in v4.3.3</h2>
-          
+        <!-- Release Notes -->
+        <section id="release-notes" data-section>
+          <h2><span class="anchor-link">#</span>Release Notes</h2>
+
           <div class="callout info">
-            <div class="callout-title">Deprecation Cleanup</div>
-            <p>v4.3.3 cleans up stale references left over from the agent consolidation. No functional changes — docs, comments, and deprecation notices only. v4.3.2 added UTC-timestamped tmux sessions. v4.1.0 introduced the team-oriented architecture.</p>
+            <div class="callout-title">Quick Summary</div>
+            <p>These updates improve team workflows, notifications, and reliability. Open each version to see the details.</p>
           </div>
 
-          <ul style="list-style-type: disc;">
-            <li><strong>Team-Oriented Architecture:</strong> Native Claude Code teams with staged pipeline (team-plan &rarr; team-prd &rarr; team-exec &rarr; team-verify &rarr; team-fix).</li>
-            <li><strong>Agent Catalog Reform:</strong> Unified 30 agents replacing the tiered system. No more <code>-low</code>/<code>-medium</code> suffixes. Clean roles with model routing.</li>
-            <li><strong>MCP Provider Upgrades:</strong> Codex now uses <code>gpt-5.3-codex</code>, Gemini uses <code>gemini-3-pro-preview</code> with 1M token context.</li>
-            <li><strong>System Prompt Modernization:</strong> Optimized for Claude Opus 4.6 with streamlined operating principles.</li>
-            <li><strong>Skill Consolidation:</strong> <code>ralplan</code> merged into <code>/plan --consensus</code>, <code>review</code> merged into <code>/plan --review</code>.</li>
-          </ul>
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.5.1</span>
+              OpenClaw CLI Command Gateway (Hotfix)
+            </div>
+            <details>
+              <summary>View changes in v4.5.1</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>CLI command gateway type:</strong> OpenClaw can wake CLI-based agents with shell commands instead of HTTP calls.</li>
+                <li><strong>tmux tail capture:</strong> It captures the last 15 terminal lines for stop and session-end notifications.</li>
+                <li><strong>Bug fix:</strong> The OpenClaw <code>HTTP 405</code> error on CLI agents is fixed.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.5.0</span>
+              Notifications Engine, OpenClaw Gateway &amp; Reliability Hardening
+            </div>
+            <details>
+              <summary>View changes in v4.5.0</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Full notifications system:</strong> You can get alerts on Discord, Telegram, Slack, or any webhook when Claude finishes work or needs input.</li>
+                <li><strong>Hook config and template engine:</strong> You can customize notification text with <code>{{variable}}</code> templates.</li>
+                <li><strong>Platform gating:</strong> Notifications fire only when you pass the right CLI flag, like <code>--telegram</code> or <code>--discord</code>.</li>
+                <li><strong>OpenClaw webhook gateway:</strong> It connects your workflows to external automation tools.</li>
+                <li><strong>Reliability fixes:</strong> Stability improved across team coordination, project memory, LSP tools, and hook lifecycle behavior.</li>
+                <li><strong>Cleanup:</strong> Dead code was removed from the legacy compatibility layer.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.4.0</span>
+              tmux CLI Workers &amp; Security Hardening
+            </div>
+            <details>
+              <summary>View changes in v4.4.0</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Breaking change:</strong> Codex and Gemini MCP providers were removed. Use <code>/omc-teams N:codex</code> or <code>/omc-teams N:gemini</code> instead.</li>
+                <li><strong>tmux CLI workers:</strong> You can spawn Claude, Codex, or Gemini CLI workers in visible tmux split panes.</li>
+                <li><strong>On-demand lifecycle:</strong> Workers start when a task arrives and stop when the task is done.</li>
+                <li><strong>/ccg tri-model skill:</strong> Work fans out to Codex and Gemini in parallel, then Claude combines the results.</li>
+                <li><strong>Security hardening:</strong> Job ID validation blocks path traversal, and session cleanup never kills your shell.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.3.x</span>
+              Agent Catalog Reform &amp; Cleanup
+            </div>
+            <details>
+              <summary>View changes in v4.3.x</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Team architecture reform:</strong> Teams now follow a staged pipeline: <code>plan &rarr; prd &rarr; exec &rarr; verify &rarr; fix</code>.</li>
+                <li><strong>Unified catalog:</strong> 30 unified agents replaced the old tiered system and removed <code>-low</code> and <code>-medium</code> suffixes.</li>
+                <li><strong>Skill consolidation:</strong> <code>ralplan</code> merged into <code>/plan --consensus</code>, and <code>review</code> merged into <code>/plan --review</code>.</li>
+                <li><strong>MCP provider upgrades:</strong> Codex now uses <code>gpt-5.3-codex</code>, and Gemini uses <code>gemini-3-pro-preview</code>.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.1.0</span>
+              Team Architecture
+            </div>
+            <details>
+              <summary>View changes in v4.1.0</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Native teams:</strong> Claude Code supports team execution with a staged pipeline.</li>
+                <li><strong>Team + Ralph composition:</strong> You can combine Team mode with Ralph for persistent execution.</li>
+                <li><strong>Mode change:</strong> Swarm was deprecated in favor of Team mode.</li>
+              </ul>
+            </details>
+          </div>
         </section>
 
         <!-- Installation -->
@@ -889,6 +998,532 @@
           </ul>
         </section>
 
+        <!-- CLI Reference -->
+        <section id="cli-reference" data-section>
+          <h2><span class="anchor-link">#</span>CLI Reference</h2>
+          <p>
+            The <code>omc</code> command-line tool lets you launch, configure, and manage OMC from your terminal.
+          </p>
+
+          <h3 id="cli-getting-started"><span class="anchor-link">#</span>Getting Started</h3>
+          <p>Install OMC globally, then run it.</p>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">BASH</span></div>
+            <pre><code>npm install -g oh-my-claude-sisyphus
+omc</code></pre>
+          </div>
+          <p>Three aliases all run the same CLI: <code>omc</code>, <code>oh-my-claudecode</code>, <code>omc-cli</code>.</p>
+          <div class="callout info">
+            <div class="callout-title">Tip</div>
+            <p>Just run <code>omc</code>. It launches Claude Code inside a tmux session automatically.</p>
+          </div>
+
+          <h3 id="cli-commands"><span class="anchor-link">#</span>Core Commands</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Command</th>
+                  <th>What It Does</th>
+                  <th>Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>omc</code> / <code>omc launch</code></td>
+                  <td>Start Claude Code in a tmux session</td>
+                  <td><code>omc</code></td>
+                </tr>
+                <tr>
+                  <td><code>omc setup</code></td>
+                  <td>Install and sync all OMC components (hooks, agents, skills)</td>
+                  <td><code>omc setup --force</code></td>
+                </tr>
+                <tr>
+                  <td><code>omc config</code></td>
+                  <td>Show or validate your current config</td>
+                  <td><code>omc config --validate</code></td>
+                </tr>
+                <tr>
+                  <td><code>omc info</code></td>
+                  <td>List available agents, skills, and MCP tools</td>
+                  <td><code>omc info</code></td>
+                </tr>
+                <tr>
+                  <td><code>omc update</code></td>
+                  <td>Check for and install updates</td>
+                  <td><code>omc update --check</code></td>
+                </tr>
+                <tr>
+                  <td><code>omc version</code></td>
+                  <td>Show detailed version info (package version, install method, commit)</td>
+                  <td><code>omc version</code></td>
+                </tr>
+                <tr>
+                  <td><code>omc doctor</code></td>
+                  <td>Run diagnostic checks for conflicts</td>
+                  <td><code>omc doctor conflicts</code></td>
+                </tr>
+                <tr>
+                  <td><code>omc install</code></td>
+                  <td>Install OMC into <code>~/.claude/</code></td>
+                  <td><code>omc install</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="cli-launch-flags"><span class="anchor-link">#</span>Launch Flags</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Flag</th>
+                  <th>What It Does</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>--notify false</code></td>
+                  <td>Turn off all notifications for this session</td>
+                </tr>
+                <tr>
+                  <td><code>--madmax</code> / <code>--yolo</code></td>
+                  <td>Skip all permission prompts</td>
+                </tr>
+                <tr>
+                  <td><code>--telegram</code></td>
+                  <td>Turn on Telegram notifications for this session</td>
+                </tr>
+                <tr>
+                  <td><code>--discord</code></td>
+                  <td>Turn on Discord notifications for this session</td>
+                </tr>
+                <tr>
+                  <td><code>--slack</code></td>
+                  <td>Turn on Slack notifications for this session</td>
+                </tr>
+                <tr>
+                  <td><code>--webhook</code></td>
+                  <td>Turn on webhook notifications for this session</td>
+                </tr>
+                <tr>
+                  <td><code>--openclaw</code></td>
+                  <td>Turn on OpenClaw gateway for this session</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">Warning</div>
+            <p><code>--madmax</code> and <code>--yolo</code> disable permission prompts. Use with caution.</p>
+          </div>
+
+          <h3 id="cli-teleport"><span class="anchor-link">#</span>Teleport</h3>
+          <p>Teleport helps you create and manage git worktrees quickly.</p>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">BASH</span></div>
+            <pre><code># Create worktree from issue/PR number
+omc teleport '#42'
+
+# Create worktree for a feature branch
+omc teleport add-auth
+
+# List all worktrees
+omc teleport list
+
+# Remove a worktree
+omc teleport remove ./path
+
+# From a full URL
+omc teleport https://github.com/owner/repo/issues/42</code></pre>
+          </div>
+          <p>Supports GitHub, GitLab, Bitbucket, and Azure DevOps.</p>
+
+          <h3 id="cli-wait"><span class="anchor-link">#</span>Wait</h3>
+          <p>The <code>wait</code> command helps you monitor rate limits and auto-resume blocked sessions.</p>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">BASH</span></div>
+            <pre><code># Check rate limit status
+omc wait
+
+# Start auto-resume daemon
+omc wait --start
+
+# Control background daemon
+omc wait daemon start
+omc wait daemon stop
+
+# Scan for blocked sessions
+omc wait detect
+
+# Show detailed status
+omc wait status</code></pre>
+          </div>
+
+          <h3 id="cli-profiles"><span class="anchor-link">#</span>Notification Profiles</h3>
+          <p>Set up notification channels from the command line, then use named profiles to switch between them.</p>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">BASH</span></div>
+            <pre><code># Set up channels
+omc config-stop-callback telegram --enable --token &lt;token&gt; --chat &lt;id&gt;
+omc config-stop-callback discord --enable --webhook &lt;url&gt;
+omc config-stop-callback slack --enable --webhook &lt;url&gt;
+omc config-stop-callback file --enable --path ~/.claude/logs/{date}.md
+
+# Manage profiles
+omc config-notify-profile --list
+omc config-notify-profile work --show
+
+# Launch with a profile
+OMC_NOTIFY_PROFILE=work omc</code></pre>
+          </div>
+          <div class="callout info">
+            <div class="callout-title">Tip</div>
+            <p>Named profiles let you switch notification setups quickly. Use <code>OMC_NOTIFY_PROFILE=work omc</code> to launch with a specific profile.</p>
+          </div>
+
+          <h3 id="cli-other"><span class="anchor-link">#</span>Other Commands</h3>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">BASH</span></div>
+            <pre><code># Split-pane tmux with Claude + Codex side by side
+omc interop
+
+# Run the HUD status line
+omc hud
+
+# Live HUD refresh every second
+omc hud --watch --interval 1000</code></pre>
+          </div>
+          <p><code>omc interop</code> opens a split-pane tmux layout with Claude and Codex side by side. Requires both CLIs installed.</p>
+          <p><code>omc hud</code> shows a status line with session info. Use <code>--watch</code> for live updates.</p>
+        </section>
+
+        <!-- Notifications -->
+        <section id="notifications" data-section>
+          <h2><span class="anchor-link">#</span>Notifications</h2>
+
+          <h3 id="notify-overview"><span class="anchor-link">#</span>Overview</h3>
+          <p>Notifications tell you when Claude finishes work, needs your input, or hits a problem.</p>
+          <p>It works with Discord, Telegram, Slack, and any webhook endpoint.</p>
+          <p>Notifications are non-blocking, so they never slow down your work.</p>
+          <p>Each platform stays dormant until you activate it with a CLI flag in that session.</p>
+
+          <div class="callout info">
+            <div class="callout-title">Tip</div>
+            <p>Turn on only the platform you want for this run, like <code>omc --telegram</code> or <code>omc --discord</code>.</p>
+          </div>
+
+          <h3 id="notify-setup"><span class="anchor-link">#</span>Quick Setup</h3>
+          <p>The easiest setup is running <code>/oh-my-claudecode:configure-notifications</code> inside Claude Code.</p>
+          <p>It walks you through each step with prompts.</p>
+          <p>You can also configure everything manually using the sections below.</p>
+
+          <h3 id="notify-platforms"><span class="anchor-link">#</span>Supported Platforms</h3>
+
+          <h4>Telegram</h4>
+          <ul style="list-style-type: disc;">
+            <li>Create a bot with <code>@BotFather</code> on Telegram and copy the bot token.</li>
+            <li>Send your bot a message, then get your chat ID.</li>
+            <li>Add <code>notifications.telegram.botToken</code> and <code>notifications.telegram.chatId</code> to config.</li>
+            <li>Activate per session with <code>omc --telegram</code>.</li>
+          </ul>
+
+          <h4>Discord (Webhook)</h4>
+          <ul style="list-style-type: disc;">
+            <li>In your channel: Settings &gt; Integrations &gt; Webhooks &gt; New Webhook.</li>
+            <li>Copy the webhook URL.</li>
+            <li>Add <code>notifications.discord.webhookUrl</code> to config.</li>
+            <li>Optional mentions: <code>&lt;@USER_ID&gt;</code> for a user, <code>&lt;@&amp;ROLE_ID&gt;</code> for a role.</li>
+            <li>Activate per session with <code>omc --discord</code>.</li>
+          </ul>
+
+          <h4>Discord (Bot API)</h4>
+          <ul style="list-style-type: disc;">
+            <li>Create a bot in the Discord Developer Portal and copy the bot token.</li>
+            <li>Get the channel ID (right-click channel &gt; Copy ID with developer mode on).</li>
+            <li>Add <code>notifications.discordBot.botToken</code> and <code>notifications.discordBot.channelId</code> to config.</li>
+            <li>Activate per session with <code>omc --discord</code>.</li>
+          </ul>
+
+          <h4>Slack</h4>
+          <ul style="list-style-type: disc;">
+            <li>Create an app at <code>api.slack.com</code> and enable Incoming Webhooks.</li>
+            <li>Add a webhook to your workspace and copy the URL.</li>
+            <li>Add <code>notifications.slack.webhookUrl</code> to config.</li>
+            <li>Optional mentions: <code>&lt;@UXXXXXXXX&gt;</code>, <code>&lt;!channel&gt;</code>, <code>&lt;!here&gt;</code>.</li>
+            <li>Activate per session with <code>omc --slack</code>.</li>
+          </ul>
+
+          <h4>Generic Webhook</h4>
+          <ul style="list-style-type: disc;">
+            <li>Use any HTTPS endpoint that accepts JSON <code>POST</code> requests.</li>
+            <li>Add <code>notifications.webhook.url</code> to config.</li>
+            <li>Optional: add custom headers with <code>notifications.webhook.headers</code>.</li>
+            <li>Activate per session with <code>omc --webhook</code>.</li>
+          </ul>
+
+          <h3 id="notify-events"><span class="anchor-link">#</span>Notification Events</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>When It Fires</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>session-start</code></td>
+                  <td>A new Claude session begins.</td>
+                </tr>
+                <tr>
+                  <td><code>session-end</code></td>
+                  <td>The session finishes. Includes duration, agents used, and modes run.</td>
+                </tr>
+                <tr>
+                  <td><code>session-stop</code></td>
+                  <td>A persistent mode (like <code>ralph</code>) blocks the session from stopping.</td>
+                </tr>
+                <tr>
+                  <td><code>session-idle</code></td>
+                  <td>The session is waiting for your input.</td>
+                </tr>
+                <tr>
+                  <td><code>ask-user-question</code></td>
+                  <td>Claude asks a question and needs your answer.</td>
+                </tr>
+                <tr>
+                  <td><code>agent-call</code></td>
+                  <td>A specialized agent was spawned.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="notify-verbosity"><span class="anchor-link">#</span>Verbosity Levels</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Level</th>
+                  <th>What You Get</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>minimal</code></td>
+                  <td>Session start and end only. No terminal output.</td>
+                </tr>
+                <tr>
+                  <td><code>session</code></td>
+                  <td>Session events plus the last few lines of terminal output.</td>
+                </tr>
+                <tr>
+                  <td><code>agent</code></td>
+                  <td>Everything in <code>session</code>, plus a notification for each spawned agent.</td>
+                </tr>
+                <tr>
+                  <td><code>verbose</code></td>
+                  <td>All events and all output.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Set this with <code>notifications.verbosity</code> in config or the <code>OMC_NOTIFY_VERBOSITY</code> environment variable.</p>
+
+          <h3 id="notify-env-vars"><span class="anchor-link">#</span>Environment Variables</h3>
+          <p>Use these for zero-config setup without editing files:</p>
+          <ul style="list-style-type: disc;">
+            <li><code>OMC_TELEGRAM_BOT_TOKEN</code> + <code>OMC_TELEGRAM_CHAT_ID</code> &mdash; Telegram without config file.</li>
+            <li><code>OMC_DISCORD_WEBHOOK_URL</code> &mdash; Discord without config file.</li>
+            <li><code>OMC_SLACK_WEBHOOK_URL</code> &mdash; Slack without config file.</li>
+            <li><code>OMC_NOTIFY_VERBOSITY</code> &mdash; Set verbosity level.</li>
+            <li><code>OMC_NOTIFY=0</code> &mdash; Turn off all notifications.</li>
+            <li><code>OMC_NOTIFY_PROFILE</code> &mdash; Use a named notification profile.</li>
+          </ul>
+
+          <h3 id="notify-templates"><span class="anchor-link">#</span>Custom Message Templates</h3>
+          <ul style="list-style-type: disc;">
+            <li>Template file: <code>~/.claude/omc_config.hook.json</code></li>
+            <li>Use <code>{{variable}}</code> placeholders: <code>{{sessionId}}</code>, <code>{{timestamp}}</code>, <code>{{projectName}}</code>, <code>{{reason}}</code>, <code>{{duration}}</code></li>
+            <li>Use conditionals: <code>{{#if variable}}show this{{/if}}</code></li>
+            <li>Computed values: <code>duration</code>, <code>time</code>, <code>modesDisplay</code>, <code>agentDisplay</code>, <code>footer</code>, <code>tmuxTailBlock</code></li>
+            <li>You can set different templates per event and per platform.</li>
+          </ul>
+
+          <h3 id="notify-example-config"><span class="anchor-link">#</span>Example Config</h3>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">JSON</span></div>
+            <pre><code>{
+  "notifications": {
+    "verbosity": "session",
+    "telegram": {
+      "botToken": "123456:ABC-DEF",
+      "chatId": "-1001234567890"
+    },
+    "discord": {
+      "webhookUrl": "https://discord.com/api/webhooks/...",
+      "mention": "&lt;@123456789&gt;"
+    },
+    "slack": {
+      "webhookUrl": "https://hooks.slack.com/services/T.../B.../xxx"
+    },
+    "events": {
+      "session-end": { "telegram": true, "discord": true },
+      "ask-user-question": { "telegram": true },
+      "session-start": { "discord": true }
+    }
+  }
+}</code></pre>
+          </div>
+          <p>Put this in <code>~/.claude/.omc-config.json</code>.</p>
+
+          <h3 id="notify-reply"><span class="anchor-link">#</span>Reply Injection</h3>
+          <p>This is an advanced feature for answering Claude from your phone.</p>
+          <ul style="list-style-type: disc;">
+            <li>A background daemon polls Discord or Telegram for your replies.</li>
+            <li>When you reply to a notification, your text is sent back to your tmux pane.</li>
+            <li>This lets you answer Claude's questions remotely.</li>
+            <li>Configure <code>replyListener</code> in <code>.omc-config.json</code> with polling interval and authorized user IDs.</li>
+            <li>Security: rate limiting, input sanitization, and pane verification before injection.</li>
+          </ul>
+
+          <div class="callout warning">
+            <div class="callout-title">Warning</div>
+            <p>Only allow trusted user IDs for reply injection. This protects your tmux session from unwanted input.</p>
+          </div>
+        </section>
+
+        <!-- Recommended Workflows -->
+        <section id="workflows" data-section>
+          <h2><span class="anchor-link">#</span>Recommended Workflows</h2>
+          <p>
+            These are battle-tested workflows for common tasks. Each one chains OMC skills together in a proven order.
+            Pick the one that fits your situation.
+          </p>
+
+          <h3 id="wf-full-auto"><span class="anchor-link">#</span>Full-Auto from PRD</h3>
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <div class="mode-card__icon">&#x1F680;</div>
+              <div>
+                <h3 class="mode-card__title">Full-Auto from PRD</h3>
+                <span class="mode-card__keyword">parallel build</span>
+              </div>
+            </div>
+            <p class="mode-card__description">
+              Use this when you have a requirements doc (PRD) and want to build everything from scratch with parallel agents.
+            </p>
+            <div class="workflow">
+              <span class="workflow__step">/ralplan</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/teams</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/ralph</span>
+            </div>
+            <ul class="mode-card__features">
+              <li><code>/ralplan</code> reviews your PRD and builds a consensus plan (Planner + Architect + Critic agree).</li>
+              <li><code>/teams</code> spawns multiple Claude agents to build in parallel.</li>
+              <li><code>/ralph</code> keeps going until the architect verifies everything works.</li>
+            </ul>
+          </div>
+
+          <h3 id="wf-no-brainer"><span class="anchor-link">#</span>No-Brainer</h3>
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <div class="mode-card__icon">&#x26A1;</div>
+              <div>
+                <h3 class="mode-card__title">No-Brainer</h3>
+                <span class="mode-card__keyword">simple tasks</span>
+              </div>
+            </div>
+            <p class="mode-card__description">
+              Use this for clear, simple tasks that just need to get done. No planning needed.
+            </p>
+            <div class="workflow">
+              <span class="workflow__step">/autopilot</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/ultrawork</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/ralph</span>
+            </div>
+            <ul class="mode-card__features">
+              <li><code>/autopilot</code> takes your request and starts building right away.</li>
+              <li><code>/ultrawork</code> splits work across agents for speed.</li>
+              <li><code>/ralph</code> continues until everything is fully verified.</li>
+            </ul>
+          </div>
+
+          <h3 id="wf-fix-debug"><span class="anchor-link">#</span>Fix / Debugging</h3>
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <div class="mode-card__icon">&#x1F527;</div>
+              <div>
+                <h3 class="mode-card__title">Fix / Debugging</h3>
+                <span class="mode-card__keyword">bug fix</span>
+              </div>
+            </div>
+            <p class="mode-card__description">
+              Use this when something is broken and you need a reliable fix path.
+            </p>
+            <div class="workflow">
+              <span class="workflow__step">/plan</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/ralph</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/ultraqa</span>
+            </div>
+            <ul class="mode-card__features">
+              <li><code>/plan</code> analyzes the issue and lays out a fix strategy.</li>
+              <li><code>/ralph</code> keeps working on the fix until it passes checks.</li>
+              <li><code>/ultraqa</code> runs end-to-end and smoke tests (Playwright for web apps, tmux for CLI).</li>
+            </ul>
+            <div class="callout info">
+              <div class="callout-title">Tip</div>
+              <p>For complex bugs, run <code>/ralplan</code> first for deeper analysis.</p>
+            </div>
+          </div>
+
+          <h3 id="wf-parallel-issues"><span class="anchor-link">#</span>Parallel Issue / Ticket Handling</h3>
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <div class="mode-card__icon">&#x1F9E9;</div>
+              <div>
+                <h3 class="mode-card__title">Parallel Issue / Ticket Handling</h3>
+                <span class="mode-card__keyword">multi-issue</span>
+              </div>
+            </div>
+            <p class="mode-card__description">
+              Use this when you need to handle many issues or tickets at the same time.
+            </p>
+            <div class="workflow">
+              <span class="workflow__step">/omc-teams N:architect</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/omc-teams</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/omc-teams</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/ralplan</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/ralph + /ultrawork</span>
+              <span class="workflow__arrow">&rarr;</span>
+              <span class="workflow__step">/ultraqa</span>
+            </div>
+            <ul class="mode-card__features">
+              <li>Start architect workers to analyze all issues and draft one complete plan.</li>
+              <li>Run workers in parallel on separate worktrees, each submitting a PR to <code>dev</code>.</li>
+              <li>Review and merge open PRs, then <code>/ralplan</code> to resolve conflicts safely.</li>
+              <li>Finish with <code>/ralph</code>, <code>/ultrawork</code>, and <code>/ultraqa</code> until all tests pass.</li>
+            </ul>
+          </div>
+
+          <div class="callout info">
+            <div class="callout-title">Good to know</div>
+            <p>These four patterns cover most real-world work. Other skills exist for specific tasks, but you rarely need them day-to-day.</p>
+          </div>
+        </section>
+
       </div>
     </main>
   </div>
@@ -930,19 +1565,39 @@
       const mobileBtn = document.getElementById('mobile-menu-btn');
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebar-overlay');
-      
-      const toggleMenu = () => {
+      const docsMain = document.querySelector('.docs-main');
+
+      function toggleMenu() {
+        const isOpen = sidebar.classList.contains('open');
         sidebar.classList.toggle('open');
         overlay.classList.toggle('active');
-      };
+        mobileBtn.setAttribute('aria-expanded', String(!isOpen));
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+
+        if (!isOpen) {
+          docsMain?.setAttribute('inert', '');
+          sidebar.querySelector('.sidebar-link')?.focus();
+        } else {
+          docsMain?.removeAttribute('inert');
+        }
+      }
+
+      function closeMenu() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        mobileBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        docsMain?.removeAttribute('inert');
+        mobileBtn.focus();
+      }
 
       mobileBtn.addEventListener('click', toggleMenu);
-      overlay.addEventListener('click', toggleMenu);
-      
+      overlay.addEventListener('click', closeMenu);
+
       // Close on link click (mobile)
       document.querySelectorAll('.sidebar-link').forEach(link => {
         link.addEventListener('click', () => {
-          if (window.innerWidth <= 1024) toggleMenu();
+          if (window.innerWidth <= 1024) closeMenu();
         });
       });
 
