@@ -113,6 +113,89 @@
       font-size: 0.85em;
     }
 
+    /* Code Blocks */
+    .code-block-wrapper {
+      background: var(--code-bg, #161b22);
+      border: 1px solid var(--code-border, #30363d);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      margin: 1.25rem 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      background: var(--code-header-bg, #1c2129);
+      border-bottom: 1px solid var(--code-border, #30363d);
+    }
+
+    .code-lang {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .code-block-wrapper pre {
+      margin: 0;
+      padding: 1rem;
+      overflow-x: auto;
+      background: transparent;
+    }
+
+    .code-block-wrapper code {
+      font-family: inherit;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    .code-with-line-numbers {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .line-numbers {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+      color: var(--text-tertiary, #484f58);
+      user-select: none;
+      flex-shrink: 0;
+      line-height: 1.6;
+      font-size: 0.85rem;
+    }
+
+    .line-number {
+      display: block;
+    }
+
+    .copy-btn {
+      padding: 4px 8px;
+      background: transparent;
+      border: 1px solid var(--code-border, #30363d);
+      border-radius: 0.25rem;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+    }
+
+    .copy-btn:hover {
+      color: var(--text-secondary);
+      border-color: var(--border-hover, #6e7681);
+    }
+
+    .copy-btn.copied {
+      color: #3fb950;
+      border-color: #3fb950;
+    }
+
     /* Anchor Links */
     .anchor-link {
       position: absolute;
