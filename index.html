@@ -1682,6 +1682,252 @@
   color: var(--text-secondary);
   line-height: 1.5;
 }
+
+    /* ============================================
+       DEEP INTERVIEW CARD - STUNNING 3D EFFECTS
+       ============================================ */
+
+    /* Target the Deep Interview card with both class and nth-child for robustness */
+    .premium-card.deep-interview-featured,
+    .premium-card:nth-child(4) {
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+
+    .premium-card.deep-interview-featured .feature-card-new,
+    .premium-card:nth-child(4) .feature-card-new {
+      position: relative;
+      transform-style: preserve-3d;
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      background: linear-gradient(145deg, rgba(26,26,26,0.95) 0%, rgba(17,17,17,0.98) 100%);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      box-shadow:
+        0 0 0 1px rgba(220, 38, 38, 0.1),
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    /* Animated border flow effect */
+    .premium-card.deep-interview-featured .feature-card-new::before,
+    .premium-card:nth-child(4) .feature-card-new::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(220, 38, 38, 0.8) 60deg,
+        rgba(239, 68, 68, 1) 120deg,
+        rgba(220, 38, 38, 0.8) 180deg,
+        transparent 240deg,
+        transparent 360deg
+      );
+      border-radius: 22px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      animation: borderRotate 4s linear infinite;
+    }
+
+    @keyframes borderRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Shimmer overlay effect */
+    .premium-card.deep-interview-featured .feature-card-new::after,
+    .premium-card:nth-child(4) .feature-card-new::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.08) 45%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.08) 55%,
+        transparent 60%
+      );
+      background-size: 200% 200%;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      animation: shimmerDiagonal 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmerDiagonal {
+      0% { background-position: 200% 200%; }
+      100% { background-position: -200% -200%; }
+    }
+
+    /* Particle glow effect on hover */
+    .premium-card.deep-interview-featured .feature-card-new,
+    .premium-card:nth-child(4) .feature-card-new {
+      overflow: visible;
+    }
+
+    .premium-card.deep-interview-featured .feature-card-new .particle-glow,
+    .premium-card:nth-child(4) .feature-card-new .particle-glow {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(220, 38, 38, 0.6) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.5s ease;
+      filter: blur(20px);
+    }
+
+    /* 3D Hover transformations */
+    @media (hover: hover) {
+      .premium-card.deep-interview-featured:hover .feature-card-new,
+      .premium-card:nth-child(4):hover .feature-card-new {
+        transform:
+          translateY(-12px)
+          translateZ(30px)
+          rotateX(5deg)
+          rotateY(-5deg)
+          scale(1.03);
+        box-shadow:
+          0 0 0 1px rgba(220, 38, 38, 0.5),
+          0 30px 60px rgba(0, 0, 0, 0.6),
+          0 0 50px rgba(220, 38, 38, 0.25),
+          0 0 100px rgba(220, 38, 38, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        border-color: rgba(220, 38, 38, 0.6);
+      }
+
+      .premium-card.deep-interview-featured:hover .feature-card-new::before,
+      .premium-card:nth-child(4):hover .feature-card-new::before {
+        opacity: 1;
+      }
+
+      .premium-card.deep-interview-featured:hover .feature-card-new::after,
+      .premium-card:nth-child(4):hover .feature-card-new::after {
+        opacity: 1;
+      }
+
+      /* Icon 3D rotation */
+      .premium-card.deep-interview-featured:hover .feature-card-new__icon,
+      .premium-card:nth-child(4):hover .feature-card-new__icon {
+        transform: translateZ(40px) rotateY(360deg) scale(1.1);
+        box-shadow:
+          0 0 30px rgba(220, 38, 38, 0.6),
+          0 0 60px rgba(220, 38, 38, 0.3),
+          0 10px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Title elevation */
+      .premium-card.deep-interview-featured:hover .feature-card-new__title,
+      .premium-card:nth-child(4):hover .feature-card-new__title {
+        transform: translateZ(25px);
+        text-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+      }
+
+      /* Description elevation */
+      .premium-card.deep-interview-featured:hover .feature-card-new__description,
+      .premium-card:nth-child(4):hover .feature-card-new__description {
+        transform: translateZ(15px);
+      }
+    }
+
+    /* Enhanced icon styles with 3D capabilities */
+    .premium-card.deep-interview-featured .feature-card-new__icon,
+    .premium-card:nth-child(4) .feature-card-new__icon {
+      background: linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #ef4444 100%);
+      position: relative;
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      transform-style: preserve-3d;
+    }
+
+    .premium-card.deep-interview-featured .feature-card-new__icon::before,
+    .premium-card:nth-child(4) .feature-card-new__icon::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, #ef4444, #991b1b);
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    @media (hover: hover) {
+      .premium-card.deep-interview-featured:hover .feature-card-new__icon::before,
+      .premium-card:nth-child(4):hover .feature-card-new__icon::before {
+        opacity: 0.5;
+        filter: blur(8px);
+      }
+    }
+
+    /* Inner glow pulse animation */
+    .premium-card.deep-interview-featured .feature-card-new__icon svg,
+    .premium-card:nth-child(4) .feature-card-new__icon svg {
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+      animation: iconPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5)); }
+      50% { filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.8)); }
+    }
+
+    /* Floating animation for the entire card */
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0) translateZ(0); }
+      50% { transform: translateY(-6px) translateZ(10px); }
+    }
+
+    .premium-card.deep-interview-featured .feature-card-new,
+    .premium-card:nth-child(4) .feature-card-new {
+      animation: floatCard 4s ease-in-out infinite;
+    }
+
+    .premium-card.deep-interview-featured:hover .feature-card-new,
+    .premium-card:nth-child(4):hover .feature-card-new {
+      animation: none;
+    }
+
+    /* Title and description transitions for 3D effect */
+    .premium-card.deep-interview-featured .feature-card-new__title,
+    .premium-card.deep-interview-featured .feature-card-new__description,
+    .premium-card:nth-child(4) .feature-card-new__title,
+    .premium-card:nth-child(4) .feature-card-new__description {
+      transition: transform 0.4s ease, text-shadow 0.4s ease;
+    }
+
+    /* Extra glow layers for depth */
+    .premium-card.deep-interview-featured,
+    .premium-card:nth-child(4) {
+      position: relative;
+    }
+
+    .premium-card.deep-interview-featured::before,
+    .premium-card:nth-child(4)::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(220, 38, 38, 0.15) 0%,
+        transparent 70%
+      );
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      filter: blur(30px);
+      pointer-events: none;
+    }
+
+    @media (hover: hover) {
+      .premium-card.deep-interview-featured:hover::before,
+      .premium-card:nth-child(4):hover::before {
+        opacity: 1;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1807,6 +2053,26 @@
       <path d="M12 20v2"></path>
       <path d="M2 12h2"></path>
       <path d="M20 12h2"></path>
+    </symbol>
+    <symbol id="icon-message-circle" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Isometric Socratic Core (Diamond/Brain) -->
+        <path d="M12 2l8 4.5v7.5L12 18.5l-8-4.5V6.5L12 2z" fill="currentColor" fill-opacity="0.1" />
+        <path d="M12 2v16.5M20 6.5L12 11 4 6.5" opacity="0.5" />
+        
+        <!-- Inner Socratic Light -->
+        <circle cx="12" cy="11" r="3" fill="currentColor" fill-opacity="0.2" stroke="none" />
+        
+        <!-- Dialogue Bubble 1 (Isometric) -->
+        <path d="M15 14l4 2.2v3.8l-4-2.2z" fill="currentColor" />
+        
+        <!-- Dialogue Bubble 2 (Isometric) -->
+        <path d="M9 14l-4 2.2v3.8l4-2.2z" fill="currentColor" />
+        
+        <!-- Socratic Question Mark Silhouette -->
+        <path d="M12 7c1 0 1.5.5 1.5 1.5s-.5 1.5-1.5 1.5v1" stroke-width="1" />
+        <circle cx="12" cy="13" r="0.5" fill="currentColor" stroke="none" />
+      </g>
     </symbol>
   </svg>
 
@@ -2181,8 +2447,9 @@
         </div>
       </article>
 
-      <article class="premium-card" data-reveal="fade-up" data-reveal-delay="300">
+      <article class="premium-card deep-interview-featured" data-reveal="fade-up" data-reveal-delay="300">
         <div class="feature-card-new">
+          <div class="particle-glow"></div>
           <div class="feature-card-new__icon">
             <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           </div>
