@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.5.1 - 30 agents, 10 execution modes, 25+ MCP tools.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.7.0 - 30 agents, 10 execution modes, 25+ MCP tools.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
@@ -565,7 +565,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.5.1</span>
+        <span class="sidebar-brand__version">v4.7.0</span>
       </a>
 
       <div class="sidebar-search">
@@ -609,8 +609,8 @@
             <button class="collapsible-toggle">Advanced Modes <span>▾</span></button>
             <div class="submenu">
               <a href="#team" class="sidebar-link" data-section="team">Team</a>
-              <a href="#ultrapilot" class="sidebar-link sidebar-link--deprecated" data-section="ultrapilot">Ultrapilot (Deprecated)</a>
-              <a href="#swarm" class="sidebar-link sidebar-link--deprecated" data-section="swarm">Swarm (Deprecated)</a>
+
+
               <a href="#pipeline" class="sidebar-link" data-section="pipeline">Pipeline</a>
               <a href="#ultraqa" class="sidebar-link" data-section="ultraqa">UltraQA</a>
               <a href="#plan" class="sidebar-link" data-section="plan">Plan</a>
@@ -718,6 +718,38 @@
 
           <div class="mode-card">
             <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.7.0</span>
+              Team Coordination API & Tri-Model Orchestration
+            </div>
+            <details>
+              <summary>View changes in v4.7.0</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Native Team/Task API:</strong> Added <code>TeamCreate</code>, <code>TaskCreate</code>, <code>TaskList</code>, <code>TaskGet</code>, <code>TaskUpdate</code>, and <code>SendMessage</code> for granular agent orchestration.</li>
+                <li><strong>omc ask Command:</strong> New <code>omc ask &lt;claude|codex|gemini&gt;</code> flow for explicit tri-model routing.</li>
+                <li><strong>Skill Expansion:</strong> Added 14 new skills including <code>configure-openclaw</code>, <code>deepinit</code>, <code>project-session-manager</code>, <code>tdd</code>, and <code>trace</code>.</li>
+                <li><strong>Agent Catalog Update:</strong> Introduced <code>code-simplifier</code> agent to the Build lane.</li>
+                <li><strong>Deprecation:</strong> Legacy <code>omc_run_team_*</code> runtime tools are now deprecated in favor of the Team API.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card">
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.6.0</span>
+              Multi-Model Restore & Performance Tuning
+            </div>
+            <details>
+              <summary>View changes in v4.6.0</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Multi-Model Recovery:</strong> Restored <code>ask-codex</code> and <code>ask-gemini</code> as high-level skills for non-tmux environments.</li>
+                <li><strong>Context Optimization:</strong> Improved <code>external-context</code> hook for faster large-repo analysis.</li>
+                <li><strong>UX Polish:</strong> Enhanced <code>hud</code> status line with real-time agent heartbeat indicators.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card">
+            <div class="mode-card__header">
               <span class="mode-card__keyword">v4.5.1</span>
               OpenClaw CLI Command Gateway (Hotfix)
             </div>
@@ -757,7 +789,7 @@
             <details>
               <summary>View changes in v4.4.0</summary>
               <ul style="list-style-type: disc;">
-                <li><strong>Breaking change:</strong> Codex and Gemini MCP providers were removed. Use <code>/omc-teams N:codex</code> or <code>/omc-teams N:gemini</code> instead.</li>
+                <li><strong>Breaking change:</strong> Codex and Gemini MCP providers were removed in v4.4.0 (restored as high-level <code>ask-codex</code> and <code>ask-gemini</code> skills in v4.6.0). Use <code>/omc-teams N:codex</code> or <code>/omc-teams N:gemini</code> for tmux workers.</li>
                 <li><strong>tmux CLI workers:</strong> You can spawn Claude, Codex, or Gemini CLI workers in visible tmux split panes.</li>
                 <li><strong>On-demand lifecycle:</strong> Workers start when a task arrives and stop when the task is done.</li>
                 <li><strong>/ccg tri-model skill:</strong> Work fans out to Codex and Gemini in parallel, then Claude combines the results.</li>
@@ -1021,6 +1053,61 @@
           </div>
         </section>
 
+        <!-- Agent Catalog -->
+        <section id="agent-catalog" data-section>
+          <h2 id="agent-overview"><span class="anchor-link">#</span>Agent Catalog</h2>
+          <p>OMC provides a unified catalog of 21 specialized agents across 4 functional lanes. Each agent is optimized for specific tasks using the most appropriate model tier.</p>
+
+          <div id="build-lane" class="lane-card lane-card--build">
+            <span class="lane-card__badge">Build & Analysis</span>
+            <h3 class="lane-card__title">Build & Analysis</h3>
+            <div class="lane-card__agents">
+              <span class="agent-tag">explore <small>Haiku</small></span>
+              <span class="agent-tag">analyst <small>Opus</small></span>
+              <span class="agent-tag">planner <small>Opus</small></span>
+              <span class="agent-tag">architect <small>Opus</small></span>
+              <span class="agent-tag">debugger <small>Sonnet</small></span>
+              <span class="agent-tag">executor <small>Sonnet</small></span>
+              <span class="agent-tag">deep-executor <small>Opus</small></span>
+              <span class="agent-tag">verifier <small>Sonnet</small></span>
+            </div>
+          </div>
+
+          <div id="review-lane" class="lane-card lane-card--review">
+            <span class="lane-card__badge">Review</span>
+            <h3 class="lane-card__title">Review</h3>
+            <div class="lane-card__agents">
+              <span class="agent-tag">quality-reviewer <small>Sonnet</small></span>
+              <span class="agent-tag">security-reviewer <small>Sonnet</small></span>
+              <span class="agent-tag">code-reviewer <small>Opus</small></span>
+            </div>
+          </div>
+
+          <div id="domain-lane" class="lane-card lane-card--domain">
+            <span class="lane-card__badge">Domain Specialists</span>
+            <h3 class="lane-card__title">Domain Specialists</h3>
+            <div class="lane-card__agents">
+              <span class="agent-tag">test-engineer <small>Sonnet</small></span>
+              <span class="agent-tag">build-fixer <small>Sonnet</small></span>
+              <span class="agent-tag">designer <small>Sonnet</small></span>
+              <span class="agent-tag">writer <small>Haiku</small></span>
+              <span class="agent-tag">qa-tester <small>Sonnet</small></span>
+              <span class="agent-tag">scientist <small>Sonnet</small></span>
+              <span class="agent-tag">document-specialist <small>Sonnet</small></span>
+              <span class="agent-tag">git-master <small>Sonnet</small></span>
+              <span class="agent-tag">code-simplifier <small>Opus</small></span>
+            </div>
+          </div>
+
+          <div id="coordination-lane" class="lane-card lane-card--coord">
+            <span class="lane-card__badge">Coordination</span>
+            <h3 class="lane-card__title">Coordination</h3>
+            <div class="lane-card__agents">
+              <span class="agent-tag">critic <small>Opus</small></span>
+            </div>
+          </div>
+        </section>
+
         <!-- MCP Tools -->
         <section id="mcp-tools" data-section>
           <h2><span class="anchor-link">#</span>MCP Tools</h2>
@@ -1035,9 +1122,10 @@
           <p><strong>LSP Tools:</strong> <code>lsp_hover</code>, <code>lsp_goto_definition</code>, <code>lsp_find_references</code>, <code>lsp_diagnostics</code>, <code>lsp_rename</code>.</p>
           <p><strong>AST Grep:</strong> <code>ast_grep_search</code>, <code>ast_grep_replace</code> for structural refactoring.</p>
 
-          <h3>Utilities</h3>
+          <h3>Team & Task Coordination</h3>
+          <p><strong>Team API:</strong> <code>TeamCreate</code>, <code>TaskCreate</code>, <code>TaskList</code>, <code>TaskGet</code>, <code>TaskUpdate</code>, <code>SendMessage</code>.</p>
+          <p><strong>Workflows:</strong> <code>omc ask &lt;claude|codex|gemini&gt;</code> for tri-model orchestration.</p>
           <p><strong>Python REPL:</strong> Persistent environment for data analysis.</p>
-          <p><strong>Job Management:</strong> <code>check_job_status</code>, <code>wait_for_job</code>, <code>list_jobs</code>, <code>kill_job</code>.</p>
         </section>
 
         <!-- Skills & Commands -->
@@ -1053,7 +1141,21 @@
                 <tr><td><code>team</code></td><td>Native Team</td><td>"team 3:executor build it"</td></tr>
                 <tr><td><code>plan</code></td><td>Strategic planning</td><td>"plan the migration"</td></tr>
                 <tr><td><code>ask codex</code></td><td>Consult Codex</td><td>"ask codex to review this"</td></tr>
-              </tbody>
+                <tr><td><code>configure-openclaw</code></td><td>Notification gateway setup</td><td>"/configure-openclaw"</td></tr>
+                <tr><td><code>deepinit</code></td><td>Deep codebase initialization</td><td>"/deepinit"</td></tr>
+                <tr><td><code>external-context</code></td><td>Manage external hooks</td><td>"/external-context"</td></tr>
+                <tr><td><code>learn-about-omc</code></td><td>Usage pattern analysis</td><td>"/learn-about-omc"</td></tr>
+                <tr><td><code>learner</code></td><td>Extract learned skills</td><td>"/learner"</td></tr>
+                <tr><td><code>mcp-setup</code></td><td>MCP tool configuration</td><td>"/mcp-setup"</td></tr>
+                <tr><td><code>omc-doctor</code></td><td>Diagnostic toolkit</td><td>"/omc-doctor"</td></tr>
+                <tr><td><code>omc-help</code></td><td>Interactive help guide</td><td>"/omc-help"</td></tr>
+                <tr><td><code>project-session-manager</code></td><td>Isolated environments</td><td>"/project-session-manager"</td></tr>
+                <tr><td><code>ralph-init</code></td><td>Initialize PRD loop</td><td>"/ralph-init"</td></tr>
+                <tr><td><code>sciomc</code></td><td>Scientific research agents</td><td>"/sciomc research photosynthesis"</td></tr>
+                <tr><td><code>tdd</code></td><td>Test-driven development</td><td>"/tdd build auth"</td></tr>
+                <tr><td><code>trace</code></td><td>Agent flow visualization</td><td>"/trace"</td></tr>
+                <tr><td><code>writer-memory</code></td><td>Agentic memory for writers</td><td>"/writer-memory"</td></tr>
+                </tbody>
             </table>
           </div>
           <p><strong>Utility Skills:</strong> <code>/oh-my-claudecode:cancel</code>, <code>note</code>, <code>omc-setup</code>, <code>hud</code>, <code>doctor</code>.</p>
