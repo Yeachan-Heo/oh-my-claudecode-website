@@ -72,6 +72,7 @@
       position: relative;
       overflow: hidden;
       padding: 2rem 1rem;
+      perspective: 1200px;
     }
 
     .hero__content {
@@ -82,6 +83,17 @@
       gap: 4rem;
       align-items: center;
       z-index: 1;
+      transform-style: preserve-3d;
+    }
+
+    .hero__text {
+      transform-style: preserve-3d;
+      transform: translateZ(50px);
+    }
+
+    .hero__visual {
+      transform-style: preserve-3d;
+      transform: translateZ(30px) rotateY(-5deg);
     }
 
     @media (max-width: 968px) {
@@ -468,17 +480,35 @@
       width: 100%;
       max-width: 340px;
       position: relative;
+      transform-style: preserve-3d;
+      animation: float3D 6s ease-in-out infinite;
+    }
+
+    @keyframes float3D {
+      0%, 100% { transform: translateZ(0) translateY(0) rotateY(-5deg); }
+      50% { transform: translateZ(100px) translateY(-20px) rotateY(5deg) rotateX(5deg); }
     }
 
     .hero__illustration img {
       width: 100%;
       height: auto;
       object-fit: contain;
+      border-radius: 16px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 20px 60px rgba(220, 38, 38, 0.4);
+      transform: translateZ(20px);
     }
 
     .hero__illustration svg {
-      width: 100%;
-      height: 100%;
+      width: 140%;
+      height: 140%;
+      position: absolute;
+      top: -20%;
+      left: -20%;
+      z-index: 2;
+      pointer-events: none;
+      transform: translateZ(80px);
     }
 
 
@@ -487,6 +517,7 @@
       padding: 6rem 1rem;
       max-width: 1200px;
       margin: 0 auto;
+      perspective: 1500px;
     }
 
     /* Section header — single consolidated rule */
@@ -494,6 +525,12 @@
       text-align: center;
       margin-bottom: 4rem;
       position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+    }
+
+    .section__header:hover {
+      transform: translateZ(30px);
     }
 
     .section__header::after {
@@ -632,6 +669,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
+      perspective: 2000px;
     }
 
     .feature-card {
@@ -639,48 +677,21 @@
       border: 1px solid var(--border-color);
       border-radius: 20px;
       padding: 2.5rem 2rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       z-index: 1;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-      background-size: 200% 100%;
-      border-radius: inherit;
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      animation: borderFlow 4s linear infinite;
-    }
-
-    @keyframes borderFlow {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+      transform-style: preserve-3d;
     }
 
     @media (hover: hover) {
       .feature-card:hover {
-        transform: translateY(-8px) scale(1.02);
+        transform: translateY(-15px) translateZ(40px) rotateX(10deg) rotateY(-5deg);
         box-shadow:
           0 0 0 1px rgba(var(--accent-color-rgb), 0.35),
-          0 20px 40px rgba(0, 0, 0, 0.45),
+          0 30px 60px rgba(0, 0, 0, 0.5),
           0 0 30px rgba(var(--accent-color-rgb), 0.1);
         border-color: rgba(var(--accent-color-rgb), 0.5);
-      }
-
-      .feature-card:hover::before {
-        opacity: 1;
-      }
-    }
-
-    @media (hover: none) {
-      .feature-card:active {
-        transform: scale(0.98);
       }
     }
 
@@ -695,6 +706,12 @@
       color: white;
       margin-bottom: 1.5rem;
       box-shadow: 0 8px 16px rgba(220, 38, 38, 0.2);
+      transform: translateZ(50px);
+      transition: transform 0.5s ease;
+    }
+
+    .feature-card:hover .feature-card__icon {
+      transform: translateZ(80px) rotateY(360deg);
     }
 
     .feature-card__title {
@@ -703,12 +720,14 @@
       margin-bottom: 1rem;
       color: var(--text-primary);
       letter-spacing: -0.01em;
+      transform: translateZ(30px);
     }
 
     .feature-card__description {
       font-size: 1rem;
       color: var(--text-secondary);
       line-height: 1.6;
+      transform: translateZ(20px);
     }
 
     /* Magic keywords table */
@@ -1627,6 +1646,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
+  perspective: 1500px;
 }
 
  @media (max-width: 1024px) {
@@ -1646,12 +1666,14 @@
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-style: preserve-3d;
 }
 
 .mcp-card:hover {
   border-color: var(--accent-color);
-  transform: translateY(-2px);
+  transform: translateY(-10px) translateZ(30px) rotateX(5deg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .mcp-card__icon {
@@ -1663,24 +1685,22 @@
   justify-content: center;
   margin-bottom: 1rem;
   color: white;
+  transform: translateZ(40px);
 }
-
-.mcp-card__icon--lsp { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-.mcp-card__icon--ast { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.mcp-card__icon--python { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.mcp-card__icon--state { background: linear-gradient(135deg, #22c55e, #16a34a); }
 
 .mcp-card__title {
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
+  transform: translateZ(20px);
 }
 
 .mcp-card__description {
   font-size: 0.875rem;
   color: var(--text-secondary);
   line-height: 1.5;
+  transform: translateZ(10px);
 }
 
     /* ============================================
@@ -2152,11 +2172,11 @@
         </div>
       </div>
       <div class="hero__visual">
-        <div class="hero__illustration" style="position: relative;">
+        <div class="hero__illustration">
           <!-- Character Image -->
-          <img src="omc-character.jpg" alt="Oh My ClaudeCode character" width="1408" height="3040" style="border-radius: 16px; position: relative; z-index: 1; box-shadow: 0 0 60px rgba(220, 38, 38, 0.3);" loading="eager">
+          <img src="omc-character.jpg" alt="Oh My ClaudeCode character" width="1408" height="3040" loading="eager">
           <!-- Orbiting decoration overlay -->
-          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; inset: 0; z-index: 2; pointer-events: none;">
+          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <radialGradient id="glow" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="#dc2626" stop-opacity="0.15"/>
