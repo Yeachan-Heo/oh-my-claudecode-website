@@ -21,6 +21,7 @@
 
   <!-- Design System -->
   <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/redesign.css">
 
   <style>
     /* =========================================
@@ -1281,6 +1282,7 @@
         <div class="sidebar-section">
           <div class="sidebar-title">Tools & Config</div>
           <a href="#mcp-tools" class="sidebar-link" data-section="mcp-tools">MCP Tools</a>
+          <a href="#team-api" class="sidebar-link" data-section="team-api">Team API</a>
           <a href="#skills" class="sidebar-link" data-section="skills">Skills & Commands</a>
           <a href="#state-memory" class="sidebar-link" data-section="state-memory">State & Memory</a>
           <a href="#configuration" class="sidebar-link" data-section="configuration">Configuration</a>
@@ -1372,7 +1374,7 @@
             <p>These updates improve runtime safety, team workflows, and release reliability. Open each version to see the details.</p>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <span class="mode-card__keyword">v4.7.5</span>
               Runtime Guardrails &amp; Model Default Cleanup
@@ -1388,7 +1390,7 @@
             </details>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <span class="mode-card__keyword">v4.7.0</span>
               Team Coordination API & Tri-Model Orchestration
@@ -1405,7 +1407,7 @@
             </details>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <span class="mode-card__keyword">v4.6.0</span>
               Multi-Model Restore & Performance Tuning
@@ -1420,7 +1422,7 @@
             </details>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <span class="mode-card__keyword">v4.5.1</span>
               OpenClaw CLI Command Gateway (Hotfix)
@@ -1435,7 +1437,7 @@
             </details>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <span class="mode-card__keyword">v4.5.0</span>
               Notifications Engine, OpenClaw Gateway &amp; Reliability Hardening
@@ -1453,7 +1455,7 @@
             </details>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <span class="mode-card__keyword">v4.4.0</span>
               tmux CLI Workers &amp; Security Hardening
@@ -1470,7 +1472,7 @@
             </details>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <span class="mode-card__keyword">v4.3.x</span>
               Agent Catalog Reform &amp; Cleanup
@@ -1486,7 +1488,7 @@
             </details>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <span class="mode-card__keyword">v4.1.0</span>
               Team Architecture
@@ -1654,7 +1656,7 @@
           <h2><span class="anchor-link">#</span>Execution Modes</h2>
           
           <div id="autopilot">
-            <div class="mode-card">
+            <div class="mode-card premium-card" data-tilt>
               <div class="mode-card__header">
                 <div class="mode-card__icon">🤖</div>
                 <div>
@@ -1673,7 +1675,7 @@
           </div>
 
           <div id="ralph">
-            <div class="mode-card">
+            <div class="mode-card premium-card" data-tilt>
               <div class="mode-card__header">
                 <div class="mode-card__icon">🔄</div>
                 <div>
@@ -1691,7 +1693,7 @@
           </div>
 
           <div id="ultrawork">
-            <div class="mode-card">
+            <div class="mode-card premium-card" data-tilt>
               <div class="mode-card__header">
                 <div class="mode-card__icon">⚡</div>
                 <div>
@@ -1728,9 +1730,9 @@
         <!-- Agent Catalog -->
         <section id="agent-catalog" data-section>
           <h2 id="agent-overview"><span class="anchor-link">#</span>Agent Catalog</h2>
-          <p>OMC provides a unified catalog of 21 specialized agents across 4 functional lanes. Each agent is optimized for specific tasks using the most appropriate model tier.</p>
+          <p>OMC provides a unified catalog of 30 specialized agents across 5 functional lanes. Each agent is optimized for specific tasks using the most appropriate model tier.</p>
 
-          <div id="build-lane" class="lane-card lane-card--build">
+          <div id="build-lane" class="lane-card premium-card lane-card--build" data-tilt>
             <span class="lane-card__badge">Build & Analysis</span>
             <h3 class="lane-card__title">Build & Analysis</h3>
             <div class="lane-card__agents">
@@ -1745,7 +1747,7 @@
             </div>
           </div>
 
-          <div id="review-lane" class="lane-card lane-card--review">
+          <div id="review-lane" class="lane-card premium-card lane-card--review" data-tilt>
             <span class="lane-card__badge">Review</span>
             <h3 class="lane-card__title">Review</h3>
             <div class="lane-card__agents">
@@ -1755,7 +1757,7 @@
             </div>
           </div>
 
-          <div id="domain-lane" class="lane-card lane-card--domain">
+          <div id="domain-lane" class="lane-card premium-card lane-card--domain" data-tilt>
             <span class="lane-card__badge">Domain Specialists</span>
             <h3 class="lane-card__title">Domain Specialists</h3>
             <div class="lane-card__agents">
@@ -1771,7 +1773,17 @@
             </div>
           </div>
 
-          <div id="coordination-lane" class="lane-card lane-card--coord">
+          <div id="product-lane" class="lane-card premium-card lane-card--product" data-tilt>
+            <span class="lane-card__badge">Product</span>
+            <h3 class="lane-card__title">Product</h3>
+            <div class="lane-card__agents">
+              <span class="agent-tag">product-manager <small>Opus</small></span>
+              <span class="agent-tag">analyst <small>Opus</small></span>
+              <span class="agent-tag">ux-researcher <small>Sonnet</small></span>
+            </div>
+          </div>
+
+          <div id="coordination-lane" class="lane-card premium-card lane-card--coord" data-tilt>
             <span class="lane-card__badge">Coordination</span>
             <h3 class="lane-card__title">Coordination</h3>
             <div class="lane-card__agents">
@@ -1798,6 +1810,64 @@
           <p><strong>Team API:</strong> <code>TeamCreate</code>, <code>TaskCreate</code>, <code>TaskList</code>, <code>TaskGet</code>, <code>TaskUpdate</code>, <code>SendMessage</code>.</p>
           <p><strong>Workflows:</strong> <code>omc ask &lt;claude|codex|gemini&gt;</code> for tri-model orchestration.</p>
           <p><strong>Python REPL:</strong> Persistent environment for data analysis.</p>
+        </section>
+
+        <!-- Team API Detailed -->
+        <section id="team-api" data-section>
+          <h2><span class="anchor-link">#</span>Team API Reference</h2>
+          <p>The Team API provides granular control over multi-agent orchestration. It allows you to programmatically manage teams, tasks, and inter-agent communication.</p>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>Tool</th><th>Parameters</th><th>Description</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>TeamCreate</code></td>
+                  <td><code>team_name</code>, <code>workers</code></td>
+                  <td>Initializes a new team with a specified set of workers.</td>
+                </tr>
+                <tr>
+                  <td><code>TaskCreate</code></td>
+                  <td><code>team_name</code>, <code>subject</code>, <code>description</code></td>
+                  <td>Adds a new task to a team's backlog.</td>
+                </tr>
+                <tr>
+                  <td><code>TaskList</code></td>
+                  <td><code>team_name</code>, <code>status_filter</code></td>
+                  <td>Lists all tasks for a team, optionally filtered by status.</td>
+                </tr>
+                <tr>
+                  <td><code>TaskUpdate</code></td>
+                  <td><code>team_name</code>, <code>task_id</code>, <code>status</code>, <code>result</code></td>
+                  <td>Updates the status or result of a specific task.</td>
+                </tr>
+                <tr>
+                  <td><code>SendMessage</code></td>
+                  <td><code>team_name</code>, <code>to_worker</code>, <code>body</code></td>
+                  <td>Sends an asynchronous message to a specific team worker.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Example: Programmatic Delegation</h3>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">JAVASCRIPT</span></div>
+            <pre><code>// 1. Create a specialized team
+TeamCreate(team_name="ui-redesign", workers=["designer", "executor", "verifier"]);
+
+// 2. Assign tasks
+TaskCreate(
+  team_name="ui-redesign",
+  subject="Hero Section",
+  description="Redesign the hero section with a focus on modern visual effects."
+);
+
+// 3. Monitor progress
+const tasks = TaskList(team_name="ui-redesign", status_filter="completed");</code></pre>
+          </div>
         </section>
 
         <!-- Skills & Commands -->
@@ -2267,7 +2337,7 @@ omc hud --watch --interval 1000</code></pre>
           </p>
 
           <h3 id="wf-full-auto"><span class="anchor-link">#</span>Full-Auto from PRD</h3>
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <div class="mode-card__icon">&#x1F680;</div>
               <div>
@@ -2295,7 +2365,7 @@ omc hud --watch --interval 1000</code></pre>
           </div>
 
           <h3 id="wf-no-brainer"><span class="anchor-link">#</span>No-Brainer</h3>
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <div class="mode-card__icon">&#x26A1;</div>
               <div>
@@ -2321,7 +2391,7 @@ omc hud --watch --interval 1000</code></pre>
           </div>
 
           <h3 id="wf-fix-debug"><span class="anchor-link">#</span>Fix / Debugging</h3>
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <div class="mode-card__icon">&#x1F527;</div>
               <div>
@@ -2351,7 +2421,7 @@ omc hud --watch --interval 1000</code></pre>
           </div>
 
           <h3 id="wf-parallel-issues"><span class="anchor-link">#</span>Parallel Issue / Ticket Handling</h3>
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <div class="mode-card__icon">&#x1F9E9;</div>
               <div>
@@ -2422,7 +2492,7 @@ omc hud --watch --interval 1000</code></pre>
             <pre><code>/omc-doctor</code></pre>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <div class="mode-card__icon">&#x1F4A1;</div>
               <div>
@@ -2513,12 +2583,12 @@ omc hud --watch --interval 1000</code></pre>
                 </tr>
                 <tr>
                   <td><strong>Sonnet</strong></td>
-                  <td><code>executor</code>, <code>debugger</code>, <code>verifier</code>, <code>test-engineer</code>, <code>build-fixer</code>, <code>designer</code>, <code>qa-tester</code>, <code>scientist</code>, <code>document-specialist</code>, <code>git-master</code>, <code>quality-reviewer</code>, <code>security-reviewer</code></td>
+                  <td><code>executor</code>, <code>debugger</code>, <code>verifier</code>, <code>test-engineer</code>, <code>build-fixer</code>, <code>designer</code>, <code>qa-tester</code>, <code>scientist</code>, <code>document-specialist</code>, <code>git-master</code>, <code>quality-reviewer</code>, <code>security-reviewer</code>, <code>ux-researcher</code></td>
                   <td>Implementation, testing, reviews, debugging, domain work</td>
                 </tr>
                 <tr>
                   <td><strong>Opus</strong></td>
-                  <td><code>analyst</code>, <code>planner</code>, <code>architect</code>, <code>deep-executor</code>, <code>code-reviewer</code>, <code>critic</code>, <code>code-simplifier</code></td>
+                  <td><code>analyst</code>, <code>planner</code>, <code>architect</code>, <code>deep-executor</code>, <code>code-reviewer</code>, <code>critic</code>, <code>code-simplifier</code>, <code>product-manager</code></td>
                   <td>Architecture, planning, deep analysis, critical reviews</td>
                 </tr>
               </tbody>
@@ -2593,7 +2663,7 @@ echo $OMC_SKIP_HOOKS
 /omc-doctor</code></pre>
           </div>
 
-          <div class="mode-card">
+          <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
               <div class="mode-card__icon">&#x1F4A1;</div>
               <div>
@@ -2738,8 +2808,10 @@ echo $OMC_SKIP_HOOKS
     import { SearchService } from './js/ui/searchService.js';
     import { Accordion } from './js/ui/accordion.js';
     import { CodeBlocks } from './js/ui/codeBlocks.js';
+    import { RedesignUI } from './js/redesign.js';
 
     document.addEventListener('DOMContentLoaded', () => {
+      new RedesignUI();
       new SidebarSpy({
         sidebar: '.docs-sidebar',
         content: '.docs-content',

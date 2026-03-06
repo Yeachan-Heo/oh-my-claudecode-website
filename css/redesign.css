@@ -1,0 +1,218 @@
+/**
+ * Oh My Claudecode - Enhanced Design System CSS
+ * Version: 2.0.0
+ */
+
+:root {
+  /* Enhanced Backgrounds with depth */
+  --bg-primary: #050508;
+  --bg-secondary: #0a0a0f;
+  --bg-tertiary: #12121a;
+  --bg-elevated: #1a1a24;
+
+  /* Refined Surface Colors */
+  --surface-default: rgba(21, 21, 32, 0.7);
+  --surface-hover: rgba(30, 30, 45, 0.8);
+  --surface-active: rgba(37, 37, 54, 0.9);
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(10, 10, 15, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(255, 255, 255, 0.15);
+
+  /* Border Colors */
+  --border-default: rgba(42, 42, 61, 0.5);
+  --border-hover: rgba(58, 58, 82, 0.8);
+  --border-active: #dc2626;
+
+  /* Accent Colors - More vibrant */
+  --accent-primary: #ff1f1f;
+  --accent-primary-hover: #ff4d4d;
+  --accent-primary-pressed: #cc0000;
+  --accent-secondary: #8b5cf6;
+  --accent-glow: rgba(220, 38, 38, 0.4);
+
+  /* Type Scale (Modernized) */
+  --text-display: clamp(2.5rem, 8vw, 4.5rem);
+  --text-h1: clamp(2rem, 5vw, 3rem);
+  --text-h2: clamp(1.5rem, 4vw, 2.25rem);
+  
+  /* 3D Transform Defaults */
+  --perspective: 1200px;
+  --card-rotate-x: 5deg;
+  --card-rotate-y: -5deg;
+  --card-translate-z: 20px;
+}
+
+/* 3D Utilities */
+.preserve-3d { transform-style: preserve-3d; }
+.perspective { perspective: var(--perspective); }
+
+/* Enhanced Hero Section */
+.hero--redesign {
+  background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.05) 0%, var(--bg-primary) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__glow-sphere {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
+}
+
+/* Premium Card Redesign */
+.premium-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.premium-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent 50%, rgba(220,38,38,0.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.premium-card:hover {
+  transform: perspective(var(--perspective)) rotateX(var(--card-rotate-x)) rotateY(var(--card-rotate-y)) translateZ(var(--card-rotate-z, 10px));
+  border-color: var(--glass-border-hover);
+  box-shadow: 
+    0 20px 40px rgba(0,0,0,0.4),
+    0 0 20px rgba(220, 38, 38, 0.1);
+}
+
+/* What's New Card Redesign */
+.whats-new-card--premium {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.whats-new-card--premium:hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: var(--accent-primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.whats-new-card--premium::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.whats-new-card--premium:hover::after {
+  opacity: 1;
+}
+
+/* Agent Tier Card Enhancements */
+.tier-card--premium {
+  border-left-width: 4px !important;
+  background: var(--bg-tertiary);
+  transition: all 0.4s ease;
+}
+
+.tier-card--premium:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+}
+
+.premium-card__icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-pressed));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 16px rgba(220, 38, 38, 0.3);
+  transform: translateZ(30px);
+}
+
+.premium-card__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  transform: translateZ(25px);
+}
+
+.premium-card__text {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  transform: translateZ(15px);
+}
+
+/* 3D Floating Elements */
+.float-3d {
+  animation: float3D 6s ease-in-out infinite;
+}
+
+@keyframes float3D {
+  0%, 100% { transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); }
+  25% { transform: translate3d(5px, -15px, 20px) rotateX(2deg) rotateY(2deg); }
+  50% { transform: translate3d(0, -25px, 40px) rotateX(0) rotateY(4deg); }
+  75% { transform: translate3d(-5px, -15px, 20px) rotateX(-2deg) rotateY(2deg); }
+}
+
+/* Enhanced Buttons */
+.btn--premium {
+  background: linear-gradient(135deg, var(--accent-primary-hover), var(--accent-primary));
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(220, 38, 38, 0.2);
+  border: none;
+  cursor: pointer;
+}
+
+.btn--premium:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(220, 38, 38, 0.4);
+  filter: brightness(1.1);
+}
+
+/* Mesh Gradient Background */
+.mesh-bg {
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(220, 38, 38, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(220, 38, 38, 0.05) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(124, 58, 237, 0.1) 0px, transparent 50%);
+}
