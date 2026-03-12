@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.7.5 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.8.0 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
@@ -1213,7 +1213,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.7.5</span>
+        <span class="sidebar-brand__version">v4.8.0</span>
       </a>
 
       <div class="sidebar-search">
@@ -1347,8 +1347,8 @@
 
           <div class="grid grid--2">
             <div class="card">
-              <h3 style="margin-top:0">30 Specialized Agents</h3>
-              <p>Unified catalog of 30 agents across 5 functional lanes, using optimized models (Opus/Sonnet/Haiku).</p>
+              <h3 style="margin-top:0">19 Specialized Agents</h3>
+              <p>Unified catalog of 19 agents across 5 functional lanes, using optimized models (Opus/Sonnet/Haiku).</p>
             </div>
             <div class="card">
               <h3 style="margin-top:0">10 Execution Modes</h3>
@@ -1376,16 +1376,17 @@
 
           <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
-              <span class="mode-card__keyword">v4.7.5</span>
-              Runtime Guardrails &amp; Model Default Cleanup
+              <span class="mode-card__keyword">v4.8.0</span>
+              Tracer Agent, Security Hardening &amp; HUD Token Tracking
             </div>
             <details open>
-              <summary>View changes in v4.7.5</summary>
+              <summary>View changes in v4.8.0</summary>
               <ul style="list-style-type: disc;">
-                <li><strong>Centralized model defaults:</strong> Runtime, config, and Team flows now share one source of truth instead of stale hardcoded mappings.</li>
-                <li><strong>Orchestration guardrails:</strong> Stronger context validation helps invalid agent/runtime state fail earlier and more predictably.</li>
-                <li><strong>Safer Team stop enforcement:</strong> Stop-hook behavior now fails open and adds breaker protection to reduce blocking and deadlock-style shutdown paths.</li>
-                <li><strong>Release stabilization:</strong> Includes the recent Team worker/mailbox hardening from v4.7.4 plus verifier test fixes that kept the 4.7.5 release green.</li>
+                <li><strong>Tracer Agent &amp; Trace Skill:</strong> Evidence-driven causal tracing with hypothesis ranking, evidence for/against tracking, and uncertainty quantification. (/trace command)</li>
+                <li><strong>Security Hardening:</strong> Patched 21 security vulnerabilities including SSRF bypass, command injection, prototype pollution, and shell injection vectors.</li>
+                <li><strong>HUD Token Usage Tracking:</strong> Real-time token usage display in HUD with optional transcript token totals for better cost visibility.</li>
+                <li><strong>OMX Team Governance Backport:</strong> Hardened team runtime with leader nudge guidance and improved pane stall heuristics.</li>
+                <li><strong>Unified MCP Registry:</strong> Synchronized MCP registry now syncs to Codex config for consistent server management.</li>
               </ul>
             </details>
           </div>
@@ -1481,7 +1482,7 @@
               <summary>View changes in v4.3.x</summary>
               <ul style="list-style-type: disc;">
                 <li><strong>Team architecture reform:</strong> Teams now follow a staged pipeline: <code>plan &rarr; prd &rarr; exec &rarr; verify &rarr; fix</code>.</li>
-                <li><strong>Unified catalog:</strong> 30 unified agents replaced the old tiered system and removed <code>-low</code> and <code>-medium</code> suffixes.</li>
+                <li><strong>Unified catalog:</strong> 19 unified agents replaced the old tiered system and removed <code>-low</code> and <code>-medium</code> suffixes.</li>
                 <li><strong>Skill consolidation:</strong> <code>ralplan</code> merged into <code>/plan --consensus</code>, and <code>review</code> merged into <code>/plan --review</code>.</li>
                 <li><strong>MCP provider upgrades:</strong> Codex now uses <code>gpt-5.3-codex</code>, and Gemini uses <code>gemini-3-pro-preview</code>.</li>
               </ul>
@@ -1730,7 +1731,7 @@
         <!-- Agent Catalog -->
         <section id="agent-catalog" data-section>
           <h2 id="agent-overview"><span class="anchor-link">#</span>Agent Catalog</h2>
-          <p>OMC provides a unified catalog of 30 specialized agents across 5 functional lanes. Each agent is optimized for specific tasks using the most appropriate model tier.</p>
+          <p>OMC provides a unified catalog of 19 specialized agents across 5 functional lanes. Each agent is optimized for specific tasks using the most appropriate model tier.</p>
 
           <div id="build-lane" class="lane-card premium-card lane-card--build" data-tilt>
             <span class="lane-card__badge">Build & Analysis</span>
