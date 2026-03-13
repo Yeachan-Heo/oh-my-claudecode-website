@@ -3,7 +3,7 @@
  * IntersectionObserver-based scroll animations
  */
 
-import { ANIMATION_CONFIG, prefersReducedMotion } from '../config.js';
+import { ANIMATION_CONFIG, prefersReducedMotion, getViewport } from '../config.js';
 
 /**
  * Default observer options
@@ -43,6 +43,16 @@ export const initScrollReveal = (options = {}) => {
     once = true,
     observerOptions = DEFAULT_OPTIONS,
   } = options;
+
+  // Mobile-specific adjustments for better reliability
+  const isMobile = getViewport() === 'mobile';
+  const mobileFriendlyOptions = isMobile
+    ? {
+        ...observerOptions,
+        rootMargin: '0px 0px 0px 0px', // Remove negative margin on mobile
+        threshold: 0.05, // Lower threshold for mobile (5% visibility)
+      }
+    : observerOptions;
 
   // Respect reduced motion preference
   if (prefersReducedMotion()) {
@@ -90,11 +100,22 @@ export const initScrollReveal = (options = {}) => {
         entry.target.classList.remove(visibleClass);
       }
     });
-  }, observerOptions);
+  }, mobileFriendlyOptions);
 
   // Observe all matching elements
   const elements = document.querySelectorAll(selector);
   elements.forEach((el) => activeObserver.observe(el));
+
+  // Mobile safety: if observer hasn't revealed elements after 5s, force reveal
+  if (isMobile) {
+    setTimeout(() => {
+      elements.forEach((el) => {
+        if (!el.classList.contains(visibleClass)) {
+          el.classList.add(visibleClass);
+        }
+      });
+    }, 5000);
+  }
 
   return activeObserver;
 };
