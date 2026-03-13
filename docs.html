@@ -1273,8 +1273,6 @@
           <a href="#build-lane" class="sidebar-link" data-section="build-lane">Build & Analysis</a>
           <a href="#review-lane" class="sidebar-link" data-section="review-lane">Review</a>
           <a href="#domain-lane" class="sidebar-link" data-section="domain-lane">Domain Specialists</a>
-          <a href="#product-lane" class="sidebar-link" data-section="product-lane">Product</a>
-          <a href="#coordination-lane" class="sidebar-link" data-section="coordination-lane">Coordination</a>
           <a href="#team-compositions" class="sidebar-link" data-section="team-compositions">Team Compositions</a>
         </div>
 
@@ -1348,7 +1346,7 @@
           <div class="grid grid--2">
             <div class="card">
               <h3 style="margin-top:0">19 Specialized Agents</h3>
-              <p>Unified catalog of 19 agents across 5 functional lanes, using optimized models (Opus/Sonnet/Haiku).</p>
+              <p>Unified catalog of 19 agents across 3 functional lanes, using optimized models (Opus/Sonnet/Haiku).</p>
             </div>
             <div class="card">
               <h3 style="margin-top:0">10 Execution Modes</h3>
@@ -1731,7 +1729,7 @@
         <!-- Agent Catalog -->
         <section id="agent-catalog" data-section>
           <h2 id="agent-overview"><span class="anchor-link">#</span>Agent Catalog</h2>
-          <p>OMC provides a unified catalog of 19 specialized agents across 5 functional lanes. Each agent is optimized for specific tasks using the most appropriate model tier.</p>
+          <p>OMC provides a unified catalog of 19 specialized agents across 3 functional lanes. Each agent is optimized for specific tasks using the most appropriate model tier.</p>
 
           <div id="build-lane" class="lane-card premium-card lane-card--build" data-tilt>
             <span class="lane-card__badge">Build & Analysis</span>
@@ -1743,8 +1741,8 @@
               <span class="agent-tag">architect <small>Opus</small></span>
               <span class="agent-tag">debugger <small>Sonnet</small></span>
               <span class="agent-tag">executor <small>Sonnet</small></span>
-              <span class="agent-tag">deep-executor <small>Opus</small></span>
               <span class="agent-tag">verifier <small>Sonnet</small></span>
+              <span class="agent-tag">code-simplifier <small>Opus</small></span>
             </div>
           </div>
 
@@ -1752,9 +1750,9 @@
             <span class="lane-card__badge">Review</span>
             <h3 class="lane-card__title">Review</h3>
             <div class="lane-card__agents">
-              <span class="agent-tag">quality-reviewer <small>Sonnet</small></span>
               <span class="agent-tag">security-reviewer <small>Sonnet</small></span>
               <span class="agent-tag">code-reviewer <small>Opus</small></span>
+              <span class="agent-tag">critic <small>Opus</small></span>
             </div>
           </div>
 
@@ -1762,33 +1760,14 @@
             <span class="lane-card__badge">Domain Specialists</span>
             <h3 class="lane-card__title">Domain Specialists</h3>
             <div class="lane-card__agents">
+              <span class="agent-tag">document-specialist <small>Sonnet</small></span>
               <span class="agent-tag">test-engineer <small>Sonnet</small></span>
-              <span class="agent-tag">build-fixer <small>Sonnet</small></span>
               <span class="agent-tag">designer <small>Sonnet</small></span>
               <span class="agent-tag">writer <small>Haiku</small></span>
               <span class="agent-tag">qa-tester <small>Sonnet</small></span>
               <span class="agent-tag">scientist <small>Sonnet</small></span>
-              <span class="agent-tag">document-specialist <small>Sonnet</small></span>
               <span class="agent-tag">git-master <small>Sonnet</small></span>
-              <span class="agent-tag">code-simplifier <small>Opus</small></span>
-            </div>
-          </div>
-
-          <div id="product-lane" class="lane-card premium-card lane-card--product" data-tilt>
-            <span class="lane-card__badge">Product</span>
-            <h3 class="lane-card__title">Product</h3>
-            <div class="lane-card__agents">
-              <span class="agent-tag">product-manager <small>Opus</small></span>
-              <span class="agent-tag">analyst <small>Opus</small></span>
-              <span class="agent-tag">ux-researcher <small>Sonnet</small></span>
-            </div>
-          </div>
-
-          <div id="coordination-lane" class="lane-card premium-card lane-card--coord" data-tilt>
-            <span class="lane-card__badge">Coordination</span>
-            <h3 class="lane-card__title">Coordination</h3>
-            <div class="lane-card__agents">
-              <span class="agent-tag">critic <small>Opus</small></span>
+              <span class="agent-tag">tracer <small>Sonnet</small></span>
             </div>
           </div>
         </section>
@@ -1898,6 +1877,14 @@ const tasks = TaskList(team_name="ui-redesign", status_filter="completed");</cod
                 <tr><td><code>tdd</code></td><td>Test-driven development</td><td>"/tdd build auth"</td></tr>
                 <tr><td><code>trace</code></td><td>Agent flow visualization</td><td>"/trace"</td></tr>
                 <tr><td><code>writer-memory</code></td><td>Agentic memory for writers</td><td>"/writer-memory"</td></tr>
+                <tr><td><code>deep-interview</code></td><td>Socratic requirements clarification</td><td>"/deep-interview 'vague idea'"</td></tr>
+                <tr><td><code>ralplan</code></td><td>Iterative planning consensus</td><td>"ralplan this feature"</td></tr>
+                <tr><td><code>ccg</code></td><td>Tri-model fan-out (Claude+Codex+Gemini)</td><td>"/ccg review this module"</td></tr>
+                <tr><td><code>ultraqa</code></td><td>Automated QA cycling</td><td>"/ultraqa"</td></tr>
+                <tr><td><code>ai-slop-cleaner</code></td><td>Detect and remove AI-generated slop</td><td>"deslop this file"</td></tr>
+                <tr><td><code>release</code></td><td>Release management workflow</td><td>"/release"</td></tr>
+                <tr><td><code>configure-notifications</code></td><td>Set up Discord/Slack/Telegram alerts</td><td>"/configure-notifications"</td></tr>
+                <tr><td><code>omc-plan</code></td><td>Structured planning mode</td><td>"/omc-plan"</td></tr>
                 </tbody>
             </table>
           </div>
@@ -2584,12 +2571,12 @@ omc hud --watch --interval 1000</code></pre>
                 </tr>
                 <tr>
                   <td><strong>Sonnet</strong></td>
-                  <td><code>executor</code>, <code>debugger</code>, <code>verifier</code>, <code>test-engineer</code>, <code>build-fixer</code>, <code>designer</code>, <code>qa-tester</code>, <code>scientist</code>, <code>document-specialist</code>, <code>git-master</code>, <code>quality-reviewer</code>, <code>security-reviewer</code>, <code>ux-researcher</code></td>
+                  <td><code>executor</code>, <code>debugger</code>, <code>verifier</code>, <code>test-engineer</code>, <code>designer</code>, <code>qa-tester</code>, <code>scientist</code>, <code>document-specialist</code>, <code>git-master</code>, <code>security-reviewer</code>, <code>tracer</code></td>
                   <td>Implementation, testing, reviews, debugging, domain work</td>
                 </tr>
                 <tr>
                   <td><strong>Opus</strong></td>
-                  <td><code>analyst</code>, <code>planner</code>, <code>architect</code>, <code>deep-executor</code>, <code>code-reviewer</code>, <code>critic</code>, <code>code-simplifier</code>, <code>product-manager</code></td>
+                  <td><code>analyst</code>, <code>planner</code>, <code>architect</code>, <code>code-reviewer</code>, <code>critic</code>, <code>code-simplifier</code></td>
                   <td>Architecture, planning, deep analysis, critical reviews</td>
                 </tr>
               </tbody>

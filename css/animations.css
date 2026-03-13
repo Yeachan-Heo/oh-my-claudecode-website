@@ -1193,3 +1193,55 @@
     transition: none;
   }
 }
+
+/* ========================================
+   Mobile Card Rendering Fixes
+   ======================================== */
+
+/* Safety net: if JS fails to load or IntersectionObserver doesn't fire,
+   ensure cards are visible on mobile after a timeout via CSS animation */
+@media (max-width: 768px) {
+  /* Flatten 3D transforms that can break mobile rendering */
+  .premium-card,
+  .feature-card,
+  .tier-card,
+  .doc-card,
+  .mcp-card,
+  .ai-feature-card {
+    transform-style: flat !important;
+    perspective: none !important;
+  }
+
+  .features-grid,
+  .mcp-grid {
+    perspective: none !important;
+  }
+
+  .premium-card:hover,
+  .feature-card:hover {
+    transform: translateY(-4px) !important;
+  }
+
+  .premium-card__icon,
+  .premium-card__title,
+  .premium-card__text,
+  .feature-card__icon {
+    transform: none !important;
+  }
+
+  /* Fallback: make stagger children visible after 3s if JS hasn't added .revealed */
+  [data-reveal="stagger"]:not(.revealed) > * {
+    animation: mobileCardFallback 0.01s 3s forwards;
+  }
+
+  [data-reveal]:not([data-reveal="stagger"]):not(.revealed) {
+    animation: mobileCardFallback 0.01s 3s forwards;
+  }
+}
+
+@keyframes mobileCardFallback {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

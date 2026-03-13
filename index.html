@@ -2736,7 +2736,7 @@
           <svg width="24" height="24"><use href="#icon-zap"></use></svg>
         </div>
         <h3 class="doc-card__title">Just Talk</h3>
-        <p class="doc-card__description">"Build me a REST API" - that's it. Autopilot detects your intent and orchestrates 21 agents automatically.</p>
+        <p class="doc-card__description">"Build me a REST API" - that's it. Autopilot detects your intent and orchestrates 19 agents automatically.</p>
       </div>
 
       <div class="doc-card premium-card" data-tilt data-reveal="fade-up" data-reveal-delay="100">
@@ -2826,6 +2826,14 @@
       </div>
     </div>
   </footer>
+
+  <!-- Fallback: show all cards if JS is disabled -->
+  <noscript>
+    <style>
+      [data-reveal] { opacity: 1 !important; transform: none !important; }
+      [data-reveal="stagger"] > * { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
 
   <!-- Main JavaScript -->
   <script type="module" src="js/main.js"></script>
