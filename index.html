@@ -1949,6 +1949,41 @@
         opacity: 1;
       }
     }
+
+    /* ========================================
+       MOBILE FIXES - Force content visible
+       ======================================== */
+    @media (max-width: 768px) {
+      /* Force hero content visible */
+      .hero-entrance {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
+
+      .hero__visual {
+        opacity: 1 !important;
+        animation: none !important;
+      }
+
+      .hero__illustration {
+        animation: none !important;
+        transform: none !important;
+      }
+
+      /* Force all reveal elements visible */
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+
+      [data-reveal="stagger"] > * {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
   </style>
 </head>
 <body>
