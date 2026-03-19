@@ -1,0 +1,109 @@
+---
+title: Project Session Manager
+description: A session manager that uses git worktrees and tmux to manage isolated development environments
+---
+
+## Overview
+
+Project Session Manager (PSM) automates isolated development environments using git worktrees and tmux sessions. It allows you to run PR reviews, issue fixes, and feature development independently in parallel.
+
+If you only need quick worktree creation, the `omc teleport` command is also available.
+
+## Usage
+
+```bash
+/oh-my-claudecode:project-session-manager review <ref>
+/oh-my-claudecode:project-session-manager fix <ref>
+/oh-my-claudecode:project-session-manager feature <project> <name>
+/oh-my-claudecode:project-session-manager list
+/oh-my-claudecode:project-session-manager attach <session>
+/oh-my-claudecode:project-session-manager kill <session>
+/oh-my-claudecode:project-session-manager cleanup
+/oh-my-claudecode:project-session-manager status
+```
+
+The alias `psm` is also available:
+
+```bash
+/psm review omc#123
+/psm fix omc#42
+/psm feature omc add-webhooks
+```
+
+## Project Reference Formats
+
+| Format | Example |
+|--------|---------|
+| Alias | `omc#123` |
+| Full | `owner/repo#123` |
+| URL | `https://github.com/owner/repo/pull/123` |
+| Current repo | `#123` |
+
+## Key Commands
+
+### review
+
+Creates a PR review session. Checks out the PR branch, creates a worktree, starts a tmux session, and runs Claude Code.
+
+### fix
+
+Creates an issue fix session. Fetches issue information and creates a fix branch.
+
+### feature
+
+Creates a feature development session. Creates a feature branch and sets up a worktree.
+
+### cleanup
+
+Automatically cleans up sessions for merged PRs or closed issues.
+
+## Teleport Command
+
+A lighter-weight worktree creation tool than PSM. Creates worktrees without tmux session management.
+
+```bash
+omc teleport #123           # Create worktree for an issue/PR
+omc teleport my-feature     # Create worktree for a feature
+omc teleport list           # List worktrees
+omc teleport remove <name>  # Remove a worktree
+```
+
+## Providers
+
+| Provider | CLI | Reference Format |
+|----------|-----|-----------------|
+| GitHub (default) | `gh` | `owner/repo#123`, alias, URL |
+| Jira | `jira` | `PROJ-123`, alias |
+
+## Configuration
+
+Configure project aliases in `~/.psm/projects.json`.
+
+```json
+{
+  "aliases": {
+    "omc": {
+      "repo": "Yeachan-Heo/oh-my-claudecode",
+      "local": "~/Workspace/oh-my-claudecode",
+      "default_base": "main"
+    }
+  }
+}
+```
+
+## Requirements
+
+- `git` (v2.5+ with worktree support)
+- `jq`
+- `tmux` (optional, recommended)
+- `gh` (for GitHub) or `jira` (for Jira)
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:project-session-manager` |
+| Alias | `/oh-my-claudecode:psm` |
+| Magic Keyword | - |
+| Category | Utility |
+| Config | `~/.psm/projects.json` |

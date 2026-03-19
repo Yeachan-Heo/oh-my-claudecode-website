@@ -1,0 +1,72 @@
+---
+title: External Context
+description: Fetch external documentation and references using parallel document-specialist agents
+---
+
+## Overview
+
+External Context is a skill for fetching external documentation, references, and context. It decomposes a query into 2-5 independent search facets and spawns parallel document-specialist agents to investigate them simultaneously.
+
+## Usage
+
+```bash
+/oh-my-claudecode:external-context <topic or question>
+```
+
+## Examples
+
+```bash
+/oh-my-claudecode:external-context What are the best practices for JWT token rotation in Node.js?
+/oh-my-claudecode:external-context Compare Prisma vs Drizzle ORM for PostgreSQL
+/oh-my-claudecode:external-context Latest React Server Components patterns and conventions
+```
+
+## Protocol
+
+### 1. Facet Decomposition
+
+Decomposes the query into 2-5 independent search facets.
+
+```
+Query: "JWT token rotation best practices in Node.js"
+
+Facet 1: JWT rotation official docs and RFCs
+Facet 2: Node.js JWT library comparison (jsonwebtoken, jose)
+Facet 3: Production JWT refresh patterns
+```
+
+### 2. Parallel Agent Calls
+
+Runs document-specialist (Sonnet) agents concurrently for each facet. Uses WebSearch and WebFetch to find official documentation and examples.
+
+Supports up to 5 parallel agents.
+
+### 3. Synthesized Output
+
+Synthesizes findings with source citations.
+
+```markdown
+## Key Findings
+1. **Finding** - Source: [title](url)
+2. **Finding** - Source: [title](url)
+
+## Detailed Results
+...
+
+## Sources
+- [Source 1](url)
+- [Source 2](url)
+```
+
+## Related Skills
+
+- [sciomc](/docs/skills/workflow/sciomc) - deeper parallel research orchestration
+- [ask](/docs/skills/utility/ask) - query a single provider
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:external-context` |
+| Magic Keywords | - |
+| Category | Workflow |

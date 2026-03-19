@@ -1,0 +1,69 @@
+---
+title: Executor
+description: A code execution agent that implements specified tasks precisely with minimal changes.
+---
+
+## Overview
+
+Executor is an agent that implements code changes precisely.
+From simple fixes to complex multi-file changes, it works within the requested scope with minimal diff.
+
+The most common failure mode is "doing too much."
+A small correct change beats a large clever one.
+It does not broaden scope, introduce unnecessary abstractions, or refactor adjacent code.
+
+## When to Use
+
+- When feature implementation is needed
+- When executing code refactoring
+- When implementing a planned task step by step
+- When complex multi-file changes are needed (use model=opus)
+
+## Usage Examples
+
+```
+"Add a timeout parameter to the fetchData() function"
+"Implement the auth module according to this plan"
+"Add this API endpoint"
+```
+
+## Task Classification
+
+Executor classifies tasks into three types and applies appropriate effort.
+
+- **Trivial** (single file, obvious fix): Minimal exploration, verify only modified file
+- **Scoped** (2-5 files, clear boundaries): Targeted exploration, verify modified files + relevant tests
+- **Complex** (multi-system, unclear scope): Full exploration, run full verification suite
+
+## Work Process
+
+1. Classify the task and identify which files need changes
+2. For non-trivial tasks, explore first: map files with Glob, find patterns with Grep, understand code style
+3. Discover codebase patterns: naming conventions, error handling, import style, function signatures
+4. Create atomic steps with TodoWrite (when there are 2+ steps)
+5. Implement one at a time, verify with lsp_diagnostics after each change
+6. Declare completion only after final build/test verification
+
+## Verification Criteria
+
+- All modified files have 0 errors in lsp_diagnostics
+- Build and tests pass (show actual output, no assumptions)
+- No leftover debug code (console.log, TODO, HACK, debugger)
+- Matches existing codebase patterns
+
+## Combining with Other Agents
+
+- **explore**: Spawns up to 3 in parallel to gather codebase context before implementation
+- **architect**: Consults for architectural cross-checks when needed
+- **planner**: Executor implements the plan created by Planner
+- **verifier**: Verifier independently validates after implementation is complete
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:executor` |
+| Lane | Build & Analysis |
+| Former Name | `deep-executor` (deprecated) |
+| Tier Variants | `executor-low` (haiku), `executor-high` (opus) |

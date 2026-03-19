@@ -1,0 +1,121 @@
+---
+title: Deep Interview
+description: Socratic deep interview with mathematical ambiguity gating
+---
+
+## Overview
+
+Deep Interview combines Ouroboros-inspired Socratic questioning with mathematical ambiguity scoring. It asks targeted questions to surface hidden assumptions, measures clarity across weighted dimensions, and refuses to proceed until ambiguity falls below a threshold (default 20%).
+
+Designed as the first step of a 3-stage pipeline: **deep-interview → ralplan → autopilot**
+
+## Usage
+
+```bash
+/oh-my-claudecode:deep-interview "vague idea or description"
+```
+
+Also activated via magic keywords.
+
+```
+deep interview me about this project idea
+ouroboros help me clarify what I want
+I have a vague idea about a task management tool
+```
+
+## Ambiguity Score
+
+Clarity is measured across 4 dimensions during the interview.
+
+| Dimension | Greenfield Weight | Brownfield Weight |
+|-----------|-------------------|-------------------|
+| Goal clarity | 40% | 35% |
+| Constraint clarity | 30% | 25% |
+| Success criteria clarity | 30% | 25% |
+| Context clarity | - | 15% |
+
+Brownfield (modifying existing code) additionally measures understanding of the existing system.
+
+### Score Interpretation
+
+| Range | Meaning |
+|-------|---------|
+| 0-10% | Fully clear, proceed immediately |
+| 10-20% | Sufficiently clear (default threshold) |
+| 20-40% | Some gaps, continue interview |
+| 40-60% | Significant gaps, focus on weak dimensions |
+| 60-80% | Very unclear, reframing needed |
+| 80-100% | Almost nothing is known |
+
+## Challenge Agents
+
+The questioning perspective shifts at specific rounds.
+
+| Mode | Activated | Purpose |
+|------|-----------|---------|
+| Contrarian | Round 4+ | "What if the opposite is true?" — challenge core assumptions |
+| Simplifier | Round 6+ | "What is the simplest version?" — strip complexity |
+| Ontologist | Round 8+ (ambiguity > 30%) | "What is this really?" — find the essence |
+
+Each mode is used only once.
+
+## Execution Phases
+
+### Phase 1: Initialization
+
+- Parse the user's idea
+- Detect Brownfield vs. Greenfield (explore agent)
+- Initialize state
+
+### Phase 2: Interview Loop
+
+- Generate questions targeting the weakest dimension
+- Only one question at a time
+- Calculate and display ambiguity score after each answer
+- Codebase facts gathered first via the explore agent
+
+### Phase 3: Challenge Agents
+
+Perspective shifts at rounds 4, 6, and 8.
+
+### Phase 4: Spec Crystallization
+
+When the ambiguity threshold is reached, generate a spec file: `.omc/specs/deep-interview-{slug}.md`
+
+### Phase 5: Execution Bridge
+
+Present execution options:
+
+1. **Ralplan → Autopilot** (recommended): consensus refinement then autonomous execution
+2. **Autopilot** (fast): direct autonomous execution without consensus refinement
+3. **Ralph**: continuous loop execution
+4. **Team**: N parallel agents
+5. **Continue interview**: keep interviewing for greater clarity
+
+## 3-Stage Pipeline
+
+```
+deep-interview → ralplan → autopilot
+  ambiguity ≤ 20%   consensus plan   execution
+```
+
+Each stage provides a different quality gate.
+
+1. **Deep Interview**: clarity gate (does the user know what they want?)
+2. **Ralplan**: feasibility gate (is the approach sound?)
+3. **Autopilot**: correctness gate (does the code work?)
+
+## Related Skills
+
+- [ralplan](/docs/skills/workflow/ralplan) - consensus-based planning (stage 2)
+- [autopilot](/docs/skills/workflow/autopilot) - autonomous execution (stage 3)
+- [plan](/docs/skills/workflow/plan) - strategic planning
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:deep-interview` |
+| Magic Keywords | `deep interview`, `ouroboros`, `socratic` |
+| Category | Workflow |
+| Spec Path | `.omc/specs/deep-interview-{slug}.md` |

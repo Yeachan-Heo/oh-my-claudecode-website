@@ -7,3 +7,6 @@ social-preview-1x.png
 .omc/
 .sisyphus/
 .omx/
+node_modules
+.next
+.source

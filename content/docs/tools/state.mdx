@@ -1,0 +1,117 @@
+---
+title: State
+description: MCP tool group for managing execution mode state
+---
+
+## Overview
+
+The State tools manage the state of OMC execution modes (autopilot, ralph, ultrawork, etc.). Each mode records its current progress, active status, and configuration in state files.
+
+## Storage Path
+
+```
+.omc/state/
+├── sessions/{sessionId}/     # Per-session state
+│   ├── autopilot-state.json
+│   ├── ralph-state.json
+│   └── ultrawork-state.json
+├── autopilot-state.json      # Legacy compatibility
+├── ralph-state.json
+└── ultrawork-state.json
+```
+
+When a session ID is provided, the session-scoped path is used; otherwise the legacy path is used as a fallback.
+
+## Tool List
+
+### state_read
+
+Reads the state for the specified mode.
+
+```
+state_read(mode="ralph")
+state_read(mode="ralph", session_id="abc123")
+```
+
+Returns an empty response if the state file does not exist.
+
+### state_write
+
+Saves the state for the specified mode.
+
+```
+state_write(mode="ralph", state={
+  active: true,
+  current_phase: "execution",
+  iteration: 3,
+  max_iterations: 10
+})
+```
+
+### state_clear
+
+Deletes the state file for the specified mode.
+
+```
+state_clear(mode="ralph")
+state_clear(mode="ralph", session_id="abc123")
+```
+
+Calling without a session ID cleans up legacy files.
+
+### state_list_active
+
+Lists all currently active modes.
+
+```
+state_list_active()
+```
+
+Returns modes that have active state files.
+
+### state_get_status
+
+Returns detailed status for a specific mode or all modes.
+
+```
+state_get_status(mode="ralph")
+```
+
+Includes active status, file path, and state contents.
+
+## Environment Variables
+
+| Variable | Default | Description |
+|------|--------|------|
+| `OMC_STATE_DIR` | (unset) | Centralized state directory. When set, state is preserved even if the worktree is deleted |
+
+When `OMC_STATE_DIR` is set, state is stored in `$OMC_STATE_DIR/{project-id}/`.
+
+```bash
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```
+
+## Usage Patterns
+
+### Activate a Mode
+
+```
+state_write(mode="autopilot", state={
+  active: true,
+  current_phase: "expansion",
+  started_at: "2024-01-15T09:00:00Z"
+})
+```
+
+### Deactivate a Mode
+
+```
+state_clear(mode="autopilot")
+```
+
+### Check Active Modes
+
+```
+state_list_active()
+→ [{session_id: "abc123", mode: "ralph", active: true}]
+```

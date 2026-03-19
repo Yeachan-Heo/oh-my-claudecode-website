@@ -1,0 +1,74 @@
+---
+title: Architect
+description: A design advisory agent that provides code analysis, bug diagnosis, and architecture guidance.
+---
+
+## Overview
+
+Architect is an agent that analyzes code, diagnoses root causes of bugs, and provides actionable architecture recommendations.
+All claims are backed by specific `file:line` evidence.
+
+It is a read-only agent and does not directly modify code.
+Making judgments without reading code is guesswork, and vague recommendations ("consider refactoring") are not provided.
+
+## When to Use
+
+- When analyzing the root cause of a complex bug
+- When evaluating trade-offs for architecture decisions
+- When implementation verification is needed
+- When providing technical counterarguments in ralplan consensus reviews
+
+## Usage Examples
+
+```
+"Analyze the cause of this race condition"
+"Evaluate the trade-offs of this module structure"
+"Verify that this implementation matches the design intent"
+```
+
+## Analysis Process
+
+1. **Context Collection** (required): Map project structure with Glob, find relevant implementations with Grep/Read, check dependencies/tests (run in parallel)
+2. **Hypothesis Formation**: Document hypotheses before reading the code
+3. **Cross-Validation**: Compare hypotheses against actual code, provide file:line evidence for all claims
+4. **Results Summary**: Summary, diagnosis, root cause, prioritized recommendations, trade-offs, references
+
+For non-obvious bugs, follows a 4-step protocol:
+Root cause analysis → Pattern analysis → Hypothesis validation → Recommendation derivation.
+After 3 failed fix attempts, questions the architecture itself.
+
+## ralplan Consensus Review
+
+In ralplan consensus reviews, Architect takes on additional roles.
+
+- **Antithesis**: Presents the strongest counterargument against the preferred direction
+- **Tradeoff tension**: Points out trade-offs that cannot be ignored
+- **Synthesis**: Proposes a synthesis that preserves the strengths of competing options (when possible)
+- In deliberate mode, explicitly flags principle violations
+
+## Combining with Other Agents
+
+- **debugger**: Specific error fixes like build errors are debugger's responsibility
+- **critic**: Delegates to critic when plan review is needed
+- **qa-tester**: Collaborates with qa-tester when runtime validation is needed (diagnosis → validation loop)
+- **executor**: Passes implementation to executor based on analysis results
+
+### Architect + QA-Tester Diagnosis-Validation Loop
+
+A useful workflow for debugging CLI apps or services.
+
+1. Architect diagnoses the issue and provides root cause analysis
+2. Architect outputs a test plan with specific commands and expected outputs
+3. QA-Tester executes the test plan in tmux and captures actual output
+4. If validation fails, feeds results back to Architect for re-diagnosis
+5. Repeats until validation succeeds
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | opus |
+| Subagent Type | `oh-my-claudecode:architect` |
+| Lane | Build & Analysis |
+| Read-Only | Yes (Write, Edit blocked) |
+| Tier Variants | `architect-low` (haiku), `architect-medium` (sonnet) |

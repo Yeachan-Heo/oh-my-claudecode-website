@@ -1,0 +1,85 @@
+---
+title: Skills
+description: Introduces all 28 OMC skills organized into workflow and utility categories.
+---
+
+## What are Skills?
+
+Skills are commands invoked with the format `/oh-my-claudecode:skill-name`.
+They can also be activated via magic keywords, so you can use them in conversation without memorizing the command name.
+
+## Workflow Skills
+
+Execution mode skills that automate tasks.
+
+| Skill | Description | Magic Keywords |
+|-------|-------------|----------------|
+| [autopilot](/docs/skills/workflow/autopilot) | Autonomous full pipeline from idea to working code | `autopilot`, `build me`, `I want a` |
+| [ralph](/docs/skills/workflow/ralph) | Self-referential loop that repeats until completion | `ralph`, `don't stop` |
+| [ultrawork](/docs/skills/workflow/ultrawork) | Maximum parallel agent execution | `ultrawork`, `ulw` |
+| [ultraqa](/docs/skills/workflow/ultraqa) | QA cycling: test, verify, fix, repeat | - |
+| [team](/docs/skills/workflow/team) | N Claude agent coordination pipeline | `team` |
+| [omc-teams](/docs/skills/workflow/omc-teams) | Run claude/codex/gemini CLI workers in tmux | - |
+| [ccg](/docs/skills/workflow/ccg) | Claude-Codex-Gemini tri-model orchestration | `ccg` |
+| [plan](/docs/skills/workflow/plan) | Interview-based strategic planning | `plan this` |
+| [ralplan](/docs/skills/workflow/ralplan) | Planner-Architect-Critic consensus planning | `ralplan` |
+| [sciomc](/docs/skills/workflow/sciomc) | Parallel scientist agent research orchestration | - |
+| [external-context](/docs/skills/workflow/external-context) | Parallel document-specialist external documentation lookup | - |
+| [deepinit](/docs/skills/workflow/deepinit) | Hierarchical AGENTS.md codebase documentation | - |
+| [deep-interview](/docs/skills/workflow/deep-interview) | Socratic deep interview with mathematical ambiguity gating | `deep interview`, `ouroboros`, `socratic` |
+
+## Utility Skills
+
+Configuration, management, and helper skills.
+
+| Skill | Description | Magic Keywords |
+|-------|-------------|----------------|
+| [cancel](/docs/skills/utility/cancel) | Cancel all active modes | `cancelomc`, `stopomc` |
+| [ask](/docs/skills/utility/ask) | Ask Claude/Codex/Gemini and capture artifacts | - |
+| [ai-slop-cleaner](/docs/skills/utility/ai-slop-cleaner) | Clean up AI code slop | `deslop`, `anti-slop` |
+| [learner](/docs/skills/utility/learner) | Extract reusable skills from the current session | - |
+| [skill](/docs/skills/utility/skill) | Manage local skills (list, add, remove, search) | - |
+| [trace](/docs/skills/utility/trace) | Evidence-driven tracing lane | - |
+| [hud](/docs/skills/utility/hud) | HUD display configuration | - |
+| [configure-notifications](/docs/skills/utility/configure-notifications) | Notification integrations (Telegram, Discord, Slack) | `configure telegram`, `configure discord`, `configure slack` |
+| [release](/docs/skills/utility/release) | Automated release workflow | - |
+| [writer-memory](/docs/skills/utility/writer-memory) | Agentic memory system for writers | - |
+| [project-session-manager](/docs/skills/utility/project-session-manager) | git worktree + tmux isolated development environment | - |
+| [omc-setup](/docs/skills/utility/omc-setup) | OMC setup and configuration | - |
+| [mcp-setup](/docs/skills/utility/mcp-setup) | MCP server setup | - |
+| [omc-doctor](/docs/skills/utility/omc-doctor) | Diagnose and fix installation issues | - |
+| [setup](/docs/skills/utility/setup) | Unified setup entry point | - |
+
+## How to Invoke Skills
+
+### Slash Commands
+
+```bash
+/oh-my-claudecode:autopilot "REST API for a bookstore"
+/oh-my-claudecode:ralph "fix all TypeScript errors"
+/oh-my-claudecode:team 3:executor "implement user auth"
+```
+
+### Magic Keywords
+
+Keywords typed in conversation activate the skill automatically.
+
+```
+autopilot build me a todo app with React
+ralph fix the authentication module
+ulw implement user management
+```
+
+## Skill Relationship Map
+
+```
+deep-interview (clarify requirements)
+  → ralplan (consensus planning)
+    → autopilot (autonomous execution)
+      → ralph (loop execution)
+        → ultrawork (parallel execution)
+      → ultraqa (QA cycling)
+```
+
+Higher-level skills automatically include lower-level skills.
+Running autopilot internally enlists ralph and ultrawork to help.

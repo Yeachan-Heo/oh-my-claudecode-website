@@ -1,0 +1,340 @@
+---
+title: Getting Started
+description: Get up and running with Oh My ClaudeCode (OMC) from installation to your first session
+---
+
+## Overview
+
+If you are new to Oh My ClaudeCode (OMC), follow the steps below in order.
+
+1. [Installation](#installation) - Install the OMC plugin and run initial setup
+2. [First Session](#first-session) - Run your first task with autopilot
+3. [Configuration](#configuration) - Per-project settings and agent model customization
+
+### Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Must be installed |
+| Authentication | Claude Max/Pro subscription or `ANTHROPIC_API_KEY` environment variable |
+
+---
+
+## Installation
+
+OMC can only be installed as a Claude Code Plugin.
+Direct installation via npm or bun is not supported.
+
+### Add the Marketplace
+
+Run the following command inside Claude Code.
+
+```bash
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+```
+
+### Install the Plugin
+
+After adding the marketplace, install the plugin.
+
+```bash
+/plugin install oh-my-claudecode
+```
+
+### Run Initial Setup
+
+After installation, enter one of the following in Claude Code.
+
+```bash
+# Option 1: Natural language
+setup omc
+
+# Option 2: Skill command
+/oh-my-claudecode:omc-setup
+```
+
+Running without flags launches an interactive wizard. You can also specify the scope directly.
+
+| Scope | Command | Config Location |
+|-------|---------|-----------------|
+| Per-project | `/oh-my-claudecode:omc-setup --local` | `./.claude/CLAUDE.md` |
+| Global | `/oh-my-claudecode:omc-setup --global` | `~/.claude/CLAUDE.md` |
+
+<Callout type="warn">
+The global setup overwrites your existing `~/.claude/CLAUDE.md` file. If you already have configuration there, use `--local` instead.
+</Callout>
+
+### Verify Installation
+
+Use the diagnostic tool to confirm the installation is working.
+
+```bash
+/oh-my-claudecode:omc-doctor
+```
+
+### Updates
+
+OMC automatically checks for updates every 24 hours.
+To update manually, re-run the plugin install command.
+
+<Callout type="info">
+After a plugin update, it is recommended to re-run `/oh-my-claudecode:omc-setup` to apply the latest configuration.
+</Callout>
+
+### Uninstall
+
+```bash
+/plugin uninstall oh-my-claudecode@oh-my-claudecode
+```
+
+---
+
+## First Session
+
+Once OMC is installed, run your first task right away.
+
+`autopilot` is OMC's flagship skill. Give it one idea and it automatically runs the full development pipeline — from analysis and code writing to testing and validation.
+
+Open Claude Code and type the following.
+
+```bash
+autopilot build me a hello world app
+```
+
+When OMC detects the `autopilot` keyword, it launches a 5-stage pipeline.
+
+<Steps>
+
+### Expansion
+
+The `analyst` and `architect` agents analyze your idea.
+They gather requirements and produce a technical specification.
+
+### Planning
+
+The `planner` agent creates an execution plan.
+The `critic` agent reviews the plan and identifies gaps.
+
+### Execution
+
+The `executor` agent writes the code.
+Multiple agents work in parallel when needed.
+
+### QA
+
+Validates that the build succeeds and tests pass.
+Automatically fixes failures and re-validates.
+
+### Validation
+
+Specialized agents perform a final review of functionality, security, and code quality.
+Once all checks pass, the task is complete.
+
+</Steps>
+
+### HUD Status Display
+
+While a task is running, you can monitor the current status in Claude Code's status bar (HUD).
+
+```
+[OMC] autopilot:execution | agents:3 | todos:2/5 | ctx:45%
+```
+
+| Field | Meaning |
+|-------|---------|
+| `autopilot:execution` | Current stage of the autopilot pipeline |
+| `agents:3` | Number of currently active agents |
+| `todos:2/5` | Completed tasks / total tasks |
+| `ctx:45%` | Context window usage |
+
+To change the HUD settings, run:
+
+```bash
+/oh-my-claudecode:hud setup
+```
+
+---
+
+## Configuration
+
+OMC supports two levels of configuration files.
+
+| Scope | File Path | Purpose |
+|-------|-----------|---------|
+| User (global) | `~/.config/claude-omc/config.jsonc` | Applies to all projects |
+| Project | `.claude/omc.jsonc` | Applies to the current project only |
+
+<Callout type="warn">
+The configuration file format is JSONC (JSON with comments). It is not a TypeScript config file (omc.config.ts).
+</Callout>
+
+### Configuration Priority
+
+When settings exist from multiple sources, they are merged in the following order. Lower entries take higher priority.
+
+```
+Defaults → User config (~/.config/claude-omc/config.jsonc)
+         → Project config (.claude/omc.jsonc)
+         → Environment variables
+```
+
+### Base Configuration Structure
+
+```jsonc
+{
+  // Per-agent model settings
+  "agents": {
+    "explore": { "model": "haiku" },
+    "executor": { "model": "sonnet" },
+    "architect": { "model": "opus" }
+  },
+
+  // Feature toggles
+  "features": {
+    "parallelExecution": true,
+    "lspTools": true,
+    "astTools": true,
+    "continuationEnforcement": true,
+    "autoContextInjection": true
+  },
+
+  // MCP server settings
+  "mcpServers": {
+    "exa": { "enabled": true },
+    "context7": { "enabled": true }
+  },
+
+  // Permission settings
+  "permissions": {
+    "allowBash": true,
+    "allowEdit": true,
+    "allowWrite": true,
+    "maxBackgroundTasks": 5
+  },
+
+  // Magic keyword customization
+  "magicKeywords": {
+    "ultrawork": ["ultrawork", "ulw", "uw"],
+    "search": ["search", "find", "locate"],
+    "analyze": ["analyze", "investigate", "examine"],
+    "ultrathink": ["ultrathink", "think", "reason", "ponder"]
+  },
+
+  // External model settings (optional)
+  "externalModels": {
+    "defaults": {
+      "codexModel": "gpt-5.3-codex",
+      "geminiModel": "gemini-3.1-pro-preview"
+    }
+  }
+}
+```
+
+### Agent Model Override
+
+You can change the AI model used by each agent.
+
+```jsonc
+{
+  "agents": {
+    // Upgrade the explore agent to a stronger model
+    "explore": { "model": "sonnet" },
+
+    // Upgrade the executor to opus (for complex projects)
+    "executor": { "model": "opus" },
+
+    // Cost savings: use haiku for documentation
+    "writer": { "model": "haiku" }
+  }
+}
+```
+
+#### Default Model Mapping
+
+| Agent | Default Model | Role |
+|-------|---------------|------|
+| `explore` | haiku | Codebase exploration |
+| `writer` | haiku | Documentation |
+| `executor` | sonnet | Code implementation |
+| `debugger` | sonnet | Debugging |
+| `designer` | sonnet | UI/UX design |
+| `verifier` | sonnet | Verification |
+| `securityReviewer` | sonnet | Security review |
+| `testEngineer` | sonnet | Test strategy |
+| `qaTester` | sonnet | QA testing |
+| `scientist` | sonnet | Data analysis |
+| `tracer` | sonnet | Causal tracing |
+| `gitMaster` | sonnet | Git management |
+| `documentSpecialist` | sonnet | External doc lookup |
+| `omc` | opus | Main orchestrator |
+| `analyst` | opus | Requirements analysis |
+| `architect` | opus | System design |
+| `planner` | opus | Strategic planning |
+| `critic` | opus | Plan review |
+| `codeReviewer` | opus | Code review |
+| `codeSimplifier` | opus | Code simplification |
+
+### Magic Keyword Customization
+
+You can customize keywords in 4 categories via the `magicKeywords` section of `config.jsonc`.
+
+```jsonc
+{
+  "magicKeywords": {
+    // Triggers parallel execution mode
+    "ultrawork": ["ultrawork", "ulw", "parallel"],
+
+    // Triggers codebase search mode
+    "search": ["search", "find", "locate", "grep"],
+
+    // Triggers analysis mode
+    "analyze": ["analyze", "debug", "investigate"],
+
+    // Triggers deep reasoning mode
+    "ultrathink": ["ultrathink", "think", "reason", "ponder"]
+  }
+}
+```
+
+<Callout type="info">
+The `magicKeywords` in `config.jsonc` can only change 4 categories (ultrawork, search, analyze, ultrathink). Keywords like `autopilot`, `ralph`, and `ccg` are hardcoded in the keyword-detector hook and cannot be changed via the config file.
+</Callout>
+
+### Model Routing Configuration
+
+OMC automatically selects a model tier based on task complexity.
+
+```jsonc
+{
+  "routing": {
+    "enabled": true,
+    "defaultTier": "MEDIUM",
+    // Force all agents to inherit the parent model
+    // (auto-enabled when using CC Switch, Bedrock, or Vertex AI)
+    "forceInherit": false
+  }
+}
+```
+
+| Tier | Model | Use Case |
+|------|-------|----------|
+| LOW | haiku | Fast lookups, simple tasks |
+| MEDIUM | sonnet | Standard implementation, general tasks |
+| HIGH | opus | Architecture, deep analysis |
+
+### CLAUDE.md Configuration
+
+OMC's default behavior is also configured via `CLAUDE.md` files.
+Running `/oh-my-claudecode:omc-setup` automatically generates this file.
+
+| Scope | File | Description |
+|-------|------|-------------|
+| Global | `~/.claude/CLAUDE.md` | Common settings for all projects |
+| Project | `.claude/CLAUDE.md` | Project-specific context |
+
+### When to Re-run Setup
+
+- After the initial installation
+- After an OMC update (to apply the latest configuration)
+- When using OMC on a new machine
+- When starting a new project (use the `--local` option)

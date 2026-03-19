@@ -1,0 +1,111 @@
+---
+title: Hook System Overview
+description: Explains how the OMC hook system works and its overall structure.
+---
+
+## What are Hooks?
+
+Hooks are scripts that run automatically in response to Claude Code lifecycle events.
+oh-my-claudecode uses multiple hooks to extend Claude Code's default behavior.
+
+When a user submits a prompt, a tool is executed, or a session starts/ends,
+hooks run automatically to inject additional context, activate modes, or manage state.
+
+## How It Works
+
+Hooks are defined in a `hooks.json` file, and each hook follows this structure:
+
+```json
+{
+  "eventName": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "node scripts/hook-script.mjs",
+          "timeout": 5
+        }
+      ]
+    }
+  ]
+}
+```
+
+- **eventName**: The lifecycle event the hook responds to
+- **matcher**: The condition for running the hook (`*` means all cases)
+- **command**: The Node.js script to execute
+- **timeout**: Maximum execution time (in seconds)
+
+Hook output is injected into Claude via `<system-reminder>` tags.
+Additional context is passed through `hookSpecificOutput.additionalContext`.
+
+## Hook Categories
+
+OMC hooks are divided into 4 major categories.
+
+### Execution Mode Hooks
+
+Manages execution modes such as autonomous execution, parallel processing, and persistence.
+
+| Hook | Description |
+|----|------|
+| autopilot | Fully autonomous execution from idea to working code |
+| ralph | Persistent execution until verification is complete |
+| ultrawork | Maximum parallel agent execution |
+| ultraqa | Repeated QA cycles until goals are met |
+| persistent-mode | Maintains mode state across sessions |
+
+### Core Hooks
+
+Handles core functionality including orchestration and keyword detection.
+
+| Hook | Description |
+|----|------|
+| keyword-detector | Detects magic keywords (ultrawork, ralph, etc.) |
+| skill-injector | Injects skill prompts |
+| pre-tool-enforcer | Validates rules before tool use |
+| post-tool-verifier | Verifies tool use results |
+
+### Context Management Hooks
+
+Manages memory, project state, and compaction.
+
+| Hook | Description |
+|----|------|
+| notepad | Compaction-resistant memory system |
+| project-memory | Project memory management |
+| pre-compact | Processing before compaction |
+
+### Quality/Verification Hooks
+
+Handles code quality, permission management, and subagent tracking.
+
+| Hook | Description |
+|----|------|
+| permission-handler | Permission requests and validation |
+| subagent-tracker | Tracks subagent spawn/completion |
+| code-simplifier | Auto-simplifies recently modified files on Stop (opt-in) |
+
+## Disabling Hooks
+
+### Disable All
+
+```bash
+export DISABLE_OMC=1
+```
+
+### Selective Disable
+
+```bash
+export OMC_SKIP_HOOKS="keyword-detector,notepad"
+```
+
+Separate with commas to skip only specific hooks.
+
+## Detail Pages
+
+- [Lifecycle Events](/docs/hooks/lifecycle-events) -- 11 events and hook mappings
+- [Core Hooks](/docs/hooks/core-hooks) -- Execution mode and orchestration hooks
+- [Context Management Hooks](/docs/hooks/context-hooks) -- Memory and compaction hooks
+- [Magic Keywords](/docs/hooks/magic-keywords) -- System for activating modes with natural language

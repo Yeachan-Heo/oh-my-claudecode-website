@@ -1,0 +1,78 @@
+---
+title: Ultrawork
+description: Parallel execution engine that runs independent tasks simultaneously
+---
+
+## Overview
+
+Ultrawork is an execution engine that runs multiple agents concurrently to handle independent tasks in parallel. It is designed as a component rather than a standalone mode — it provides parallel execution and smart model routing, but no persistence or verification loop.
+
+Ralph and Autopilot use Ultrawork internally.
+
+## Usage
+
+```bash
+/oh-my-claudecode:ultrawork "implement user authentication with OAuth"
+```
+
+Also activated via magic keywords.
+
+```
+ultrawork implement the API endpoints
+ulw add validation to all forms
+```
+
+## How It Works
+
+### Task Classification
+
+Distinguishes independent tasks from tasks with dependencies.
+
+### Model Routing
+
+Selects the appropriate model tier based on task complexity.
+
+| Complexity | Model | Use Case |
+|------------|-------|----------|
+| Simple lookup / definition | Haiku | Add type exports, fix missing imports |
+| Standard implementation | Sonnet | Implement API endpoints, write tests |
+| Complex analysis / refactoring | Opus | Implement OAuth flow, architecture refactoring |
+
+### Parallel Execution
+
+Independent tasks run simultaneously.
+
+```
+Task 1 (Haiku):  Add type exports             ─┐
+Task 2 (Sonnet): Implement API endpoints       ─┤── concurrent
+Task 3 (Sonnet): Auth middleware tests         ─┘
+```
+
+Tasks with dependencies run after their prerequisites complete.
+Long-running tasks like builds, installs, and tests run in the background.
+
+## Relationship to Other Modes
+
+```
+autopilot (autonomous execution)
+ └── ralph (continuous loop)
+      └── ultrawork (parallel execution) ← this skill
+```
+
+- **Use ultrawork alone**: when you only need parallel execution without persistence or verification
+- **Prefer ralph**: when persistence and verification are needed (ralph includes ultrawork)
+- **Prefer autopilot**: when the full lifecycle is needed
+
+## Related Skills
+
+- [ralph](/docs/skills/workflow/ralph) - adds persistence and verification on top of ultrawork
+- [autopilot](/docs/skills/workflow/autopilot) - full autonomous pipeline that includes ralph
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:ultrawork` |
+| Magic Keywords | `ultrawork`, `ulw` |
+| Category | Workflow |
+| State File | `.omc/state/ultrawork-state.json` |

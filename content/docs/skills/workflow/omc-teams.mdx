@@ -1,0 +1,73 @@
+---
+title: OMC Teams
+description: Parallel task skill that runs claude, codex, and gemini CLI workers in tmux
+---
+
+## Overview
+
+OMC Teams spawns N CLI worker processes in tmux panes and runs tasks in parallel. It supports three agent types: Claude, Codex, and Gemini.
+
+Unlike `/team`, which uses Claude Code native team agents, this approach directly runs external CLI processes.
+
+## Usage
+
+```bash
+/oh-my-claudecode:omc-teams N:claude "task description"
+/oh-my-claudecode:omc-teams N:codex "task description"
+/oh-my-claudecode:omc-teams N:gemini "task description"
+```
+
+### Parameters
+
+- **N**: Number of CLI workers (1-10)
+- **agent-type**: `claude`, `codex`, or `gemini`
+- **task**: Task description to distribute across all workers
+
+## Examples
+
+```bash
+/omc-teams 2:claude "implement auth module with tests"
+/omc-teams 2:codex "review the auth module for security issues"
+/omc-teams 3:gemini "redesign UI components for accessibility"
+```
+
+## Requirements
+
+- **tmux**: Must be installed (`command -v tmux`)
+- **Active tmux session**: Required to create worker panes
+- **claude CLI**: `npm install -g @anthropic-ai/claude-code`
+- **codex CLI**: `npm install -g @openai/codex`
+- **gemini CLI**: `npm install -g @google/gemini-cli`
+
+## Workflow
+
+1. **Check prerequisites**: Verify tmux is installed and a session is active
+2. **Parse input**: Extract and validate N, agent-type, and task
+3. **Decompose task**: Split task into N independent subtasks
+4. **Start CLI team**: Run `omc team N:agent "task"`
+5. **Monitor**: Check progress with `omc team status <team-name>`
+6. **Shutdown**: Use `omc team shutdown <team-name>` when needed
+7. **Report**: Summarize results
+
+## Differences from `/team`
+
+| Item | `/team` | `/omc-teams` |
+|------|---------|--------------|
+| Worker type | Claude Code native team agents | claude/codex/gemini CLI processes |
+| Invocation | `TeamCreate` / `Task` / `SendMessage` | `omc team` CLI + tmux |
+| Coordination | Native team messaging, staged pipeline | tmux worker runtime + CLI API state files |
+| When to use | Claude native team orchestration | Running external CLI workers |
+
+## Related Skills
+
+- [team](/docs/skills/workflow/team) - Claude Code native team orchestration
+- [ccg](/docs/skills/workflow/ccg) - Claude-Codex-Gemini tri-model advisor
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:omc-teams` |
+| Magic Keywords | - |
+| Category | Workflow |
+| State File | `.omc/state/omc-teams-state.json` |

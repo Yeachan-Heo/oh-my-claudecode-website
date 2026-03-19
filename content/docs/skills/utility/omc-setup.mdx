@@ -1,0 +1,86 @@
+---
+title: OMC Setup
+description: The one command you need to know to install and configure oh-my-claudecode
+---
+
+## Overview
+
+OMC Setup is the skill responsible for setting up and configuring oh-my-claudecode. Run it once after initial installation and everything else works automatically. After updates, use this command to apply the latest configuration.
+
+**This is the one command you need to know.**
+
+## Usage
+
+```bash
+/oh-my-claudecode:omc-setup              # Initial setup or update
+/oh-my-claudecode:omc-setup --local      # Configure current project only
+/oh-my-claudecode:omc-setup --global     # Global configuration
+/oh-my-claudecode:omc-setup --force      # Re-run the full setup wizard
+/oh-my-claudecode:omc-setup --help       # Show help
+```
+
+## Configuration Scope
+
+### Project Scope (`--local`, recommended)
+
+Creates configuration in `./.claude/CLAUDE.md`. Applies only to the current project and does not affect other projects.
+
+### Global Scope (`--global`)
+
+Creates configuration in `~/.claude/CLAUDE.md`. Applies to all Claude Code sessions.
+
+Project configuration takes precedence over global configuration.
+
+## Setup Phases
+
+The full setup proceeds through 4 phases.
+
+### Phase 1 - CLAUDE.md Installation
+
+Downloads and installs the latest CLAUDE.md. Backs up any existing file.
+
+### Phase 2 - Environment Configuration
+
+Sets up the HUD status line. Delegates to the HUD skill for processing.
+
+### Phase 3 - Integration Setup
+
+Configures additional integrations such as MCP servers.
+
+### Phase 4 - Complete
+
+Displays a setup completion message and guides you through next steps.
+
+## Already Configured
+
+If setup has already been completed, running it again presents three options:
+
+1. **Update CLAUDE.md only**: Download the latest CLAUDE.md (fast)
+2. **Re-run full setup**: Run the wizard from the beginning
+3. **Cancel**: Exit without changes
+
+## How to Update
+
+After a plugin update:
+
+```bash
+/oh-my-claudecode:omc-setup          # Offers option to update CLAUDE.md only
+/oh-my-claudecode:omc-setup --local  # Update project configuration only
+/oh-my-claudecode:omc-setup --force  # Re-run the full wizard
+```
+
+## Related Skills
+
+- [setup](/docs/skills/utility/setup) - Unified setup entry point
+- [omc-doctor](/docs/skills/utility/omc-doctor) - Diagnose installation issues
+- [mcp-setup](/docs/skills/utility/mcp-setup) - MCP server configuration
+- [hud](/docs/skills/utility/hud) - HUD status line configuration
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:omc-setup` |
+| Magic Keyword | - |
+| Category | Utility |
+| Config Record | `~/.claude/.omc-config.json` |

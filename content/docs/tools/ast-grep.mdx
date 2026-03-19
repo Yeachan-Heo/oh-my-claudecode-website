@@ -1,0 +1,93 @@
+---
+title: AST Grep
+description: AST-based structural code search and replacement tools
+---
+
+## Overview
+
+The AST Grep tools use [@ast-grep/napi](https://ast-grep.github.io/) to search and replace structural patterns in code. Operating on an AST (Abstract Syntax Tree) basis rather than regular expressions, it matches code structure precisely.
+
+## Tool List
+
+### ast_grep_search
+
+Searches code using an AST pattern.
+
+```
+ast_grep_search(
+  pattern="console.log($$$ARGS)",
+  lang="typescript"
+)
+```
+
+#### Meta Variables
+
+| Meta Variable | Description | Example |
+|-----------|------|------|
+| `$VAR` | Matches a single AST node | `$VAR.map($FUNC)` |
+| `$$$` | Matches multiple AST nodes | `console.log($$$ARGS)` |
+
+#### Examples
+
+```
+# Find all console.log calls
+ast_grep_search(pattern="console.log($$$)", lang="typescript")
+
+# Find function calls matching a specific pattern
+ast_grep_search(pattern="fetch($URL, { method: 'POST', $$$REST })", lang="typescript")
+
+# Find React useState usage
+ast_grep_search(pattern="const [$STATE, $SETTER] = useState($INIT)", lang="tsx")
+
+# Find try-catch blocks
+ast_grep_search(pattern="try { $$$ } catch($ERR) { $$$ }", lang="typescript")
+```
+
+### ast_grep_replace
+
+Structurally replaces code using an AST pattern.
+
+```
+ast_grep_replace(
+  pattern="console.log($$$ARGS)",
+  replacement="logger.info($$$ARGS)",
+  lang="typescript",
+  dryRun=true
+)
+```
+
+**Always run with `dryRun=true` first to review the changes.**
+
+#### Examples
+
+```
+# Convert console.log to logger.info
+ast_grep_replace(
+  pattern="console.log($$$ARGS)",
+  replacement="logger.info($$$ARGS)",
+  lang="typescript",
+  dryRun=true
+)
+
+# Convert synchronous functions to async
+ast_grep_replace(
+  pattern="function $NAME($$$PARAMS) { $$$BODY }",
+  replacement="async function $NAME($$$PARAMS) { $$$BODY }",
+  lang="typescript",
+  dryRun=true
+)
+```
+
+## Difference from Regular Expressions
+
+| Item | Regex (Grep) | AST Grep |
+|------|--------------|----------|
+| Match target | Text patterns | Code structure |
+| Whitespace/newlines | Sensitive | Ignored |
+| Comments | Matched | Skipped |
+| Refactoring | Risky | Structure-preserving |
+| Use case | Text search | Code transformation |
+
+## Supported Languages
+
+Supports major programming languages including TypeScript, JavaScript, TSX, JSX, Python, Go, Rust, Java, C, C++, C#, Ruby, Swift, and Kotlin.

@@ -1,0 +1,102 @@
+---
+title: HUD
+description: A skill for configuring and managing the HUD (Heads-Up Display) that shows real-time OMC status
+---
+
+## Overview
+
+HUD is a skill that configures and manages a Heads-Up Display showing real-time OMC status in Claude Code's status line. At a glance you can see active modes, context usage, agent status, TODO progress, and more.
+
+## Usage
+
+```bash
+/oh-my-claudecode:hud              # Show current status (auto-configure if needed)
+/oh-my-claudecode:hud setup        # Install/repair the HUD status line
+/oh-my-claudecode:hud minimal      # Minimal display
+/oh-my-claudecode:hud focused      # Focused display (default)
+/oh-my-claudecode:hud full         # Full display
+/oh-my-claudecode:hud status       # Detailed status
+```
+
+## Presets
+
+### Minimal
+
+Shows only essential information.
+
+```
+[OMC] ralph | ultrawork | todos:2/5
+```
+
+### Focused (default)
+
+Shows all relevant elements.
+
+```
+[OMC] branch:main | ralph:3/10 | US-002 | ultrawork | ctx:67% | agents:2 | todos:2/5
+```
+
+### Full
+
+Multi-line display with detailed agent information.
+
+```
+[OMC] repo:omc branch:main | ralph:3/10 | US-002 | ctx:[████░░]67% | agents:3 | todos:2/5
+├─ O architect    2m   analyzing architecture patterns...
+├─ e explore     45s   searching for test files
+└─ s executor     1m   implementing validation logic
+```
+
+## Display Elements
+
+| Element | Description |
+|---------|-------------|
+| `[OMC]` | Mode identifier |
+| `repo:name` | Git repository name |
+| `branch:name` | Git branch name |
+| `ralph:3/10` | Ralph iteration count / maximum |
+| `US-002` | Current PRD story ID |
+| `ctx:67%` | Context window usage |
+| `agents:2` | Number of running sub-agents |
+| `todos:2/5` | TODO completion status |
+
+## Color Codes
+
+- **Green**: Normal / healthy
+- **Yellow**: Warning (context > 70%, ralph > 7)
+- **Red**: Critical (context > 85%, ralph at maximum)
+
+## Configuration
+
+Configure under the `omcHud` key in `~/.claude/settings.json`.
+
+```json
+{
+  "omcHud": {
+    "preset": "focused",
+    "elements": {
+      "omcLabel": true,
+      "contextBar": true,
+      "agents": true,
+      "todos": true,
+      "ralph": true,
+      "showTokens": false
+    }
+  }
+}
+```
+
+Available presets: `minimal`, `focused`, `full`, `dense`, `analytics`, `opencode`
+
+## Related Skills
+
+- [omc-setup](/docs/skills/utility/omc-setup) - Full OMC configuration (includes HUD)
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:hud` |
+| Magic Keyword | - |
+| Category | Utility |
+| Config Location | `~/.claude/settings.json` (`omcHud` key) |

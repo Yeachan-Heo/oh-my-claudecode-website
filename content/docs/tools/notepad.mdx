@@ -1,0 +1,100 @@
+---
+title: Notepad
+description: A persistent note system that survives context window compaction
+---
+
+## Overview
+
+Notepad is a persistent note system that survives context window compaction. In long sessions, even when important information from early in the conversation is pushed out of the context, content saved in the Notepad is restored after compaction.
+
+## Storage Path
+
+```
+.omc/notepad.md
+```
+
+## Tool List
+
+### notepad_read
+
+Reads the full contents of the current notepad.
+
+```
+notepad_read()
+```
+
+### notepad_write_priority
+
+Writes to the Priority Context section. **Replaces existing content.** Always loaded at session start. Keep under 500 characters.
+
+```
+notepad_write_priority(content="This project uses TypeScript strict mode")
+```
+
+Use for architecture decisions, core constraints, and information that must never be forgotten.
+
+### notepad_write_working
+
+Appends an entry with a timestamp to the Working Memory section. Automatically pruned after 7 days.
+
+```
+notepad_write_working(content="Currently refactoring auth module, 3/5 files complete")
+```
+
+Use for progress updates, next steps, and information discovered during work.
+
+### notepad_write_manual
+
+Appends an entry to the MANUAL section. Not automatically pruned.
+
+```
+notepad_write_manual(content="Bug: sessionId undefined at session.ts:45")
+```
+
+### notepad_prune
+
+Prunes Working Memory entries older than N days (default: 7 days).
+
+```
+notepad_prune()
+```
+
+### notepad_stats
+
+Returns statistics about the notepad (entry count, size, etc.).
+
+```
+notepad_stats()
+```
+
+## Usage Patterns
+
+### Recording Important Decisions
+
+```
+notepad_write_priority(content="DB migration: PostgreSQL → MySQL prohibited. Existing query compatibility issues")
+```
+
+### Recording Task Progress
+
+```
+notepad_write_working(content="TODO: 1. Fix auth module ✓ 2. Add tests 3. Update docs")
+```
+
+### Restoring Context When Resuming a Session
+
+```
+notepad_read()
+→ "Currently refactoring auth. src/auth/login.ts complete. Next: src/auth/session.ts"
+```
+
+## Compaction Behavior
+
+When Claude Code compacts the context:
+
+1. Notepad contents are included in the compaction result
+2. Priority notes are restored first
+3. Working notes are restored next
+4. Pruned notes are excluded
+
+Core context is maintained even in long sessions.

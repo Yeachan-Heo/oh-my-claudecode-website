@@ -1,0 +1,4 @@
+{
+  "title": "Tools",
+  "pages": ["state", "notepad", "project-memory", "lsp", "ast-grep", "python-repl"]
+}

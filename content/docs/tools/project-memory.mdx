@@ -1,0 +1,98 @@
+---
+title: Project Memory
+description: MCP tool group for managing per-project long-term memory
+---
+
+## Overview
+
+Project Memory is a tool for managing per-project long-term memory. It maintains project structure, rules, learned knowledge, and directives across sessions so agents can quickly understand project context.
+
+## Storage Path
+
+```
+.omc/project-memory.json
+```
+
+## Tool List
+
+### project_memory_read
+
+Reads the full contents of project memory.
+
+```
+project_memory_read()
+```
+
+Returns all stored notes and directives for the project.
+
+### project_memory_write
+
+Overwrites project memory entirely.
+
+```
+project_memory_write(content={
+  notes: ["Uses TypeScript strict mode", "Tests use vitest"],
+  directives: ["JSDoc required for all functions"]
+})
+```
+
+Note: Completely replaces existing content. Use `add_note` or `add_directive` for partial updates.
+
+### project_memory_add_note
+
+Adds a note about the project.
+
+```
+project_memory_add_note(note="src/utils/ should contain only pure functions")
+```
+
+Records project structure, patterns, and learned knowledge.
+
+### project_memory_add_directive
+
+Adds a directive that agents must follow.
+
+```
+project_memory_add_directive(directive="Use structured logging instead of console.log")
+```
+
+Records coding rules, prohibitions, and requirements.
+
+## Notes vs Directives
+
+| | Notes | Directives |
+|------|-------------|----------------------|
+| Nature | Information, observations, learnings | Rules, constraints, requirements |
+| Example | "This project uses a monorepo structure" | "No PRs without tests" |
+| Agent behavior | Reference for judgment | Must be followed |
+
+## Difference from Notepad
+
+| Item | Notepad | Project Memory |
+|------|---------|----------------|
+| Scope | Current session | Entire project (persists across sessions) |
+| Purpose | Notes during work | Project rules, structure, learnings |
+| File | `.omc/notepad.md` | `.omc/project-memory.json` |
+| Compaction | Restored on compaction | Always available |
+
+## Usage Patterns
+
+### Registering Project Rules
+
+```
+project_memory_add_directive("This repository uses conventional commits")
+project_memory_add_directive("Files in src/generated/ must not be manually edited")
+```
+
+### Recording Codebase Structure
+
+```
+project_memory_add_note("API layer: src/api/ → src/services/ → src/repositories/")
+project_memory_add_note("Auth: JWT + passport.js, implemented in src/auth/")
+```
+
+### Recording Learnings
+
+```
+project_memory_add_note("tsconfig paths settings need to be synchronized with jest.config")
+```

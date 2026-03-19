@@ -1,0 +1,97 @@
+---
+title: Code Reviewer
+description: A code review agent that evaluates code quality and security with severity-based feedback.
+---
+
+## Overview
+
+Code Reviewer is a code review agent covering spec compliance verification, security checks, code quality assessment, logic correctness, error handling completeness,
+anti-pattern detection, SOLID principle adherence, and performance review.
+
+The core principle is "verify spec compliance first, then review code quality."
+Missing an SQL injection while flagging style issues is a failure.
+Every issue includes a CRITICAL/HIGH/MEDIUM/LOW severity rating and a specific fix suggestion.
+
+It is a read-only agent, and reviews are conducted as a separate pass from the author.
+
+## When to Use
+
+- When doing a full review of a PR or code change
+- When validating code quality and logic correctness
+- When checking API contracts and backward compatibility
+- When assessing release readiness
+
+## Usage Examples
+
+```
+"Code review this PR"
+"Review the quality of the recent changes"
+"code review"  # magic keyword auto-activates
+```
+
+## 2-Stage Review Process
+
+### Stage 1: Spec Compliance (Always First)
+
+- Does the implementation cover all requirements?
+- Is it solving the right problem?
+- What's missing? What's been added?
+- Would the requester recognize this as their request?
+
+### Stage 2: Code Quality (Only After Stage 1 Passes)
+
+- Run lsp_diagnostics on all modified files
+- Detect problematic patterns with ast_grep_search (console.log, empty catch, hardcoded secrets)
+- Logic correctness: loop boundaries, null handling, type mismatches, control/data flow
+- Error handling: error propagation, resource cleanup
+- Anti-patterns: God Object, magic numbers, copy-paste, shotgun surgery
+- SOLID principles: SRP, OCP, LSP, ISP, DIP
+- Maintainability: readability, complexity (cyclomatic < 10), testability
+
+## Additional Review Modes
+
+Code Reviewer can enable additional modes on request.
+
+### API Contract Review
+
+- Breaking changes: removed fields, changed types, renamed endpoints
+- Versioning strategy: version bump for incompatible changes
+- Error semantics: consistent error codes, no internal info leaks
+- Backward compatibility: can existing callers continue to work without changes
+
+### Performance Review
+
+- Algorithm complexity (O(n^2) loops, N+1 queries)
+- Memory leaks, excessive allocations
+- Caching opportunities and invalidation correctness
+
+### Quality Strategy
+
+- Test coverage adequacy (unit, integration, e2e)
+- Release readiness: blocking defects, untested paths
+- Risk tier: SAFE / MONITOR / HOLD
+
+## Approval Criteria
+
+| Verdict | Condition |
+|------|------|
+| APPROVE | No CRITICAL/HIGH issues, only minor improvements needed |
+| REQUEST CHANGES | CRITICAL or HIGH issues exist |
+| COMMENT | Only LOW/MEDIUM issues, no blocking concerns |
+
+## Combining with Other Agents
+
+- **security-reviewer**: When specialized in-depth security audit is needed
+- **test-engineer**: Writing tests is test-engineer's responsibility
+- **executor**: Fix implementation is passed to executor
+- **architect**: When architecture-level design review is needed
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | opus |
+| Subagent Type | `oh-my-claudecode:code-reviewer` |
+| Lane | Review |
+| Read-Only | Yes (Write, Edit blocked) |
+| Former Names | `api-reviewer`, `performance-reviewer`, `quality-reviewer`, `quality-strategist` (all deprecated) |

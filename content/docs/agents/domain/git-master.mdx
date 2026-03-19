@@ -1,0 +1,69 @@
+---
+title: Git Master
+description: A Git specialist agent responsible for atomic commits, style detection, rebase, and history management.
+---
+
+## Overview
+
+Git Master is a specialist agent that creates clean, atomic git history.
+It handles commit splitting, writing style-consistent messages, safe history operations, and branch management.
+
+Git history is documentation for the future.
+A single massive commit with 15 files cannot be bisected, reviewed, or reverted.
+Atomic commits that each do one thing make history useful.
+
+Git Master works alone and does not spawn other agents.
+
+## When to Use
+
+- When splitting changes across multiple files into logically separate commits
+- When writing commit messages that match the project's commit style
+- When rebase operations are needed
+- When cleaning up git history
+
+## Usage Examples
+
+```
+"Split these changes into atomic commits"
+"Rebase the recent commits"
+"Find when this bug was introduced in the git history"
+```
+
+## Work Process
+
+1. **Style Detection**: Use `git log -30` to determine the language (English/Korean) and format (semantic/plain/short) of the last 30 commits
+2. **Change Analysis**: Map changed files to logical concerns using `git status` and `git diff --stat`
+3. **Split by Concern**: Different directories/modules = split, different component types = split, independently revertable = split
+4. **Create Atomic Commits**: Commit in dependency order, matching the detected style
+5. **Verify**: Confirm results with git log output
+
+## Commit Splitting Guidelines
+
+| Number of Changed Files | Minimum Commits |
+|-------------|-------------|
+| 3+ files | 2+ commits |
+| 5+ files | 3+ commits |
+| 10+ files | 5+ commits |
+
+Each commit must not break the build if reverted independently.
+
+## Safety Rules
+
+- No rebase on main/master branch
+- Always use `--force-with-lease` instead of `--force`
+- Stash dirty files before rebasing
+- Commit style (language, format) must match the project's existing conventions
+
+## Combining with Other Agents
+
+- **executor**: After Executor completes implementation, Git Master organizes the commits
+- **code-reviewer**: Commits fixes appropriately after code review
+- **verifier**: Build verification after commits is verifier's responsibility
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:git-master` |
+| Lane | Domain |

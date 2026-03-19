@@ -1,0 +1,66 @@
+---
+title: Tracer
+description: An agent for evidence-based causal tracing and competing hypothesis analysis.
+---
+
+## Overview
+
+Tracer is an agent that explains observed outcomes through disciplined, evidence-based causal tracing.
+It separates observation from interpretation, generates competing hypotheses, collects evidence for and against each hypothesis,
+ranks explanations by evidence strength, and recommends the next probe that will most quickly reduce uncertainty.
+
+What distinguishes it from ordinary debugging is that it does not jump from symptom directly to a preferred explanation.
+It maintains alternative explanations until evidence eliminates them and explicitly handles uncertainty.
+
+## When to Use
+
+- When tracing the cause of a complex phenomenon
+- When there are multiple possible causes and it is unclear which is correct
+- When deep analysis of "why did this happen?" is needed
+- When investigating problems with unclear causes such as performance regressions or intermittent failures
+
+## Usage Examples
+
+```
+"Trace why this benchmark performance dropped by 25%"
+"Analyze why worker assignment is stalling"
+"Investigate why this test intermittently fails"
+```
+
+## Tracing Protocol
+
+1. **OBSERVE**: Describe the observed outcome accurately, without interpretation
+2. **FRAME**: Define the tracing target — which specific "why" question is being answered
+3. **HYPOTHESIZE**: Deliberately generate competing causal explanations from different frames (code paths, configuration/environment, measurement error, architectural assumption mismatch, etc.)
+4. **GATHER EVIDENCE**: Collect supporting and opposing evidence for each hypothesis. Cite specific file:line evidence
+5. **APPLY LENSES**: Apply system lens (boundaries, retries, feedback loops), pre-mortem lens, and scientific lens
+6. **REBUT**: Run a rebuttal round where the strongest alternative challenges the current leader
+7. **RANK/CONVERGE**: Downrank explanations that contradict evidence or require additional assumptions
+8. **SYNTHESIZE**: State the current best explanation and why it is superior to alternatives
+9. **PROBE**: Recommend the next investigation that will reduce the most uncertainty
+
+## Evidence Strength Hierarchy
+
+Tracer evaluates evidence in order of strength.
+
+1. Controlled reproduction, direct experiments, source of truth that uniquely distinguishes the hypothesis
+2. Direct evidence: timestamped logs, trace events, metrics, configuration snapshots, git history
+3. Multiple independent sources converging on the same explanation
+4. Single-source inference that fits the observation but does not yet uniquely distinguish
+5. Weak circumstantial clues (naming, temporal proximity, stack position)
+6. Intuition/analogy/guesswork
+
+## Combining with Other Agents
+
+- **debugger**: Simple bug fixes are debugger's responsibility. Complex phenomena with unclear causes are handled by tracer
+- **architect**: Collaborates with architect when architecture-level analysis is needed
+- **scientist**: Combines with scientist for traces requiring data analysis
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:tracer` |
+| Lane | Build & Analysis |
+| Skill Integration | `/oh-my-claudecode:trace` |

@@ -1,0 +1,81 @@
+---
+title: Release
+description: A release workflow that automates version bumping, testing, and publishing for oh-my-claudecode
+---
+
+## Overview
+
+Release is a skill that automates the release process for oh-my-claudecode. It handles the entire flow sequentially: version bump, test execution, commit, tag, npm publish, and GitHub release creation.
+
+## Usage
+
+```bash
+/oh-my-claudecode:release <version>
+/oh-my-claudecode:release patch
+/oh-my-claudecode:release minor
+/oh-my-claudecode:release major
+```
+
+## Release Checklist
+
+Executed in order:
+
+### 1. Version Bump
+
+Updates the version in the following files:
+
+| File | Field |
+|------|-------|
+| `package.json` | `"version": "X.Y.Z"` |
+| `src/installer/index.ts` | `VERSION` constant |
+| `src/__tests__/installer.test.ts` | Expected version constant |
+| `.claude-plugin/plugin.json` | `"version"` |
+| `.claude-plugin/marketplace.json` | `plugins[0].version` + root `version` |
+| `docs/CLAUDE.md` | `<!-- OMC:VERSION:X.Y.Z -->` |
+| `README.md` | Version badge + title |
+
+### 2. Run Tests
+
+```bash
+npm run test:run
+```
+
+### 3. Commit and Tag
+
+```bash
+git add -A
+git commit -m "chore: Bump version to <version>"
+git tag v<version>
+git push origin main
+git push origin v<version>
+```
+
+### 4. npm Publish
+
+```bash
+npm publish --access public
+```
+
+### 5. GitHub Release
+
+```bash
+gh release create v<version> --title "v<version> - <title>" --notes "<notes>"
+```
+
+## Semantic Versioning
+
+- **patch** (X.Y.Z+1): Bug fixes, minor improvements
+- **minor** (X.Y+1.0): New features, backward compatible
+- **major** (X+1.0.0): Breaking changes
+
+## Related Skills
+
+- [omc-setup](/docs/skills/utility/omc-setup) - Apply configuration after an update
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:release` |
+| Magic Keyword | - |
+| Category | Utility |

@@ -1,0 +1,76 @@
+---
+title: Skill
+description: A CLI for managing local skills - list, add, remove, search, edit, and sync
+---
+
+## Overview
+
+Skill is a meta-skill for managing oh-my-claudecode skills. It can list, add, remove, search, edit, and sync local skills at both the user and project level.
+
+## Usage
+
+```bash
+/oh-my-claudecode:skill list
+/oh-my-claudecode:skill add [name]
+/oh-my-claudecode:skill remove <name>
+/oh-my-claudecode:skill edit <name>
+/oh-my-claudecode:skill search <query>
+/oh-my-claudecode:skill info <name>
+/oh-my-claudecode:skill sync
+/oh-my-claudecode:skill setup
+/oh-my-claudecode:skill scan
+```
+
+## Subcommands
+
+### list
+
+Displays user skills (`~/.claude/skills/omc-learned/`) and project skills (`.omc/skills/`) organized by scope.
+
+### add
+
+Creates a new skill via an interactive wizard. Prompts for name, description, trigger keywords, and scope (user/project), then generates a SKILL.md template.
+
+### remove
+
+Finds a skill by name and deletes it after confirmation. Never deletes without confirmation.
+
+### edit
+
+Interactively modifies an existing skill's description, triggers, argument hints, and content.
+
+### search
+
+Searches for a query across names, descriptions, triggers, and full markdown content. Name/trigger matches take priority over content matches.
+
+### info
+
+Displays detailed information and full content for a skill.
+
+### sync
+
+Compares skills between user and project scopes and allows copying between them. Always confirms before overwriting.
+
+### setup
+
+Runs the full setup wizard. Provides directory verification, skill scanning, adding new skills, conversation pattern scanning, and skill importing.
+
+## Skill Storage Locations
+
+| Scope | Path | Purpose |
+|-------|------|---------|
+| User | `~/.claude/skills/omc-learned/` | Available across all projects |
+| Project | `.omc/skills/` | Used only in this repository (version-controlled) |
+
+## Related Skills
+
+- [learner](/docs/skills/utility/learner) - Extract skills from the current conversation
+- [deepinit](/docs/skills/workflow/deepinit) - Generate AGENTS.md codebase documentation
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:skill` |
+| Magic Keyword | - |
+| Category | Utility |

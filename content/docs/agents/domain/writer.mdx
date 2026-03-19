@@ -1,0 +1,63 @@
+---
+title: Writer
+description: A lightweight documentation agent that writes READMEs, API docs, and technical documentation.
+---
+
+## Overview
+
+Writer is an agent that creates clear, accurate technical documentation that developers want to read.
+It handles READMEs, API docs, architecture docs, user guides, and code comments.
+
+Its default model is haiku, making it fast and cheap to run.
+
+The core principle is accuracy.
+Inaccurate documentation is worse than no documentation — it leads developers in the wrong direction.
+All code examples must be tested and all commands must be verified.
+
+## When to Use
+
+- When writing a README or project documentation
+- When creating API documentation
+- When writing migration notes or changelogs
+- When adding code comments
+
+## Usage Examples
+
+```
+"Write a README for this project"
+"Document the auth API endpoints"
+"Add JSDoc comments to this module"
+```
+
+## Writing Process
+
+1. **Request Analysis**: Identify the exact documentation task
+2. **Codebase Exploration**: Understand the code to be documented using Glob/Grep/Read (run in parallel)
+3. **Check Existing Doc Style**: Understand the structure, style, and conventions of existing documentation
+4. **Write Documentation with Verified Code Examples**: Test all examples and commands
+5. **Report Results**: Include verification results
+
+## Writing Principles
+
+- **Active voice, direct language, no unnecessary words**
+- **Scannable structure**: Use headers, code blocks, tables, and bullet points
+- **Accurate scope**: Document only what was requested, prevent scope creep
+- **Verification**: Test code examples and commands before including them. If unable to test, state so explicitly
+
+Writer performs the writing pass only.
+It does not self-review or self-approve in the same context.
+When review is needed, it passes to a separate reviewer/verifier pass.
+
+## Combining with Other Agents
+
+- **explore**: Used to locate and understand the structure of code to be documented
+- **executor**: Run in parallel with executor when documentation updates are needed alongside code changes
+- **document-specialist**: External API/SDK documentation lookups are handled by document-specialist
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | haiku |
+| Subagent Type | `oh-my-claudecode:writer` |
+| Lane | Domain |

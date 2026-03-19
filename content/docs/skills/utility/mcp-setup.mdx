@@ -1,0 +1,93 @@
+---
+title: MCP Setup
+description: A skill that configures MCP servers to extend Claude Code's capabilities
+---
+
+## Overview
+
+MCP Setup is a skill that configures Model Context Protocol (MCP) servers to provide Claude Code agents with additional tools such as web search, file system access, and GitHub integration.
+
+Configuration is done using the `claude mcp add` command.
+
+## Usage
+
+```bash
+/oh-my-claudecode:mcp-setup
+```
+
+## Supported MCP Servers
+
+### Context7
+
+Retrieves official documentation for libraries and frameworks. No API key required.
+
+```bash
+claude mcp add context7 -- npx -y @upstash/context7-mcp
+```
+
+### Exa Web Search
+
+Enhanced web search capabilities.
+
+```bash
+claude mcp add -e EXA_API_KEY=<key> exa -- npx -y exa-mcp-server
+```
+
+### Filesystem
+
+Extended file system access capabilities.
+
+```bash
+claude mcp add filesystem -- npx -y @modelcontextprotocol/server-filesystem <dirs>
+```
+
+### GitHub
+
+GitHub API integration (issues, PRs, repository management).
+
+```bash
+# Docker (local)
+claude mcp add -e GITHUB_PERSONAL_ACCESS_TOKEN=<token> github -- docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server
+
+# HTTP (remote)
+claude mcp add --transport http github https://api.githubcopilot.com/mcp/
+```
+
+### Custom
+
+Add a custom MCP server.
+
+```bash
+# stdio server
+claude mcp add <name> -- <command> [args...]
+
+# HTTP server
+claude mcp add --transport http <name> <url>
+```
+
+## Verify Installation
+
+```bash
+claude mcp list
+```
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| MCP server not loading | Verify Node.js 18+ is installed |
+| API key issues | Check your key in the respective service dashboard |
+| Using built-in tools | Restart Claude Code |
+
+## Related Skills
+
+- [omc-setup](/docs/skills/utility/omc-setup) - Full OMC configuration (includes MCP)
+- [setup](/docs/skills/utility/setup) - Unified setup entry point
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:mcp-setup` |
+| Magic Keyword | - |
+| Category | Utility |

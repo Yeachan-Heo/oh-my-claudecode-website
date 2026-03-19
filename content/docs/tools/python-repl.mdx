@@ -1,0 +1,96 @@
+---
+title: Python REPL
+description: Perform data analysis and computation in a persistent Python REPL environment
+---
+
+## Overview
+
+Python REPL is a Python execution environment with state preserved across sessions. Use it for data analysis, statistical calculations, visualization, and prototyping.
+
+## Tool
+
+### python_repl
+
+Executes Python code and returns the result. The `action` parameter specifies the behavior.
+
+| action | Description |
+|--------|------|
+| `execute` (default) | Execute code |
+| `interrupt` | Interrupt execution |
+| `reset` | Reset state |
+| `get_state` | Check memory/variables |
+
+```
+python_repl(code="import json; data = json.loads('{\"key\": \"value\"}'); print(data)")
+```
+
+## Features
+
+### State Persistence
+
+Variables, functions, and imports defined once remain available in subsequent calls.
+
+```python
+# First call
+python_repl(code="import pandas as pd; df = pd.read_csv('data.csv')")
+
+# Second call (df is preserved)
+python_repl(code="print(df.describe())")
+```
+
+### Data Analysis
+
+```python
+python_repl(code="""
+import json
+with open('.omc/research/session-1/state.json') as f:
+    state = json.load(f)
+print(f"Stages: {len(state['stages'])}")
+print(f"Status: {state['status']}")
+""")
+```
+
+### Calculation and Transformation
+
+```python
+python_repl(code="""
+# Token cost calculation
+input_tokens = 150000
+output_tokens = 50000
+cost = (input_tokens * 0.003 + output_tokens * 0.015) / 1000
+print(f"Estimated cost: ${cost:.4f}")
+""")
+```
+
+### File Processing
+
+```python
+python_repl(code="""
+import os
+import json
+
+# Project file statistics
+extensions = {}
+for root, dirs, files in os.walk('src'):
+    for f in files:
+        ext = os.path.splitext(f)[1]
+        extensions[ext] = extensions.get(ext, 0) + 1
+
+for ext, count in sorted(extensions.items(), key=lambda x: -x[1]):
+    print(f"{ext}: {count} files")
+""")
+```
+
+## Use Cases
+
+| Use Case | Description |
+|-----------|------|
+| Data analysis | CSV, JSON file analysis, statistical calculations |
+| Prototyping | Algorithm validation, logic testing |
+| File processing | File conversion, batch processing |
+| Visualization | Chart generation with matplotlib, plotly |
+| Calculation | Mathematical calculations, cost estimation |
+
+## Integration with the scientist Agent
+
+The [scientist](/docs/agents/domain/scientist) agent uses python_repl for data analysis. It is used for statistical analysis and visualization in the [SciOMC](/docs/skills/workflow/sciomc) research workflow.

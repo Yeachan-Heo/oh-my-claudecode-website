@@ -1,0 +1,126 @@
+---
+title: LSP
+description: 12 code intelligence tools via Language Server Protocol
+---
+
+## Overview
+
+The LSP tools provide code intelligence based on Language Server Protocol. They enable type information, go-to-definition, find references, error diagnostics, symbol search, and renaming.
+
+A language server must be installed (typescript-language-server, pylsp, rust-analyzer, gopls, etc.). Use `lsp_servers` to check installation status.
+
+## Tool List
+
+### lsp_hover
+
+Returns type information and documentation at the specified location.
+
+```
+lsp_hover(file="src/auth.ts", line=42, character=10)
+```
+
+### lsp_goto_definition
+
+Navigates to the definition location of a symbol.
+
+```
+lsp_goto_definition(file="src/auth.ts", line=42, character=10)
+```
+
+### lsp_find_references
+
+Finds all usage locations of a symbol.
+
+```
+lsp_find_references(file="src/auth.ts", line=42, character=10)
+```
+
+### lsp_document_symbols
+
+Returns a structural overview of a file (functions, classes, interfaces, etc.).
+
+```
+lsp_document_symbols(file="src/auth.ts")
+```
+
+### lsp_workspace_symbols
+
+Searches for symbols across the entire workspace.
+
+```
+lsp_workspace_symbols(query="UserConfig")
+```
+
+### lsp_diagnostics
+
+Returns errors, warnings, and hints for a file.
+
+```
+lsp_diagnostics(file="src/auth.ts")
+```
+
+Useful for immediately checking type errors after a code change.
+
+### lsp_diagnostics_directory
+
+Runs project-level diagnostics for the specified directory. Prefers `tsc --noEmit` and falls back to iterative LSP mode on failure.
+
+```
+lsp_diagnostics_directory(path="src/")
+```
+
+Checks for type errors across the entire project after complex multi-file changes.
+
+### lsp_prepare_rename
+
+Checks in advance whether a rename is valid.
+
+```
+lsp_prepare_rename(file="src/auth.ts", line=42, character=10)
+```
+
+### lsp_rename
+
+Returns a list of edits to rename a symbol across the entire project. **Does not automatically apply changes.**
+
+```
+lsp_rename(file="src/auth.ts", line=42, character=10, newName="AuthService")
+```
+
+### lsp_code_actions
+
+Returns a list of available refactoring actions.
+
+```
+lsp_code_actions(file="src/auth.ts", startLine=40, endLine=50)
+```
+
+### lsp_code_action_resolve
+
+Returns the details of a code action.
+
+```
+lsp_code_action_resolve(action=<action_object>)
+```
+
+### lsp_servers
+
+Returns the list of available language servers and their installation status.
+
+```
+lsp_servers()
+```
+
+## Environment Variables
+
+| Variable | Default | Description |
+|------|--------|------|
+| `OMC_LSP_TIMEOUT_MS` | `15000` | LSP request timeout (ms). Increase for large repositories or slow servers |
+
+## Troubleshooting
+
+| Problem | Solution |
+|------|------|
+| LSP tools not working | Install language server: `npm install -g typescript-language-server` |
+| Timeout | Increase `OMC_LSP_TIMEOUT_MS` |
+| Check server status | Use `lsp_servers()` to verify installation status |
