@@ -1,0 +1,63 @@
+---
+title: Document Specialist
+description: An agent that looks up and synthesizes external documentation, API references, and SDK docs.
+---
+
+## Overview
+
+Document Specialist is an agent that finds and synthesizes information from the most trustworthy documentation sources.
+It searches in order: local repo docs, curated documentation backends (Context Hub/Context7), official external docs.
+
+It also handles project documentation lookup, external documentation lookup, API/framework reference research,
+package evaluation, version compatibility verification, and academic paper/literature/reference database research.
+
+Implementing based on outdated or incorrect API documentation creates bugs that are difficult to diagnose.
+
+It is a read-only agent.
+
+## When to Use
+
+- When verifying the correct usage of an SDK or framework
+- When researching parameters and behavior of an external API
+- When checking package version compatibility
+- When researching academic papers or standard documents
+
+## Usage Examples
+
+```
+"Find how to implement fetch timeout in Node.js"
+"Check the latest API changes for this library"
+"Research how to handle streaming responses in the OpenAI SDK"
+```
+
+## Lookup Priority
+
+1. **Local Repo Docs**: README, `docs/`, migration guides — check first for project-related questions
+2. **Context Hub / Curated Backend**: Look up official SDK/API docs using `chub` or Context7 MCP tools
+3. **Official External Docs**: Search official docs with WebSearch/WebFetch — when `chub` is unavailable or coverage is insufficient
+4. **Secondary Sources**: Blogs, Stack Overflow — only when official docs are unavailable
+
+## Output Standards
+
+All answers include verifiable sources.
+- Provide source URLs when possible
+- For curated backend responses without URLs, specify the library/doc ID
+- Explicitly flag information older than 2 years or from deprecated docs
+- Explicitly note version compatibility issues
+- Include code examples where applicable
+
+## Combining with Other Agents
+
+- **explore**: Internal codebase exploration is explore's responsibility. External documentation lookup is handled by document-specialist
+- **executor**: After confirming correct API usage, executor implements
+- **planner**: Consults document-specialist when creating plans that depend on external APIs/SDKs
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:document-specialist` |
+| Lane | Domain |
+| Read-Only | Yes (Write, Edit blocked) |
+| Former Names | `dependency-expert`, `researcher` (both deprecated) |

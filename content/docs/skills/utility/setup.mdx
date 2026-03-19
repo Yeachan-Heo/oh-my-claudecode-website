@@ -1,0 +1,46 @@
+---
+title: Setup
+description: A setup skill that unifies installation, diagnostics, and MCP configuration under a single entry point
+---
+
+## Overview
+
+Setup is a skill that consolidates OMC's configuration-related skills into a single entry point. It routes to the appropriate sub-skill based on the arguments provided.
+
+## Usage
+
+```bash
+/oh-my-claudecode:setup              # Full setup wizard (→ omc-setup)
+/oh-my-claudecode:setup doctor       # Installation diagnostics (→ omc-doctor)
+/oh-my-claudecode:setup mcp          # MCP server configuration (→ mcp-setup)
+/oh-my-claudecode:setup wizard       # Explicit wizard path (→ omc-setup)
+/oh-my-claudecode:setup --local      # Local project configuration (→ omc-setup --local)
+/oh-my-claudecode:setup --global     # Global configuration (→ omc-setup --global)
+```
+
+## Routing Rules
+
+| Argument | Routes To |
+|----------|-----------|
+| none, `wizard`, `local`, `global`, `--force` | `/oh-my-claudecode:omc-setup` |
+| `doctor` | `/oh-my-claudecode:omc-doctor` |
+| `mcp` | `/oh-my-claudecode:mcp-setup` |
+
+## Compatibility
+
+`omc-setup`, `omc-doctor`, and `mcp-setup` can still be invoked individually.
+New documentation recommends using `/oh-my-claudecode:setup`.
+
+## Related Skills
+
+- [omc-setup](/docs/skills/utility/omc-setup) - Full OMC setup wizard
+- [omc-doctor](/docs/skills/utility/omc-doctor) - Installation issue diagnostics
+- [mcp-setup](/docs/skills/utility/mcp-setup) - MCP server configuration
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:setup` |
+| Magic Keyword | - |
+| Category | Utility |

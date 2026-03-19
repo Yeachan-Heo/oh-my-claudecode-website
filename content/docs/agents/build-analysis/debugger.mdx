@@ -1,0 +1,62 @@
+---
+title: Debugger
+description: An agent responsible for root cause analysis, regression isolation, and build/compile error resolution.
+---
+
+## Overview
+
+Debugger is an agent that traces bugs to their root cause and proposes minimal fixes.
+It also handles resolving build failures with minimal changes.
+
+The core principle is "fix the cause, not the symptom."
+Instead of adding null checks everywhere, it traces "why is this undefined?"
+Fixes are always minimal diffs, without refactoring or architectural changes.
+
+## When to Use
+
+- When finding the root cause of a runtime error
+- When fixing build/compile errors (type errors, import errors, etc.)
+- When isolating regressions
+- When analyzing stack traces
+
+## Usage Examples
+
+```
+"Trace the TypeError: Cannot read property 'name' of undefined error"
+"Fix the build error"
+"Find why this test suddenly started failing"
+```
+
+## Runtime Bug Investigation Protocol
+
+1. **Reproduce**: Confirm the bug can be triggered reliably
+2. **Gather Evidence** (parallel): Read full error message/stack trace, check recent changes with git log/blame, find similar working code
+3. **Form Hypotheses**: Compare broken code vs working code, trace data flow from input to error
+4. **Fix**: Propose only one change at a time. Check if the same pattern exists elsewhere
+5. **Circuit Breaker**: After 3 failed hypotheses, stop and escalate to architect
+
+## Build Error Resolution Protocol
+
+1. Detect project type from manifest files
+2. Collect all errors using `lsp_diagnostics_directory` or build command
+3. Classify errors: type inference, missing definitions, import/export, configuration
+4. Fix each error with minimal changes: type annotations, null checks, import fixes
+5. Verify after fixing: run lsp_diagnostics on modified files
+6. Final verification: confirm build command exits with code 0
+7. Track progress: report "X/Y errors fixed"
+
+## Combining with Other Agents
+
+- **architect**: Escalates to architect-level analysis after 3 failed hypotheses
+- **executor**: Once debugger finds the cause, executor implements the fix
+- **test-engineer**: Writing regression tests after the fix is test-engineer's responsibility
+- **verifier**: Verifies that the fix actually resolved the problem
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:debugger` |
+| Lane | Build & Analysis |
+| Former Name | `build-fixer` (deprecated) |

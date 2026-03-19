@@ -1,0 +1,70 @@
+---
+title: Context Management Hooks
+description: Explains OMC hooks that manage memory, project state, and compaction.
+---
+
+## Why Context Management is Needed
+
+Claude Code's context window is finite.
+In long sessions, compaction occurs and previous conversation content is summarized.
+OMC's context management hooks prepare for compaction, preserve important information,
+and maintain project-level memory.
+
+## notepad
+
+A memory system resistant to compaction.
+
+- **Storage path**: `.omc/notepad.md`
+- **MCP tools**: `notepad_read`, `notepad_write_priority`, `notepad_write_working`, `notepad_write_manual`
+- **Behavior**: Information written to the notepad is preserved even after compaction
+
+The notepad supports three priority levels.
+
+| Priority | Tool | Description |
+|---------|------|------|
+| Priority | `notepad_write_priority` | Information that must never be lost |
+| Working | `notepad_write_working` | Current task progress |
+| Manual | `notepad_write_manual` | Manually recorded notes |
+
+Use `notepad_prune` to clean up old entries, and `notepad_stats` to check status.
+
+## project-memory
+
+Manages project-level persistent memory.
+
+- **Storage path**: `.omc/project-memory.json`
+- **MCP tools**: `project_memory_read`, `project_memory_write`, `project_memory_add_note`, `project_memory_add_directive`
+- **Related hooks**:
+  - `project-memory-session.mjs` (SessionStart): Loads project memory at session start
+  - `project-memory-posttool.mjs` (PostToolUse): Updates memory after tool use
+  - `project-memory-precompact.mjs` (PreCompact): Preserves memory before compaction
+
+Two types of data are stored in project-memory.
+
+- **Notes**: Learned facts about the project (architecture patterns, bug records, etc.)
+- **Directives**: Instructions that must be followed when working on the project
+
+## pre-compact
+
+Preserves important state just before compaction.
+
+- **Event**: PreCompact
+- **Behavior**: Summarizes/preserves the current task state, ongoing TODOs, and critical context
+- **Purpose**: Keeps essential information so work can continue after compaction
+
+## Context Preservation Strategy
+
+OMC's context management hooks collaborate with the following strategy:
+
+```
+Session start
+  → Load project-memory (project-memory-session.mjs)
+    → [Work in progress]
+    → Record important info to notepad
+    → Update project-memory (project-memory-posttool.mjs)
+      → [Compaction occurs]
+      → Preserve state pre-compact (pre-compact.mjs)
+      → Preserve project-memory (project-memory-precompact.mjs)
+        → [After compaction]
+        → Restore from notepad/project-memory
+```

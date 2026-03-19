@@ -1,0 +1,79 @@
+---
+title: Changelog
+description: Version-by-version changes for Oh My ClaudeCode
+---
+
+## Changelog
+
+A summary of major changes to Oh My ClaudeCode by version.
+
+### v4.8.2 (current)
+
+**Bug Fixes**
+- Fix CCG skill nesting issue — route advisor calls through CLI path (#1662)
+- Fix ralph/ralplan stop hook auto-continue failure (#1660)
+- Remove unused code (deprecated feature remnants) (#1659)
+
+**Improvements**
+- Backport 6 team runtime enhancements — worker stability, mailbox handling, shell affinity, assignment improvements (#1658)
+- Add ontology convergence tracking to deep-interview (#1657)
+
+---
+
+### v4.8.0
+
+**Agent System**
+- 19 specialized agents (4 lanes: Build/Analysis, Review, Domain, Coordination)
+- Agent tier system: LOW (haiku), MEDIUM (sonnet), HIGH (opus)
+- Delegation categories: visual-engineering, ultrabrain, artistry, quick, writing
+
+**Skill System**
+- 28 skills
+- Skill pipeline metadata (preview)
+- learner skill for automatic skill extraction from sessions
+
+**Hook System**
+- 11 lifecycle events
+- keyword-detector for automatic magic keyword detection
+- persistent-mode for ralph/ultrawork persistence
+- code-simplifier hook (opt-in)
+
+**Configuration System**
+- `config.jsonc` configuration file (JSONC format)
+- 2-level user/project configuration
+- All settings overridable via environment variables
+- Automatic `forceInherit` detection (CC Switch, Bedrock, Vertex AI)
+
+**State Management**
+- Notepad: Notes that survive context compaction
+- Project Memory: Maintains project knowledge across sessions
+- Plan Notepad: Captures learnings per plan
+- `OMC_STATE_DIR` for centralized state management
+
+**Team Orchestration**
+- `omc team` CLI command
+- 5-stage pipeline: plan → prd → exec → verify → fix
+- team ralph: combines team + iterative verification
+
+**autopilot**
+- 5-stage autonomous execution: expansion → planning → execution → qa → validation
+- 3-type validation: functional, security, quality
+- Cancel/resume support
+
+**External Model Integration**
+- Codex/Gemini CLI worker support
+- CCG (Claude-Codex-Gemini) 3-model orchestration
+- Delegation routing (opt-in)
+
+**Code Intelligence**
+- 12 LSP tools (hover, goto definition, find references, diagnostics, etc.)
+- 2 AST tools (ast-grep search/replace)
+- Directory-level diagnostics
+
+**Platform Support**
+- macOS, Linux: Bash hooks
+- Windows: WSL2 recommended, Node.js hooks (experimental)
+
+<Callout type="info">
+The full changelog is available in the project's [CHANGELOG.md](https://github.com/Yeachan-Heo/oh-my-claudecode) file.
+</Callout>

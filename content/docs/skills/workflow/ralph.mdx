@@ -1,0 +1,117 @@
+---
+title: Ralph
+description: PRD-based continuous loop that keeps executing until all user stories are verified
+---
+
+## Overview
+
+Ralph is a PRD (Product Requirements Document) based continuous loop. It continues working until all user story acceptance criteria are met and a reviewer verifies them. On top of Ultrawork's parallel execution, it adds session persistence, automatic retries, structured story tracking, and mandatory verification.
+
+It was created to prevent tasks from being declared "done" when only partially implemented.
+
+## Usage
+
+```bash
+/oh-my-claudecode:ralph "fix all TypeScript errors across the project"
+```
+
+Also activated via magic keywords.
+
+```
+ralph refactor the authentication module
+don't stop until all tests pass
+must complete the migration
+```
+
+## Options / Flags
+
+| Flag | Description |
+|------|-------------|
+| `--no-prd` | Skip PRD generation (for simple tasks) |
+| `--critic=architect` | Use architect as completion reviewer (default) |
+| `--critic=critic` | Use critic as completion reviewer |
+| `--critic=codex` | Use Codex CLI as completion reviewer |
+
+## Execution Steps
+
+### 1. PRD Setup
+
+On the first iteration, creates `prd.json` or reads an existing file.
+Replaces generic acceptance criteria in the auto-generated scaffold with task-specific concrete criteria.
+
+```json
+{
+  "stories": [
+    {
+      "id": "US-001",
+      "title": "Add flag detection helpers",
+      "acceptanceCriteria": [
+        "detectNoPrdFlag('ralph --no-prd fix') returns true",
+        "TypeScript compiles with no errors (npm run build)"
+      ],
+      "passes": false
+    }
+  ]
+}
+```
+
+### 2. Per-Story Implementation
+
+Selects the highest-priority incomplete story and implements it.
+
+- Simple tasks: LOW tier (Haiku)
+- Standard tasks: MEDIUM tier (Sonnet)
+- Complex tasks: HIGH tier (Opus)
+- Independent tasks run concurrently
+
+### 3. Per-Story Verification
+
+Verifies each acceptance criterion with fresh evidence.
+Marks `passes: true` when all criteria are met.
+
+### 4. PRD Completion Check
+
+If all stories are complete, proceeds to reviewer verification.
+If incomplete stories remain, selects the next one.
+
+### 5. Reviewer Verification
+
+The verification tier is determined by the scope of changes.
+
+- Fewer than 5 files, fewer than 100 lines: STANDARD (Sonnet)
+- 20 or more files, or security/architecture changes: THOROUGH (Opus)
+
+### 6. Completion
+
+On approval, cleans up state with `/oh-my-claudecode:cancel`.
+On rejection, fixes issues and re-verifies.
+
+## Examples
+
+```bash
+# Basic usage
+ralph fix all failing tests in the auth module
+
+# Simple task without PRD
+ralph --no-prd fix the typo in README.md
+
+# Using Codex reviewer
+ralph --critic=codex implement the user profile page
+```
+
+## Related Skills
+
+- [ultrawork](/docs/skills/workflow/ultrawork) - parallel execution engine inside ralph
+- [autopilot](/docs/skills/workflow/autopilot) - full autonomous pipeline that includes ralph
+- [cancel](/docs/skills/utility/cancel) - cancel ralph execution
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:ralph` |
+| Magic Keywords | `ralph`, `don't stop`, `must complete` |
+| Category | Workflow |
+| State File | `.omc/state/ralph-state.json` |
+| PRD File | `.omc/prd.json` |
+| Progress Log | `.omc/progress.txt` |

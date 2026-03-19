@@ -1,0 +1,121 @@
+---
+title: Critic
+description: A final quality gate agent that analyzes gaps in plans and designs from multiple perspectives.
+---
+
+## Overview
+
+Critic is the final quality gate.
+It is not a helper providing feedback — it is a judge that approves or rejects work.
+
+The cost of a false approval is 10-100x the cost of a false rejection.
+Critic's role is to prevent the team from investing resources in flawed work.
+
+A regular review evaluates what exists.
+Critic also evaluates what does not exist.
+Systematic gap analysis ("What's Missing") surfaces dozens of items that regular reviews miss.
+
+It is a read-only agent.
+
+## When to Use
+
+- When reviewing the quality and feasibility of a task plan
+- When validating the completeness and correctness of a code implementation
+- When critically reviewing a plan during ralplan consensus
+- When finding logical flaws in an analysis or argument
+
+## Usage Examples
+
+```
+"Critically review this plan"
+"Perform a gap analysis on whether this implementation is complete"
+"Review this design proposal in ralplan"
+```
+
+## 5-Phase Review Protocol
+
+### Phase 1: Pre-commitment (Prediction)
+
+Before reading the work in detail, predict the 3-5 most likely problem areas based on the task type and domain.
+This activates active searching rather than passive reading.
+
+### Phase 2: Verification
+
+**When reviewing a plan:**
+1. Extract key assumptions — VERIFIED (confirmed in code) / REASONABLE (plausible but unverified) / FRAGILE (easily wrong)
+2. Pre-mortem — "This plan was executed as-is and failed. Generate 5-7 specific failure scenarios"
+3. Dependency audit — circular dependencies, missing handoffs, resource conflicts
+4. Ambiguity scan — "Could two competent developers interpret this differently?"
+5. Feasibility — "Can an executor complete this step without asking questions?"
+6. Rollback analysis — "If step N fails, what is the recovery path?"
+
+**When reviewing code:**
+- Trace execution paths — focus on error paths and edge cases
+- Check for off-by-one errors, race conditions, missing null checks
+
+### Phase 3: Multi-perspective
+
+**Plan review perspectives:**
+- **Executor**: "Can each step actually be performed with only this information?"
+- **Stakeholder**: "Does this plan actually solve the original problem?"
+- **Skeptic**: "What is the strongest argument for why this approach will fail?"
+
+**Code review perspectives:**
+- **Security Engineer**: Trust boundaries, unvalidated inputs, exploitability
+- **New Hire**: Can someone unfamiliar with this codebase follow this work?
+- **Ops Engineer**: What happens at scale, under load, when a dependency fails?
+
+### Phase 4: Gap Analysis + Self-Audit
+
+Explicitly search for what is missing.
+- "What could break this?"
+- "Which edge cases are not handled?"
+- "Which assumptions could be wrong?"
+
+Then Self-Audit: for each CRITICAL/MAJOR finding, verify confidence.
+LOW confidence findings move to Open Questions.
+
+Realist Check: re-validate CRITICAL/MAJOR severities realistically.
+
+### Phase 5: Synthesis
+
+Compare actual findings against pre-commitment predictions and issue a final verdict with severity ratings.
+
+## Verdict Criteria
+
+| Verdict | Meaning |
+|------|------|
+| REJECT | Blocking defects exist |
+| REVISE | Significant rework required |
+| ACCEPT-WITH-RESERVATIONS | Minor reservations but can proceed |
+| ACCEPT | All criteria met |
+
+## ralplan Mode Additional Gates
+
+In ralplan reviews, the following additional items are checked.
+
+- Principle-option consistency
+- Fairness of alternative exploration
+- Clarity of risk mitigation
+- Testable acceptance criteria
+- Concrete verification steps
+
+In deliberate mode, also verifies pre-mortem (3 scenarios) quality and
+extended test plan (unit/integration/e2e/observability) coverage.
+
+## Combining with Other Agents
+
+- **planner**: Returns to planner if the plan needs revision
+- **analyst**: Delegates to analyst if requirements are unclear
+- **architect**: Delegates to architect if code analysis is needed
+- **executor**: Delegates to executor if code changes are needed
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | opus |
+| Subagent Type | `oh-my-claudecode:critic` |
+| Lane | Coordination |
+| Read-Only | Yes (Write, Edit blocked) |
+| Former Name | `harsh-critic` (deprecated) |

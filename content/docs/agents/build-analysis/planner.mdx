@@ -1,0 +1,63 @@
+---
+title: Planner
+description: A strategic planning agent that creates actionable task plans through user interviews.
+---
+
+## Overview
+
+Planner is an agent that conducts structured interviews with users and produces actionable task plans.
+When given a request like "do X," it does not implement directly — it creates "a task plan for X."
+
+There are two core principles:
+1. Ask users only about preferences/priorities; verify codebase facts directly using the explore agent
+2. Generate actionable plans with 3-6 steps (neither 30 micro-steps nor 2 vague directives)
+
+Plans are saved to `.omc/plans/{name}.md`.
+
+## When to Use
+
+- When you need an execution plan for a new feature or project
+- When organizing steps for refactoring or migration
+- When understanding the order and dependencies of complex tasks
+- When running ralplan (consensus-based planning)
+
+## Usage Examples
+
+```
+"Create a plan for adding dark mode"
+"Make a refactoring plan for this module"
+"Use ralplan to create a plan for redesigning the auth system"
+```
+
+## Planning Process
+
+1. **Intent Classification**: Determines whether this is a simple fix / refactoring / new build / medium-scale task
+2. **Codebase Investigation**: Uses the explore agent to understand existing patterns and structure
+3. **User Interview**: Asks one question at a time about preferences, timeline, and scope decisions
+4. **Analyst Consultation**: Analyzes requirement gaps before generating the plan
+5. **Plan Generation**: Includes context, goals, guardrails, task workflow, detailed TODOs, and success criteria
+6. **User Confirmation**: Moves to execution phase only after receiving explicit approval
+
+## Consensus Mode (ralplan)
+
+Running with `/plan --consensus` or `/ralplan` activates consensus-based planning mode.
+
+- **RALPLAN-DR Summary**: Principles (3-5), decision drivers (top 3), actionable options (2+)
+- **ADR Included**: Decision, drivers, alternatives considered, reason for choice, consequences, follow-up actions
+- `--deliberate` flag: Adds pre-mortem and extended test planning for high-risk work
+
+## Combining with Other Agents
+
+- **explore**: Auto-spawned for codebase fact verification
+- **analyst**: Consulted for requirement gap analysis before plan generation
+- **critic**: Reviews the quality of the generated plan
+- **executor**: Handles implementation after plan approval
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | opus |
+| Subagent Type | `oh-my-claudecode:planner` |
+| Lane | Build & Analysis |
+| Output Path | `.omc/plans/{name}.md` |

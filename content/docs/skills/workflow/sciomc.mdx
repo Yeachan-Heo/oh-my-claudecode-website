@@ -1,0 +1,93 @@
+---
+title: SciOMC
+description: Research orchestration using parallel scientist agents
+---
+
+## Overview
+
+SciOMC is a research orchestration skill that decomposes a research goal into independent steps and runs parallel scientist agents to perform the analysis.
+
+It follows a 4-stage workflow of decompose → execute → verify → synthesize, with full autonomous execution available in AUTO mode.
+
+## Usage
+
+```bash
+/oh-my-claudecode:sciomc <goal>
+/oh-my-claudecode:sciomc AUTO: <goal>
+/oh-my-claudecode:sciomc status
+/oh-my-claudecode:sciomc resume
+/oh-my-claudecode:sciomc list
+/oh-my-claudecode:sciomc report <session-id>
+```
+
+## Examples
+
+```bash
+# Standard research (with user checkpoints)
+/oh-my-claudecode:sciomc What are the performance characteristics of different sorting algorithms?
+
+# Fully autonomous execution
+/oh-my-claudecode:sciomc AUTO: Analyze authentication patterns in this codebase
+
+# Error handling analysis
+/oh-my-claudecode:sciomc How does the error handling work across the API layer?
+```
+
+## Research Protocol
+
+### 1. Step Decomposition
+
+Decomposes the research goal into 3-7 independent steps. Assigns a complexity tier (LOW/MEDIUM/HIGH) to each step.
+
+### 2. Parallel Execution
+
+Runs independent steps concurrently using scientist agents.
+
+| Complexity | Model | Use Case |
+|------------|-------|----------|
+| LOW | Haiku | File enumeration, pattern counting, simple lookups |
+| MEDIUM | Sonnet | Code analysis, pattern detection, documentation review |
+| HIGH | Opus | Architecture analysis, cross-cutting concerns, hypothesis validation |
+
+Supports up to 20 concurrent scientist agents.
+
+### 3. Cross-Validation
+
+After all steps complete, validates consistency of findings.
+Checks for contradictions, missing connections, coverage gaps, and evidence quality.
+
+### 4. Synthesis Report
+
+Generates a final report at `.omc/research/{session-id}/report.md`.
+
+## AUTO Mode
+
+Adding the `AUTO:` prefix runs fully autonomously without user intervention.
+
+- Up to 10 iterations
+- State saved after each step completes
+- Cancellable with `/oh-my-claudecode:cancel`
+
+## Session Management
+
+| Command | Action |
+|---------|--------|
+| `status` | Show current session progress |
+| `resume` | Resume an interrupted session |
+| `list` | List all sessions |
+| `report <id>` | Generate or regenerate a report |
+| `cancel` | Cancel the current session (state preserved) |
+
+## Related Skills
+
+- [external-context](/docs/skills/workflow/external-context) - external documentation lookup
+- [trace](/docs/skills/utility/trace) - evidence-driven causal tracing
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:sciomc` |
+| Magic Keywords | - |
+| Category | Workflow |
+| Session Path | `.omc/research/{session-id}/` |

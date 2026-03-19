@@ -1,0 +1,78 @@
+---
+title: UltraQA
+description: QA cycling workflow that repeats test, verify, and fix until the goal is achieved
+---
+
+## Overview
+
+UltraQA is an autonomous QA cycling workflow. It repeats qa-tester execution, architect diagnosis, and executor fixes until the goal (tests passing, build succeeding, lint passing, etc.) is achieved.
+
+It runs up to 5 cycles, and if the same failure repeats 3 times it is treated as a root issue and stops early.
+
+## Usage
+
+```bash
+/oh-my-claudecode:ultraqa --tests
+/oh-my-claudecode:ultraqa --build
+/oh-my-claudecode:ultraqa --lint
+/oh-my-claudecode:ultraqa --typecheck
+/oh-my-claudecode:ultraqa --custom "all endpoints return 200"
+/oh-my-claudecode:ultraqa --interactive
+```
+
+## Goal Types
+
+| Flag | Goal | What is checked |
+|------|------|-----------------|
+| `--tests` | Tests | All test suites pass |
+| `--build` | Build | Build succeeds (exit 0) |
+| `--lint` | Lint | No lint errors |
+| `--typecheck` | Type check | No TypeScript errors |
+| `--custom "pattern"` | Custom | Check for a specific pattern in output |
+| `--interactive` | Interactive | CLI/service testing via qa-tester |
+
+## Cycle Workflow
+
+Each cycle goes through the following steps.
+
+1. **Run QA**: Execute validation based on the goal type
+2. **Check result**: Exit with success message if passing
+3. **Architect diagnosis**: Analyze root cause with opus model on failure
+4. **Apply fix**: Executor applies fixes per architect's recommendations
+5. **Repeat**: Return to step 1
+
+## Exit Conditions
+
+| Condition | Action |
+|-----------|--------|
+| Goal achieved | `ULTRAQA COMPLETE: Goal met after N cycles` |
+| 5 cycles reached | `ULTRAQA STOPPED: Max cycles. Diagnosis: ...` |
+| Same failure 3 times | `ULTRAQA STOPPED: Same failure detected 3 times` |
+| Environment error | `ULTRAQA ERROR: [issue description]` |
+
+## Progress Output
+
+```
+[ULTRAQA Cycle 1/5] Running tests...
+[ULTRAQA Cycle 1/5] FAILED - 3 tests failing
+[ULTRAQA Cycle 1/5] Architect diagnosing...
+[ULTRAQA Cycle 1/5] Fixing: auth.test.ts - missing mock
+[ULTRAQA Cycle 2/5] Running tests...
+[ULTRAQA Cycle 2/5] PASSED - All 47 tests pass
+[ULTRAQA COMPLETE] Goal met after 2 cycles
+```
+
+## Related Skills
+
+- [autopilot](/docs/skills/workflow/autopilot) - uses UltraQA in Phase 3
+- [ralph](/docs/skills/workflow/ralph) - broader scope continuous loop
+- [cancel](/docs/skills/utility/cancel) - cancel UltraQA execution
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:ultraqa` |
+| Magic Keywords | - |
+| Category | Workflow |
+| State File | `.omc/state/ultraqa-state.json` |

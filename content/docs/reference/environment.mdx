@@ -1,0 +1,140 @@
+---
+title: Environment Variables
+description: Complete list and usage of environment variables that control OMC behavior
+---
+
+## Core Environment Variables
+
+### DISABLE_OMC
+
+Disables all OMC hooks.
+
+```bash
+export DISABLE_OMC=1
+```
+
+When any value is set, OMC is completely disabled.
+Claude Code runs with its default behavior without OMC.
+
+### OMC_SKIP_HOOKS
+
+Skips only specific hooks. Separate with commas.
+
+```bash
+export OMC_SKIP_HOOKS="keyword-detector,persistent-mode"
+```
+
+Use this when you want to disable specific hooks without a full disable (`DISABLE_OMC`).
+
+## State Management
+
+### OMC_STATE_DIR
+
+Manages state files in a centralized location.
+
+```bash
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```
+
+| Item | Default | After setting |
+|------|--------|--------|
+| State storage location | `{worktree}/.omc/` | `$OMC_STATE_DIR/{project-id}/` |
+| On worktree deletion | State deleted with it | State preserved |
+
+The project identifier uses a hash of the Git remote URL.
+State is shared across different worktrees of the same repository.
+
+## Feature Control
+
+| Variable | Default | Description |
+|------|--------|------|
+| `OMC_PARALLEL_EXECUTION` | `true` | Allow parallel agent execution |
+| `OMC_LSP_TOOLS` | `true` | Enable LSP tools |
+| `OMC_MAX_BACKGROUND_TASKS` | `5` | Maximum background tasks |
+| `OMC_LSP_TIMEOUT_MS` | `15000` | LSP request timeout (milliseconds) |
+
+## Model Routing
+
+| Variable | Default | Description |
+|------|--------|------|
+| `OMC_ROUTING_ENABLED` | `true` | Enable intelligent model routing |
+| `OMC_ROUTING_DEFAULT_TIER` | `MEDIUM` | Default model tier (LOW/MEDIUM/HIGH) |
+| `OMC_ROUTING_FORCE_INHERIT` | `false` | Force parent model inheritance |
+| `OMC_ESCALATION_ENABLED` | `true` | Allow escalation |
+
+### Tier Model Override
+
+```bash
+export OMC_MODEL_HIGH="claude-opus-4-6"    # HIGH tier default model
+export OMC_MODEL_MEDIUM="claude-sonnet-4-6" # MEDIUM tier default model
+export OMC_MODEL_LOW="claude-haiku-4-5"    # LOW tier default model
+```
+
+Overrides the default model ID for each tier. Particularly useful in Bedrock/Vertex AI environments.
+
+### Model Alias Override
+
+```bash
+export OMC_MODEL_ALIAS_HAIKU="custom-haiku-model"
+export OMC_MODEL_ALIAS_SONNET="custom-sonnet-model"
+export OMC_MODEL_ALIAS_OPUS="custom-opus-model"
+```
+
+Maps model names when using non-standard providers.
+
+## External Models
+
+| Variable | Default | Description |
+|------|--------|------|
+| `OMC_EXTERNAL_MODELS_DEFAULT_CODEX_MODEL` | `gpt-5.3-codex` | Default Codex CLI model |
+| `OMC_EXTERNAL_MODELS_DEFAULT_GEMINI_MODEL` | `gemini-3.1-pro-preview` | Default Gemini CLI model |
+| `OMC_EXTERNAL_MODELS_DEFAULT_PROVIDER` | - | Default external provider (codex/gemini) |
+| `OMC_EXTERNAL_MODELS_FALLBACK_POLICY` | `provider_chain` | Fallback policy on model failure |
+| `OMC_CODEX_DEFAULT_MODEL` | - | (Legacy) Use `OMC_EXTERNAL_MODELS_DEFAULT_CODEX_MODEL` instead |
+| `OMC_GEMINI_DEFAULT_MODEL` | - | (Legacy) Use `OMC_EXTERNAL_MODELS_DEFAULT_GEMINI_MODEL` instead |
+
+## Delegation Routing
+
+| Variable | Default | Description |
+|------|--------|------|
+| `OMC_DELEGATION_ROUTING_ENABLED` | `false` | Enable delegation routing to external providers |
+| `OMC_DELEGATION_ROUTING_DEFAULT_PROVIDER` | `claude` | Default delegation provider |
+
+## MCP Servers
+
+| Variable | Description |
+|------|------|
+| `EXA_API_KEY` | Exa MCP server API key |
+
+## Advanced Settings
+
+| Variable | Description |
+|------|------|
+| `OMC_BRIDGE_SCRIPT` | Python bridge script path (auto-detected) |
+| `OMC_USE_NODE_HOOKS` | When set to `1`, uses Node.js hooks on macOS/Linux |
+
+## Usage Examples
+
+### Cost-saving Mode
+
+```bash
+# Disable routing, all agents inherit parent model
+export OMC_ROUTING_FORCE_INHERIT=true
+```
+
+### Debug Mode
+
+```bash
+# Disable specific hooks to isolate issues
+export OMC_SKIP_HOOKS="persistent-mode,keyword-detector"
+```
+
+### Large Projects
+
+```bash
+# Increase LSP timeout
+export OMC_LSP_TIMEOUT_MS=30000
+
+# Allow more background tasks
+export OMC_MAX_BACKGROUND_TASKS=10
+```

@@ -1,0 +1,100 @@
+---
+title: Configure Notifications
+description: An interactive wizard for setting up Telegram, Discord, and Slack notification integrations
+---
+
+## Overview
+
+Configure Notifications is an interactive wizard that sets up Telegram, Discord, and Slack integrations so you can receive notifications when sessions end, input is awaited, or background tasks complete.
+
+It guides you step by step through natural language conversation.
+
+## Usage
+
+```bash
+/oh-my-claudecode:configure-notifications
+/oh-my-claudecode:configure-notifications telegram
+/oh-my-claudecode:configure-notifications discord
+/oh-my-claudecode:configure-notifications slack
+```
+
+## Supported Platforms
+
+### Telegram
+
+1. Create a bot via @BotFather
+2. Enter the bot token and chat ID
+3. Choose message format (Markdown/HTML)
+4. Select events
+5. Send a test notification
+
+Can also be configured via environment variables:
+```bash
+export OMC_TELEGRAM_BOT_TOKEN="123456789:ABCdefGHI..."
+export OMC_TELEGRAM_CHAT_ID="123456789"
+```
+
+### Discord
+
+Two methods supported:
+- **Webhook** (recommended): Generate a webhook URL from channel settings
+- **Bot API**: Bot token + channel ID
+
+Mention settings: choose a user ID, role ID, or no mention
+
+Environment variables:
+```bash
+export OMC_DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
+export OMC_DISCORD_MENTION="<@1465264645320474637>"
+```
+
+### Slack
+
+1. Create a Slack app → enable Incoming Webhooks
+2. Enter the webhook URL
+3. Configure mentions (user, @channel, @here)
+4. Override channel (optional)
+
+Environment variables:
+```bash
+export OMC_SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..."
+export OMC_SLACK_MENTION="<@U1234567890>"
+```
+
+## Notification Events
+
+| Event | Description |
+|-------|-------------|
+| session-end | When a Claude session ends (recommended) |
+| ask-user-question | When Claude is waiting for input |
+| session-start | When a new session starts |
+| session-continuing | When persistent mode is keeping the session alive |
+
+## Activating Platforms
+
+Even after configuration, you must enable flags per session for notifications to be sent.
+
+```bash
+omc --telegram              # Enable Telegram only
+omc --telegram --discord     # Enable Telegram + Discord
+omc --telegram --slack       # Enable Telegram + Slack
+```
+
+Running `omc` without flags sends no notifications.
+
+## Configuration File
+
+Settings are stored in `~/.claude/.omc-config.json`.
+
+## Related Skills
+
+- [omc-setup](/docs/skills/utility/omc-setup) - Full OMC configuration
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:configure-notifications` |
+| Magic Keyword | - |
+| Category | Utility |
+| Config File | `~/.claude/.omc-config.json` |

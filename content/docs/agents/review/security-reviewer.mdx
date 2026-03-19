@@ -1,0 +1,83 @@
+---
+title: Security Reviewer
+description: An agent for detecting and prioritizing security vulnerabilities based on OWASP Top 10.
+---
+
+## Overview
+
+Security Reviewer is an agent that identifies and prioritizes security vulnerabilities before they reach production.
+It performs OWASP Top 10 analysis, secret detection, input validation review, authentication/authorization checks, and dependency security audits.
+
+Security issues are invisible until they are exploited.
+The cost of missing a vulnerability in review is many times higher than the cost of thorough inspection.
+All findings are prioritized based on `severity x exploitability x blast radius`.
+
+It is a read-only agent.
+
+## When to Use
+
+- When a new API endpoint is added
+- When authentication/authorization code changes
+- When user input handling logic changes
+- When database queries are added or modified
+- When dependencies are updated
+- When payment-related code changes
+
+## Usage Examples
+
+```
+"Review this PR for security vulnerabilities"
+"Security review the auth module"
+"security review"  # magic keyword auto-activates
+```
+
+## Review Process
+
+1. **Scope Identification**: Identify files/components under review and the language/framework
+2. **Secret Scan**: Search for hardcoded secrets using api_key, password, secret, token patterns
+3. **Dependency Audit**: Run language-appropriate tools such as `npm audit`, `pip-audit`, `cargo audit`
+4. **OWASP Top 10 Check**: Verify relevant patterns for each category
+5. **Prioritization**: Sort by severity x exploitability x blast radius
+6. **Provide Secure Code Examples**: Contrast vulnerable code with safe code in the same language
+
+## OWASP Top 10 Checklist
+
+| Code | Category | Checks |
+|------|---------|----------|
+| A01 | Broken Access Control | Authorization on all routes, CORS configuration |
+| A02 | Cryptographic Failures | Strong algorithms (AES-256, RSA-2048+), key management |
+| A03 | Injection | Parameterized queries, input sanitization, output escaping |
+| A04 | Insecure Design | Threat modeling, secure design patterns |
+| A05 | Security Misconfiguration | Change defaults, disable debug, security headers |
+| A06 | Vulnerable Components | Dependency audit, no CRITICAL/HIGH CVEs |
+| A07 | Auth Failures | Strong password hashing (bcrypt/argon2), JWT validation |
+| A08 | Integrity Failures | Signed updates, CI/CD pipeline validation |
+| A09 | Logging Failures | Security event logging, monitoring |
+| A10 | SSRF | URL validation, outbound request allowlisting |
+
+## Severity Definitions
+
+| Level | Description | Response Time |
+|------|------|----------|
+| CRITICAL | Exploitable vulnerability with severe impact (data breach, RCE) | Within 24 hours |
+| HIGH | Requires specific conditions but has severe impact | Within 1 week |
+| MEDIUM | Limited impact or difficult to exploit | Within 1 month |
+| LOW | Best practice violation or minor security concern | Backlog |
+
+Exposed secrets must be rotated immediately upon discovery (within 1 hour).
+
+## Combining with Other Agents
+
+- **code-reviewer**: Code quality and logic review is code-reviewer's responsibility. Specialized security review is handled by security-reviewer
+- **executor**: Vulnerability fix implementation is passed to executor
+- **architect**: When security architecture-level design review is needed
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:security-reviewer` |
+| Lane | Review |
+| Read-Only | Yes (Write, Edit blocked) |
+| Tier Variant | `security-reviewer-low` (haiku) |

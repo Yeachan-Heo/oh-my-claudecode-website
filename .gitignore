@@ -1,9 +1,31 @@
 node_modules/
-package-lock.json
-package.json
+node_modules
+.next
+.source
+.vercel
+
+# env files
+.env
+.env*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# build
+*.tsbuildinfo
+out/
+
+# debug
+*.log
+npm-debug.log*
+
+# legacy
 generate-thumbnail.js
 social-preview.html
 social-preview-1x.png
+
+# tools
 .omc/
 .sisyphus/
 .omx/

@@ -1,0 +1,760 @@
+---
+title: Guides
+description: Step-by-step guidance for using OMC in practice
+---
+
+## Practical Guides
+
+Once you understand the core concepts of OMC, it's time to put them to work.
+
+### Recommended Learning Paths
+
+#### Beginners
+
+1. [First autopilot session](#what-is-autopilot) - Experience autopilot with a simple project
+2. [Create custom skills](#what-are-custom-skills) - Register your own skills
+3. [Best practices](#model-cost-optimization) - Efficient usage patterns
+
+#### Intermediate
+
+1. [Team orchestration](#what-is-team-mode) - Use multiple agents simultaneously
+2. [Planning workflows](#why-planning-matters) - Structured planning
+3. [Debugging with OMC](#omc-debugging-tools) - Tracking complex bugs
+
+---
+
+## What Is Autopilot?
+
+Autopilot is OMC's flagship workflow — give it one idea and it automatically produces finished code.
+It runs a 5-stage pipeline in sequence.
+
+### Running Autopilot
+
+Open Claude Code in an empty directory and type the following.
+
+```bash
+autopilot build me a todo CLI app
+```
+
+### 5-Stage Pipeline
+
+<Steps>
+
+### Expansion
+
+The `analyst` and `architect` agents flesh out the idea "todo CLI app".
+
+- Gather functional requirements (add, delete, list, mark complete)
+- Generate technical spec (Node.js CLI, JSON file storage, etc.)
+- Output: `.omc/autopilot/spec.md`
+
+### Planning
+
+The `planner` agent creates an implementation plan.
+
+- Task breakdown (file structure, implementation order for each feature)
+- The `critic` agent reviews the plan and identifies gaps
+- Output: `.omc/plans/autopilot-impl.md`
+
+### Execution
+
+The `executor` agent writes code according to the plan.
+
+- Multiple executors work in parallel when needed
+- Runs in `ralph` + `ultrawork` mode to continue until complete
+
+### QA
+
+ultraqa validates quality.
+
+- Checks whether the build succeeds
+- Checks whether tests pass
+- Automatically fixes failures and re-validates (up to 5 attempts)
+
+### Validation
+
+Specialized agents perform a final review from three perspectives.
+
+| Validation Type | What Is Checked |
+|----------------|-----------------|
+| Functional | Whether features work as specified |
+| Security | Whether there are security vulnerabilities |
+| Quality | Whether code quality is sufficient |
+
+All must receive `APPROVED` for the task to be complete.
+If `REJECTED` or `NEEDS_FIX` is returned, fixes are made and re-validation occurs (up to 3 rounds).
+
+</Steps>
+
+### Monitoring Progress
+
+#### HUD Status Bar
+
+```
+[OMC] autopilot:planning | agents:2 | todos:1/4 | ctx:32%
+```
+
+#### Checking State Files
+
+The current state of autopilot is available in these files.
+
+```bash
+# State file
+.omc/state/autopilot-state.json
+
+# Spec document
+.omc/autopilot/spec.md
+
+# Execution plan
+.omc/plans/autopilot-impl.md
+```
+
+### Autopilot Configuration Options
+
+You can fine-tune autopilot behavior.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `maxIterations` | 10 | Maximum number of iterations |
+| `maxQaCycles` | 5 | Number of QA retry attempts |
+| `maxValidationRounds` | 3 | Number of final validation rounds |
+| `parallelExecutors` | 5 | Number of parallel executor agents |
+| `pauseAfterExpansion` | false | Pause after the Expansion stage |
+| `pauseAfterPlanning` | false | Pause after the Planning stage |
+| `skipQa` | false | Skip the QA stage |
+| `skipValidation` | false | Skip the Validation stage |
+
+### Canceling Autopilot
+
+To stop autopilot while it is running, enter one of the following.
+
+```bash
+cancelomc
+# or
+/oh-my-claudecode:cancel
+```
+
+Progress up to that point is preserved when you cancel, so you can resume later.
+
+---
+
+## What Is Team Mode?
+
+Team mode is a collaborative system that runs multiple Claude agents simultaneously to achieve a single goal.
+It is suited for large-scale tasks that are difficult to handle with a single agent.
+
+### Basic Usage
+
+```bash
+# Distribute work across 3 executor agents
+/oh-my-claudecode:team 3:executor "implement a full-stack todo app"
+
+# Can also be run as a CLI command
+omc team 2:executor "implement API endpoints"
+```
+
+Format: `N:agent-type "task description"`
+
+- `N`: Number of agents (2–5 recommended)
+- `agent-type`: Agent to use (executor, codex, gemini, etc.)
+
+### Team Pipeline
+
+Team mode operates through a 5-stage pipeline.
+
+<Steps>
+
+### team-plan
+
+The `explore` and `planner` agents analyze the task and create a plan.
+`analyst` or `architect` may also participate as needed.
+
+### team-prd
+
+The `analyst` agent defines requirements in detail.
+`critic` reviews the requirements for gaps.
+
+### team-exec
+
+`executor` agents implement code in parallel.
+Specialist agents like `designer`, `writer`, and `test-engineer` are brought in as needed.
+
+### team-verify
+
+The `verifier` and reviewer agents validate the results.
+
+### team-fix
+
+Issues found during verification are fixed.
+`executor`, `debugger`, and others are brought in based on the type of problem.
+Repeats until the problem is resolved (bounded by a maximum attempt count).
+
+</Steps>
+
+### Team State Management
+
+```bash
+# Check team status
+omc team status <team-name>
+
+# Force shut down a team
+omc team shutdown <team-name> --force
+```
+
+### team ralph
+
+`team ralph` combines team mode and ralph mode.
+It runs the team pipeline repeatedly, not stopping until the verifier confirms all tasks are complete.
+
+```bash
+# Combine team + ralph
+team ralph 3:executor "implement the full authentication system"
+```
+
+Canceling either mode also cancels the other.
+
+### Agent Type Use Cases
+
+| Agent Type | Use Cases |
+|-----------|----------|
+| `executor` | Feature implementation, refactoring |
+| `codex` | Implementation via OpenAI Codex |
+| `gemini` | Implementation via Google Gemini |
+
+### Team Mode vs Autopilot
+
+| Aspect | autopilot | team |
+|--------|-----------|------|
+| Automation level | Fully automatic (5 stages) | Semi-automatic (requires direction) |
+| Number of agents | Determined automatically | Specified by the user |
+| Planning | Included automatically | Included as a separate stage |
+| Best for | End-to-end automatic execution | Parallel processing of specific stages |
+
+### Notes
+
+<Callout type="warn">
+Team mode runs multiple agents simultaneously, so token costs are high. For simple tasks, a single agent is more efficient.
+</Callout>
+
+---
+
+## Why Planning Matters
+
+Jumping straight into execution on complex tasks makes it easy to lose direction.
+OMC supports step-by-step planning to keep work on track.
+
+### Choosing a Planning Workflow
+
+| Workflow | Best For | Cost |
+|----------|----------|------|
+| `/plan` | When you need a quick plan | Low |
+| `/ralplan` | When you need consensus from multiple perspectives | Medium |
+| `autopilot` | When you want planning through execution automated | High |
+
+### /plan (Basic Planning)
+
+The simplest way to create a plan.
+
+```bash
+/oh-my-claudecode:omc-plan "refactor the authentication system"
+```
+
+The `planner` agent analyzes the task and generates an execution plan.
+
+#### Options
+
+```bash
+# Consensus-based plan (same as ralplan)
+/oh-my-claudecode:omc-plan --consensus "refactor the authentication system"
+
+# Review an existing plan
+/oh-my-claudecode:omc-plan --review "analyze problems with the current plan"
+```
+
+### /ralplan (Consensus-Based Planning)
+
+A planning process where three agents — Planner, Architect, and Critic — iterate until they reach consensus.
+
+```bash
+ralplan this feature
+# or
+/oh-my-claudecode:ralplan "design the payment system"
+```
+
+#### Consensus Process
+
+```
+Planner (creates plan)
+    ↓
+Architect (technical review)
+    ↓
+Critic (gap analysis)
+    ↓
+Consensus reached? → No → Back to Planner
+    ↓ Yes
+Final plan confirmed
+```
+
+#### High-Risk Mode (--deliberate)
+
+For critical projects, use the `--deliberate` option for more thorough deliberation.
+
+```bash
+/oh-my-claudecode:ralplan --deliberate "production database migration"
+```
+
+Differences from the default mode:
+
+| Aspect | Default Mode | --deliberate |
+|--------|-------------|-------------|
+| Pre-analysis | None | Includes pre-mortem analysis |
+| Test planning | Basic | Unit/integration/E2E/observability tests |
+| Iterations | Short deliberation | Extended deliberation |
+
+### From Plan to Execution
+
+Ways to transition from planning to execution.
+
+#### Option 1: Manual Execution
+
+```bash
+# 1. Create a plan
+ralplan "API refactoring"
+
+# 2. Review the plan, then execute manually
+ultrawork implement the plan in .omc/plans/
+```
+
+#### Option 2: autopilot (Automatic Transition)
+
+autopilot automatically moves from the Planning stage to the Execution stage.
+
+```bash
+autopilot refactor the authentication system
+```
+
+#### Option 3: Skill Pipeline
+
+Skills support handoffs to the next skill.
+
+```
+deep-interview → omc-plan → autopilot
+```
+
+Clarify requirements in deep-interview, create a plan with omc-plan, then execute with autopilot.
+
+### Plan File Locations
+
+| File | Purpose |
+|------|---------|
+| `.omc/plans/autopilot-impl.md` | autopilot execution plan |
+| `.omc/autopilot/spec.md` | autopilot requirements spec |
+| `.omc/plans/*.md` | Other plan files |
+
+<Callout type="info">
+Plan files are treated as read-only. Be careful not to let agents modify plan files directly.
+</Callout>
+
+---
+
+## What Are Custom Skills?
+
+Beyond OMC's built-in skills, you can create and register your own.
+Turn repeating task patterns into skills so they can be executed with a single command.
+
+### Skill Structure
+
+A skill is defined by a single `SKILL.md` file.
+
+```
+~/.claude/skills/
+└── my-skill/
+    └── SKILL.md
+```
+
+#### Writing SKILL.md
+
+```markdown
+---
+name: my-skill
+description: Description of my custom skill
+trigger: "my-skill"
+---
+
+# My Skill
+
+## What This Skill Does
+
+Describe the skill's behavior in detail here.
+Claude reads this prompt and acts according to the instructions.
+
+## Execution Steps
+
+1. First step
+2. Second step
+3. Third step
+
+## Rules
+
+- Rules that must be followed
+- Things that must not be done
+```
+
+#### Frontmatter Fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | Required | Skill name (used in slash commands) |
+| `description` | Required | Short description of the skill |
+| `trigger` | Optional | Magic keyword trigger |
+
+#### Pipeline Metadata (Advanced)
+
+You can define transitions between skills.
+
+```yaml
+---
+name: my-interview
+pipeline: [my-interview, omc-plan, autopilot]
+next-skill: omc-plan
+next-skill-args: --consensus --direct
+handoff: .omc/specs/my-interview-{slug}.md
+---
+```
+
+| Field | Description |
+|-------|-------------|
+| `pipeline` | Order of skill execution |
+| `next-skill` | The skill to invoke next |
+| `next-skill-args` | Arguments to pass to the next skill |
+| `handoff` | Path to the artifact passed to the next skill |
+
+### Skill Management Commands
+
+Use the `/oh-my-claudecode:skill` command to manage skills.
+
+```bash
+# List installed skills
+/oh-my-claudecode:skill list
+
+# Add a new skill
+/oh-my-claudecode:skill add
+
+# Remove a skill
+/oh-my-claudecode:skill remove my-skill
+
+# Search for skills
+/oh-my-claudecode:skill search "deploy"
+
+# Edit a skill
+/oh-my-claudecode:skill edit my-skill
+```
+
+### Auto-Extract Skills with learner
+
+You can automatically extract repeating task patterns from the current session as a skill.
+
+```bash
+/oh-my-claudecode:learner
+```
+
+If learner finds a reusable pattern in the current conversation, it generates a `SKILL.md` for you.
+
+### Skill Storage Locations
+
+| Location | Scope |
+|----------|-------|
+| `~/.claude/skills/` | Available across all projects |
+| `.claude/skills/` | Available in the current project only |
+
+### Tips for Writing Skills
+
+1. List execution steps concretely
+2. Clearly state what must not be done
+3. Including input and output examples improves accuracy
+4. If a specific agent is required, state it explicitly
+
+```markdown
+## Execution Steps
+
+1. Use the `explore` agent to find relevant files
+2. Use the `executor` agent to implement the changes
+3. Use the `verifier` agent to validate the results
+```
+
+---
+
+## OMC Debugging Tools
+
+OMC provides several specialized agents for debugging.
+
+| Agent | Role | Model |
+|-------|------|-------|
+| `debugger` | Root cause analysis, build error fixes | sonnet |
+| `tracer` | Evidence-based causal tracing | sonnet |
+| `architect` | System-level design analysis | opus |
+| `qa-tester` | Runtime validation via tmux | sonnet |
+
+### Quick Debugging
+
+For simple errors, use a magic keyword to start analysis immediately.
+
+```bash
+analyze why this test is failing
+```
+
+The `analyze` keyword directly invokes the `debugger` agent.
+
+### /trace Skill: Evidence-Based Tracing
+
+For complex bugs, use the `/trace` skill.
+Multiple tracer agents work in parallel, forming hypotheses and collecting evidence.
+
+```bash
+/oh-my-claudecode:trace
+```
+
+#### trace Workflow
+
+```
+Observe the problem
+    ↓
+Hypothesis 1 ──→ tracer A (collect evidence)
+Hypothesis 2 ──→ tracer B (collect evidence)
+Hypothesis 3 ──→ tracer C (collect evidence)
+    ↓
+Synthesize evidence → Identify root cause
+    ↓
+Fix and verify
+```
+
+Each tracer independently validates its hypothesis while gathering evidence.
+After collecting both supporting and contradicting evidence, the most likely cause is identified.
+
+### Architect + QA-Tester Loop
+
+A useful pattern for debugging bugs in CLI apps or services.
+
+<Steps>
+
+### architect diagnoses the problem
+
+The architect agent analyzes the code and identifies the root cause.
+It outputs a concrete test plan (commands to run and expected results).
+
+### qa-tester verifies
+
+The qa-tester agent executes the test plan in tmux.
+It captures the actual output.
+
+### Compare results
+
+Compare expected results with actual results.
+If there is a mismatch, request further analysis from architect.
+
+### Repeat
+
+Repeat until the problem is resolved.
+
+</Steps>
+
+### Verification Priority
+
+When verifying a fix after debugging, start with the least expensive methods.
+
+| Priority | Verification Method | Cost | When to Use |
+|----------|-------------------|------|-------------|
+| 1 | Run existing tests | Low | When the project has a test suite |
+| 2 | Run commands directly (curl, etc.) | Low | For simple behavior checks |
+| 3 | qa-tester (tmux) | High | Only when interactive verification is needed |
+
+<Callout type="info">
+qa-tester runs a real service in a tmux session, so token costs are high. If the project has tests, run those first.
+</Callout>
+
+### Fixing Build Errors
+
+Build errors and type errors are handled by the `debugger` agent.
+
+```bash
+# Invoke with magic keyword
+analyze fix the build errors
+
+# Invoke with Quick Command
+build-fix
+```
+
+What the `debugger` agent does:
+
+1. Analyze the error message
+2. Identify the root cause
+3. Apply the fix
+4. Re-run the build to verify
+
+### Debugging Combination Examples
+
+#### Test Failure
+
+```bash
+# 1. Analyze the failure cause
+analyze why test_auth.py is failing
+
+# 2. Collect evidence if needed
+/oh-my-claudecode:trace
+
+# 3. Fix and verify
+tdd: fix the failing test
+```
+
+#### Production Issue
+
+```bash
+# 1. Deep analysis
+deep-analyze the memory leak in the worker process
+
+# 2. Evidence-based tracing
+/oh-my-claudecode:trace
+
+# 3. Fix and review
+ralph: fix the memory leak and add regression tests
+```
+
+---
+
+## Model Cost Optimization
+
+OMC uses three model tiers. Choosing the right tier reduces costs significantly.
+
+### Haiku-First Principle
+
+Start every task with the lightest model (haiku) by default, and only escalate to a heavier model when needed.
+
+| Task Type | Recommended Model | Reason |
+|-----------|-------------------|--------|
+| File search, code lookup | haiku | Search is a simple task |
+| Documentation | haiku | Structured text generation |
+| General code implementation | sonnet | Good quality-to-cost ratio |
+| Debugging | sonnet | Requires code understanding |
+| Architecture design | opus | Requires deep reasoning |
+| Security review | opus | Requires exhaustive analysis |
+
+### High-Cost Operations
+
+- `team` mode: runs multiple agents simultaneously
+- `ralph` mode: loops until complete
+- `autopilot`: full 5-stage pipeline
+- `qa-tester`: tmux session-based validation
+
+<Callout type="warn">
+Using autopilot or team mode for simple tasks wastes tokens. Choose the tool that matches the scale of your task.
+</Callout>
+
+### Agent Combination Patterns
+
+#### Standard Development Flow
+
+```
+explore → planner → executor → verifier
+```
+
+The most basic flow. Performs exploration, planning, implementation, and verification in order.
+
+#### Deep Analysis Then Implement
+
+```
+analyst → architect → planner → critic → executor → verifier
+```
+
+For complex projects, fully analyze requirements before implementing.
+
+#### Debugging Loop
+
+```
+debugger → architect → qa-tester → (repeat)
+```
+
+Iterates through root cause analysis, system-level review, and runtime verification.
+
+#### Code Review Pipeline
+
+```
+code-reviewer → security-reviewer → executor (fixes)
+```
+
+Review code quality and security, then fix any issues found.
+
+### Verification Strategy
+
+#### Verification Must Always Be Evidence-Based
+
+Always check actual command output before declaring completion.
+
+| Verification Type | Method |
+|-------------------|--------|
+| BUILD | Run the build command, confirm success |
+| TEST | Run tests, confirm all pass |
+| LINT | Run the linter, confirm no errors |
+| FUNCTIONALITY | Confirm features work as intended |
+
+#### Verification Cost Optimization
+
+1. Run existing tests (cheapest) — if the project has tests, run those first
+2. Direct commands (cheap) — quick checks with curl, CLI commands
+3. qa-tester (expensive) — only when the above methods are insufficient
+
+### Anti-Patterns
+
+#### Overusing qa-tester
+
+Using qa-tester when the project already has a test suite is wasteful.
+
+```bash
+# Bad: using qa-tester when tests exist
+qa-tester verify the login feature
+
+# Good: run existing tests
+npm test -- --grep "login"
+```
+
+#### Claiming Completion Without Verification
+
+When an agent says "done", don't move on immediately.
+Always check build/test results first.
+
+#### Using Heavy Modes for Simple Tasks
+
+```bash
+# Bad: using autopilot for a single file edit
+autopilot fix the typo in README.md
+
+# Good: direct edit request
+Fix the typo in README.md
+```
+
+#### Using opus for Everything
+
+```jsonc
+// Bad: setting all agents to opus
+{
+  "agents": {
+    "explore": { "model": "opus" },
+    "writer": { "model": "opus" },
+    "executor": { "model": "opus" }
+  }
+}
+
+// Good: keep defaults, change only where needed
+{
+  "agents": {
+    "executor": { "model": "opus" }  // only for complex projects
+  }
+}
+```
+
+### General Tips
+
+1. Start small — begin with a single agent and scale up to team or autopilot when needed
+2. Plan first — use `/plan` or `ralplan` to plan complex tasks before executing
+3. Use the notepad — save important information with `/note` to survive context compaction
+4. Monitor state — use the HUD or state files to track current progress
+5. Know when to cancel — use `cancelomc` to quickly stop unnecessary work

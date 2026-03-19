@@ -1,0 +1,100 @@
+---
+title: Core Hooks
+description: Explains OMC's core hooks for execution modes, orchestration, and persistence.
+---
+
+## Execution Mode Hooks
+
+These hooks manage OMC's core execution modes.
+They activate/deactivate and maintain modes using state files
+(`.omc/state/{mode}-state.json`).
+
+### autopilot
+
+Runs fully autonomously from idea to working code.
+
+- **Activation**: Keywords like "autopilot", "build me", "I want a"
+- **Behavior**: Automatically runs the full cycle of planning → implementation → testing → verification
+- **State file**: `.omc/state/autopilot-state.json`
+
+### ralph
+
+Persistence mode that keeps running until verification is complete.
+
+- **Activation**: Keywords "ralph", "don't stop", "must complete"
+- **Behavior**: Does not stop until all tasks are complete and verified
+- **Features**: Automatically includes ultrawork. Can be linked with team (`team ralph`)
+- **State file**: `.omc/state/ralph-state.json`
+- **Reinforcement message**: "The boulder never stops" -- encourages continued work from the Stop hook
+
+### ultrawork
+
+Runs multiple agents in parallel with maximum parallelism.
+
+- **Activation**: Keywords "ultrawork", "ulw"
+- **Behavior**: Delegates independent tasks to multiple agents in parallel
+- **State file**: `.omc/state/ultrawork-state.json`
+
+### ultraqa
+
+Repeats QA cycles until goals are met.
+
+- **Activation**: Runs automatically within autopilot
+- **Behavior**: Test → verify → fix → repeat
+- **Related skill**: `/oh-my-claudecode:ultraqa`
+
+## Orchestration Hooks
+
+### keyword-detector
+
+Detects magic keywords in user prompts and invokes the corresponding skill.
+
+- **Event**: UserPromptSubmit
+- **Behavior**: Sanitizes the prompt (removes code blocks, URLs, file paths) then performs keyword matching
+- **Conflict resolution**: cancel has highest priority, then ralph > autopilot > ultrawork
+- **Safety guard**: Disabled inside team workers (prevents infinite spawning)
+
+For the detailed keyword list, see the [Magic Keywords](/docs/hooks/magic-keywords) page.
+
+### persistent-mode
+
+Maintains active execution modes across sessions.
+
+- **Event**: Stop
+- **Behavior**: Injects reinforcement messages when an active mode (ralph, ultrawork, autopilot, etc.) exists
+- **Message**: Encourages continued work when there are incomplete tasks
+- **Cancel**: Use `/oh-my-claudecode:cancel` to deactivate modes
+
+## Mode State Management
+
+Execution mode hooks manage state files in the `.omc/state/` directory.
+
+```json
+{
+  "active": true,
+  "started_at": "2025-01-15T10:30:00Z",
+  "prompt": "ultrawork implement auth",
+  "session_id": "abc123",
+  "project_path": "/path/to/project",
+  "iteration": 0,
+  "max_iterations": 10,
+  "linked_ultrawork": false,
+  "last_checked_at": "2025-01-15T10:30:00Z"
+}
+```
+
+If a session ID is present, the state is saved in session scope at `.omc/state/sessions/{sessionId}/`.
+
+### Cancelling Modes
+
+```
+cancelomc
+```
+
+Or
+
+```
+/oh-my-claudecode:cancel
+```
+
+cancel removes the state files for all active modes including ralph, autopilot, and ultrawork.

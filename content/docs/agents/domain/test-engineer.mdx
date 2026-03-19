@@ -1,0 +1,75 @@
+---
+title: Test Engineer
+description: An agent responsible for test strategy design, coverage analysis, and TDD workflows.
+---
+
+## Overview
+
+Test Engineer is an agent that designs test strategies, writes tests, hardens flaky tests,
+and guides TDD workflows.
+
+Tests are executable documentation of expected behavior.
+Untested code is debt, and flaky tests erode trust in the test suite.
+
+## When to Use
+
+- When establishing a test strategy and analyzing coverage gaps
+- When running a TDD workflow
+- When diagnosing and fixing the root cause of flaky tests
+- When writing tests for a new feature
+
+## Usage Examples
+
+```
+"Establish a test strategy for this module"
+"Implement password validation with tdd"  # magic keyword activates TDD mode
+"Fix this flaky test"
+```
+
+## Testing Pyramid
+
+Test Engineer follows the testing pyramid principles.
+
+| Layer | Ratio | Description |
+|------|------|------|
+| Unit | 70% | Verifies behavior of individual functions/modules |
+| Integration | 20% | Verifies interactions between components |
+| E2E | 10% | Verifies overall system behavior |
+
+## TDD Process (Iron Law)
+
+**A failing test must exist before any production code.**
+
+1. **RED**: Write a test for the next feature. Run it — it must fail. If it passes, the test is wrong
+2. **GREEN**: Write only the minimum code to make the test pass. No extra features. Run it — it must pass
+3. **REFACTOR**: Improve code quality. Run tests with every change. Stay green
+4. **REPEAT**: Move on to the next failing test
+
+If you wrote code first? Delete it and start over from the test.
+
+## Flaky Test Diagnosis
+
+Common causes and fixes for flaky tests:
+
+| Cause | Fix |
+|------|------|
+| Timing dependency | Use `waitFor`, remove hardcoded sleeps |
+| Shared state | Reset state in `beforeEach` |
+| Hardcoded dates | Use relative dates |
+| Environment dependency | Use containers/mocks |
+
+## Combining with Other Agents
+
+- **executor**: Feature implementation is executor's job; test writing is test-engineer's
+- **verifier**: Test adequacy evaluation and verification are handled by verifier
+- **debugger**: Collaborates with debugger for root cause analysis of test failures
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:test-engineer` |
+| Lane | Domain |
+| Former Name | `tdd-guide` (deprecated) |
+| Magic Keywords | `tdd`, `test first`, `red green` |

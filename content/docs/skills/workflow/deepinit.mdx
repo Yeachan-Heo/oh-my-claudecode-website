@@ -1,0 +1,76 @@
+---
+title: Deepinit
+description: Automatically generates hierarchical AGENTS.md documentation across the entire codebase
+---
+
+## Overview
+
+Deepinit generates hierarchical AGENTS.md documentation throughout the entire codebase. AGENTS.md files are AI-readable documents that describe the contents of each directory, component relationships, and considerations when working with the code.
+
+The goal is to help agents better understand the codebase and work more accurately.
+
+## Usage
+
+```bash
+/oh-my-claudecode:deepinit
+/oh-my-claudecode:deepinit [path]
+```
+
+## Hierarchical Tagging
+
+Every AGENTS.md (except the root) includes a parent reference tag.
+
+```
+/AGENTS.md                        (root, no parent)
+├── src/AGENTS.md                 <!-- Parent: ../AGENTS.md -->
+│   ├── src/components/AGENTS.md  <!-- Parent: ../AGENTS.md -->
+│   └── src/utils/AGENTS.md       <!-- Parent: ../AGENTS.md -->
+└── docs/AGENTS.md                <!-- Parent: ../AGENTS.md -->
+```
+
+## AGENTS.md Structure
+
+Sections included in each file:
+
+- **Purpose**: Description of the directory's role
+- **Key Files**: List of important files with descriptions
+- **Subdirectories**: List of subdirectories
+- **For AI Agents**: Working instructions, test requirements, code patterns
+- **Dependencies**: Internal and external dependencies
+
+## Execution Workflow
+
+1. **Map directory structure**: explore agent maps the entire structure
+2. **Generate task plan**: Organized by depth level
+3. **Generate by level**: Parent-to-child order (ensures parent reference validity)
+4. **Update existing files**: Compare and merge if already present (preserves manual sections)
+5. **Verify hierarchy**: Check parent references, orphaned files, and completeness
+
+## Parallelization Rules
+
+- Directories at the same level: processed in parallel
+- Different levels: processed sequentially (parent first)
+- Large directories: assigned a dedicated agent
+- Small directories: multiple handled by a single agent
+
+## Update Mode
+
+When run on a codebase with existing AGENTS.md files:
+
+1. Read and parse existing content
+2. Analyze current directory state
+3. Compare existing vs. current differences
+4. Update auto-generated sections, preserve manual sections below `<!-- MANUAL -->`
+
+## Related Skills
+
+- [learner](/docs/skills/utility/learner) - extract skills from a session
+- [skill](/docs/skills/utility/skill) - manage local skills
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:deepinit` |
+| Magic Keywords | - |
+| Category | Workflow |

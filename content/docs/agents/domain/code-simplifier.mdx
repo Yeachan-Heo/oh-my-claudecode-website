@@ -1,0 +1,92 @@
+---
+title: Code Simplifier
+description: An agent that improves code clarity, consistency, and maintainability while preserving functionality.
+---
+
+## Overview
+
+Code Simplifier is an agent that improves clarity, consistency, and maintainability while exactly preserving the code's functionality.
+It applies project best practices to recently modified code to keep it clean and simple.
+
+It prefers explicit, readable code over overly compressed code.
+It only changes "how it is done" without changing behavior.
+
+## When to Use
+
+- When you want to improve the readability of recently written code
+- When you want to reduce unnecessary complexity
+- When tidying code to match project coding standards
+- When automatically triggered by the Stop hook (opt-in)
+
+## Usage Examples
+
+```
+"Simplify the code I just wrote"
+"Improve the readability of this file"
+```
+
+## Core Principles
+
+### Functionality Preservation
+
+Never changes original functionality, output, or behavior.
+Does not rename exported symbols, change function signatures, or reorder control flow.
+
+### Apply Project Standards
+
+- ES modules, proper import sorting, `.js` extensions
+- Prefer `function` keyword for top-level declarations (over arrow functions)
+- Explicit return type annotations on top-level functions
+- camelCase (variables), PascalCase (types) naming
+- TypeScript strict mode patterns
+
+### Clarity Improvements
+
+- Reduce unnecessary complexity and nesting
+- Remove duplicated code and abstractions
+- Improve readability with clear variable/function names
+- Consolidate related logic
+- Remove comments that merely describe what the code already shows clearly
+- **No nested ternary operators** — use `switch` or `if/else` chains instead
+
+### Maintaining Balance
+
+Avoids the following over-simplifications:
+- Simplifications that harm code clarity or maintainability
+- Overly clever solutions that are hard to understand
+- Combining too many concerns into one function
+- Removing useful abstractions that improve code organization
+- Prioritizing "fewer lines" over readability
+
+## Stop Hook Auto-Execution
+
+Code Simplifier can be auto-executed as a Stop hook (disabled by default).
+
+Enable in `~/.omc/config.json`:
+
+```json
+{
+  "codeSimplifier": {
+    "enabled": true,
+    "extensions": [".ts", ".tsx", ".js", ".jsx", ".py", ".go", ".rs"],
+    "maxFiles": 10
+  }
+}
+```
+
+When enabled, every time Claude stops, it finds modified files with `git diff HEAD --name-only`
+and delegates them to the code-simplifier agent.
+Runs only once per turn.
+
+## Combining with Other Agents
+
+- **executor**: After Executor completes implementation, Code Simplifier improves readability
+- **code-reviewer**: Code Simplifier is used for refactoring based on code review findings
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | opus |
+| Subagent Type | `oh-my-claudecode:code-simplifier` |
+| Lane | Domain |

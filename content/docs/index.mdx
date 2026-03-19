@@ -1,0 +1,82 @@
+---
+title: Oh My ClaudeCode
+description: Multi-agent orchestration plugin for Claude Code
+---
+
+![Oh My ClaudeCode](/images/omc-social-preview.jpg)
+
+**Multi-agent orchestration for Claude Code. Zero learning curve.**
+
+Oh My ClaudeCode (OMC) is a multi-agent orchestration layer that runs on top of Claude Code.
+With a single prompt, it coordinates multiple specialized agents to automate complex development tasks.
+
+## Quick Start
+
+```bash
+# 1. Install
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+/plugin install oh-my-claudecode
+
+# 2. Configure
+setup omc
+
+# 3. Run
+autopilot build me a REST API for managing tasks
+```
+
+That's it. The rest is automatic.
+
+## Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **19 Specialized Agents** | Role-based division: explore, plan, implement, verify, review |
+| **28 Skills** | Automated workflows like autopilot, ralph, ultrawork |
+| **Magic Keywords** | Run the full pipeline with a single phrase like "autopilot build me X" |
+| **Team Orchestration** | Coordinate multiple Claude/Codex/Gemini agents simultaneously |
+| **State Management** | Maintain context across sessions with notepad and project-memory |
+| **Multi-AI** | Use Claude, Codex, and Gemini for cross-validation (optional) |
+
+## Team Mode
+
+The core orchestration mode of OMC. Multiple agents collaborate through a pipeline.
+
+```bash
+/team 3:executor "fix all TypeScript errors"
+```
+
+| Command | Workers | Use Case |
+|---------|---------|----------|
+| `omc team N:claude "..."` | Claude CLI | General tasks |
+| `omc team N:codex "..."` | Codex CLI | Code review, security analysis |
+| `omc team N:gemini "..."` | Gemini CLI | UI/UX, docs, large context |
+| `/ccg` | Claude + Codex + Gemini | Tri-model synthesis |
+
+## Documentation
+
+<Cards>
+  <Card title="Getting Started" href="/docs/getting-started">
+    Installation, first session, and configuration
+  </Card>
+  <Card title="Core Concepts" href="/docs/concepts">
+    Agents, skills, hooks, and state management
+  </Card>
+  <Card title="Guides" href="/docs/guides">
+    Autopilot, team mode, and debugging guides
+  </Card>
+  <Card title="Agents" href="/docs/agents">
+    Detailed reference for all 19 agents
+  </Card>
+  <Card title="Skills" href="/docs/skills">
+    Detailed reference for all 28 skills
+  </Card>
+  <Card title="Hooks" href="/docs/hooks">
+    Hook system and magic keywords
+  </Card>
+  <Card title="Tools" href="/docs/tools">
+    MCP tools (State, Notepad, LSP, etc.)
+  </Card>
+  <Card title="Reference" href="/docs/reference">
+    Configuration, environment variables, changelog
+  </Card>
+</Cards>

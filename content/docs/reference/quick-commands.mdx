@@ -1,0 +1,120 @@
+---
+title: Quick Commands
+description: Quick Command shortcut reference for directly invoking agents
+---
+
+## What are Quick Commands?
+
+Quick Commands are shortcut keywords that directly invoke a specific agent.
+Unlike skills, they immediately execute the corresponding agent without a separate pipeline.
+
+<Callout type="info">
+Quick Commands are not independent slash commands but prompt trigger behaviors. Including a keyword in a natural language prompt invokes the corresponding agent.
+</Callout>
+
+## Full List
+
+| Quick Command | Agent invoked | Description |
+|--------------|-------------|------|
+| `analyze` | `debugger` | Root cause analysis, bug investigation |
+| `tdd` | `test-engineer` | TDD workflow (Red-Green-Refactor) |
+| `build-fix` | `debugger` | Fix build errors, type errors |
+| `code-review` | `code-reviewer` | Comprehensive code review |
+| `security-review` | `security-reviewer` | Security vulnerability review |
+| `review` | `omc-plan --review` | Review/critique an existing plan |
+
+## Usage Examples
+
+### analyze
+
+```bash
+# Analyze why auth tests are failing
+analyze why the auth tests are failing
+
+# Investigate a performance issue
+analyze the slow response time on /api/users
+```
+
+The `debugger` agent analyzes the code and identifies the root cause.
+
+### tdd
+
+```bash
+# Implement a feature with TDD
+tdd: implement password validation
+
+# Test-first development
+test first: add email format validation
+```
+
+The `test-engineer` agent follows the Red-Green-Refactor cycle.
+1. Write a failing test (Red)
+2. Implement code that passes the test (Green)
+3. Clean up the code (Refactor)
+
+### build-fix
+
+```bash
+# Fix build errors
+build-fix
+
+# Fix type errors
+fix build errors in the auth module
+```
+
+The `debugger` agent analyzes and fixes compile/build errors.
+
+### code-review
+
+```bash
+# Request a code review
+code-review the recent changes
+
+# Review a specific file
+review code in src/auth/
+```
+
+The `code-reviewer` agent (opus) reviews from the following perspectives:
+- Logic defects
+- Maintainability
+- Anti-patterns
+- Performance
+- API contracts
+- Backward compatibility
+
+### security-review
+
+```bash
+# Security review
+security-review the payment module
+
+# Security audit
+security review on authentication flow
+```
+
+The `security-reviewer` agent reviews from the following perspectives:
+- Vulnerability detection
+- Trust boundaries
+- Authentication/authorization logic
+- OWASP checklist
+
+### review
+
+```bash
+# Review a plan
+review the current plan
+
+# Critique a design
+review plan for the migration
+```
+
+Runs `/omc-plan --review` to analyze issues with an existing plan.
+
+## Quick Commands vs Skills
+
+| Item | Quick Commands | Skills |
+|------|---------------|------|
+| Invocation | Prompt keyword | `/oh-my-claudecode:name` |
+| Pipeline | None (single agent direct call) | Yes (multiple stages) |
+| Customization | Not available | Available (SKILL.md) |
+| Example | `analyze`, `tdd` | `autopilot`, `ralph` |

@@ -1,0 +1,130 @@
+---
+title: Autopilot
+description: Full pipeline skill that autonomously executes from idea to working code
+---
+
+## Overview
+
+Autopilot handles the entire development lifecycle autonomously from a simple idea description — requirements analysis, technical design, planning, parallel implementation, QA cycling, and validation.
+
+The goal is to produce working code from a 2-3 line description. Internally it uses ralph, ultrawork, and ultraqa, moving to the next phase as each one completes.
+
+## Usage
+
+```bash
+/oh-my-claudecode:autopilot "REST API for a bookstore with CRUD operations using TypeScript"
+```
+
+Also activated via magic keywords.
+
+```
+autopilot build me a CLI tool that tracks daily habits
+build me a todo app with React and PostgreSQL
+I want a chat application with WebSocket support
+```
+
+## Execution Phases
+
+Autopilot consists of 6 phases.
+
+### Phase 0 - Expansion
+
+Expands the user's idea into a detailed spec.
+
+- Analyst (Opus) extracts requirements
+- Architect (Opus) writes the technical specification
+- Output: `.omc/autopilot/spec.md`
+
+If a ralplan consensus plan already exists, Phases 0 and 1 are skipped.
+If a deep-interview spec exists, it is used as Phase 0 output.
+
+### Phase 1 - Planning
+
+Generates an implementation plan from the spec.
+
+- Architect (Opus) writes the plan
+- Critic (Opus) validates the plan
+- Output: `.omc/plans/autopilot-impl.md`
+
+### Phase 2 - Execution
+
+Implements the plan using Ralph + Ultrawork.
+
+- Simple tasks: Executor (Haiku)
+- Standard tasks: Executor (Sonnet)
+- Complex tasks: Executor (Opus)
+- Independent tasks run in parallel
+
+### Phase 3 - QA
+
+Iterates in UltraQA mode until all tests pass.
+
+- Build, lint, test, fix failures
+- Up to 5 iterations
+- If the same error repeats 3 times, it is treated as a root issue and execution stops
+
+### Phase 4 - Validation
+
+Performs parallel reviews.
+
+- Architect: validates functional completeness
+- Security-reviewer: checks for security vulnerabilities
+- Code-reviewer: reviews code quality
+- All reviewers must approve
+
+### Phase 5 - Cleanup
+
+Deletes all state files when complete.
+
+## Examples
+
+```bash
+# Specify a concrete domain and tech stack
+autopilot A REST API for a bookstore inventory with CRUD operations using TypeScript
+
+# Clear feature description
+build me a CLI tool that tracks daily habits with streak counting
+
+# 3-Stage pipeline (highest quality)
+/oh-my-claudecode:deep-interview "vague idea"
+  → /oh-my-claudecode:ralplan --direct
+    → /oh-my-claudecode:autopilot
+```
+
+## Options
+
+Configurable in `.claude/settings.json`.
+
+```json
+{
+  "omc": {
+    "autopilot": {
+      "maxIterations": 10,
+      "maxQaCycles": 5,
+      "maxValidationRounds": 3,
+      "pauseAfterExpansion": false,
+      "skipQa": false,
+      "skipValidation": false
+    }
+  }
+}
+```
+
+## Related Skills
+
+- [ralph](/docs/skills/workflow/ralph) - handles the execution loop inside autopilot
+- [ultrawork](/docs/skills/workflow/ultrawork) - handles parallel execution inside autopilot
+- [ultraqa](/docs/skills/workflow/ultraqa) - Phase 3 QA cycling for autopilot
+- [deep-interview](/docs/skills/workflow/deep-interview) - pre-interview to clarify vague ideas
+- [ralplan](/docs/skills/workflow/ralplan) - consensus-based planning
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:autopilot` |
+| Magic Keywords | `autopilot`, `build me`, `I want a` |
+| Category | Workflow |
+| State File | `.omc/state/autopilot-state.json` |
+| Cancel | `/oh-my-claudecode:cancel` |
+| Resume | Re-run with the same command |
