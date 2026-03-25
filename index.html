@@ -2240,26 +2240,26 @@
     </div>
   </section>
 
-<!-- What's New in v4.8.0 Section -->
+<!-- What's New in v4.9.1 Section -->
 <section id="whats-new" class="section whats-new-section" aria-labelledby="whats-new-title">
   <div class="section__header" data-reveal="fade-up">
     <div class="whats-new-badge">
       <span class="whats-new-badge__label">NEW</span>
-      <span class="whats-new-badge__version">v4.8.0</span>
+      <span class="whats-new-badge__version">v4.9.1</span>
     </div>
-    <h2 id="whats-new-title" class="section__title">What's New in 4.8.0</h2>
-    <p class="section__subtitle">Tracer Agent for evidence-driven causal analysis, 21 security vulnerability patches, HUD token tracking, and team governance hardening.</p>
+    <h2 id="whats-new-title" class="section__title">What's New in 4.9.1</h2>
+    <p class="section__subtitle">Bridge hardening, team runtime stability, devcontainer-aware LSP, and visual verdict skill for screenshot-based QA.</p>
   </div>
 
   <div class="whats-new-layout" data-reveal="fade-up" data-reveal-delay="100">
     <div class="whats-new-highlights">
       <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="200">
         <div class="whats-new-card__icon whats-new-card__icon--feature">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/><circle cx="11" cy="11" r="8"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Tracer Agent & Trace Skill</h3>
-          <p class="whats-new-card__desc">New evidence-driven causal tracing agent with competing hypotheses, evidence ranking, and discriminating probe recommendations. Enables systematic root-cause analysis with scientific rigor.</p>
+          <h3 class="whats-new-card__title">Bridge Path Hardening</h3>
+          <p class="whats-new-card__desc">Prevent bridge skill discovery from rejecting canonical temp paths. Fixed edge cases where symlink resolution caused valid paths to be rejected.</p>
         </div>
       </article>
 
@@ -2268,38 +2268,38 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Security Hardening</h3>
-          <p class="whats-new-card__desc">Patched 21 security vulnerabilities including SSRF bypass via IPv6-mapped addresses, command injection in tmux launch, prototype pollution in deepMerge, and shell injection vectors.</p>
+          <h3 class="whats-new-card__title">Team Worker Identity Isolation</h3>
+          <p class="whats-new-card__desc">Prevent duplicate worker identities from leaking across team runtime surfaces. Hardened cleanup for split-pane workers after metadata drift.</p>
         </div>
       </article>
 
       <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="300">
         <div class="whats-new-card__icon whats-new-card__icon--feature">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">HUD Token Usage Tracking</h3>
-          <p class="whats-new-card__desc">Real-time token usage display in HUD with optional transcript token totals for better cost visibility. Monitor your AI usage as you work.</p>
+          <h3 class="whats-new-card__title">Devcontainer-Aware LSP</h3>
+          <p class="whats-new-card__desc">LSP sessions now use an already-running devcontainer when the host is wrong. Broadened devcontainer config discovery without changing LSP launch semantics.</p>
         </div>
       </article>
 
       <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="350">
         <div class="whats-new-card__icon whats-new-card__icon--feature">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/><path d="M12 2v10"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">OMX Team Governance Backport</h3>
-          <p class="whats-new-card__desc">Hardened team runtime with leader nudge guidance, governance enforcement, and improved pane stall heuristics ported from OMX production runtime.</p>
+          <h3 class="whats-new-card__title">Visual Verdict Skill</h3>
+          <p class="whats-new-card__desc">New screenshot-based QA skill for structured visual comparisons. Align visual-verdict with OMC-native discovery for seamless integration.</p>
         </div>
       </article>
 
       <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="400">
         <div class="whats-new-card__icon whats-new-card__icon--feature">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Unified MCP Registry</h3>
-          <p class="whats-new-card__desc">Synchronized MCP registry now syncs to Codex config for consistent server management across Claude Code, Codex CLI, and other tools.</p>
+          <h3 class="whats-new-card__title">HUD & State Stability</h3>
+          <p class="whats-new-card__desc">Stabilized HUD context display across refreshes. Prevent session state leakage across HUD windows. Fixed ralplan state lifecycle cleanup.</p>
         </div>
       </article>
 
@@ -2308,14 +2308,14 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Reliability Improvements</h3>
-          <p class="whats-new-card__desc">23+ PRs merged including Windows hook path preservation, ExitPlanMode unblocking, Codex worker lifecycle sync, and 15 additional bug fixes.</p>
+          <h3 class="whats-new-card__title">Windows & MCP Fixes</h3>
+          <p class="whats-new-card__desc">Synced shipped Windows omc update reconcile artifacts. Write Claude MCP registrations where Claude Code actually reads them. Lock MCP config ownership at install boundary.</p>
         </div>
       </article>
     </div>
 
     <div class="whats-new-cta" data-reveal="fade-up" data-reveal-delay="500">
-      <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v4.8.0" class="btn btn--primary" target="_blank" rel="noopener">View Release Notes</a>
+      <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v4.9.1" class="btn btn--primary" target="_blank" rel="noopener">View Release Notes</a>
       <a href="https://github.com/yeachan-heo/oh-my-claudecode/blob/main/CHANGELOG.md" class="btn btn--secondary" target="_blank" rel="noopener">Full Changelog</a>
     </div>
   </div>
@@ -2422,7 +2422,7 @@
   <section id="installation" class="section install-section" aria-labelledby="install-title">
     <div class="section__header" data-reveal="fade-up">
       <h2 id="install-title" class="section__title">Get Started in Seconds</h2>
-      <p class="section__subtitle">Install via Claude Code plugin marketplace, or use the npm package directly: <code>oh-my-claude-sisyphus@4.8.0</code>.</p>
+      <p class="section__subtitle">Install via Claude Code plugin marketplace, or use the npm package directly: <code>oh-my-claude-sisyphus@4.9.1</code>.</p>
     </div>
 
     <div class="install-flow" data-reveal="stagger">
@@ -2461,13 +2461,13 @@
                 <span class="code-block__dot code-block__dot--yellow"></span>
                 <span class="code-block__dot code-block__dot--green"></span>
               </div>
-              <button class="code-block__copy" data-copy="npm install -g oh-my-claude-sisyphus@4.8.0" aria-label="Copy command">
+              <button class="code-block__copy" data-copy="npm install -g oh-my-claude-sisyphus@4.9.1" aria-label="Copy command">
                 Copy
               </button>
             </div>
             <div class="code-block__content">
               <code><span class="comment"># CLI install via npm:</span><br>
-  npm install -g oh-my-claude-sisyphus@4.8.0</code>
+  npm install -g oh-my-claude-sisyphus@4.9.1</code>
             </div>
           </div>
         </div>
