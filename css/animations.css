@@ -1195,6 +1195,26 @@
 }
 
 /* ========================================
+   Card Rendering Fixes - All Screen Sizes
+   ======================================== */
+
+/* AGGRESSIVE FIX: Force all data-reveal elements visible immediately */
+/* This overrides the opacity: 0 that hides elements before scroll reveal */
+/* Safety net: if JS fails to load or IntersectionObserver doesn't fire */
+[data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+/* Stagger children also need to be visible */
+[data-reveal="stagger"] > * {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+/* ========================================
    Mobile Card Rendering Fixes
    ======================================== */
 
@@ -1238,21 +1258,6 @@
   .feature-card-new__title,
   .feature-card-new__description {
     transform: none !important;
-  }
-
-  /* AGGRESSIVE MOBILE FIX: Force all data-reveal elements visible immediately */
-  /* This overrides the opacity: 0 that hides elements before scroll reveal */
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-
-  /* Stagger children also need to be visible */
-  [data-reveal="stagger"] > * {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
   }
 }
 
