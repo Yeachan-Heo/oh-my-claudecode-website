@@ -31,7 +31,7 @@ const translations = {
     heroSubtitle: 'Multi-Agent Orchestration for Claude Code',
     heroDesc: [
       'A multi-agent orchestration layer for Claude Code.',
-      '20 agents and 28 skills working together.',
+      '19 agents and 30 skills working together.',
     ],
     metaTitle: 'Oh My ClaudeCode — Multi-Agent Orchestration for Claude Code',
     metaDescription:
@@ -43,12 +43,12 @@ const translations = {
       'A specialized agent layer that runs on top of Claude Code.',
     features: [
       {
-        title: '20 Specialized Agents',
+        title: '19 Specialized Agents',
         desc: 'Agents dedicated to each role from exploration, planning, implementation, to verification and review.',
         tag: 'Agents',
       },
       {
-        title: '28 Automation Skills',
+        title: '30 Automation Skills',
         desc: 'autopilot, ralph, ultrawork — complex pipelines run with a single command.',
         tag: 'Skills',
       },
@@ -76,7 +76,7 @@ const translations = {
       { label: 'Validation', role: 'Verifier' },
     ],
     agentsTitle: 'Specialized Agents',
-    agentsDesc: '4 lanes, 20 agents. Each optimized for its role.',
+    agentsDesc: '4 lanes, 19 agents. Each optimized for its role.',
     viewAllAgents: 'View all agents',
     skillsTitle: 'Key Skills',
     skillsDesc: 'Execute complex workflows with a single word.',
@@ -110,7 +110,7 @@ const translations = {
     heroSubtitle: 'Claude Code를 위한 멀티 에이전트 오케스트레이션',
     heroDesc: [
       'Claude Code를 위한 멀티 에이전트 오케스트레이션 레이어.',
-      '20개 에이전트와 28개 스킬이 협업합니다.',
+      '19개 에이전트와 30개 스킬이 협업합니다.',
     ],
     metaTitle: 'Oh My ClaudeCode — Claude Code 멀티 에이전트 오케스트레이션',
     metaDescription:
@@ -122,12 +122,12 @@ const translations = {
       'Claude Code 위에서 동작하는 전문 에이전트 레이어입니다.',
     features: [
       {
-        title: '20개 전문 에이전트',
+        title: '19개 전문 에이전트',
         desc: '탐색, 계획, 구현, 검증, 리뷰까지 각 역할에 특화된 에이전트가 분담합니다.',
         tag: 'Agents',
       },
       {
-        title: '28개 자동화 스킬',
+        title: '30개 자동화 스킬',
         desc: 'autopilot, ralph, ultrawork -- 한 마디면 복잡한 파이프라인이 실행됩니다.',
         tag: 'Skills',
       },
@@ -155,7 +155,7 @@ const translations = {
       { label: '검증', role: 'Verifier' },
     ],
     agentsTitle: '전문 에이전트',
-    agentsDesc: '4개 레인, 20개 에이전트. 각자의 역할에 최적화되어 있습니다.',
+    agentsDesc: '4개 레인, 19개 에이전트. 각자의 역할에 최적화되어 있습니다.',
     viewAllAgents: '전체 에이전트 보기',
     skillsTitle: '주요 스킬',
     skillsDesc: '복잡한 워크플로우를 한 단어로 실행합니다.',
