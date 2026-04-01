@@ -1,0 +1,134 @@
+---
+title: Magic Keywords
+description: The magic keyword system that activates OMC execution modes and skills through natural language prompts.
+---
+
+## What are Magic Keywords?
+
+Magic keywords are a system that detects specific words or patterns in a user's natural language prompt
+and automatically activates OMC skills or execution modes.
+
+Without a separate slash command, including a keyword in your prompt automatically activates the corresponding feature.
+
+## How keyword-detector Works
+
+`keyword-detector.mjs` runs on the UserPromptSubmit event.
+
+1. Receives the user prompt and sanitizes it
+2. Removes code blocks, XML tags, URLs, and file paths to prevent false positives
+3. Performs keyword pattern matching on the sanitized text
+4. Injects the skill invocation instruction after conflict resolution
+
+### Safety Guards
+
+- **Sanitization**: Keywords inside code blocks, words in URLs, and file paths are ignored
+- **Team worker protection**: Disabled when the `OMC_TEAM_WORKER` environment variable is set (prevents infinite spawning)
+- **Disable**: `DISABLE_OMC=1` or `OMC_SKIP_HOOKS=keyword-detector`
+
+## Keyword List
+
+### Execution Mode Keywords
+
+Keywords that invoke a skill and create a state file.
+
+| Keyword | Skill | Description |
+|--------|------|------|
+| `cancelomc`, `stopomc` | cancel | Cancels all active modes |
+| `ralph`, `don't stop`, `must complete`, `until done` | ralph | Persistent execution until verification complete |
+| `autopilot`, `auto pilot`, `auto-pilot`, `autonomous`, `build me`, `I want a`, `create/make me <noun>`, `handle it all`, `full auto`, `fullsend`, `end to end`, `e2e this` | autopilot | Fully autonomous execution |
+| `ultrawork`, `ulw`, `uw` | ultrawork | Maximum parallel execution |
+| `ccg`, `claude-codex-gemini` | ccg | Claude-Codex-Gemini tri-model orchestration |
+| `ralplan` | ralplan | Consensus-based iterative planning |
+| `deep interview`, `ouroboros` | deep-interview | Socratic deep interview |
+
+### AI Slop Cleanup Keywords
+
+Supports two types: explicit patterns and combination patterns.
+
+**Explicit patterns** (activate on their own):
+- `ai-slop`, `anti-slop`, `deslop`, `de-slop`
+
+**Combination patterns** (activate when action + smell are combined):
+
+| Action keywords | Smell keywords |
+|------------|------------|
+| `cleanup`, `refactor`, `simplify`, `dedupe`, `prune` | `slop`, `duplicate`, `duplication`, `dead code`, `unused code`, `over-abstraction`, `wrapper layers`, `needless abstractions`, `unnecessary abstractions`, `ai-generated`, `generated code`, `tech debt`, `boundary violations` |
+
+Example: "cleanup the duplicate code" → activates the ai-slop-cleaner skill
+
+### Agent Shortcut Keywords
+
+Activates agents with natural language instead of slash commands.
+
+| Keyword | Effect | Behavior |
+|--------|------|------|
+| `tdd`, `test first`, `red green` | TDD mode | Forces test-first writing |
+| `code review`, `review code` | Code review mode | Runs comprehensive code review |
+| `security review`, `review security` | Security review mode | Runs security-focused review |
+
+These keywords inject an inline mode message instead of invoking a skill.
+
+### Reasoning Enhancement Keywords
+
+| Keyword | Effect |
+|--------|------|
+| `ultrathink`, `think hard`, `think deeply` | Activates extended reasoning mode |
+| `deepsearch`, `search the codebase`, `find in codebase` (also: `search code`, `search files`, `search project`, `find in code`, `find in all files`) | Codebase-focused search mode |
+| `deep-analyze`, `deepanalyze` | Deep analysis mode |
+
+## Priority and Conflict Resolution
+
+When multiple keywords are detected simultaneously, they are resolved in the following priority order:
+
+```
+cancel (highest priority, exclusive)
+  → ralph
+    → autopilot
+      → ultrawork
+        → ccg
+          → ralplan
+            → deep-interview
+              → ai-slop-cleaner
+                → tdd
+                  → code-review
+                    → security-review
+                      → ultrathink
+                        → deepsearch
+                          → analyze
+```
+
+`cancel` is exclusive -- it ignores all other matches and only runs the cancel.
+Other keywords allow multiple matches and are processed in priority order.
+
+## Usage Examples
+
+```bash
+# In Claude Code:
+
+# Autonomous execution
+autopilot: implement user authentication with OAuth
+
+# Parallel execution
+ultrawork write all tests for this module
+
+# Persistent execution
+ralph refactor this authentication module
+
+# TDD
+tdd: implement password validation function
+
+# Code review
+code review the recent changes
+
+# Cancel
+stopomc
+```
+
+## Team Keywords
+
+`team` is not auto-detected.
+To prevent infinite spawning, it must be explicitly invoked with the `/team` slash command.
+
+```
+/oh-my-claudecode:team 3:executor "build a full-stack todo app"
+```

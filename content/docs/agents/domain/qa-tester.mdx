@@ -1,0 +1,65 @@
+---
+title: QA Tester
+description: An agent that interactively validates CLI/service runtime behavior through tmux sessions.
+---
+
+## Overview
+
+QA Tester is an agent that interactively validates actual application behavior in tmux sessions.
+It handles starting services, sending commands, capturing output, validating against expectations, and teardown.
+
+Unit tests verify code logic, but QA testing verifies actual behavior.
+An application can pass all unit tests yet fail when actually run.
+Interactive testing via tmux catches startup failures, integration issues, and user-facing bugs.
+
+## When to Use
+
+- When the automated test suite does not cover the behavior in question
+- When interactive CLI input/output simulation is needed
+- When service startup/shutdown testing is needed
+- When streaming/real-time behavior validation is needed
+
+### When Not to Use
+
+- When the project has tests covering the feature (running tests is more efficient)
+- For simple command verification (direct execution is more efficient)
+- For static code analysis (architect is more suitable)
+
+## Usage Examples
+
+```
+"Actually test that the API server responds correctly"
+"Validate the interactive features of this CLI tool"
+"Check the /health endpoint after service startup"
+```
+
+## Testing Process
+
+1. **Prerequisite Check**: Verify tmux is installed, port is available, directory exists. Fail immediately if not met
+2. **Setup**: Create a tmux session with a unique name (`qa-{service}-{test}-{timestamp}`), start the service, wait for ready signal
+3. **Execute**: Send test commands, wait for output, capture with `tmux capture-pane`
+4. **Validate**: Compare captured output against expected patterns. Report PASS/FAIL
+5. **Cleanup**: Terminate tmux session and remove artifacts. Always clean up, even on failure
+
+## Key Rules
+
+- **Unique session names**: Use the format `qa-{service}-{test}-{timestamp}`. No generic names like "test"
+- **Wait for readiness**: Do not send commands immediately after service startup. Poll for output pattern or port availability
+- **Capture output first**: Always run `tmux capture-pane` before making assertions
+- **Always clean up**: Always terminate the session even on test failure. Prevent orphan processes
+- **Appropriate delays**: Short delays are needed between send-keys and capture-pane
+
+## Combining with Other Agents
+
+- **architect**: Architect diagnoses and outputs a test plan; QA Tester executes it (diagnosis-validation loop)
+- **debugger**: Root cause analysis of test failures is debugger's responsibility
+- **verifier**: Automated test verification is handled by verifier
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:qa-tester` |
+| Lane | Domain |
+| Required Tool | tmux |

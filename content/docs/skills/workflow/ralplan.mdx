@@ -1,0 +1,95 @@
+---
+title: Ralplan
+description: Iterative planning through a Planner-Architect-Critic consensus process
+---
+
+## Overview
+
+Ralplan is a shortcut alias for `/oh-my-claudecode:omc-plan --consensus`. It performs RALPLAN-DR structured deliberation where Planner, Architect, and Critic agents iteratively review and refine a plan until they reach consensus.
+
+It also acts as a pre-execution gate for vague execution requests. Prompts like `ralph add authentication` that lack specificity are redirected to ralplan to establish a plan first.
+
+## Usage
+
+```bash
+/oh-my-claudecode:ralplan "task description"
+/oh-my-claudecode:ralplan --interactive "task description"
+/oh-my-claudecode:ralplan --deliberate "high-risk migration"
+```
+
+Also activated via magic keywords.
+
+```
+ralplan this feature
+```
+
+## Options / Flags
+
+| Flag | Description |
+|------|-------------|
+| `--interactive` | Enable user prompts at key decision points |
+| `--deliberate` | Deep deliberation for high-risk work (pre-mortem analysis + extended test plan) |
+| `--architect codex` | Use Codex CLI in the Architect stage |
+| `--critic codex` | Use Codex CLI in the Critic stage |
+
+## Consensus Workflow
+
+1. **Planner** writes the initial plan + RALPLAN-DR summary
+   - Principles (3-5), decision drivers (top 3), actionable options (2 or more)
+   - `--deliberate`: adds pre-mortem analysis (3 scenarios) + extended test plan
+2. **Architect** reviews architectural soundness (runs sequentially, includes counterarguments)
+3. **Critic** evaluates quality criteria (runs after Architect completes)
+4. On rejection: revise → Architect → Critic cycle (up to 5 times)
+5. On approval: output final plan with ADR
+
+## Pre-Execution Gate
+
+When an ambiguous prompt is passed to an execution mode (ralph, autopilot, team, ultrawork), it is redirected to ralplan.
+
+### Prompts That Pass the Gate
+
+A prompt passes the gate if it contains at least one concrete signal.
+
+| Signal | Example |
+|--------|---------|
+| File path | `ralph fix src/hooks/bridge.ts` |
+| Issue/PR number | `ralph implement #42` |
+| camelCase symbol | `ralph fix processKeywordDetector` |
+| Numbered steps | `ralph do: 1. Add X 2. Test Y` |
+| Error reference | `ralph fix TypeError in auth` |
+
+### How to Bypass the Gate
+
+```bash
+force: ralph refactor the auth module
+! autopilot optimize everything
+```
+
+## Examples
+
+```bash
+# Basic consensus planning
+ralplan redesign the database schema
+
+# Interactive mode
+ralplan --interactive migrate from REST to GraphQL
+
+# High-risk work
+ralplan --deliberate rewrite the authentication system
+```
+
+## Related Skills
+
+- [plan](/docs/skills/workflow/plan) - full planning skill (ralplan is the consensus mode alias)
+- [autopilot](/docs/skills/workflow/autopilot) - autonomous execution after consensus planning
+- [team](/docs/skills/workflow/team) - team execution after consensus planning (recommended)
+- [deep-interview](/docs/skills/workflow/deep-interview) - deep interview before planning
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:ralplan` |
+| Magic Keywords | `ralplan` |
+| Category | Workflow |
+| Output Path | `.omc/plans/ralplan-*.md` |

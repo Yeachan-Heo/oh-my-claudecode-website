@@ -1,0 +1,61 @@
+---
+title: Analyst
+description: A pre-planning consultant that analyzes requirements and defines acceptance criteria.
+---
+
+## Overview
+
+Analyst is an agent that converts decided product scope into implementable acceptance criteria.
+Its core purpose is to catch gaps in requirements before planning begins.
+
+It focuses on "can this be built?" and does not make market/value judgments about "should this be built?"
+Discovering requirement gaps before planning is 100x cheaper than discovering them after implementation.
+
+Analyst is a read-only agent.
+
+## When to Use
+
+- When verifying the completeness of requirements before implementing a feature
+- When finding missing questions and undefined boundary conditions
+- When confirming that acceptance criteria are testable
+- When identifying scope creep risks in advance
+
+## Usage Examples
+
+```
+"Analyze the requirements for the user deletion feature"
+"Find what's missing in this PRD"
+"Summarize the edge cases for this feature"
+```
+
+Analyst checks the following questions for each requirement:
+- Is it complete? Is it testable? Is it unambiguous?
+- What are the unvalidated assumptions?
+- What is explicitly included and excluded from scope?
+- What are the prerequisite dependencies?
+
+## Output Format
+
+Analyst produces an analysis report in a structured format.
+
+- **Missing Questions**: Questions not yet asked and their importance
+- **Undefined Guardrails**: Areas where boundary definitions are needed
+- **Scope Risks**: Potential scope creep areas and prevention strategies
+- **Unvalidated Assumptions**: Assumptions and how to validate them
+- **Missing Acceptance Criteria**: Measurable success criteria
+- **Edge Cases**: Abnormal scenarios and handling approaches
+
+## Combining with Other Agents
+
+- **planner**: Planner creates a plan based on Analyst's analysis. Planner consults analyst before generating a plan
+- **architect**: Delegates to architect when code analysis is needed
+- **critic**: If a plan already exists, critic reviews it
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | opus |
+| Subagent Type | `oh-my-claudecode:analyst` |
+| Lane | Build & Analysis |
+| Read-Only | Yes (Write, Edit blocked) |

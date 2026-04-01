@@ -1,0 +1,135 @@
+---
+title: Lifecycle Events
+description: Explains Claude Code's 11 lifecycle events and the hooks connected to each event.
+---
+
+## What are Lifecycle Events?
+
+Claude Code emits multiple events during a session.
+OMC connects hooks to these events to extend behavior.
+
+Below are the 11 lifecycle events supported by Claude Code
+and the OMC hooks executed at each event.
+
+## UserPromptSubmit
+
+Fires when a user submits a prompt.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `keyword-detector.mjs` | Detects magic keywords and invokes the corresponding skill | 5s |
+| `skill-injector.mjs` | Injects skill prompts | 3s |
+
+This event runs on all user input (`matcher: "*"`).
+When the keyword detector finds keywords like "ultrawork", "ralph", or "autopilot",
+it injects a skill invocation instruction via `additionalContext`.
+
+## SessionStart
+
+Fires when a new session starts.
+
+| Script | matcher | Role | timeout |
+|---------|---------|------|---------|
+| `session-start.mjs` | `*` | Session initialization, state restoration | 5s |
+| `project-memory-session.mjs` | `*` | Loads project memory | 5s |
+| `setup-init.mjs` | `init` | Initial setup wizard | 30s |
+| `setup-maintenance.mjs` | `maintenance` | Maintenance tasks | 60s |
+
+The `init` and `maintenance` matchers only run in special cases.
+For a normal session start, only the 2 scripts with `*` matcher run.
+
+## PreToolUse
+
+Fires just before Claude uses a tool.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `pre-tool-enforcer.mjs` | Validates rules before tool use | 3s |
+
+Runs on all tool calls (`matcher: "*"`) and enforces agent permission restrictions
+(e.g., blocking Write/Edit for read-only agents).
+
+## PermissionRequest
+
+Fires when a permission request occurs during Bash tool execution.
+
+| Script | matcher | Role | timeout |
+|---------|---------|------|---------|
+| `permission-handler.mjs` | `Bash` | Handles Bash command permission | 5s |
+
+Only handles permission requests for the Bash tool.
+
+## PostToolUse
+
+Fires after a tool use completes.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `post-tool-verifier.mjs` | Verifies tool use results and injects additional context | 3s |
+| `project-memory-posttool.mjs` | Updates project memory | 3s |
+
+Injects additional guidance based on tool results for Read, Write, Edit, Bash, etc.
+For example, after reading a file it might hint "consider using parallel reads".
+
+## PostToolUseFailure
+
+Fires when a tool use fails.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `post-tool-use-failure.mjs` | Provides recovery guidance for failed tool use | 3s |
+
+## SubagentStart
+
+Fires when a subagent is spawned.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `subagent-tracker.mjs start` | Tracks subagent start, injects prompts | 3s |
+
+Records the subagent's name, start time, and session information.
+
+## SubagentStop
+
+Fires when a subagent completes.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `subagent-tracker.mjs stop` | Tracks subagent completion | 5s |
+| `verify-deliverables.mjs` | Verifies subagent deliverables | 5s |
+
+## PreCompact
+
+Fires just before context compaction.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `pre-compact.mjs` | Preserves state before compaction | 10s |
+| `project-memory-precompact.mjs` | Preserves project memory | 5s |
+
+Preserves important state and memory before compaction runs
+when the context window is full.
+
+## Stop
+
+Fires when Claude's response ends.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `context-guard-stop.mjs` | Monitors context usage | 5s |
+| `persistent-mode.cjs` | Maintains active mode state (ralph, ultrawork, etc.) | 10s |
+| `code-simplifier.mjs` | Auto-simplifies modified files (opt-in) | 5s |
+
+persistent-mode injects reinforcement messages like "The boulder never stops"
+when there is an active execution mode to encourage continued work.
+
+## SessionEnd
+
+Fires when a session ends.
+
+| Script | Role | timeout |
+|---------|------|---------|
+| `session-end.mjs` | Saves session summary, sends callback notifications | 10s |
+
+Saves agent activity, token usage, etc. during the session to `.omc/sessions/`,
+and sends completion notifications to Discord/Telegram/Slack if configured.

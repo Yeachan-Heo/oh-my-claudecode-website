@@ -1,0 +1,101 @@
+---
+title: Plan
+description: Strategic planning skill supporting 4 modes including interview-based planning
+---
+
+## Overview
+
+Plan is a strategic planning skill that supports four modes: interview, direct, consensus, and review. It automatically selects a mode based on how specific the request is, explores the codebase first, then asks the user questions.
+
+## Usage
+
+```bash
+/oh-my-claudecode:omc-plan "implement user authentication"
+/oh-my-claudecode:omc-plan --consensus "redesign the API layer"
+/oh-my-claudecode:omc-plan --direct "add caching to the search endpoint"
+/oh-my-claudecode:omc-plan --review
+```
+
+Also activated via magic keywords.
+
+```
+plan this feature
+plan the migration
+let's plan the refactoring
+```
+
+## Mode Selection
+
+| Mode | Trigger | Behavior |
+|------|---------|----------|
+| Interview | Broad request (default) | Interactive requirements gathering |
+| Direct | `--direct` or detailed request | Skip interview and generate plan immediately |
+| Consensus | `--consensus` or `ralplan` | Iterative Planner-Architect-Critic consensus |
+| Review | `--review` | Critic evaluation of an existing plan |
+
+## Interview Mode
+
+Interactively gathers requirements for broad or vague requests.
+
+- Codebase facts are gathered first via the explore agent
+- Only one question is asked at a time
+- Each question builds on previous answers
+- Generates a plan when the user is ready
+
+## Consensus Mode
+
+A consensus mode using RALPLAN-DR structured deliberation.
+
+1. **Planner** writes the initial plan and RALPLAN-DR summary
+2. **Architect** reviews architectural soundness (runs sequentially)
+3. **Critic** evaluates quality criteria (runs after Architect completes)
+4. Iterates up to 5 times on rejection
+5. Outputs final plan with ADR on approval
+
+### RALPLAN-DR Summary Structure
+
+- Principles (3-5)
+- Decision drivers (top 3)
+- Actionable options (2 or more), each with pros and cons
+- `--deliberate` mode: pre-mortem analysis (3 scenarios) + extended test plan
+
+## Options / Flags
+
+| Flag | Description |
+|------|-------------|
+| `--direct` | Generate plan directly without interview |
+| `--consensus` | Activate consensus mode |
+| `--review` | Review an existing plan |
+| `--interactive` | Enable user prompts during consensus mode |
+| `--deliberate` | Deep deliberation mode for high-risk work |
+| `--architect codex` | Use Codex in the Architect stage |
+| `--critic codex` | Use Codex in the Critic stage |
+
+## Plan Output Format
+
+Every plan includes:
+
+- Requirements summary
+- Acceptance criteria (testable)
+- Implementation steps (with file references)
+- Risks and mitigations
+- Verification steps
+- Consensus mode: RALPLAN-DR summary + ADR
+
+Plans are saved to `.omc/plans/`.
+
+## Related Skills
+
+- [ralplan](/docs/skills/workflow/ralplan) - shortcut alias for `plan --consensus`
+- [autopilot](/docs/skills/workflow/autopilot) - autonomous execution after planning
+- [ralph](/docs/skills/workflow/ralph) - continuous loop execution after planning
+- [deep-interview](/docs/skills/workflow/deep-interview) - deep interview before planning
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:omc-plan` |
+| Magic Keywords | `plan this`, `plan the`, `let's plan` |
+| Category | Workflow |
+| Output Path | `.omc/plans/` |

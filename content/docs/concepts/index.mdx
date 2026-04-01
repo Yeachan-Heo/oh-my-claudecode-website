@@ -1,0 +1,602 @@
+---
+title: Core Concepts
+description: How agents, skills, hooks, and the state management system fit together in OMC
+---
+
+## OMC Building Blocks
+
+OMC runs on four systems.
+
+<Mermaid chart={`
+graph TD
+    A["User Input"] --> B["Hooks\nEvent Detection"]
+    B --> C["Skills\nBehavior Injection"]
+    C --> D["Agents\nSpecialized Task Execution"]
+    D --> E["State\nProgress Tracking"]
+`} />
+
+### Summary of Each Concept
+
+#### Agents
+
+19 specialized agents perform tasks according to their role.
+Each agent operates with an appropriate AI model (haiku, sonnet, or opus).
+
+Examples: `explore` (discovery), `executor` (implementation), `architect` (design), `verifier` (validation)
+
+#### Skills
+
+30 skills compose and extend how agents behave.
+They are activated via slash commands (`/oh-my-claudecode:skill-name`) or magic keywords.
+
+Examples: `autopilot` (autonomous execution), `ralph` (loop until complete), `team` (parallel collaboration)
+
+#### Hooks
+
+React to Claude Code lifecycle events to activate skills and agents.
+They fire when users submit prompts, use tools, or when a session starts or ends.
+
+#### State Management
+
+Stores task progress, notes, and project knowledge in the `.omc/` directory.
+Important information is preserved even when the context window is reset (compacted).
+
+---
+
+## What Are Agents?
+
+Agents are AI workers specialized for specific roles.
+OMC organizes its 19 agents into 4 lanes.
+
+Each agent is invoked with the format `oh-my-claudecode:agent-name`.
+
+### Build/Analysis Lane
+
+Handles the entire development flow — from exploration to verification.
+
+| Agent | Default Model | Role |
+|-------|---------------|------|
+| `explore` | haiku | Codebase exploration, file and pattern discovery |
+| `analyst` | opus | Requirements analysis, uncovering hidden constraints |
+| `planner` | opus | Task sequencing, execution planning |
+| `architect` | opus | System design, interface definition, trade-off analysis |
+| `debugger` | sonnet | Root cause analysis, build error fixes |
+| `executor` | sonnet | Code implementation, refactoring |
+| `verifier` | sonnet | Completion verification, test adequacy checks |
+| `tracer` | sonnet | Evidence-based causal tracing, competing hypotheses |
+
+### Review Lane
+
+The quality gate before handing off code. Catches quality and security issues.
+
+| Agent | Default Model | Role |
+|-------|---------------|------|
+| `security-reviewer` | sonnet | Security vulnerabilities, trust boundaries, authn/authz |
+| `code-reviewer` | opus | Comprehensive code review, API contracts, backward compatibility |
+
+### Domain Lane
+
+Domain specialists called in as needed.
+
+| Agent | Default Model | Role |
+|-------|---------------|------|
+| `test-engineer` | sonnet | Test strategy, coverage, flaky-test hardening |
+| `designer` | sonnet | UI/UX architecture, interaction design |
+| `writer` | haiku | Documentation, migration notes |
+| `qa-tester` | sonnet | CLI/service runtime validation via tmux |
+| `scientist` | sonnet | Data analysis, statistical research |
+| `git-master` | sonnet | Git operations, commits, rebase, history management |
+| `document-specialist` | sonnet | External docs, API, and SDK reference lookup |
+| `code-simplifier` | opus | Code clarity, simplification, maintainability improvements |
+
+### Coordination Lane
+
+Challenges plans made by other agents. If no gaps are found, the plan passes.
+
+| Agent | Default Model | Role |
+|-------|---------------|------|
+| `critic` | opus | Gap analysis of plans and designs, multi-angle review |
+
+### Model Routing
+
+OMC uses three model tiers.
+
+| Tier | Model | Characteristics | Cost |
+|------|-------|-----------------|------|
+| LOW | haiku | Fast and inexpensive | Low |
+| MEDIUM | sonnet | Balance between performance and cost | Medium |
+| HIGH | opus | Highest-level reasoning | High |
+
+Default tiers vary by agent.
+
+- haiku: fast lookups and simple tasks (explore, writer)
+- sonnet: code implementation, debugging, testing (executor, debugger, test-engineer)
+- opus: architecture, strategic analysis, review (architect, planner, critic, code-reviewer)
+
+### Delegation Rules
+
+The OMC orchestrator delegates to the appropriate agent based on task type.
+
+#### When to Delegate to an Agent
+
+- When multiple files need to be changed
+- When refactoring is needed
+- When debugging or root cause analysis is needed
+- When code review or security review is needed
+- When planning or research is needed
+
+#### When to Handle Directly
+
+- Simple file lookups
+- Straightforward question answering
+- Single-line command execution
+
+### Example Agent Workflow
+
+A typical task flow looks like this.
+
+<Mermaid chart={`
+graph LR
+    A["explore\nDiscovery"] --> B["analyst\nRequirements"]
+    B --> C["planner\nPlanning"]
+    C --> D["critic\nReview"]
+    D --> E["executor\nImplementation"]
+    E --> F["verifier\nVerification"]
+`} />
+
+#### Agent Role Boundaries
+
+| Agent | Does | Does Not |
+|-------|------|----------|
+| `architect` | Code analysis, debugging, verification | Requirements gathering, planning |
+| `analyst` | Finding requirement gaps | Code analysis, planning |
+| `planner` | Creating task plans | Requirements analysis, plan review |
+| `critic` | Reviewing plan quality | Requirements analysis, code analysis |
+
+### Agent Selection Guide
+
+| Task Type | Recommended Agent | Model |
+|-----------|-------------------|-------|
+| Quick code lookup | `explore` | haiku |
+| Feature implementation | `executor` | sonnet |
+| Complex refactoring | `executor` (model=opus) | opus |
+| Simple bug fix | `debugger` | sonnet |
+| Complex debugging | `architect` | opus |
+| UI component | `designer` | sonnet |
+| Documentation | `writer` | haiku |
+| Test strategy | `test-engineer` | sonnet |
+| Security review | `security-reviewer` | sonnet |
+| Code review | `code-reviewer` | opus |
+| Data analysis | `scientist` | sonnet |
+
+---
+
+## What Are Skills?
+
+Skills are a behavior injection system that defines how agents act.
+They do not replace agents — they add extra capabilities to existing agents.
+
+Skills are divided into three layers.
+
+<Mermaid chart={`
+graph TD
+    G["Guarantee Layer (optional)\nralph: never stops until verified"]
+    E["Enhancement Layer (0 or more)\nultrawork (parallel) | git-master (commit)"]
+    X["Execution Layer (default)\ndefault (build) | orchestrate (coordinate)"]
+    G --> E --> X
+`} />
+
+Skills can be composed.
+
+```
+Task: "ultrawork: refactor the API and commit it"
+Active skills: ultrawork + default + git-master
+```
+
+### How to Invoke Skills
+
+#### Slash Commands
+
+```bash
+/oh-my-claudecode:autopilot build me a todo app
+/oh-my-claudecode:ralph refactor the auth module
+/oh-my-claudecode:team 3:executor "implement a full-stack app"
+```
+
+#### Magic Keywords
+
+Include a keyword in natural language and the corresponding skill activates automatically.
+
+```bash
+autopilot build me a todo app          # activates autopilot skill
+ralph: refactor the auth module        # activates ralph skill
+ultrawork implement OAuth              # activates ultrawork skill
+```
+
+### Key Workflow Skills
+
+#### autopilot
+
+A 5-stage autonomous execution pipeline from idea to finished code.
+
+```bash
+autopilot build me a REST API with authentication
+```
+
+Trigger keywords: `autopilot`, `build me`, `I want a`
+
+#### ralph
+
+A loop that does not stop until the task is verified complete.
+Keeps working until the verifier confirms completion.
+
+```bash
+ralph: refactor the authentication module
+```
+
+Trigger keywords: `ralph`, `don't stop`, `must complete`
+
+#### ultrawork
+
+Runs multiple agents simultaneously with maximum parallelism.
+
+```bash
+ultrawork implement user authentication with OAuth
+```
+
+Trigger keywords: `ultrawork`, `ulw`
+
+#### team
+
+Coordinates N Claude agents simultaneously.
+Operates through a 5-stage pipeline: plan → prd → exec → verify → fix
+
+```bash
+/oh-my-claudecode:team 3:executor "implement a full-stack todo app"
+```
+
+#### ccg (Claude-Codex-Gemini)
+
+Queries Codex and Gemini simultaneously, then Claude synthesizes the results.
+
+```bash
+ccg: review this authentication implementation
+```
+
+Trigger keywords: `ccg`, `claude-codex-gemini`
+
+#### ralplan
+
+A planning process where Planner, Architect, and Critic iterate until reaching consensus.
+
+```bash
+ralplan this feature
+```
+
+Trigger keywords: `ralplan`
+
+### Utility Skills
+
+| Skill | Description | Command |
+|-------|-------------|---------|
+| `cancel` | Cancel a running mode | `/oh-my-claudecode:cancel` |
+| `note` | Save a note to the notepad | `/oh-my-claudecode:note` |
+| `hud` | Configure the status bar | `/oh-my-claudecode:hud` |
+| `omc-setup` | Initial setup wizard | `/oh-my-claudecode:omc-setup` |
+| `omc-doctor` | Installation diagnostics | `/oh-my-claudecode:omc-doctor` |
+| `learner` | Extract reusable skills from a session | `/oh-my-claudecode:learner` |
+| `skill` | Manage local skills (list/add/remove) | `/oh-my-claudecode:skill` |
+| `trace` | Evidence-based causal tracing | `/oh-my-claudecode:trace` |
+| `release` | Automated release workflow | `/oh-my-claudecode:release` |
+| `deepinit` | Generate hierarchical AGENTS.md | `/oh-my-claudecode:deepinit` |
+| `deep-interview` | Socratic deep interview | `/oh-my-claudecode:deep-interview` |
+| `sciomc` | Parallel scientist agent orchestration | `/oh-my-claudecode:sciomc` |
+| `external-context` | Parallel document specialist research | `/oh-my-claudecode:external-context` |
+| `ai-slop-cleaner` | AI expression cleanup workflow | `/oh-my-claudecode:ai-slop-cleaner` |
+| `writer-memory` | Memory system for writing projects | `/oh-my-claudecode:writer-memory` |
+
+### Full Magic Keyword List
+
+| Keyword | Effect |
+|---------|--------|
+| `ultrawork`, `ulw` | Parallel agent orchestration |
+| `autopilot`, `build me`, `I want a` | Autonomous execution pipeline |
+| `ralph`, `don't stop`, `must complete` | Loop until verified complete |
+| `ccg`, `claude-codex-gemini` | 3-model orchestration |
+| `ralplan` | Consensus-based planning |
+| `deep interview`, `ouroboros` | Socratic deep interview |
+| `deepsearch`, `search the codebase` | Codebase search mode |
+| `deepanalyze`, `deep-analyze` | Deep analysis mode |
+| `ultrathink` | Deep reasoning mode |
+| `tdd`, `test first`, `red green` | TDD workflow |
+| `deslop`, `anti-slop` | AI expression cleanup |
+| `cancelomc`, `stopomc` | Cancel execution mode |
+
+### config.jsonc vs keyword-detector
+
+Keywords are processed in two places.
+
+| Source | Role | Customizable |
+|--------|------|-------------|
+| `config.jsonc` `magicKeywords` | 4 categories (ultrawork, search, analyze, ultrathink) | Yes |
+| `keyword-detector` hook | 11+ triggers (autopilot, ralph, ccg, etc.) | No |
+
+The keywords you can change in `config.jsonc` are limited.
+Major triggers like `autopilot`, `ralph`, and `ccg` are hardcoded in the hook.
+
+---
+
+## What Are Hooks?
+
+Hooks are code that reacts to Claude Code lifecycle events.
+They run automatically when users submit prompts, use tools, or when sessions start or end.
+
+OMC uses this hook system to implement agent delegation, keyword detection, and state persistence.
+
+### Lifecycle Events
+
+Claude Code provides 11 lifecycle events, and OMC registers hooks on them.
+
+| Event | When It Fires | OMC Usage |
+|-------|--------------|-----------|
+| `UserPromptSubmit` | When the user submits a prompt | Magic keyword detection, skill injection |
+| `SessionStart` | When a session starts | Initial setup, project memory load |
+| `PreToolUse` | Before a tool is used | Permission validation, parallel execution hints |
+| `PermissionRequest` | When a permission is requested | Bash command permission handling |
+| `PostToolUse` | After a tool is used | Tool result validation, project memory update |
+| `PostToolUseFailure` | After a tool use failure | Error recovery handling |
+| `SubagentStart` | When a subagent starts | Agent tracking |
+| `SubagentStop` | When a subagent stops | Agent tracking, output verification |
+| `PreCompact` | Before context compaction | Preserve important info, save project memory |
+| `Stop` | When Claude stops | Maintain persistent mode, code simplification |
+| `SessionEnd` | When a session ends | Session data cleanup |
+
+### system-reminder Injection
+
+Hooks inject additional context to Claude via `<system-reminder>` tags.
+
+```xml
+<system-reminder>
+hook success: Success
+</system-reminder>
+```
+
+The meaning depends on the injected pattern.
+
+| Pattern | Meaning |
+|---------|---------|
+| `hook success: Success` | Hook ran successfully, continue normally |
+| `hook additional context: ...` | Additional context info, take note |
+| `[MAGIC KEYWORD: ...]` | Magic keyword detected, execute the indicated skill |
+| `The boulder never stops` | ralph/ultrawork mode is active |
+
+### Key Hook Descriptions
+
+#### keyword-detector
+
+Fires on the `UserPromptSubmit` event.
+Detects magic keywords in user input and activates the corresponding skill.
+
+<Mermaid chart={`
+graph LR
+    A["User\nautopilot build me a todo app"] --> B["keyword-detector\nDetects autopilot keyword"]
+    B --> C["autopilot\nSkill activated"]
+`} />
+
+#### persistent-mode
+
+Fires on the `Stop` event.
+Prevents Claude from stopping when a persistent mode like ralph or ultrawork is active.
+
+#### pre-compact
+
+Fires on the `PreCompact` event.
+Saves important information to the notepad before the context window is compacted.
+
+#### subagent-tracker
+
+Fires on `SubagentStart` and `SubagentStop` events.
+Tracks currently running agents and verifies their output when they stop.
+
+#### context-guard-stop
+
+Fires on the `Stop` event.
+Monitors context usage and warns when approaching the limit.
+
+#### code-simplifier
+
+Fires on the `Stop` event. Disabled by default.
+When enabled, automatically simplifies modified files when Claude stops.
+
+To enable:
+
+```json
+{
+  "codeSimplifier": {
+    "enabled": true,
+    "extensions": [".ts", ".tsx", ".js", ".jsx", ".py", ".go", ".rs"],
+    "maxFiles": 10
+  }
+}
+```
+
+### Disabling Hooks
+
+#### Disable All Hooks
+
+```bash
+export DISABLE_OMC=1
+```
+
+#### Skip Specific Hooks
+
+```bash
+export OMC_SKIP_HOOKS="keyword-detector,persistent-mode"
+```
+
+Multiple hooks can be skipped at once using comma separation.
+
+### Hook Registration Structure
+
+OMC hooks are defined declaratively in a `hooks.json` file.
+Each hook is implemented as a Node.js script with a configured timeout.
+
+```json
+{
+  "UserPromptSubmit": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "node scripts/keyword-detector.mjs",
+          "timeout": 5
+        }
+      ]
+    }
+  ]
+}
+```
+
+- `matcher`: Pattern the hook responds to (`*` matches all input)
+- `timeout`: Timeout in seconds
+- `type`: Always `"command"` (runs an external command)
+
+---
+
+## State Management Overview
+
+OMC stores task progress and project knowledge in the `.omc/` directory.
+Even when context compaction occurs, this state system preserves important information.
+
+### Directory Structure
+
+```
+.omc/
+├── state/                    # Per-mode state files
+│   ├── autopilot-state.json  # autopilot progress
+│   ├── ralph-state.json      # ralph loop state
+│   ├── team/                 # team task state
+│   └── sessions/             # per-session state
+│       └── {sessionId}/
+├── notepad.md                # Compaction-resistant notes
+├── project-memory.json       # Project knowledge store
+├── plans/                    # Execution plans
+├── notepads/                 # Per-plan knowledge capture
+│   └── {plan-name}/
+│       ├── learnings.md
+│       ├── decisions.md
+│       ├── issues.md
+│       └── problems.md
+├── autopilot/                # autopilot artifacts
+│   └── spec.md
+├── research/                 # Research results
+└── logs/                     # Execution logs
+```
+
+### Notepad
+
+**File**: `.omc/notepad.md`
+
+The notepad is a memo pad that survives context compaction.
+Even when Claude's context window is reset, content written to the notepad is preserved.
+
+#### Usage
+
+```bash
+# Save a note using the skill
+/oh-my-claudecode:note "Use /api/v2 for the API endpoint"
+```
+
+#### MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `notepad_read` | Read notepad content |
+| `notepad_write_priority` | Save a high-priority note (permanently preserved) |
+| `notepad_write_working` | Save a working note |
+| `notepad_write_manual` | Save a manual note |
+| `notepad_prune` | Clean up old notes |
+| `notepad_stats` | View notepad statistics |
+
+#### How It Works
+
+1. When a `PreCompact` event fires, important information is saved to the notepad
+2. After context compaction, notepad content is re-injected
+3. Agents use the notepad to recover previous context
+
+### Project Memory
+
+**File**: `.omc/project-memory.json`
+
+Project memory is a persistent store for project-level knowledge.
+Knowledge about the project is retained across sessions.
+
+#### MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `project_memory_read` | Read project memory |
+| `project_memory_write` | Write entire project memory |
+| `project_memory_add_note` | Add a note |
+| `project_memory_add_directive` | Add a directive |
+
+#### Lifecycle Integration
+
+- `SessionStart`: Loads project memory and injects it into the context
+- `PostToolUse`: Extracts and saves project knowledge from tool use results
+- `PreCompact`: Saves project memory before context compaction
+
+### Session Scope
+
+**Path**: `.omc/state/sessions/{sessionId}/`
+
+Stores state isolated per session.
+Multiple sessions running simultaneously on the same project do not have state conflicts.
+
+### Plan Notepad (Per-plan Knowledge Capture)
+
+**Path**: `.omc/notepads/{plan-name}/`
+
+Stores learnings for each execution plan separately.
+
+| File | Contents |
+|------|----------|
+| `learnings.md` | Discovered patterns, successful approaches |
+| `decisions.md` | Architecture decisions and rationale |
+| `issues.md` | Problems and blockers |
+| `problems.md` | Technical debt and cautions |
+
+All entries are automatically timestamped.
+
+### Centralized State Management
+
+By default, state is stored in the `.omc/` directory inside the project.
+If the worktree is deleted, the state is lost with it.
+
+To preserve state across worktree deletions, set the `OMC_STATE_DIR` environment variable.
+
+```bash
+# Add to ~/.bashrc or ~/.zshrc
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```
+
+With this setting, state is stored at `~/.claude/omc/{project-identifier}/`.
+The project identifier is a hash of the Git remote URL, so state can be shared across different worktrees of the same repository.
+
+### Persistent Memory (remember tags)
+
+Especially important information can be stored with `<remember>` tags.
+
+```xml
+<!-- Retained for 7 days -->
+<remember>API endpoint changed to /v2</remember>
+
+<!-- Retained permanently -->
+<remember priority>Never access the production DB directly</remember>
+```
+
+| Tag | Retention |
+|-----|-----------|
+| `<remember>` | 7 days |
+| `<remember priority>` | Permanent |

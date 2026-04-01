@@ -1,0 +1,53 @@
+---
+title: Ask
+description: Ask Claude, Codex, or Gemini a question and save the result as an artifact
+---
+
+## Overview
+
+Ask is an advisor skill that forwards prompts to locally installed Claude, Codex, or Gemini CLIs and saves the results as artifact files.
+
+## Usage
+
+```bash
+/oh-my-claudecode:ask <claude|codex|gemini> <question or task>
+```
+
+## Examples
+
+```bash
+/oh-my-claudecode:ask codex "review this patch from a security perspective"
+/oh-my-claudecode:ask gemini "suggest UX improvements for this flow"
+/oh-my-claudecode:ask claude "draft an implementation plan for issue #123"
+```
+
+## Requirements
+
+The chosen CLI must be installed and authenticated.
+
+```bash
+claude --version
+codex --version
+gemini --version
+```
+
+## Artifacts
+
+Results are saved to the following path:
+
+```
+.omc/artifacts/ask/<provider>-<slug>-<timestamp>.md
+```
+
+## Related Skills
+
+- [ccg](/docs/skills/workflow/ccg) - Ask Codex + Gemini simultaneously, then have Claude synthesize
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:ask` |
+| Subcommands | `ask codex`, `ask gemini`, `ask claude` |
+| Category | Utility |
+| Artifact Path | `.omc/artifacts/ask/` |

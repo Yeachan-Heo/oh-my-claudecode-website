@@ -1,0 +1,136 @@
+---
+title: 마이그레이션 가이드
+description: Oh My ClaudeCode 버전 간 업그레이드 가이드
+---
+
+## 마이그레이션 가이드
+
+OMC 버전 간 업그레이드를 위한 단계별 안내입니다.
+
+### v3.x → v4.0
+
+v4.0은 대규모 아키텍처 변경입니다. 업그레이드 방법은 설치 방식에 따라 다릅니다.
+
+#### 플러그인 설치 (권장)
+
+```bash
+# 이전 버전 제거
+/plugin uninstall oh-my-claudecode
+
+# 새 버전 설치
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+/plugin install oh-my-claudecode
+
+# 설정 재실행
+setup omc
+```
+
+#### NPM 설치
+
+```bash
+npm install -g oh-my-claudecode@latest
+omc setup
+```
+
+#### v4.0 주요 변경사항
+
+| 영역 | v3.x | v4.0 |
+|------|------|------|
+| 설정 형식 | `.omc/config.json` | `config.jsonc` (JSONC) |
+| 에이전트 수 | 15개 | 19개 (4개 레인) |
+| 스킬 시스템 | 기본 스킬 레지스트리 | 파이프라인 메타데이터, 레이어 |
+| 훅 시스템 | 단순 이벤트 핸들러 | 11개 라이프사이클 이벤트 |
+| 상태 관리 | 플랫 파일 상태 | 구조화된 `.omc/` 디렉토리 |
+
+#### 제거된 기능
+
+- `skill-injector` (훅 기반 주입으로 대체)
+- `legacy-mode` (폐기된 실행 경로)
+- 직접 에이전트 호출 구문 (`oh-my-claudecode:agent-name` 형식 사용)
+
+### v3.3.x → v3.4.0
+
+**병렬 실행 및 고급 워크플로우**
+
+- `ultrawork` 스킬 도입 (병렬 에이전트 실행)
+- `team` 스킬 도입 (N-에이전트 조율)
+- `ccg` 스킬 도입 (3-모델 오케스트레이션)
+
+주요 변경사항 없음. 일반 설치로 업그레이드.
+
+### v3.0 → v3.1
+
+**노트패드 위즈덤 및 기능 강화**
+
+- 노트패드 시스템 도입 (컨텍스트 컴팩션 시 보존)
+- 프로젝트 메모리 시스템 도입
+- `deepinit` 스킬 도입
+
+주요 변경사항 없음. 일반 설치로 업그레이드.
+
+### v2.x → v3.0
+
+**패키지 이름 변경 및 자동 활성화**
+
+#### 주요 변경사항
+
+| 영역 | v2.x | v3.0 |
+|------|------|------|
+| 패키지명 | `claude-code-orchestrator` | `oh-my-claudecode` |
+| 활성화 | 수동 `omc start` | 훅을 통한 자동 활성화 |
+| 설정 위치 | `~/.omc/` | `.omc/` (프로젝트별) |
+
+#### 마이그레이션 단계
+
+1. 이전 패키지 제거: `npm uninstall -g claude-code-orchestrator`
+2. 새 패키지 설치: `npm install -g oh-my-claudecode`
+3. 설정 이동: `mv ~/.omc/ .omc/`
+4. 설정 실행: `setup omc`
+
+### v3.5.2 → v3.5.3
+
+**스킬 통합**
+
+8개 스킬이 제거되고 기존 스킬로 통합되었습니다:
+
+| 제거된 스킬 | 대체 |
+|------------|------|
+| `simplify` | `code-simplifier` 에이전트 |
+| `codebase-search` | `explore` 에이전트 + `deepsearch` 키워드 |
+| `review` | `omc-plan --review` |
+| `build-fix` | `debugger` 에이전트 |
+| `analyze` | `debugger` 에이전트 |
+| `tdd` | `test-engineer` 에이전트 |
+| `security-review` | `security-reviewer` 에이전트 |
+| `code-review` | `code-reviewer` 에이전트 |
+
+### 일반적인 업그레이드 문제
+
+#### 업그레이드 후 훅이 로드되지 않는 경우
+
+```bash
+# 진단 실행
+/oh-my-claudecode:omc-doctor
+
+# 훅 재설치
+/oh-my-claudecode:omc-setup
+```
+
+#### 설정 형식 오류
+
+v4.0은 JSONC 형식을 사용합니다. v3.x의 `config.json`이 있는 경우:
+
+1. `config.jsonc`로 이름 변경
+2. 필요에 따라 주석 추가 (JSONC는 `//`와 `/* */` 주석 지원)
+
+#### 상태 디렉토리 충돌
+
+사용자별 상태에서 프로젝트별 상태로 업그레이드하는 경우:
+
+```bash
+# 상태를 프로젝트 디렉토리로 이동
+mv ~/.omc/state/ .omc/state/
+
+# 또는 중앙 집중식 상태 설정
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```

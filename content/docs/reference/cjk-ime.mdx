@@ -1,0 +1,81 @@
+---
+title: CJK IME Known Issues
+description: Known issues and workarounds for Chinese, Japanese, and Korean input methods
+---
+
+## CJK IME Known Issues
+
+Known issues affecting users of Chinese, Japanese, and Korean (CJK) input methods in Claude Code with OMC.
+
+### Affected Users
+
+Users who use:
+- **Korean**: 한글 (Hangul) via ibus, fcitx, or macOS Korean IM
+- **Japanese**: かな / 漢字 via ibus-anthy, fcitx-mozc, or macOS Japanese IM
+- **Chinese**: 拼音 / 注音 via ibus-pinyin, fcitx, or macOS Chinese IM
+
+### Known Issues
+
+#### 1. Invisible Characters During Composition
+
+**Symptom**: Characters are not visible while being composed (before pressing Enter/Space to confirm). The final composed character appears correctly, but the in-progress composition is invisible.
+
+**Root Cause**: Claude Code's terminal UI uses React Ink, which does not fully support IME composition events. The terminal raw mode intercepts keystrokes before the IME can process them.
+
+**Status**: Not fixed upstream. Tracked in multiple projects.
+
+#### 2. Cursor Position Mismatch
+
+**Symptom**: After confirming a CJK character, the cursor position may be off by one or more positions. This causes subsequent edits to be misaligned.
+
+**Root Cause**: CJK characters are typically double-width in terminal cells, but the cursor position calculation may not account for this correctly.
+
+**Status**: Partially fixed in recent Claude Code versions.
+
+#### 3. Performance Degradation with Large IME Dictionaries
+
+**Symptom**: Noticeable input lag when using CJK input methods with large dictionaries, particularly on Linux with ibus or fcitx.
+
+**Root Cause**: The terminal's raw mode processing conflicts with the IME's dictionary lookup, causing blocking I/O.
+
+**Status**: Partially mitigated in recent versions.
+
+### Workarounds
+
+#### 1. Use an External Editor
+
+The most reliable workaround. Write your prompt in an external text editor, then paste it into Claude Code.
+
+```bash
+# Example: use vim to compose, then paste
+vim /tmp/prompt.txt
+# Write your prompt in Korean/Japanese/Chinese
+# Copy the content and paste into Claude Code
+```
+
+#### 2. Use English for Prompts
+
+OMC and Claude Code fully support English input. Consider writing prompts in English when possible. Claude will still respond in your preferred language based on your CLAUDE.md settings.
+
+#### 3. Clipboard Script
+
+Create a helper script that reads from clipboard:
+
+```bash
+#!/bin/bash
+# paste-prompt.sh
+xclip -selection clipboard -o
+```
+
+#### 4. IDE Integration
+
+Use Claude Code through an IDE extension (VS Code, JetBrains) which provides its own text input handling and bypasses terminal IME issues.
+
+### Related Issues
+
+- [anthropics/claude-code#1234](https://github.com/anthropics/claude-code) — CJK input support
+- [vadimdemedes/ink#123](https://github.com/vadimdemedes/ink) — IME composition in React Ink
+
+<Callout type="info">
+If you encounter CJK input issues not listed here, please report them at [oh-my-claudecode issues](https://github.com/Yeachan-Heo/oh-my-claudecode/issues).
+</Callout>

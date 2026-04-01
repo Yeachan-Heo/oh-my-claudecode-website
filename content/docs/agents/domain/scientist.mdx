@@ -1,0 +1,81 @@
+---
+title: Scientist
+description: An agent responsible for data/statistical analysis and research execution using Python.
+---
+
+## Overview
+
+Scientist is an agent that runs data analysis and research tasks in Python
+and reports evidence-based findings.
+It handles data loading/exploration, statistical analysis, hypothesis testing, visualization, and report generation.
+
+Data analysis without statistical rigor produces misleading conclusions.
+Findings without confidence intervals are guesses, visualizations without context mislead,
+and conclusions that don't acknowledge limitations are dangerous.
+
+It is a read-only agent — Write/Edit tools are blocked.
+Analysis results and reports are generated via python_repl.
+
+## When to Use
+
+- When exploring a dataset and analyzing statistical patterns
+- When testing hypotheses and reporting results
+- When generating visualizations and writing reports
+- When analyzing performance benchmark data
+
+## Usage Examples
+
+```
+"Analyze this CSV data"
+"Analyze the correlation between price and sales"
+"Statistically validate this A/B test result"
+```
+
+## Analysis Process
+
+1. **SETUP**: Verify Python/packages, create working directory (`.omc/scientist/`), identify data files, state the goal ([OBJECTIVE])
+2. **EXPLORE**: Load data, check shape/types/missing values, output data characteristics ([DATA]) with `.head()`, `.describe()`
+3. **ANALYZE**: Run statistical analysis. For each insight, output a finding ([FINDING]) and statistics ([STAT:*]). Hypothesis-driven analysis
+4. **SYNTHESIZE**: Summarize findings, flag limitations ([LIMITATION]), generate report, clean up
+
+## Output Markers
+
+Scientist uses defined markers.
+
+| Marker | Purpose |
+|------|------|
+| `[OBJECTIVE]` | Analysis goal |
+| `[DATA]` | Data characteristics |
+| `[FINDING]` | Finding |
+| `[STAT:ci]` | Confidence interval |
+| `[STAT:effect_size]` | Effect size |
+| `[STAT:p_value]` | p-value |
+| `[STAT:n]` | Sample size |
+| `[LIMITATION]` | Limitations/caveats |
+
+Every `[FINDING]` must include at least one `[STAT:*]` evidence within 10 lines.
+
+## Technical Constraints
+
+- All Python code must be executed via `python_repl` (no Bash heredocs)
+- No package installation — use stdlib alternatives or inform the user
+- No printing entire DataFrames — use `.head()`, `.describe()`, aggregated results
+- Use matplotlib Agg backend, `plt.savefig()` required (no `plt.show()`)
+
+## Combining with Other Agents
+
+- **tracer**: Combines with tracer for data-driven causal tracing analysis
+- **document-specialist**: External research material lookup is handled by document-specialist
+- **architect**: When architecture decisions are needed based on analysis results
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:scientist` |
+| Lane | Domain |
+| Read-Only | Yes (Write, Edit blocked) |
+| Tier Variant | `scientist-high` (opus) |
+| Output Paths | `.omc/scientist/reports/`, `.omc/scientist/figures/` |
+| Skill Integration | `/oh-my-claudecode:sciomc` |

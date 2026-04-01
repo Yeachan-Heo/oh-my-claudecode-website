@@ -1,0 +1,128 @@
+---
+title: Agent Catalog
+description: A complete list of OMC's 19 specialized agents organized into 4 lanes.
+---
+
+## Agent System
+
+oh-my-claudecode has 19 specialized agents.
+Each agent has a defined role and is invoked using the format `oh-my-claudecode:agent-name`.
+
+The orchestrator automatically delegates to the appropriate agent based on the nature of the task,
+and users can also specify an agent directly.
+
+## 4-Lane Structure
+
+Agents are divided into 4 lanes based on their roles.
+
+### Build & Analysis
+
+Covers the full development flow from codebase exploration to implementation and verification.
+
+| Agent | Default Model | Role |
+|----------|-----------|------|
+| [`explore`](/docs/agents/build-analysis/explore) | haiku | Codebase exploration, file/symbol search |
+| [`analyst`](/docs/agents/build-analysis/analyst) | opus | Requirements analysis, acceptance criteria definition |
+| [`planner`](/docs/agents/build-analysis/planner) | opus | Task sequencing, execution plan creation |
+| [`architect`](/docs/agents/build-analysis/architect) | opus | System design, boundaries, interface definition |
+| [`debugger`](/docs/agents/build-analysis/debugger) | sonnet | Root cause analysis, build error resolution |
+| [`executor`](/docs/agents/build-analysis/executor) | sonnet | Code implementation, refactoring |
+| [`verifier`](/docs/agents/build-analysis/verifier) | sonnet | Completion evidence collection, claim validation |
+| [`tracer`](/docs/agents/build-analysis/tracer) | sonnet | Evidence-based causal tracing, competing hypotheses |
+
+### Review
+
+Reviews code quality and security.
+
+| Agent | Default Model | Role |
+|----------|-----------|------|
+| [`security-reviewer`](/docs/agents/review/security-reviewer) | sonnet | OWASP Top 10, authentication/authorization vulnerability review |
+| [`code-reviewer`](/docs/agents/review/code-reviewer) | opus | Logic defects, API contracts, backward compatibility review |
+
+### Domain
+
+Handles domain-specific specialized tasks.
+
+| Agent | Default Model | Role |
+|----------|-----------|------|
+| [`test-engineer`](/docs/agents/domain/test-engineer) | sonnet | Test strategy, coverage, TDD |
+| [`designer`](/docs/agents/domain/designer) | sonnet | UI/UX architecture, interaction design |
+| [`writer`](/docs/agents/domain/writer) | haiku | Technical docs, README, API documentation |
+| [`qa-tester`](/docs/agents/domain/qa-tester) | sonnet | CLI/service runtime validation via tmux |
+| [`scientist`](/docs/agents/domain/scientist) | sonnet | Data/statistical analysis, research execution |
+| [`git-master`](/docs/agents/domain/git-master) | sonnet | Atomic commits, rebase, history management |
+| [`document-specialist`](/docs/agents/domain/document-specialist) | sonnet | External documentation/reference lookup |
+| [`code-simplifier`](/docs/agents/domain/code-simplifier) | opus | Code clarity and consistency improvement |
+
+### Coordination
+
+Applies critical review to plans and designs.
+
+| Agent | Default Model | Role |
+|----------|-----------|------|
+| [`critic`](/docs/agents/coordination/critic) | opus | Critical review of plans/designs, multi-perspective analysis |
+
+## Model Tiers
+
+Each agent has a default model tier assigned, but it can be changed at call time using the `model` parameter.
+
+| Tier | Model | Characteristics | Representative Agents |
+|------|------|------|--------------|
+| LOW | haiku | Fast and cheap. Suitable for simple lookups | explore, writer |
+| MEDIUM | sonnet | Balanced performance. Suitable for implementation/debugging | executor, debugger, test-engineer |
+| HIGH | opus | Top-level reasoning. Suitable for design/analysis | architect, planner, critic, code-reviewer |
+
+Some agents support tier variants.
+For example, `explore` defaults to haiku, but `explore-high` uses the opus tier.
+
+## Agent Selection Guide
+
+| Task Type | Recommended Agent | Model |
+|-----------|-------------|------|
+| Quick code lookup | `explore` | haiku |
+| Find files/patterns | `explore` | haiku |
+| Feature implementation | `executor` | sonnet |
+| Complex refactoring | `executor` (model=opus) | opus |
+| Simple bug fix | `debugger` | sonnet |
+| Complex debugging | `architect` | opus |
+| UI components | `designer` | sonnet |
+| Write documentation | `writer` | haiku |
+| SDK/API doc lookup | `document-specialist` | sonnet |
+| Test strategy | `test-engineer` | sonnet |
+| Security review | `security-reviewer` | sonnet |
+| Code review | `code-reviewer` | opus |
+| Data analysis | `scientist` | sonnet |
+| Strategic planning | `planner` | opus |
+| Plan review | `critic` | opus |
+
+## Agent Workflow
+
+In a typical task, agents collaborate in the following order.
+
+```
+explore (discovery)
+  → analyst (requirements analysis)
+    → planner (plan creation)
+      → critic (plan review)
+        → executor (implementation)
+          → verifier (verification)
+```
+
+Detailed descriptions of each agent are available on the sub-pages within each lane.
+
+## Deprecated Agent Aliases
+
+The following aliases remain for backward compatibility.
+
+| Alias | Actual Agent |
+|------|-------------|
+| `api-reviewer` | code-reviewer |
+| `performance-reviewer` | code-reviewer |
+| `quality-reviewer` | code-reviewer |
+| `quality-strategist` | code-reviewer |
+| `dependency-expert` | document-specialist |
+| `researcher` | document-specialist |
+| `tdd-guide` | test-engineer |
+| `deep-executor` | executor |
+| `build-fixer` | debugger |
+| `harsh-critic` | critic |

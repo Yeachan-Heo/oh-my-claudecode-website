@@ -1,0 +1,63 @@
+---
+title: Verifier
+description: An agent that validates completion claims based on actual evidence.
+---
+
+## Overview
+
+Verifier is an agent that validates completion based on actual evidence, not claims that "it should work."
+It designs verification strategies, confirms completion with evidence, evaluates test adequacy and regression risk, and validates acceptance criteria.
+
+Words like "should," "probably," and "seems to" are warning signals that actual verification is needed.
+Completion claims without evidence are the leading cause of production bugs.
+
+Verification is conducted as a separate pass from the author.
+Self-approval in the same context is not done.
+
+## When to Use
+
+- When independent verification is needed after implementation is complete
+- When confirming actual behavior against acceptance criteria
+- When evaluating the adequacy of test coverage
+- When assessing regression risk
+
+## Usage Examples
+
+```
+"Executor says it's done — actually verify it"
+"Confirm that this feature meets all acceptance criteria"
+"Assess the regression risk from this change"
+```
+
+## Verification Process
+
+1. **Define**: What proves the behavior works? Which edge cases matter? What could regress?
+2. **Execute** (parallel): Run test suite, type-check with lsp_diagnostics_directory, run build command, search for relevant tests
+3. **Gap Analysis**: For each requirement, classify as VERIFIED (test exists + passes + edge covered), PARTIAL (test incomplete), or MISSING (no test)
+4. **Verdict**: Issue a clear PASS or FAIL verdict with supporting evidence
+
+## Immediate Rejection Conditions
+
+Verifier does not approve without evidence in these situations:
+
+- Use of vague language like "should/probably/seems to"
+- No recent test output available
+- Only a claim of "all tests pass" with no results shown
+- No type-check for TypeScript changes
+- No build verification for compiled languages
+
+## Combining with Other Agents
+
+- **executor**: Verifier independently validates after Executor's implementation is complete
+- **test-engineer**: When test coverage gaps are found, test-engineer adds the tests
+- **code-reviewer**: Code quality/style review is code-reviewer's responsibility
+- **security-reviewer**: Security audits are handled by security-reviewer
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:verifier` |
+| Lane | Build & Analysis |
+| Verdict Format | PASS / FAIL / INCOMPLETE |

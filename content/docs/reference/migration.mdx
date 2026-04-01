@@ -1,0 +1,136 @@
+---
+title: Migration Guide
+description: Upgrade guides for moving between Oh My ClaudeCode versions
+---
+
+## Migration Guide
+
+Step-by-step upgrade instructions for moving between OMC versions.
+
+### v3.x → v4.0
+
+v4.0 is a major architecture overhaul. The upgrade path depends on your installation method.
+
+#### Plugin Installation (Recommended)
+
+```bash
+# Remove old version
+/plugin uninstall oh-my-claudecode
+
+# Install new version
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+/plugin install oh-my-claudecode
+
+# Re-run setup
+setup omc
+```
+
+#### NPM Installation
+
+```bash
+npm install -g oh-my-claudecode@latest
+omc setup
+```
+
+#### Breaking Changes in v4.0
+
+| Area | v3.x | v4.0 |
+|------|------|------|
+| Config format | `.omc/config.json` | `config.jsonc` (JSONC) |
+| Agent count | 15 agents | 19 agents (4 lanes) |
+| Skill system | Basic skill registry | Pipeline metadata, layers |
+| Hook system | Simple event handlers | 11 lifecycle events |
+| State management | Flat file state | Structured `.omc/` directory |
+
+#### Removed Features
+
+- `skill-injector` (replaced by hook-based injection)
+- `legacy-mode` (deprecated execution path)
+- Direct agent invocation syntax (use `oh-my-claudecode:agent-name` format)
+
+### v3.3.x → v3.4.0
+
+**Parallel Execution & Advanced Workflows**
+
+- `ultrawork` skill introduced for parallel agent execution
+- `team` skill introduced for N-agent coordination
+- `ccg` skill introduced for tri-model orchestration
+
+No breaking changes. Upgrade via standard install.
+
+### v3.0 → v3.1
+
+**Notepad Wisdom & Enhanced Features**
+
+- Notepad system introduced (survives context compaction)
+- Project memory system introduced
+- `deepinit` skill introduced
+
+No breaking changes. Upgrade via standard install.
+
+### v2.x → v3.0
+
+**Package Rename & Auto-Activation**
+
+#### Breaking Changes
+
+| Area | v2.x | v3.0 |
+|------|------|------|
+| Package name | `claude-code-orchestrator` | `oh-my-claudecode` |
+| Activation | Manual `omc start` | Auto-activation via hooks |
+| Config location | `~/.omc/` | `.omc/` (per-project) |
+
+#### Migration Steps
+
+1. Uninstall old package: `npm uninstall -g claude-code-orchestrator`
+2. Install new package: `npm install -g oh-my-claudecode`
+3. Move config: `mv ~/.omc/ .omc/`
+4. Run setup: `setup omc`
+
+### v3.5.2 → v3.5.3
+
+**Skill Consolidation**
+
+8 skills were removed and consolidated into existing skills:
+
+| Removed Skill | Replacement |
+|--------------|-------------|
+| `simplify` | `code-simplifier` agent |
+| `codebase-search` | `explore` agent with `deepsearch` keyword |
+| `review` | `omc-plan --review` |
+| `build-fix` | `debugger` agent |
+| `analyze` | `debugger` agent |
+| `tdd` | `test-engineer` agent |
+| `security-review` | `security-reviewer` agent |
+| `code-review` | `code-reviewer` agent |
+
+### Common Upgrade Issues
+
+#### Hooks not loading after upgrade
+
+```bash
+# Run diagnostics
+/oh-my-claudecode:omc-doctor
+
+# Re-install hooks
+/oh-my-claudecode:omc-setup
+```
+
+#### Config format errors
+
+v4.0 uses JSONC format. If you have a `config.json` from v3.x:
+
+1. Rename to `config.jsonc`
+2. Add comments as needed (JSONC supports `//` and `/* */` comments)
+
+#### State directory conflicts
+
+If upgrading from per-user state to per-project state:
+
+```bash
+# Move state to project directory
+mv ~/.omc/state/ .omc/state/
+
+# Or set centralized state
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```

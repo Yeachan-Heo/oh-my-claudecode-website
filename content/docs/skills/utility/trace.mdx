@@ -1,0 +1,76 @@
+---
+title: Trace
+description: An evidence-based causal analysis lane that traces competing hypotheses in parallel
+---
+
+## Overview
+
+Trace is a skill for handling ambiguous, causal, evidence-critical questions like "why did this result occur?". It restates observations, generates competing explanations, gathers evidence in parallel, ranks explanations, and suggests the next investigation most likely to reduce uncertainty.
+
+Unlike simple debugging summaries or code fix loops, it finds the most compelling explanation through competition between hypotheses.
+
+## Usage
+
+```bash
+/oh-my-claudecode:trace "why is the API returning 500 errors intermittently?"
+```
+
+## Good Use Cases
+
+- Runtime bugs and regressions
+- Performance / latency / resource behavior analysis
+- Architecture pre/post mortems
+- Experiment result tracing
+- Explaining config / routing / orchestration behavior
+
+## Core Trace Contract
+
+Always maintains the following distinctions:
+
+1. **Observation**: What was actually observed
+2. **Hypotheses**: Competing explanations
+3. **Evidence For**: What supports each explanation
+4. **Evidence Against / Gaps**: What contradicts or is missing
+5. **Current Best Explanation**: The current leading explanation
+6. **Critical Unknown**: The missing fact that distinguishes the top explanations
+7. **Discriminating Probe**: The highest-value next step to reduce uncertainty
+
+## Default Hypothesis Lanes
+
+3 tracer lanes run in parallel in team mode:
+
+1. **Code path / implementation cause**: Trace the cause in code behavior
+2. **Config / environment / orchestration cause**: Trace the cause in infrastructure/config
+3. **Measurement / artifact / assumption mismatch cause**: Trace possible errors in the observation itself
+
+## Evidence Strength Hierarchy
+
+Evidence is ranked (strongest first):
+
+1. Controlled reproduction / direct experiment / uniquely discriminating artifact
+2. Primary source artifacts from rigorous provenance (logs, metrics, git history)
+3. Multiple independent sources pointing to the same explanation
+4. Single source code path or behavioral inference
+5. Weak circumstantial clues (timing, similarity)
+6. Intuition / analogy / speculation
+
+## Falsification Round
+
+Before concluding, runs a falsification round against the leading hypothesis:
+
+- Non-leading lanes present their best counterargument against the leader
+- The leader responds with evidence (not assertions)
+- If the counterargument weakens the leader, rankings are adjusted
+- If two hypotheses converge on the same mechanism, they are merged
+
+## Related Skills
+
+- [sciomc](/docs/skills/workflow/sciomc) - Parallel research orchestration
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:trace` |
+| Magic Keyword | - |
+| Category | Utility |

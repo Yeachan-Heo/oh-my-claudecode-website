@@ -1,0 +1,69 @@
+---
+title: OMC Doctor
+description: A skill that diagnoses oh-my-claudecode installation issues and automatically fixes them
+---
+
+## Overview
+
+OMC Doctor is a skill that diagnoses the installation state of oh-my-claudecode and automatically fixes any issues found.
+
+## Usage
+
+```bash
+/oh-my-claudecode:omc-doctor
+```
+
+## Diagnostic Checks
+
+| Check | Status | Description |
+|-------|--------|-------------|
+| Plugin Version | OK / WARN / CRITICAL | Whether installed, whether up to date |
+| Legacy Hooks (settings.json) | OK / CRITICAL | Legacy hooks that cause duplicate execution |
+| Legacy Scripts (~/.claude/hooks/) | OK / WARN | Legacy scripts that cause confusion |
+| CLAUDE.md | OK / WARN / CRITICAL | Whether OMC configuration marker exists |
+| Plugin Cache | OK / WARN | Whether multiple cached versions exist |
+| Legacy Agents/Commands/Skills | OK / WARN | Residual artifacts from curl installations |
+
+## Diagnostic Report
+
+```
+## OMC Doctor Report
+
+### Summary
+[HEALTHY / ISSUES FOUND]
+
+### Checks
+| Check              | Status   | Details |
+|--------------------|----------|---------|
+| Plugin Version     | OK       | 4.9.3   |
+| Legacy Hooks       | CRITICAL | ...     |
+| CLAUDE.md          | OK       | ...     |
+```
+
+## Auto-Fix
+
+When issues are found, automatic fixes are proposed.
+
+| Issue | Fix |
+|-------|-----|
+| Legacy hooks | Remove `hooks` section from settings.json |
+| Legacy scripts | Delete `~/.claude/hooks/*.sh` |
+| Outdated plugin | Clean plugin cache |
+| Cache duplicates | Preserve only the latest version |
+| Missing/outdated CLAUDE.md | Download the latest CLAUDE.md |
+| Legacy install artifacts | Back up and remove |
+
+A Claude Code restart is required after fixes.
+
+## Related Skills
+
+- [omc-setup](/docs/skills/utility/omc-setup) - Full OMC configuration
+- [setup](/docs/skills/utility/setup) - Unified setup entry point
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:omc-doctor` |
+| Magic Keyword | - |
+| Category | Utility |

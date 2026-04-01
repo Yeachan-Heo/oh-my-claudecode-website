@@ -1,0 +1,77 @@
+---
+title: AI Slop Cleaner
+description: A bounded cleanup workflow that removes unnecessary complexity from AI-generated code while preserving behavior
+---
+
+## Overview
+
+AI Slop Cleaner is a bounded cleanup workflow that removes unnecessary complexity (slop) from AI-generated code while preserving behavior. It prioritizes deletion over addition and focuses on simplification rather than new features.
+
+## Usage
+
+```bash
+/oh-my-claudecode:ai-slop-cleaner <target>
+/oh-my-claudecode:ai-slop-cleaner <target> --review
+```
+
+Also activated by magic keywords:
+
+```
+deslop this module: too many wrappers
+anti-slop cleanup src/auth
+```
+
+## Slop Classification
+
+Before cleaning, classifies the types of slop in the code.
+
+| Type | Description |
+|------|-------------|
+| Duplication | Repeated logic, copy-paste branches, redundant helpers |
+| Dead code | Unused code, unreachable branches, stale flags, debug residue |
+| Unnecessary abstraction | Pass-through wrappers, speculative indirection, single-use helper layers |
+| Boundary violations | Hidden coupling, misplaced responsibilities, wrong-layer imports |
+| Missing tests | Code with unlocked behavior, weak regression coverage |
+
+## Workflow
+
+### 1. Protect Current Behavior
+
+Add or run regression tests before making changes. If tests cannot come first, explicitly document a validation plan.
+
+### 2. Write a Cleanup Plan
+
+Scope to the requested files/feature areas, list the specific slop to remove, and order from safest deletions to riskier integrations.
+
+### 3. Execute by Pass
+
+- **Pass 1**: Delete dead code
+- **Pass 2**: Remove duplication
+- **Pass 3**: Clean up names and error handling
+- **Pass 4**: Strengthen tests
+
+Run targeted verification after each pass.
+
+### 4. Quality Gates
+
+Run regression tests, lint, type check, and unit/integration tests. If a gate fails, fix the issue or roll back the risky cleanup.
+
+## Review Mode (`--review`)
+
+`--review` is a separate reviewer pass after the cleanup work.
+
+- Reviews the cleanup plan, changed files, and regression coverage without editing files
+- Identifies remaining dead code, duplication, unnecessary wrappers, and missing tests
+- Presents reviewer verdict and any required follow-up actions
+
+## Related Skills
+
+- [ralph](/docs/skills/workflow/ralph) - When verification is needed after cleanup
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:ai-slop-cleaner` |
+| Magic Keyword | `deslop`, `anti-slop`, `AI slop` |
+| Category | Utility |

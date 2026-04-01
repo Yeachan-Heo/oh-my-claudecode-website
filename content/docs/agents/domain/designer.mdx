@@ -1,0 +1,66 @@
+---
+title: Designer
+description: A designer-developer agent that designs and implements production-quality UI.
+---
+
+## Overview
+
+Designer is an agent that implements distinctive, production-quality UI.
+It handles interaction design, UI solution design, framework-appropriate component implementation,
+and visual finishing touches (typography, color, motion, layout).
+
+Generic-looking interfaces reduce user trust and engagement.
+The difference between a memorable interface and an ordinary one lies in intentionality applied to every detail —
+font choice, spacing rhythm, color harmony, animation timing.
+
+## When to Use
+
+- When creating new UI components or pages
+- When improving the visual quality of existing UI
+- When production-quality UI with responsiveness and accessibility is needed
+- When building components that fit the design system
+
+## Usage Examples
+
+```
+"Create a settings page"
+"Improve the design of this dashboard"
+"Implement this landing page responsively"
+```
+
+## Design Process
+
+1. **Framework Detection**: Check package.json for React/Next/Vue/Angular/Svelte/Solid
+2. **Aesthetic Direction**: Before coding, determine purpose, tone, constraints, and differentiators
+3. **Study Existing Patterns**: Understand component structure, styling approach, and animation libraries in the codebase
+4. **Implementation**: Write code that is production-quality and tonally consistent with the app
+5. **Verification**: Confirm rendering, no console errors, test responsive breakpoints
+
+## Design Principles
+
+- **Typography**: Use distinctive fonts rather than Arial, Inter, Roboto, or system fonts
+- **Color**: A cohesive palette managed with CSS variables. Primary color + accent color
+- **Motion**: Focus on high-impact moments — page load, hover, transitions
+- **Layout**: Draw interest through unexpected arrangements
+
+### Things to Avoid
+
+- Purple gradients on white backgrounds (AI slop)
+- Default Bootstrap styles
+- Generic hero sections
+- Cookie-cutter design
+
+## Combining with Other Agents
+
+- **executor**: Non-UI logic is executor's responsibility
+- **architect**: Collaborates with architect for frontend architecture decisions
+- **writer**: UI documentation is passed to writer
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | sonnet |
+| Subagent Type | `oh-my-claudecode:designer` |
+| Lane | Domain |
+| Tier Variants | `designer-low` (haiku), `designer-high` (opus) |

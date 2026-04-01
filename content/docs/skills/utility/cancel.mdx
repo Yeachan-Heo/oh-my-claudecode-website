@@ -1,0 +1,81 @@
+---
+title: Cancel
+description: A unified cancellation skill that detects and cancels all active OMC modes
+---
+
+## Overview
+
+Cancel is a unified cancellation skill that automatically detects and cancels currently active OMC modes. It cleans up linked modes in the correct order, respecting dependency relationships.
+
+This is the standard way to exit any OMC mode, and is also used to clean up state after work is complete.
+
+## Usage
+
+```bash
+/oh-my-claudecode:cancel
+/oh-my-claudecode:cancel --force
+```
+
+Also activated by magic keywords:
+
+```
+cancelomc
+stopomc
+```
+
+## Auto-Detection Order
+
+Cancel detects and cancels active modes in the following order:
+
+1. Autopilot (including linked ralph/ultraqa)
+2. Ralph (including linked ultrawork)
+3. Ultrawork (standalone)
+4. UltraQA (standalone)
+5. Ultrapilot (standalone)
+6. Pipeline (standalone)
+7. Team (Claude Code native)
+8. OMC Teams (tmux CLI workers)
+9. Plan Consensus (standalone)
+
+## Force Mode
+
+Using `--force` or `--all` completely deletes all sessions and legacy artifacts.
+
+```bash
+/oh-my-claudecode:cancel --force
+```
+
+Use this when you need to fully reset the workspace.
+
+## Cancellation Behavior by Mode
+
+### Autopilot
+Saves the current phase and deactivates. Also cleans up linked ralph and ultraqa. Resumable.
+
+### Ralph
+Deactivates persistent mode. Cleans up linked ultrawork if present.
+
+### Team
+Sends a shutdown_request to each team member and waits for responses. Cleans up with TeamDelete after acknowledgment. Cleans up linked ralph if present.
+
+## Preserved State
+
+| Mode | State Preserved | Resume Command |
+|------|-----------------|----------------|
+| Autopilot | Yes (phase, files, spec, plan) | `/oh-my-claudecode:autopilot` |
+| Ralph | No | - |
+| Ultrawork | No | - |
+| Team | No | - |
+| Plan Consensus | Yes (plan file path) | - |
+
+## Related Skills
+
+All workflow skills can be terminated with cancel.
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:cancel` |
+| Magic Keyword | `cancelomc`, `stopomc` |
+| Category | Utility |

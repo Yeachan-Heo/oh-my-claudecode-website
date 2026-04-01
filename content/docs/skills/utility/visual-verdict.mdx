@@ -1,0 +1,80 @@
+---
+title: Visual Verdict
+description: Structured visual QA verdict for screenshot-to-reference comparisons
+---
+
+## Overview
+
+Visual Verdict compares generated UI screenshots against reference images and returns a strict JSON verdict that drives the next edit iteration. It provides deterministic pass/fail guidance for visual fidelity requirements.
+
+## Usage
+
+```bash
+/oh-my-claudecode:visual-verdict
+```
+
+## When to Use
+
+- The task includes visual fidelity requirements (layout, spacing, typography, component styling)
+- You have a generated screenshot and at least one reference image
+- You need deterministic pass/fail guidance before continuing edits
+
+## Inputs
+
+- `reference_images[]` — one or more image paths
+- `generated_screenshot` — current output image
+- Optional: `category_hint` — e.g., `hackernews`, `sns-feed`, `dashboard`
+
+## Output Format
+
+Returns **JSON only** with this shape:
+
+```json
+{
+  "score": 87,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "Top nav spacing is tighter than reference",
+    "Primary button uses smaller font weight"
+  ],
+  "suggestions": [
+    "Increase nav item horizontal padding by 4px",
+    "Set primary button font-weight to 600"
+  ],
+  "reasoning": "Core layout matches, but style details still diverge."
+}
+```
+
+### Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `score` | integer 0-100 | Visual fidelity score |
+| `verdict` | string | `pass`, `revise`, or `fail` |
+| `category_match` | boolean | Whether generated output matches the intended UI category |
+| `differences` | string[] | Concrete visual mismatches (layout, spacing, typography, colors) |
+| `suggestions` | string[] | Actionable next edits tied to the differences |
+| `reasoning` | string | 1-2 sentence summary |
+
+## Pass Threshold
+
+- Target pass threshold is **90+**
+- If `score < 90`, continue editing and rerun visual-verdict before any further visual review
+- Do **not** treat the visual task as complete until the next screenshot clears the threshold
+
+## Debug Visualization
+
+When mismatch diagnosis is difficult:
+
+1. Keep visual-verdict as the authoritative decision
+2. Use pixel-level diff tooling (pixelmatch overlay) as a **secondary debug aid** to localize hotspots
+3. Convert pixel diff hotspots into concrete `differences[]` and `suggestions[]` updates
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:visual-verdict` |
+| Magic Keywords | - |
+| Category | Utility |

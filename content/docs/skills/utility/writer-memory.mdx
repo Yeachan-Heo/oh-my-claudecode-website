@@ -1,0 +1,84 @@
+---
+title: Writer Memory
+description: An agentic memory system for writers that tracks characters, relationships, scenes, and themes
+---
+
+## Overview
+
+Writer Memory is a persistent memory system for creative writers. It maintains characters' emotional arcs, attitudes, dialogue tone, relationship dynamics, scene structure, and themes across Claude sessions.
+
+It has first-class support for Korean storytelling workflows, and all data is stored in `.writer-memory/memory.json` for Git collaboration.
+
+## Usage
+
+```bash
+/oh-my-claudecode:writer-memory init <project-name>
+/oh-my-claudecode:writer-memory char add <name>
+/oh-my-claudecode:writer-memory char <name>
+/oh-my-claudecode:writer-memory rel add <char1> <char2> <type>
+/oh-my-claudecode:writer-memory scene add <title>
+/oh-my-claudecode:writer-memory query <question>
+/oh-my-claudecode:writer-memory validate <character> <dialogue>
+/oh-my-claudecode:writer-memory synopsis
+/oh-my-claudecode:writer-memory export
+```
+
+## Memory Types
+
+### Character Memory
+
+| Field | Korean | Description |
+|-------|--------|-------------|
+| `arc` | 감정궤도 | Emotional journey (e.g., "resignation → awakening desire → choice") |
+| `attitude` | 태도 | Current disposition |
+| `tone` | 대사톤 | Dialogue style (e.g., "understated", "direct") |
+| `speechLevel` | 말투 레벨 | Speech formality: informal, formal, casual, mixed |
+| `keywords` | 핵심 단어 | Words the character frequently uses |
+| `taboo` | 금기어 | Words the character never uses |
+
+### Relationship Memory
+
+Tracks dynamics between characters and how they change over time.
+Records type (romantic, family, friendship, etc.), status, power dynamics, and event timeline.
+
+### Scene Memory
+
+Tracks the emotional architecture of scenes. Records shot composition, narration tone, emotion tags, and before/after changes.
+
+### Theme Memory
+
+Captures the deeper meaning running through the story. Records how themes are expressed, related scenes, and authorial intent.
+
+## Character Validation
+
+Checks whether dialogue matches the character's established voice.
+
+```bash
+/writer-memory validate 새랑 "사랑해, 해랑아."
+```
+
+Checks speech formality level, tone matching, taboo word violations, and emotional range, then issues a PASS/WARN/FAIL verdict.
+
+## Synopsis Generation
+
+Generates an emotion-centered synopsis with five essential elements:
+
+1. Protagonist attitude summary
+2. Core relationship dynamic
+3. Emotional theme
+4. Genre vs. authentic emotion contrast
+5. Ending emotional resonance
+
+## Related Skills
+
+- [learner](/docs/skills/utility/learner) - Extract patterns from a session
+- [skill](/docs/skills/utility/skill) - Manage local skills
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:writer-memory` |
+| Magic Keyword | - |
+| Category | Utility |
+| Data Path | `.writer-memory/memory.json` |

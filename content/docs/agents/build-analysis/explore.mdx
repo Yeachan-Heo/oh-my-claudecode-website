@@ -1,0 +1,68 @@
+---
+title: Explore
+description: A lightweight agent for codebase exploration and file/symbol search.
+---
+
+## Overview
+
+Explore is a discovery-specialist agent that quickly finds files, code patterns, and relationships between symbols in a codebase.
+Its default model is haiku, making it fast and cheap, and it specializes in finding "where things are."
+
+Explore is a read-only agent.
+It does not create or modify files, and returns search results as message text.
+
+It handles internal codebase exploration only.
+Lookups of external documentation, academic papers, and API references are handled by `document-specialist`.
+
+## When to Use
+
+- When you need to find which file implements a specific feature
+- When tracking down where a code pattern or symbol is used
+- When understanding project structure and relationships between files
+- When other agents (planner, executor, etc.) need to gather codebase context before starting work
+
+## Usage Examples
+
+```
+"Find where the auth-related code is"
+"Find all files that call this function"
+"Map out the routing structure of the project"
+```
+
+Explore runs parallel searches from multiple angles rather than a single search.
+For example, when finding "auth-related code," it simultaneously searches controllers, middleware, token validation, session management, and more.
+
+## Tools Used
+
+- **Glob**: Find files by name/pattern
+- **Grep**: Search code content by text pattern
+- **ast_grep_search**: Search structural patterns such as function shapes and class structures
+- **lsp_document_symbols**: View a file's symbol overview (functions, classes, variables)
+- **lsp_workspace_symbols**: Search symbol names across the entire workspace
+- **Bash**: Query history/change records with git commands
+
+## Context Conservation Strategy
+
+Explore conserves context window space.
+
+- For files over 200 lines, it first checks the overview with `lsp_document_symbols`
+- For files over 500 lines, it prioritizes structural tools over reading the whole file
+- For large files, it reads only the needed section using `offset`/`limit` parameters
+- Parallel reads are limited to 5 files at a time
+
+## Combining with Other Agents
+
+- **planner**: Explore is run first to gather codebase context before plan creation
+- **executor**: Spawns explore agents to understand existing patterns and dependencies before implementation
+- **architect**: Used for initial file mapping during architecture analysis
+- **debugger**: Used to quickly locate code related to a bug
+
+## Reference
+
+| Item | Value |
+|------|-----|
+| Model | haiku |
+| Subagent Type | `oh-my-claudecode:explore` |
+| Lane | Build & Analysis |
+| Read-Only | Yes (Write, Edit blocked) |
+| Tier Variant | `explore-high` (opus) |

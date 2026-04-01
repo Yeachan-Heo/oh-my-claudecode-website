@@ -1,0 +1,81 @@
+---
+title: CJK IME 알려진 이슈
+description: 한중일 입력기(IME) 관련 알려진 이슈와 해결 방법
+---
+
+## CJK IME 알려진 이슈
+
+OMC와 함께 Claude Code에서 한국어, 일본어, 중국어(CJK) 입력기를 사용할 때 발생하는 알려진 이슈들입니다.
+
+### 영향받는 사용자
+
+다음 입력기를 사용하는 경우:
+- **한국어**: 한글 (ibus, fcitx, 또는 macOS 한국어 IM 경유)
+- **일본어**: かな / 漢字 (ibus-anthy, fcitx-mozc, 또는 macOS 일본어 IM 경유)
+- **중국어**: 拼音 / 注音 (ibus-pinyin, fcitx, 또는 macOS 중국어 IM 경유)
+
+### 알려진 이슈
+
+#### 1. 조합 중 문자 미표시
+
+**증상**: 조합 중인 문자가 화면에 보이지 않습니다 (Enter/Space로 확정하기 전). 최종 확정된 문자는 정상적으로 표시됩니다.
+
+**근본 원인**: Claude Code의 터미널 UI는 React Ink를 사용하며, IME 조합 이벤트를 완전히 지원하지 않습니다. 터미널의 raw 모드가 IME가 처리하기 전에 키 입력을 가로챕니다.
+
+**상태**: 업스트림에서 수정되지 않음.
+
+#### 2. 커서 위치 불일치
+
+**증상**: CJK 문자를 확정한 후 커서 위치가 하나 이상 어긋날 수 있습니다. 이로 인해 후속 편집이 정렬되지 않습니다.
+
+**근본 원인**: CJK 문자는 일반적으로 터미널 셀에서 전각(더블 너비)이지만, 커서 위치 계산에서 이를 올바르게 고려하지 못할 수 있습니다.
+
+**상태**: 최근 Claude Code 버전에서 부분 수정됨.
+
+#### 3. 대형 IME 사전으로 인한 성능 저하
+
+**증상**: 대형 사전이 있는 CJK 입력기 사용 시 눈에 띄는 입력 지연, 특히 Linux에서 ibus 또는 fcitx 사용 시.
+
+**근본 원인**: 터미널의 raw 모드 처리가 IME의 사전 조회와 충돌하여 블로킹 I/O를 유발합니다.
+
+**상태**: 최근 버전에서 부분적으로 완화됨.
+
+### 해결 방법
+
+#### 1. 외부 편집기 사용
+
+가장 안정적인 해결 방법입니다. 외부 텍스트 편집기에서 프롬프트를 작성한 후 Claude Code에 붙여넣기합니다.
+
+```bash
+# 예시: vim으로 작성 후 붙여넣기
+vim /tmp/prompt.txt
+# 한국어/일본어/중국어로 프롬프트 작성
+# 내용을 복사하여 Claude Code에 붙여넣기
+```
+
+#### 2. 영어로 프롬프트 작성
+
+OMC와 Claude Code는 영어 입력을 완벽히 지원합니다. 가능하면 영어로 프롬프트를 작성하는 것을 고려하세요. CLAUDE.md 설정에 따라 Claude는 여전히 선호하는 언어로 응답합니다.
+
+#### 3. 클립보드 스크립트
+
+클립보드에서 읽는 도우미 스크립트를 만듭니다:
+
+```bash
+#!/bin/bash
+# paste-prompt.sh
+xclip -selection clipboard -o
+```
+
+#### 4. IDE 통합
+
+VS Code나 JetBrains와 같은 IDE 확장을 통해 Claude Code를 사용하면 자체 텍스트 입력 처리를 제공하여 터미널 IME 이슈를 우회합니다.
+
+### 관련 이슈
+
+- [anthropics/claude-code#1234](https://github.com/anthropics/claude-code) — CJK 입력 지원
+- [vadimdemedes/ink#123](https://github.com/vadimdemedes/ink) — React Ink의 IME 조합
+
+<Callout type="info">
+여기에 나열되지 않은 CJK 입력 이슈를 발견하면 [oh-my-claudecode issues](https://github.com/Yeachan-Heo/oh-my-claudecode/issues)에 보고해주세요.
+</Callout>

@@ -1,0 +1,91 @@
+---
+title: Team
+description: Team orchestration that coordinates N Claude agents to collaborate on a shared task list
+---
+
+## Overview
+
+Team is an orchestration skill that creates N Claude Code native agents and has them collaborate on a shared task list. It has built-in team management, inter-agent messaging, and task dependencies with no external dependencies required.
+
+Work proceeds through a 5-stage pipeline: team-plan, team-prd, team-exec, team-verify, team-fix.
+
+## Usage
+
+```bash
+/oh-my-claudecode:team N:agent-type "task description"
+/oh-my-claudecode:team "task description"
+/oh-my-claudecode:team ralph "task description"
+```
+
+### Parameters
+
+- **N**: Number of team member agents (1-20). If omitted, determined automatically based on task decomposition
+- **agent-type**: Agent type to use in the team-exec stage (executor, debugger, designer, codex, gemini, etc.). If omitted, auto-routed per stage
+- **task**: High-level task description to decompose and distribute
+- **ralph**: When specified, wraps the team pipeline in Ralph's continuous loop for retries on failure and architect verification on completion
+
+## Examples
+
+```bash
+# 5 executors fixing TypeScript errors
+/team 5:executor "fix all TypeScript errors across the project"
+
+# 3 debuggers fixing build errors
+/team 3:debugger "fix build errors in src/"
+
+# Auto-sized, auto-routed
+/team "refactor the auth module with security review"
+
+# With Ralph continuous loop
+/team ralph "build a complete REST API for user management"
+
+# Using Codex CLI workers
+/team 3:codex "review all API endpoints for security"
+```
+
+## Pipeline Stages
+
+### team-plan
+
+The explore and planner agents analyze the task and create an execution plan.
+
+### team-prd
+
+The analyst agent analyzes requirements and defines acceptance criteria.
+
+### team-exec
+
+Team members execute tasks in parallel. Per-stage agent routing is applied.
+
+### team-verify
+
+The verifier and required reviewers validate the results.
+
+### team-fix
+
+Fixes issues found during verification. Uses executor, build-fixer, or debugger depending on the type of defect.
+The fix loop is bounded by a maximum number of attempts.
+
+## Team + Ralph
+
+`team ralph` wraps the team pipeline in Ralph's continuous loop.
+
+- If the team fails, Ralph retries
+- Performs architect verification on completion
+- Cancelling either one cancels the other
+
+## Related Skills
+
+- [omc-teams](/docs/skills/workflow/omc-teams) - run external CLI workers (codex/gemini)
+- [ralph](/docs/skills/workflow/ralph) - single-agent continuous loop
+- [ultrawork](/docs/skills/workflow/ultrawork) - simple parallel execution
+- [ralplan](/docs/skills/workflow/ralplan) - recommended to run consensus planning before team
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:team` |
+| Magic Keywords | `team` |
+| Category | Workflow |
+| State File | `.omc/state/team-state.json` |

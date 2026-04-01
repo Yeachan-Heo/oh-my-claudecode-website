@@ -1,0 +1,124 @@
+---
+title: Deep Dive
+description: "2단계 파이프라인: trace (원인 조사) → deep-interview (요구사항 결정)"
+---
+
+## 개요
+
+Deep Dive는 먼저 문제가 발생한 이유를 조사(trace)한 다음, 그에 대해 무엇을 해야 하는지 정밀하게 정의(deep-interview)하는 2단계 파이프라인을 조율합니다. trace 단계는 3개의 병렬 인과 조사 레인을 실행하며, 그 결과는 3-point injection 메커니즘을 통해 인터뷰 단계에 주입됩니다.
+
+결과물은 가정이 아닌 증거에 기반한 명확한 스펙입니다.
+
+## 사용법
+
+```bash
+/oh-my-claudecode:deep-dive "인증 토큰이 왜 일찍 만료되는지?"
+```
+
+매직 키워드로도 활성화됩니다.
+
+```
+deep dive into the authentication failures
+investigate deeply why the DAG fails intermittently
+```
+
+## 사용 시기
+
+- 근본 원인을 모르는 문제 — 요구사항 정의 전 조사가 필요할 때
+- 버그 조사: "무언가 고장났는데 원인을 파악한 후 수정 계획을 세워야 할 때"
+- 기능 탐색: "X를 개선하고 싶지만 먼저 현재 동작 방식을 이해해야 할 때"
+- 모호하고 인과적이며 증거가 중요한 문제
+
+## 사용하지 않을 때
+
+- 근본 원인을 이미 알고 있는 경우 — `/deep-interview`를 직접 사용
+- 파일 경로가 명확한 구체적 요청 — 바로 실행
+- 요구사항 없이 조사만 필요 — `/trace`를 직접 사용
+- 이미 PRD나 스펙이 있는 경우 — `/ralph`나 `/autopilot` 사용
+
+## 파이프라인 단계
+
+```
+Stage 1: Deep Dive               Stage 2: Ralplan                Stage 3: Autopilot
+┌─────────────────────┐    ┌───────────────────────────┐    ┌──────────────────────┐
+│ Trace (3 lanes)     │    │ Planner creates plan      │    │ Phase 2: Execution   │
+│ Interview (Socratic)│───>│ Architect reviews         │───>│ Phase 3: QA cycling  │
+│ 3-point injection   │    │ Critic validates          │    │ Phase 4: Validation  │
+│ Spec crystallization│    │ Loop until consensus      │    │ Phase 5: Cleanup     │
+│ Gate: ≤20% ambiguity│    │ ADR + RALPLAN-DR summary  │    │                      │
+└─────────────────────┘    └───────────────────────────┘    └──────────────────────┘
+Output: spec.md            Output: consensus-plan.md        Output: working code
+```
+
+## 실행 단계
+
+### Phase 1: 초기화
+
+사용자 입력을 파싱하고, brownfield/greenfield를 감지하며, 3개의 trace 레인 가설을 생성합니다:
+
+1. **코드 경로 / 구현 원인**
+2. **설정 / 환경 / 오케스트레이션 원인**
+3. **측정 / 아티팩트 / 가정 불일치 원인**
+
+### Phase 2: 레인 확인
+
+사용자에게 3개 가설을 제시하여 확인합니다 (1회만).
+
+### Phase 3: Trace 실행
+
+Claude 내장 팀 모드를 사용하여 3개 병렬 tracer 레인을 실행합니다. 각 레인은:
+
+- 정확히 하나의 가설을 담당
+- **지지** 및 **반박** 증거 수집
+- **핵심 미지수** 명시
+- 최적의 **구별 탐침** 제안
+
+선두 가설과 가장 강력한 대안 사이에 반증 라운드를 실행합니다.
+
+### Phase 4: Trace 주입 인터뷰
+
+deep-interview 프로토콜을 따르되 3개의 초기화 오버라이드가 적용됩니다:
+
+1. **initial_idea 강화**: 원시 입력을 trace 결과로 대체
+2. **codebase_context 대체**: 재탐색 대신 trace 합성 사용
+3. **초기 질문 큐 주입**: 레인별 핵심 미지수가 첫 인터뷰 질문이 됨
+
+모호도가 ≤ 20%가 될 때까지 소크라테스식 질문이 계속됩니다.
+
+### Phase 5: 실행 브릿지
+
+실행 옵션을 제시합니다:
+
+| 옵션 | 설명 |
+|------|------|
+| Ralplan → Autopilot (추천) | 합의 기반 스펙 정제 후 전체 autopilot 실행 |
+| Autopilot (ralplan 생략) | 전체 자율 파이프라인, 빠르지만 합의 없음 |
+| Ralph | architect 검증 포함 지속 루프 |
+| Team | N개 병렬 에이전트 조율 |
+| 추가 정제 | 인터뷰 계속 |
+
+## Trace 출력물
+
+Trace 결과는 `.omc/specs/deep-dive-trace-{slug}.md`에 저장됩니다:
+
+- 신뢰도 및 증거 강도별 가설 순위
+- 레인별 증거 요약
+- 반증 라운드 결과
+- 가장 가능성 높은 설명
+- 핵심 미지수 및 권장 구별 탐침
+
+## 관련 스킬
+
+- [trace](/docs/skills/utility/trace) - 조사만, 요구사항 없음
+- [deep-interview](/docs/skills/workflow/deep-interview) - 요구사항만, 조사 없음
+- [ralplan](/docs/skills/workflow/ralplan) - 합의 기반 계획 (Stage 2)
+- [autopilot](/docs/skills/workflow/autopilot) - 자율 실행 (Stage 3)
+
+## 레퍼런스
+
+| 항목 | 값 |
+|------|-----|
+| 호출 | `/oh-my-claudecode:deep-dive` |
+| 매직 키워드 | `deep dive`, `deep-dive`, `investigate deeply` |
+| 카테고리 | Workflow |
+| 파이프라인 | deep-dive → omc-plan → autopilot |

@@ -1,0 +1,124 @@
+---
+title: Deep Dive
+description: "2-stage pipeline: trace (causal investigation) → deep-interview (requirements crystallization)"
+---
+
+## Overview
+
+Deep Dive orchestrates a 2-stage pipeline that first investigates WHY something happened (trace) then precisely defines WHAT to do about it (deep-interview). The trace stage runs 3 parallel causal investigation lanes, and its findings feed into the interview stage via a 3-point injection mechanism.
+
+The result is a crystal-clear spec grounded in evidence, not assumptions.
+
+## Usage
+
+```bash
+/oh-my-claudecode:deep-dive "why does the auth token expire early?"
+```
+
+Also activated via magic keywords.
+
+```
+deep dive into the authentication failures
+investigate deeply why the DAG fails intermittently
+```
+
+## When to Use
+
+- User has a problem but doesn't know the root cause — needs investigation before requirements
+- Bug investigation: "Something broke and I need to figure out why, then plan the fix"
+- Feature exploration: "I want to improve X but first need to understand how it currently works"
+- The problem is ambiguous, causal, and evidence-heavy
+
+## When NOT to Use
+
+- User already knows the root cause — use `/deep-interview` directly
+- User has a clear, specific request with file paths — execute directly
+- User wants to trace only without requirements — use `/trace` directly
+- User already has a PRD or spec — use `/ralph` or `/autopilot`
+
+## Pipeline Stages
+
+```
+Stage 1: Deep Dive               Stage 2: Ralplan                Stage 3: Autopilot
+┌─────────────────────┐    ┌───────────────────────────┐    ┌──────────────────────┐
+│ Trace (3 lanes)     │    │ Planner creates plan      │    │ Phase 2: Execution   │
+│ Interview (Socratic)│───>│ Architect reviews         │───>│ Phase 3: QA cycling  │
+│ 3-point injection   │    │ Critic validates          │    │ Phase 4: Validation  │
+│ Spec crystallization│    │ Loop until consensus      │    │ Phase 5: Cleanup     │
+│ Gate: ≤20% ambiguity│    │ ADR + RALPLAN-DR summary  │    │                      │
+└─────────────────────┘    └───────────────────────────┘    └──────────────────────┘
+Output: spec.md            Output: consensus-plan.md        Output: working code
+```
+
+## Execution Phases
+
+### Phase 1: Initialize
+
+Parses the user's input, detects brownfield vs greenfield, and generates 3 trace lane hypotheses:
+
+1. **Code-path / implementation cause**
+2. **Config / environment / orchestration cause**
+3. **Measurement / artifact / assumption mismatch cause**
+
+### Phase 2: Lane Confirmation
+
+Presents the 3 hypotheses to the user for confirmation (1 round only).
+
+### Phase 3: Trace Execution
+
+Runs 3 parallel tracer lanes using Claude built-in team mode. Each lane:
+
+- Owns exactly one hypothesis
+- Gathers evidence **for** and **against**
+- Names the **critical unknown**
+- Recommends the best **discriminating probe**
+
+A falsification round runs between the leading hypothesis and the strongest alternative.
+
+### Phase 4: Interview with Trace Injection
+
+Follows the deep-interview protocol with 3 initialization overrides:
+
+1. **initial_idea enrichment**: Replaces raw input with trace findings
+2. **codebase_context replacement**: Uses trace synthesis instead of re-exploring
+3. **initial question queue injection**: Per-lane critical unknowns become the first interview questions
+
+The interview continues with Socratic questioning until ambiguity ≤ 20%.
+
+### Phase 5: Execution Bridge
+
+Presents execution options:
+
+| Option | Description |
+|--------|-------------|
+| Ralplan → Autopilot (Recommended) | Consensus-refine spec, then execute with full autopilot |
+| Autopilot (skip ralplan) | Full autonomous pipeline, faster but no consensus |
+| Ralph | Persistence loop with architect verification |
+| Team | N coordinated parallel agents |
+| Refine further | Continue interviewing |
+
+## Trace Output
+
+Trace results are saved to `.omc/specs/deep-dive-trace-{slug}.md` with:
+
+- Ranked hypotheses with confidence and evidence strength
+- Per-lane evidence summaries
+- Rebuttal round results
+- Most likely explanation
+- Critical unknown and recommended discriminating probe
+
+## Related Skills
+
+- [trace](/docs/skills/utility/trace) - Investigation only, no requirements
+- [deep-interview](/docs/skills/workflow/deep-interview) - Requirements only, no investigation
+- [ralplan](/docs/skills/workflow/ralplan) - Consensus planning (Stage 2)
+- [autopilot](/docs/skills/workflow/autopilot) - Autonomous execution (Stage 3)
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:deep-dive` |
+| Magic Keywords | `deep dive`, `deep-dive`, `investigate deeply` |
+| Category | Workflow |
+| Pipeline | deep-dive → omc-plan → autopilot |

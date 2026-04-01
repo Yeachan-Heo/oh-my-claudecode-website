@@ -1,0 +1,68 @@
+---
+title: Learner
+description: A learning skill that extracts reusable skills from the current conversation session
+---
+
+## Overview
+
+Learner extracts reusable skills from experiences like hard bug fixes, codebase-specific workarounds, and traps that waste time. Rather than simple code snippets, it stores principles and decision-making heuristics that teach Claude how to think about a type of problem.
+
+## Usage
+
+```bash
+/oh-my-claudecode:learner
+```
+
+Best used in these situations:
+
+- After resolving a tricky bug that required deep investigation
+- After discovering a non-obvious workaround specific to this codebase
+- After finding a hidden trap that would waste time if forgotten
+- After discovering undocumented behavior that affects the project
+
+## Extraction Criteria
+
+Not every solution is worth saving as a skill.
+
+| Criterion | Good Example | Bad Example |
+|-----------|-------------|-------------|
+| Non-searchable | ESM custom path resolution in this codebase | Reading files in TypeScript |
+| Context-specific | aiohttp proxy crash at server.py:42 | Handling errors with try/catch |
+| Precise action guidance | Check moduleResolution in tsconfig.json | Handle edge cases |
+| Hard-won knowledge | Race condition at worker.ts:89 | General programming patterns |
+
+## Skill Storage Locations
+
+- **User level**: `~/.claude/skills/omc-learned/` - Available across all projects (rare)
+- **Project level**: `.omc/skills/` - Used only in this repository (default)
+
+## Skill Format
+
+```markdown
+# [Skill Name]
+
+## The Insight
+The fundamental principle discovered.
+
+## Why This Matters
+What goes wrong if you don't know this.
+
+## Recognition Pattern
+How to know when this skill applies.
+
+## The Approach
+Decision-making heuristics. How to think, not code.
+```
+
+## Related Skills
+
+- [skill](/docs/skills/utility/skill) - Skill management (list, add, remove, search)
+- [cancel](/docs/skills/utility/cancel) - Cancel active OMC modes
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:learner` |
+| Magic Keyword | - |
+| Category | Utility |

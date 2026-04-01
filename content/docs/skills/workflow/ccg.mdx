@@ -1,0 +1,70 @@
+---
+title: CCG
+description: Tri-model orchestration with Claude-Codex-Gemini to gather multi-perspective input
+---
+
+## Overview
+
+CCG (Claude-Codex-Gemini) is a tri-model orchestration that simultaneously queries Codex and Gemini, then has Claude synthesize both responses into a single unified answer.
+
+It uses the `/ask` skill to collect external perspectives lightly, without spinning up tmux team workers.
+
+## Usage
+
+```bash
+/oh-my-claudecode:ccg "Review this PR - architecture/security via Codex and UX/readability via Gemini"
+```
+
+Also activated via magic keywords.
+
+```
+ccg review the authentication flow
+claude-codex-gemini analyze this API design
+```
+
+## How It Works
+
+1. **Request decomposition**: Claude breaks the request into two advisor prompts
+   - Codex prompt: architecture, correctness, backend, risks, test strategy
+   - Gemini prompt: UX/content clarity, alternatives, edge cases, documentation
+2. **Parallel queries**: Runs `/ask codex` and `/ask gemini` simultaneously
+3. **Artifact collection**: Reads results from `.omc/artifacts/ask/`
+4. **Synthesis**: Claude combines both outputs into a single unified answer
+
+## Synthesis Output Format
+
+- Agreed recommendations
+- Conflicting recommendations (explicitly marked)
+- Selected final direction + rationale
+- Action checklist
+
+## When to Use
+
+- When a single request spans backend/analysis and frontend/UI work
+- Code reviews that need both architecture and design/UX perspectives
+- Cross-validation where Codex and Gemini may offer differing opinions
+- When quick advisor input is needed without team runtime orchestration
+
+## Fallback
+
+- If one provider is unavailable, proceeds with the available provider + Claude synthesis
+- If both providers are unavailable, falls back to Claude-only answer
+
+## Requirements
+
+- **Codex CLI**: `npm install -g @openai/codex`
+- **Gemini CLI**: `npm install -g @google/gemini-cli`
+
+## Related Skills
+
+- [ask](/docs/skills/utility/ask) - query individual providers
+- [omc-teams](/docs/skills/workflow/omc-teams) - heavier parallel work via team workers
+- [team](/docs/skills/workflow/team) - Claude native team orchestration
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invoke | `/oh-my-claudecode:ccg` |
+| Magic Keywords | `ccg`, `claude-codex-gemini` |
+| Category | Workflow |
