@@ -2,14 +2,14 @@
   "github": {
     "stars": 4715,
     "forks": 345,
-    "updated": "2026-03-12"
+    "updated": "2026-04-07"
   },
   "npm": {
     "downloads": 33124,
-    "version": "4.10.1"
+    "version": "4.11.0"
   },
   "agents": 19,
   "skills": 36,
   "mcpTools": 25,
-  "lastUpdated": "2026-04-03T00:00:00Z"
+  "lastUpdated": "2026-04-07T00:00:00Z"
 }
