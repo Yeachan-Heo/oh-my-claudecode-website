@@ -108,7 +108,7 @@ class StatsService {
       // If still missing critical data, use hardcoded fallbacks
       if (data.stars === 0) data.stars = 4715;
       if (data.downloads === 0) data.downloads = 33124;
-      if (data.version === '0.0.0') data.version = '4.11.0';
+      if (data.version === '0.0.0') data.version = '4.11.1';
 
       this.updateCache(data);
       return data;
@@ -120,7 +120,7 @@ class StatsService {
         stars: 4715,
         downloads: 33124,
         agents: 19,
-        version: '4.11.0',
+        version: '4.11.1',
         updatedAt: new Date().toISOString(),
       };
     }
