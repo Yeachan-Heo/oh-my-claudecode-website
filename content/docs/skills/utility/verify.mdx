@@ -1,0 +1,62 @@
+---
+title: Verify
+description: Verify that a change really works before you claim completion
+---
+
+## Overview
+
+`verify` turns vague "it should work" claims into **concrete evidence**. Use it when you want confidence that a feature, fix, or refactor actually works before declaring completion.
+
+This skill is the lightweight counterpart to the `verifier` agent — it's a focused workflow you can invoke directly without spawning a subagent.
+
+## Usage
+
+```bash
+/oh-my-claudecode:verify
+```
+
+State what behavior must be proven. The skill walks through verification options in priority order.
+
+## Workflow
+
+1. **Identify** the exact behavior that must be proven
+2. Prefer **existing tests first**
+3. If coverage is missing, run the **narrowest direct verification commands** available
+4. If direct automation is not enough, describe **manual validation steps** and gather concrete observable evidence
+5. **Report only what was actually verified**
+
+## Verification Order
+
+1. Existing tests (`npm test`, `pytest`, etc.)
+2. Typecheck / build (`tsc`, `npm run build`)
+3. Narrow direct command checks (`curl`, `node -e ...`, etc.)
+4. Manual or interactive validation
+
+## Rules
+
+- **Do not say a change is complete without evidence**
+- If a check fails, **include the failure clearly**
+- If no realistic verification path exists, **say that explicitly** instead of bluffing
+- Prefer concise evidence summaries over noisy logs
+
+## Output Format
+
+```
+Verified:           <what was proven>
+Commands run:       <what was executed>
+Passed:             <what passed>
+Failed/unverified:  <what didn't pass or wasn't checked>
+```
+
+## Related Skills
+
+- [debug](/docs/skills/utility/debug) — diagnose runtime issues
+- [trace](/docs/skills/utility/trace) — evidence-driven causal tracing
+- [ultraqa](/docs/skills/workflow/ultraqa) — full QA cycling loop
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:verify` |
+| Category | Utility |

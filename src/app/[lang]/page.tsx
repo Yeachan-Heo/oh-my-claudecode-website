@@ -15,11 +15,11 @@ const jetbrainsMono = JetBrains_Mono({
 const AGENTS = {
   'Build & Analysis': [
     'explore', 'analyst', 'planner', 'architect',
-    'debugger', 'executor', 'deep-executor', 'verifier',
+    'debugger', 'executor', 'verifier', 'tracer',
   ],
   Review: ['code-reviewer', 'security-reviewer'],
   Domain: [
-    'test-engineer', 'build-fixer', 'designer', 'writer',
+    'test-engineer', 'designer', 'writer',
     'qa-tester', 'scientist', 'document-specialist',
     'git-master', 'code-simplifier',
   ],
@@ -31,7 +31,7 @@ const translations = {
     heroSubtitle: 'Multi-Agent Orchestration for Claude Code',
     heroDesc: [
       'A multi-agent orchestration layer for Claude Code.',
-      '19 agents and 30 skills working together.',
+      '19 agents and 37 skills working together.',
     ],
     metaTitle: 'Oh My ClaudeCode — Multi-Agent Orchestration for Claude Code',
     metaDescription:
@@ -48,7 +48,7 @@ const translations = {
         tag: 'Agents',
       },
       {
-        title: '30 Automation Skills',
+        title: '37 Automation Skills',
         desc: 'autopilot, ralph, ultrawork — complex pipelines run with a single command.',
         tag: 'Skills',
       },
@@ -110,7 +110,7 @@ const translations = {
     heroSubtitle: 'Claude Code를 위한 멀티 에이전트 오케스트레이션',
     heroDesc: [
       'Claude Code를 위한 멀티 에이전트 오케스트레이션 레이어.',
-      '19개 에이전트와 30개 스킬이 협업합니다.',
+      '19개 에이전트와 37개 스킬이 협업합니다.',
     ],
     metaTitle: 'Oh My ClaudeCode — Claude Code 멀티 에이전트 오케스트레이션',
     metaDescription:
@@ -127,7 +127,7 @@ const translations = {
         tag: 'Agents',
       },
       {
-        title: '30개 자동화 스킬',
+        title: '37개 자동화 스킬',
         desc: 'autopilot, ralph, ultrawork -- 한 마디면 복잡한 파이프라인이 실행됩니다.',
         tag: 'Skills',
       },

@@ -1,0 +1,63 @@
+---
+title: Remember
+description: Review reusable project knowledge and decide what belongs in project memory, notepad, or durable docs
+---
+
+## Overview
+
+`remember` promotes durable, reusable knowledge into the **right memory surface** instead of leaving it buried in chat history. Use it when a session uncovers something worth preserving — a project fact, a convention, a gotcha — and you want to route it to the correct destination.
+
+## Usage
+
+```bash
+/oh-my-claudecode:remember
+```
+
+Describe what you want to preserve. The skill classifies each item and proposes the best storage location.
+
+## Memory Surfaces
+
+| Surface | Purpose | Lifetime |
+|---|---|---|
+| **Project memory** (`.omc/project-memory.json`) | Durable team/project knowledge | Persistent across sessions |
+| **Notepad priority** (`.omc/notepad.md`) | Short high-signal context for the next turns | Survives compaction |
+| **Notepad working** | Temporary active-session notes | Session-scoped |
+| **Docs / AGENTS / CLAUDE files** | Durable instructions and conventions | Permanent, version-controlled |
+
+## Workflow
+
+1. Gather the relevant session findings
+2. Classify each item:
+   - durable project fact
+   - temporary working note
+   - operator preference or instruction
+   - duplicate / stale / conflicting information
+3. Propose the best destination for each item
+4. Write or update only the appropriate memory surface
+5. Call out duplicates or conflicts that should be cleaned up
+
+## Rules
+
+- **Do not dump everything into one store**
+- Prefer **project memory** for durable team knowledge
+- Prefer **notepad** for short-lived working context
+- Keep entries **concise and actionable**
+- If something is uncertain, mark it as uncertain rather than storing it as fact
+
+## Output
+
+- What was stored
+- Where it was stored (which surface)
+- Any duplicates/conflicts found
+
+## Related Skills
+
+- [learner](/docs/skills/utility/learner) — extract reusable skills from session learnings
+- [skillify](/docs/skills/utility/skillify) — convert a workflow into a SKILL.md draft
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:remember` |
+| Category | Utility |

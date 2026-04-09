@@ -1,12 +1,14 @@
 ---
 title: Skills
-description: Introduces all 30 OMC skills organized into workflow and utility categories.
+description: Introduces all 37 OMC skills organized into workflow and utility categories.
 ---
 
 ## What are Skills?
 
 Skills are commands invoked with the format `/oh-my-claudecode:skill-name`.
 They can also be activated via magic keywords, so you can use them in conversation without memorizing the command name.
+
+> **Count note:** OMC ships **37 built-in skills**. 36 are user-callable via slash command or magic keyword; 1 (`omc-reference`) is auto-loaded internally and has `user-invocable: false`.
 
 ## Workflow Skills
 
@@ -28,6 +30,7 @@ Execution mode skills that automate tasks.
 | [deepinit](/docs/skills/workflow/deepinit) | Hierarchical AGENTS.md codebase documentation | - |
 | [deep-interview](/docs/skills/workflow/deep-interview) | Socratic deep interview with mathematical ambiguity gating | `deep interview`, `ouroboros` |
 | [deep-dive](/docs/skills/workflow/deep-dive) | 2-stage pipeline: trace investigation → deep-interview requirements crystallization | `deep dive` |
+| [self-improve](/docs/skills/workflow/self-improve) | Autonomous evolutionary code improvement engine with tournament selection | - |
 
 ## Utility Skills
 
@@ -51,6 +54,12 @@ Configuration, management, and helper skills.
 | [mcp-setup](/docs/skills/utility/mcp-setup) | MCP server setup | - |
 | [omc-doctor](/docs/skills/utility/omc-doctor) | Diagnose and fix installation issues | - |
 | [setup](/docs/skills/utility/setup) | Unified setup entry point | - |
+| [debug](/docs/skills/utility/debug) | Diagnose OMC session, hooks, state, and orchestration | - |
+| [verify](/docs/skills/utility/verify) | Evidence-based verification before claiming completion | - |
+| [remember](/docs/skills/utility/remember) | Route knowledge to project memory, notepad, or docs | - |
+| [skillify](/docs/skills/utility/skillify) | Turn a session workflow into a reusable SKILL.md draft | - |
+| [wiki](/docs/skills/utility/wiki) | Persistent markdown knowledge base (Karpathy LLM Wiki) | `wiki`, `wiki add`, `wiki query` |
+| [omc-reference](/docs/skills/utility/omc-reference) | Auto-loaded OMC catalog reference (internal) | - |
 
 ## How to Invoke Skills
 

@@ -1,0 +1,98 @@
+---
+title: Self-Improve
+description: 토너먼트 선택 기반 자율 진화 코드 개선 엔진
+---
+
+## 개요
+
+`self-improve`는 대상 저장소에서 research → planning → execution → tournament-selection 루프를 실행하는 **자율 진화 코드 개선 엔진**입니다. 전체 라이프사이클을 관리합니다: 설정, 리서치, 계획, 실행, 토너먼트 선택, 히스토리 기록, 시각화, 정지 조건 평가.
+
+**Level 4 스킬**입니다: 한 번 시작되면 정지 조건이 만족될 때까지 완전 자율로 실행됩니다. 반복 사이에 확인을 위해 멈추지 않습니다.
+
+## 사용법
+
+```bash
+/oh-my-claudecode:self-improve
+```
+
+## 자율 실행 정책
+
+**개선 도중 사용자에게 묻기 위해 멈추지 않습니다.** 게이트 체크가 통과되고 루프가 시작되면, 정지 조건이 만족될 때까지 완전 자율로 실행됩니다.
+
+- 반복 사이 확인 없음
+- "요약 후 대기" 없음
+- 에이전트 실패 시: 한 번 재시도, 그 다음엔 건너뛰고 계속
+- 모든 플랜 거부 시: 로그하고 다음 반복으로 계속
+- 모든 executor 실패 시: 로그하고 계속
+- 벤치마크 에러 시: 로그, executor 실패 표시, 계속
+- **명시적 정지 조건만** 루프를 멈춤
+
+## 신뢰 경계
+
+루프는 벤치마크 명령을 대상 레포 안에서 그대로 실행합니다. 사용자는 **설정 중에 레포 경로와 벤치마크 명령을 명시적으로 확인**합니다. 루프는:
+
+- 패키지를 설치하지 않습니다
+- 시스템 설정을 수정하지 않습니다
+- 벤치마크 명령이 하는 것 이상의 네트워크 자원에 접근하지 않습니다
+- **Sealed 파일**: `validate.sh`가 벤치마크 코드를 루프가 수정할 수 없도록 강제 — 평가의 자기 수정 방지
+
+## 상태 레이아웃
+
+모든 상태는 `.omc/self-improve/` 아래에 살아 있습니다:
+
+```
+.omc/self-improve/
+├── config/                       # 사용자 설정
+│   ├── settings.json             # agents, benchmark, thresholds, sealed_files
+│   ├── goal.md                   # 개선 목표 + 대상 메트릭
+│   ├── harness.md                # 가드레일 규칙 (H001/H002/H003)
+│   └── idea.md                   # 사용자 실험 아이디어
+├── state/                        # 런타임 상태
+│   ├── agent-settings.json       # iterations, best_score, status
+│   ├── iteration_state.json      # 반복 내 진행 상황 (재개 가능)
+│   ├── research_briefs/          # 라운드별 리서치 출력
+│   ├── iteration_history/        # 라운드별 전체 히스토리
+│   ├── merge_reports/            # 토너먼트 결과
+│   └── plan_archive/             # 보관된 플랜 (영구)
+├── plans/                        # 활성 플랜 (현재 라운드)
+└── tracking/                     # 시각화 데이터
+    ├── raw_data.json             # 모든 후보 점수
+    ├── baseline.json             # 초기 벤치마크 점수
+    ├── events.json               # 설정 변경
+    └── progress.png              # 생성된 차트
+```
+
+OMC 모드 라이프사이클: `.omc/state/sessions/{sessionId}/self-improve-state.json`
+
+## 루프 스테이지
+
+1. **Setup 게이트** — 목표, 벤치마크, sealed 파일, harness 규칙 확인
+2. **Research** — 다음 반복을 위한 컨텍스트 수집
+3. **Planning** — 후보 개선 플랜 생성
+4. **Execution** — 플랜을 후보로 병렬 적용
+5. **토너먼트 선택** — 각 후보 벤치마크, 우승자 유지
+6. **히스토리 기록** — 반복 결과 로그, 트래킹 갱신
+7. **정지 체크** — 정지 조건 평가, 만족 안 되면 2단계로 복귀
+
+## 정지 조건
+
+루프는 다음에서만 멈춥니다:
+
+- 대상 메트릭 도달 (`goal.md`에서)
+- 최대 반복 횟수 도달
+- N번 연속 반복 실패
+- 명시적 사용자 취소 (`/oh-my-claudecode:cancel`)
+
+## 관련 스킬
+
+- [ralph](/docs/skills/workflow/ralph) — 검증 완료까지 지속 루프
+- [autopilot](/docs/skills/workflow/autopilot) — 자율 아이디어-투-코드 파이프라인
+- [ultrawork](/docs/skills/workflow/ultrawork) — 최대 병렬 실행
+
+## 레퍼런스
+
+| 항목 | 값 |
+|------|------|
+| 호출 | `/oh-my-claudecode:self-improve` |
+| 레벨 | 4 (자율 루프) |
+| 카테고리 | Workflow |

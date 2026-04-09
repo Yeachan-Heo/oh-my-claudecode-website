@@ -26,6 +26,9 @@ social-preview.html
 social-preview-1x.png
 
 # tools
-.omc/
+.omc/*
+!.omc/skills/
+.omc/skills/*
+!.omc/skills/sync-omc-docs/
 .sisyphus/
 .omx/

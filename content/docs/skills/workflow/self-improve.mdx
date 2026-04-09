@@ -1,0 +1,98 @@
+---
+title: Self-Improve
+description: Autonomous evolutionary code improvement engine with tournament selection
+---
+
+## Overview
+
+`self-improve` is an **autonomous evolutionary code improvement engine** that runs a research → planning → execution → tournament-selection loop on a target repository. It manages the full lifecycle: setup, research, planning, execution, tournament selection, history recording, visualization, and stop-condition evaluation.
+
+This is a **Level 4 skill**: once started, it runs fully autonomously until a stop condition is met. It does not pause for confirmation between iterations.
+
+## Usage
+
+```bash
+/oh-my-claudecode:self-improve
+```
+
+## Autonomous Execution Policy
+
+**The loop never stops to ask the user during improvement.** Once the gate check passes and the loop begins, it runs fully autonomously until a stop condition is met.
+
+- No confirmation between iterations
+- No "summarize and wait"
+- On agent failure: retry once, then skip and continue
+- On all plans rejected: log and continue to the next iteration
+- On all executors failing: log and continue
+- On benchmark errors: log, mark executor failed, continue
+- **Only the explicit stop conditions** halt the loop
+
+## Trust Boundary
+
+The loop runs benchmark commands as-is inside the target repo. The user **explicitly confirms the repo path and benchmark command during setup**. The loop:
+
+- Does NOT install packages
+- Does NOT modify system config
+- Does NOT access network resources beyond what the benchmark command does
+- **Sealed files**: `validate.sh` enforces that benchmark code cannot be modified by the loop, preventing self-modification of the evaluation
+
+## State Layout
+
+All state lives under `.omc/self-improve/`:
+
+```
+.omc/self-improve/
+├── config/                       # User configuration
+│   ├── settings.json             # agents, benchmark, thresholds, sealed_files
+│   ├── goal.md                   # Improvement objective + target metric
+│   ├── harness.md                # Guardrail rules (H001/H002/H003)
+│   └── idea.md                   # User experiment ideas
+├── state/                        # Runtime state
+│   ├── agent-settings.json       # iterations, best_score, status
+│   ├── iteration_state.json      # Within-iteration progress (resumable)
+│   ├── research_briefs/          # Research output per round
+│   ├── iteration_history/        # Full history per round
+│   ├── merge_reports/            # Tournament results
+│   └── plan_archive/             # Archived plans (permanent)
+├── plans/                        # Active plans (current round)
+└── tracking/                     # Visualization data
+    ├── raw_data.json             # All candidate scores
+    ├── baseline.json             # Initial benchmark score
+    ├── events.json               # Config changes
+    └── progress.png              # Generated chart
+```
+
+OMC mode lifecycle: `.omc/state/sessions/{sessionId}/self-improve-state.json`
+
+## Loop Stages
+
+1. **Setup gate** — confirm goal, benchmark, sealed files, harness rules
+2. **Research** — gather context for the next iteration
+3. **Planning** — generate candidate improvement plans
+4. **Execution** — apply plans in parallel as candidates
+5. **Tournament selection** — benchmark each candidate, keep the winner
+6. **History recording** — log iteration outcome, update tracking
+7. **Stop check** — evaluate stop conditions; if not met, return to step 2
+
+## Stop Conditions
+
+The loop halts only on:
+
+- Target metric reached (from `goal.md`)
+- Maximum iterations reached
+- Repeated failure across N consecutive iterations
+- Explicit user cancellation (`/oh-my-claudecode:cancel`)
+
+## Related Skills
+
+- [ralph](/docs/skills/workflow/ralph) — persistence loop until verified completion
+- [autopilot](/docs/skills/workflow/autopilot) — autonomous idea-to-code pipeline
+- [ultrawork](/docs/skills/workflow/ultrawork) — maximum parallel execution
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:self-improve` |
+| Level | 4 (autonomous loop) |
+| Category | Workflow |

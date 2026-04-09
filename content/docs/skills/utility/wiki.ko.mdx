@@ -1,0 +1,111 @@
+---
+title: Wiki
+description: LLM Wiki — 세션 간 누적되는 영구 마크다운 지식 베이스 (Karpathy 모델)
+---
+
+## 개요
+
+`wiki`는 프로젝트와 세션 지식을 위한 **영구적이고 스스로 유지되는 마크다운 지식 베이스**입니다. Karpathy의 LLM Wiki 개념에 영감을 받았으며, 채팅 히스토리와 함께 사라지는 대신 지식이 세션 간 누적되게 합니다.
+
+페이지는 `.omc/wiki/`에 살며 카테고리로 구조화됩니다. `[[page-name]]` wiki-link 문법으로 교차 참조를 지원합니다.
+
+## 사용법
+
+```bash
+/oh-my-claudecode:wiki
+```
+
+매직 키워드: `wiki`, `wiki this`, `wiki add`, `wiki lint`, `wiki query`
+
+## 작업
+
+### Ingest
+
+지식을 위키 페이지로 처리합니다. 한 번의 ingest로 여러 페이지를 다룰 수 있습니다.
+
+```
+wiki_ingest({ title: "Auth Architecture", content: "...", tags: ["auth", "architecture"], category: "architecture" })
+```
+
+### Query
+
+키워드와 태그로 모든 위키 페이지를 검색합니다. 매칭 페이지를 스니펫과 함께 반환하면, LLM이 인용과 함께 답변을 합성합니다.
+
+```
+wiki_query({ query: "authentication", tags: ["auth"], category: "architecture" })
+```
+
+### Lint
+
+위키의 헬스 체크를 실행합니다. 고아 페이지, 오래된 콘텐츠, 깨진 교차 참조, 과대 페이지, 구조적 모순을 감지합니다.
+
+```
+wiki_lint()
+```
+
+### Quick Add
+
+단일 페이지를 빠르게 추가합니다 (ingest보다 간단).
+
+```
+wiki_add({ title: "Page Title", content: "...", tags: ["tag1"], category: "decision" })
+```
+
+### List / Read / Delete
+
+```
+wiki_list()                                # 모든 페이지 표시 (index.md 읽기)
+wiki_read({ page: "auth-architecture" })   # 특정 페이지 읽기
+wiki_delete({ page: "outdated-page" })     # 페이지 삭제
+```
+
+### Log
+
+`.omc/wiki/log.md`에서 위키 작업 히스토리 확인.
+
+## 카테고리
+
+페이지는 카테고리로 구조화됩니다:
+
+- `architecture` — 시스템 설계, 컴포넌트, 데이터 흐름
+- `decision` — ADR과 근거
+- `pattern` — 반복 패턴 또는 관용구
+- `debugging` — 알려진 함정, 근본 원인
+- `environment` — 설정, 의존성, 런타임 구성
+- `session-log` — 자동 캡처된 주요 발견
+
+## 저장 구조
+
+```
+.omc/wiki/
+├── *.md              # 페이지 (YAML frontmatter가 있는 마크다운)
+├── index.md          # 자동 유지 카탈로그
+└── log.md            # append-only 작업 연대기
+```
+
+## 교차 참조
+
+`[[page-name]]` 문법으로 페이지 간 링크. 스킬이 링크 그래프를 유지하며 `wiki_lint()`가 깨진 참조를 보고합니다.
+
+## 자동 캡처
+
+세션 종료 시 주요 발견 사항이 `session-log` 페이지로 자동 캡처됩니다. `.omc-config.json`의 `wiki.autoCapture`로 설정 (기본값: 활성).
+
+## Hard Constraints
+
+- **벡터 임베딩 없음** — 쿼리는 키워드 + 태그 매칭만 사용
+- 위키 페이지는 **기본적으로 git-ignored** (`.omc/wiki/`는 프로젝트 로컬)
+
+## 관련 스킬
+
+- [remember](/docs/skills/utility/remember) — 지식을 올바른 메모리 표면으로 라우팅
+- [learner](/docs/skills/utility/learner) — 세션에서 재사용 스킬 추출
+- [writer-memory](/docs/skills/utility/writer-memory) — 글쓰기 프로젝트용 에이전틱 메모리
+
+## 레퍼런스
+
+| 항목 | 값 |
+|------|------|
+| 호출 | `/oh-my-claudecode:wiki` |
+| 매직 키워드 | `wiki`, `wiki add`, `wiki lint`, `wiki query` |
+| 카테고리 | Utility |

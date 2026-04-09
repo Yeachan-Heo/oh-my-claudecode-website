@@ -7,7 +7,131 @@ description: Oh My ClaudeCode의 버전별 변경 사항
 
 Oh My ClaudeCode의 주요 변경 사항을 버전별로 정리합니다.
 
-### v4.9.3 (현재)
+### v4.11.4 (현재)
+
+> **참고:** Upstream이 v4.11.3 릴리스 본문을 그대로 v4.11.4 태그에 다시
+> 올렸습니다. 아래 수정 내역은 v4.11.3과 동일합니다 — v4.11.4가 최신
+> 게시 태그라서 여기 표시될 뿐입니다.
+
+실제 수정 목록은 **v4.11.3** 항목을 참조하세요.
+
+---
+
+### v4.11.3
+
+**버그 수정**
+- 불안정한 `execPath` 대신 PATH의 `node`를 우선 사용 (#2400)
+- `.json`/`.jsonl` 소스 확장자 검사에서 `.js` false positive 방지 (#2395)
+- 중첩 tmux 호환성을 위해 TMUX 환경변수 제거 (#2385)
+- 비대칭 심볼릭 링크 경로 해석 문제 해결 (#2372)
+- `hasEnabledOmcPlugin`에서 Claude Code 1.x의 `enabledPlugins` 감지 (#2371)
+- 합의 완료 후 ralplan stop 강제 비활성화 (#2370)
+- HUD: `package.json`이 없을 때 경로 기반 버전으로 폴백 (#2362)
+
+**문서**
+- `--plugin-dir` 플래그 문서화 및 로컬 개발용 CONTRIBUTING.md 추가 (#2399)
+- 플러그인 + npm CLI 두 표면 공존 구조 문서화 (#2367)
+
+**통계:** 9 PR · 7 bug fixes · 0 new features · 0 security/hardening
+
+---
+
+### v4.11.2
+
+> **참고:** Upstream이 v4.11.1 릴리스 본문을 그대로 v4.11.2 태그에 다시
+> 올렸습니다. 실제 기능/수정 목록은 **v4.11.1** 항목을 참조하세요.
+
+---
+
+### v4.11.1
+
+**새로운 기능**
+- HUD: `gitStatus` 작업 트리 표시 요소 (#2247)
+- HUD: 다중 호스트 SSH 워크플로우용 `hostname` 요소 (#2246)
+- HUD: cwd 폴더 포맷이 단일 leaf 대신 `parent/leaf`를 표시 (#2238)
+
+**보안 강화**
+- `hardMaxIterations` 클램핑 + autopilot 강제 (#2331)
+- gitea URL 검증을 `validateUrlForSSRF`에 위임 (#2336)
+- `omc ask` 명령에서 `disableExternalLLM` 강제 (#2324)
+- tmux send-keys 전 `trigger_message` 제어문자 정화 (#2323)
+- `max_iterations`와 독립적으로 hardMax 직접 검사 (#2322)
+- strict 모드에서 양수가 아닌 `hardMaxIterations` 거부 (#2321)
+- ultrawork persistent 모드에서 `hardMaxIterations` 강제 (#2320)
+- worker 컨텍스트에서 모든 tmux 서브커맨드 차단 (#2316)
+
+**버그 수정 (주요)**
+- Wiki: CJK 텍스트 키워드 검색 0 결과 문제 (#2263)
+- Wiki: 비-ASCII 제목에서 titleToSlug가 빈 `.md` 파일 생성 (#2270)
+- Team: `unregisterMcpWorker`, `registerInConfig` read-modify-write 락 (#2333)
+- i18n: 한국어 키워드 `설명서`, `랄프로렌` false positive 방지 (#2337)
+- Installer: HUD helper 복사 시 `__dirname` 대신 `getPackageDir()` 사용 (#2347)
+- HUD: ANSI regex에서 ST-종료 OSC 8 시퀀스 처리 (#2319)
+- Launch: tmux 세션에 환경변수 전달 + `CLAUDE_CONFIG_DIR` 존중 (#2204)
+
+**통계:** 45 PR · 3 new features · 33 bug fixes · 8 security/hardening · 1 other
+
+---
+
+### v4.11.0
+
+**새로운 기능**
+- `wiki`: LLM Wiki 지식 레이어 — 세션 간 누적되는 영구 마크다운 지식 베이스 (Karpathy의 LLM Wiki 모델 기반) (#2214)
+- ralplan / plan / ralph에 Codex 가용성 주입, 감지 강화 (#2134)
+
+**버그 수정 (주요)**
+- Team: tmux 모드 worker startup 전달 강화 (#2225)
+- Windows: explore wrapper용 PATH에서 bash 해석 (#2216)
+- Team: team 초기화 시 startup inbox 이중 전송 중단 (#2209)
+- Installer: 올바른 권한으로 `hooks/lib` 복사 보장 (#2188)
+- Hooks: preflight context guard에서 `PreToolUse` deny API 사용 (#2177)
+- Scripts: macOS 호환성을 위해 `sed -i` 대신 `perl` 사용 (#2179)
+- Hooks: `estimateContextPercent`에서 fd 누수 방지 (#2178)
+- Team: `sendToWorker` fallback을 fail-open에서 fail-closed로 변경 (#2175)
+- 남은 코드 경로에서 `CLAUDE_CONFIG_DIR` 존중 (#2156)
+- Hooks: Windows 동시 mkdir race에서 `EEXIST` 처리 (#2172)
+
+**통계:** 27 PR · 2 new features · 16 bug fixes · 9 other changes
+
+---
+
+### v4.10.2
+
+**Highlights**
+- HUD: Node 프로젝트 외부에서의 글로벌 npm install 조회 수정 (#2149)
+- HUD 호출 횟수 아이콘 렌더링 설정 가능 (#2151)
+- 글로벌 setup / `CLAUDE.md` 보존 및 덮어쓰기 흐름 강화 (#2144, #2146)
+- Bedrock pre-tool-enforcer가 잘못된 bare Anthropic 모델 ID 차단 (#2107)
+- Cancel flow가 `skill-active` state를 정확히 정리 (#2122)
+- HUD 진단이 명확한 설치 시점 실패 경로 표시 (#2129)
+- Worktree 표시가 변동성 있는 main HEAD 대신 실제 worktree 이름 표시 (#2127)
+- Team pane geometry + bundled agent 경로 해석 수정 (#2137)
+
+---
+
+### v4.10.1
+
+**Patch 릴리스** — v4.10.0의 패키징 실수 수정.
+
+- 누락된 `dist/` HUD 레이아웃 산출물 재빌드 및 배포 — #2083의 레이아웃/worktree 정렬 변경이 실제로 게시 패키지에 포함되도록 함
+- HUD 레이아웃 경로의 `src/`와 `dist/` 사이 게시된 일치 복원
+
+---
+
+### v4.10.0
+
+**Highlights**
+- **HUD & worktree 감지**: worktree 인식 HUD 컨텍스트 + 요소 순서/그룹화 레이아웃 커스터마이제이션
+- **LSP 3.17 지원**: Kotlin 워크플로우 도구 확장
+- **새로운 스킬 — `self-improve`**: 토너먼트 선택 기반 자율 진화 코드 개선 엔진
+- **보안 강화**: Python 샌드박싱 강화, worker 명령 제약, 외부 LLM 강제
+- **런타임 수정**: 세션 지속 안전성, skill-state 정리, CLAUDE config 프로파일 처리, 설치된 HUD fallback 동작
+
+**통계:** 35+ PR · 8 major user-facing features · 20+ bug/runtime fixes
+
+---
+
+### v4.9.3
 
 **버그 수정 및 보안**
 - 보안 취약점, 린트 경고, CJS 런타임 버그 해결 (#1994)

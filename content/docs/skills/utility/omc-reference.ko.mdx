@@ -1,0 +1,49 @@
+---
+title: OMC Reference
+description: OMC 에이전트 카탈로그, 도구, 팀 파이프라인 라우팅, 커밋 프로토콜, 스킬 레지스트리를 위한 자동 로드 레퍼런스
+---
+
+## 개요
+
+`omc-reference`는 상세한 OMC 카탈로그를 인라인 컨텍스트로 제공하는 **내부 자동 로드 레퍼런스 스킬**입니다. 사용자가 직접 호출하는 워크플로우가 아니라, 모든 `CLAUDE.md` 세션에 살 필요 없는 상세 카탈로그 정보가 필요할 때 오케스트레이터가 자동으로 로드합니다.
+
+레퍼런스가 자동 로드되는 경우:
+
+- 에이전트 위임
+- OMC 도구 사용 (state, notepad, project memory, LSP, AST)
+- 팀 오케스트레이션
+- 커밋 프로토콜 준수
+- 스킬 호출
+
+## Frontmatter
+
+```yaml
+---
+name: omc-reference
+description: OMC agent catalog, available tools, team pipeline routing, commit protocol, and skills registry. Auto-loads when delegating to agents, using OMC tools, orchestrating teams, making commits, or invoking skills.
+user-invocable: false
+---
+```
+
+`user-invocable: false`는 이 스킬을 직접 호출하는 **슬래시 명령이 없다**는 뜻입니다. `CLAUDE.md`를 간결하게 유지하면서도 중요한 순간 오케스트레이터에 전체 카탈로그를 제공하기 위해 존재합니다.
+
+## 포함 내용
+
+- **에이전트 카탈로그** — 19개 OMC 에이전트와 기본 모델
+- **모델 라우팅** — `haiku` / `sonnet` / `opus` 선택 가이드라인
+- **도구 레퍼런스** — 외부 AI 오케스트레이션, OMC state, 팀 런타임, notepad, project memory, 코드 인텔리전스 (LSP, AST)
+- **팀 파이프라인** — `team-plan → team-prd → team-exec → team-verify → team-fix` 스테이지 라우팅
+- **커밋 프로토콜** — Git trailer 포맷 (Constraint, Rejected, Directive, Confidence, Scope-risk, Not-tested)
+- **스킬 레지스트리** — Workflow vs utility 분류
+
+## 존재 이유
+
+`CLAUDE.md` 파일은 모든 Claude 세션에 로드됩니다. 컨텍스트 예산을 위해 슬림하게 유지하는 것이 중요합니다. `omc-reference`는 무거운 카탈로그 디테일을 따로 들고 있다가 — 오케스트레이터가 위임/커밋/도구 호출을 결정하는 순간 — 실제로 관련 있을 때만 컨텍스트에 들어가게 합니다.
+
+## 레퍼런스
+
+| 항목 | 값 |
+|------|------|
+| 호출 | 자동 로드 (슬래시 명령 없음) |
+| 사용자 호출 가능 | 아니오 |
+| 카테고리 | Utility (내부) |

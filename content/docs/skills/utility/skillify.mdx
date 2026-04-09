@@ -1,0 +1,61 @@
+---
+title: Skillify
+description: Turn a repeatable workflow from the current session into a reusable OMC skill draft
+---
+
+## Overview
+
+`skillify` captures a successful multi-step workflow as a concrete skill draft instead of rediscovering it later. Use it when the current session uncovered a repeatable pattern that should become a reusable OMC skill.
+
+This is the natural complement to [learner](/docs/skills/utility/learner) — `learner` extracts insights from session experience, while `skillify` produces a concrete `SKILL.md` ready to install.
+
+## Usage
+
+```bash
+/oh-my-claudecode:skillify
+```
+
+Describe the workflow that worked. The skill walks through structuring it into a reusable SKILL.md.
+
+## Workflow
+
+1. **Identify** the repeatable task the session accomplished
+2. **Extract** the structured pieces:
+   - inputs
+   - ordered steps
+   - success criteria
+   - constraints / pitfalls
+   - best target location for the skill
+3. **Decide** whether the workflow belongs as:
+   - a repo built-in skill
+   - a user/project learned skill (`.omc/skills/`)
+   - documentation only
+4. **Draft** the SKILL.md content with clear triggers, steps, and success criteria
+5. **Surface** anything still too fuzzy to encode safely
+
+## Rules
+
+- Only capture workflows that are **actually repeatable**
+- Keep the skill **practical and scoped**
+- Prefer **explicit success criteria** over vague prose
+- If the workflow still has unresolved branching decisions, note them before drafting
+
+## Output
+
+- Proposed skill name
+- Target location (repo / user / project)
+- Draft workflow structure
+- Open questions, if any
+
+## Related Skills
+
+- [learner](/docs/skills/utility/learner) — extract reusable insights from session
+- [skill](/docs/skills/utility/skill) — manage local skills (list / add / remove / search / edit)
+- [remember](/docs/skills/utility/remember) — route knowledge to the right memory surface
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:skillify` |
+| Category | Utility |

@@ -1,4 +1,27 @@
 {
   "title": "Utility Skills",
-  "pages": ["omc-setup", "omc-doctor", "mcp-setup", "setup", "hud", "cancel", "ask", "trace", "learner", "skill", "ai-slop-cleaner", "configure-notifications", "release", "writer-memory", "project-session-manager"]
+  "pages": [
+    "omc-setup",
+    "omc-doctor",
+    "mcp-setup",
+    "setup",
+    "hud",
+    "cancel",
+    "ask",
+    "trace",
+    "debug",
+    "verify",
+    "learner",
+    "skill",
+    "skillify",
+    "remember",
+    "wiki",
+    "ai-slop-cleaner",
+    "configure-notifications",
+    "release",
+    "writer-memory",
+    "project-session-manager",
+    "visual-verdict",
+    "omc-reference"
+  ]
 }

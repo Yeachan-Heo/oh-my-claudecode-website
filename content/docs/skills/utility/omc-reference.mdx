@@ -1,0 +1,49 @@
+---
+title: OMC Reference
+description: Auto-loaded reference for the OMC agent catalog, tools, team pipeline routing, commit protocol, and skills registry
+---
+
+## Overview
+
+`omc-reference` is an **internal, auto-loaded reference skill** that ships the detailed OMC catalog as inline context. It is not a user-invoked workflow — it is loaded automatically when the orchestrator needs detailed catalog information that does not need to live in every `CLAUDE.md` session.
+
+Use cases for which the reference is auto-loaded:
+
+- Delegating to agents
+- Using OMC tools (state, notepad, project memory, LSP, AST)
+- Orchestrating teams
+- Following the commit protocol
+- Invoking skills
+
+## Frontmatter
+
+```yaml
+---
+name: omc-reference
+description: OMC agent catalog, available tools, team pipeline routing, commit protocol, and skills registry. Auto-loads when delegating to agents, using OMC tools, orchestrating teams, making commits, or invoking skills.
+user-invocable: false
+---
+```
+
+`user-invocable: false` means there is **no slash command** to call this skill directly. It exists to keep `CLAUDE.md` concise while still giving the orchestrator the full catalog when it matters.
+
+## What it contains
+
+- **Agent catalog** — All 19 OMC agents with default models
+- **Model routing** — `haiku` / `sonnet` / `opus` selection guidelines
+- **Tools reference** — External AI orchestration, OMC state, team runtime, notepad, project memory, code intelligence (LSP, AST)
+- **Team pipeline** — `team-plan → team-prd → team-exec → team-verify → team-fix` stage routing
+- **Commit protocol** — Git trailer format (Constraint, Rejected, Directive, Confidence, Scope-risk, Not-tested)
+- **Skills registry** — Workflow vs utility classification
+
+## Why it exists
+
+`CLAUDE.md` files are loaded into every Claude session. Keeping them slim is critical for context budget. `omc-reference` carries the heavy catalog details so they only enter context when actually relevant — at the moment the orchestrator decides to delegate, commit, or invoke a tool.
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | Auto-loaded (no slash command) |
+| User-invocable | No |
+| Category | Utility (internal) |

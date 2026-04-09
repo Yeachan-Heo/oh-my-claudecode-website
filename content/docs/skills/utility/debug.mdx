@@ -1,0 +1,59 @@
+---
+title: Debug
+description: Diagnose the current OMC session or repo state using logs, traces, state, and focused reproduction
+---
+
+## Overview
+
+`debug` is a focused diagnosis skill for OMC/Claude-Code session problems, workflow breakage, or confusing runtime behavior. It finds the real failure signal quickly and explains the next corrective step.
+
+Unlike the `debugger` agent (which performs root-cause analysis on application code), the `debug` skill is optimized for **the OMC runtime itself** — hooks, agents, state files, and orchestration plumbing.
+
+## Usage
+
+```bash
+/oh-my-claudecode:debug
+```
+
+Describe the symptom in plain language. The skill inspects the most relevant local evidence first.
+
+## Workflow
+
+1. Read the issue description carefully
+2. Inspect the most relevant local evidence first:
+   - **trace tools** — `trace_summary`, `trace_timeline`
+   - **state tools** — `state_read`, `state_list_active`, `state_get_status`
+   - **notepad / project memory** — when relevant to the failure
+   - **failing tests or commands** — direct reproduction
+3. Reproduce the issue narrowly if possible
+4. Distinguish symptoms from root cause
+5. Recommend the smallest next fix or verification step
+
+## Output Format
+
+```
+Observed failure:    <what the user sees>
+Root-cause hypothesis: <best current explanation>
+Evidence:            <what supports the hypothesis>
+Smallest next action: <concrete next step>
+```
+
+## Rules
+
+- Prefer **real evidence over guesses**
+- Use the trace/state surfaces when the issue involves orchestration, hooks, or agent flow
+- If the issue is a product/runtime bug rather than app code, **say so plainly**
+- Do not prescribe broad rewrites before isolating the failure
+
+## Related Skills
+
+- [trace](/docs/skills/utility/trace) — evidence-driven causal tracing lane
+- [omc-doctor](/docs/skills/utility/omc-doctor) — installation/config diagnostics
+- [verify](/docs/skills/utility/verify) — confirm a fix actually works
+
+## Reference
+
+| Item | Value |
+|------|-------|
+| Invocation | `/oh-my-claudecode:debug` |
+| Category | Utility |
