@@ -1,0 +1,95 @@
+---
+title: Ralplan
+description: 通过 Planner-Architect-Critic 共识过程的迭代规划
+---
+
+## 概览
+
+Ralplan 是 `/oh-my-claudecode:omc-plan --consensus` 的快捷别名。它执行 RALPLAN-DR 结构化审议，其中 Planner、Architect 和 Critic 智能体迭代审查和完善计划，直到达成共识。
+
+它也充当模糊执行请求的预执行门控。诸如 `ralph add authentication` 之类缺乏具体性的提示会被重定向到 ralplan，以先建立计划。
+
+## 使用
+
+```bash
+/oh-my-claudecode:ralplan "task description"
+/oh-my-claudecode:ralplan --interactive "task description"
+/oh-my-claudecode:ralplan --deliberate "high-risk migration"
+```
+
+也可通过魔法关键词激活。
+
+```
+ralplan this feature
+```
+
+## 选项/标志
+
+| 标志 | 说明 |
+|------|-------------|
+| `--interactive` | 在关键决策点启用用户提示 |
+| `--deliberate` | 高风险工作的深度审议（前瞻性分析 + 扩展测试计划） |
+| `--architect codex` | 在 Architect 阶段使用 Codex CLI |
+| `--critic codex` | 在 Critic 阶段使用 Codex CLI |
+
+## 共识工作流
+
+1. **Planner** 编写初始计划 + RALPLAN-DR 摘要
+   - 原则（3-5 个）、决策驱动力（前 3 个）、可行选项（2 个或更多）
+   - `--deliberate`：添加前瞻性分析（3 个场景）+ 扩展测试计划
+2. **Architect** 审查架构合理性（顺序运行，包括反驳）
+3. **Critic** 评估质量标准（在 Architect 完成后运行）
+4. 拒绝时：修订 → Architect → Critic 循环（最多 5 次）
+5. 批准时：输出最终计划和 ADR
+
+## 预执行门控
+
+当模糊提示传递给执行模式（ralph、autopilot、team、ultrawork）时，它会被重定向到 ralplan。
+
+### 通过门控的提示
+
+如果提示至少包含一个具体信号，就会通过门控。
+
+| 信号 | 示例 |
+|--------|---------|
+| 文件路径 | `ralph fix src/hooks/bridge.ts` |
+| Issue/PR 号 | `ralph implement #42` |
+| camelCase 符号 | `ralph fix processKeywordDetector` |
+| 编号步骤 | `ralph do: 1. Add X 2. Test Y` |
+| 错误参考 | `ralph fix TypeError in auth` |
+
+### 如何绕过门控
+
+```bash
+force: ralph refactor the auth module
+! autopilot optimize everything
+```
+
+## 示例
+
+```bash
+# 基本共识规划
+ralplan redesign the database schema
+
+# 交互模式
+ralplan --interactive migrate from REST to GraphQL
+
+# 高风险工作
+ralplan --deliberate rewrite the authentication system
+```
+
+## 相关技能
+
+- [plan](/docs/skills/workflow/plan) - 完整规划技能（ralplan 是共识模式别名）
+- [autopilot](/docs/skills/workflow/autopilot) - 共识规划后的自主执行
+- [team](/docs/skills/workflow/team) - 共识规划后的团队执行（推荐）
+- [deep-interview](/docs/skills/workflow/deep-interview) - 规划前的深度面试
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:ralplan` |
+| 魔法关键词 | `ralplan` |
+| 类别 | Workflow |
+| 输出路径 | `.omc/plans/ralplan-*.md` |

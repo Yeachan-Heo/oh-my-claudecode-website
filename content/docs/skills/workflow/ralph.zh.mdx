@@ -1,0 +1,117 @@
+---
+title: Ralph
+description: 基于PRD的持续循环，不断执行直到所有用户故事都被验证
+---
+
+## 概览
+
+Ralph 是一个基于 PRD（产品需求文档）的持续循环。它持续工作，直到所有用户故事的验收标准都被满足，且审查者验证通过。在 Ultrawork 并行执行的基础上，它添加了会话持久化、自动重试、结构化故事跟踪和强制验证。
+
+它的创建目的是防止任务在仅部分实现时被声称"完成"。
+
+## 使用
+
+```bash
+/oh-my-claudecode:ralph "fix all TypeScript errors across the project"
+```
+
+也可通过魔法关键词激活。
+
+```
+ralph refactor the authentication module
+don't stop until all tests pass
+must complete the migration
+```
+
+## 选项/标志
+
+| 标志 | 说明 |
+|------|-------------|
+| `--no-prd` | 跳过PRD生成（用于简单任务） |
+| `--critic=architect` | 使用 architect 作为完成审查者（默认） |
+| `--critic=critic` | 使用 critic 作为完成审查者 |
+| `--critic=codex` | 使用 Codex CLI 作为完成审查者 |
+
+## 执行步骤
+
+### 1. PRD 设置
+
+第一次迭代时，创建 `prd.json` 或读取现有文件。
+将自动生成框架中的通用验收标准替换为任务特定的具体标准。
+
+```json
+{
+  "stories": [
+    {
+      "id": "US-001",
+      "title": "Add flag detection helpers",
+      "acceptanceCriteria": [
+        "detectNoPrdFlag('ralph --no-prd fix') returns true",
+        "TypeScript compiles with no errors (npm run build)"
+      ],
+      "passes": false
+    }
+  ]
+}
+```
+
+### 2. 逐故事实现
+
+选择优先级最高的未完成故事并实现它。
+
+- 简单任务：LOW 级（Haiku）
+- 标准任务：MEDIUM 级（Sonnet）
+- 复杂任务：HIGH 级（Opus）
+- 独立任务并发运行
+
+### 3. 逐故事验证
+
+用新的证据验证每个验收标准。
+当所有标准都被满足时，标记 `passes: true`。
+
+### 4. PRD 完成检查
+
+如果所有故事都完成，进行审查者验证。
+如果仍有未完成的故事，选择下一个。
+
+### 5. 审查者验证
+
+验证级别由更改范围决定。
+
+- 少于 5 个文件、少于 100 行：STANDARD（Sonnet）
+- 20 个或更多文件，或安全/架构更改：THOROUGH（Opus）
+
+### 6. 完成
+
+批准后，用 `/oh-my-claudecode:cancel` 清理状态。
+拒绝后，修复问题并重新验证。
+
+## 示例
+
+```bash
+# 基本用法
+ralph fix all failing tests in the auth module
+
+# 不使用PRD的简单任务
+ralph --no-prd fix the typo in README.md
+
+# 使用 Codex 审查者
+ralph --critic=codex implement the user profile page
+```
+
+## 相关技能
+
+- [ultrawork](/docs/skills/workflow/ultrawork) - ralph 内部的并行执行引擎
+- [autopilot](/docs/skills/workflow/autopilot) - 包含 ralph 的完整自主流水线
+- [cancel](/docs/skills/utility/cancel) - 取消 ralph 执行
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:ralph` |
+| 魔法关键词 | `ralph`, `don't stop`, `must complete` |
+| 类别 | Workflow |
+| 状态文件 | `.omc/state/ralph-state.json` |
+| PRD 文件 | `.omc/prd.json` |
+| 进度日志 | `.omc/progress.txt` |

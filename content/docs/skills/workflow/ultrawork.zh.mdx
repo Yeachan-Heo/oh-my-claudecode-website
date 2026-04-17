@@ -1,0 +1,78 @@
+---
+title: Ultrawork
+description: 并行执行引擎，同时运行独立任务
+---
+
+## 概览
+
+Ultrawork 是一个执行引擎，并发运行多个智能体以并行处理独立任务。它被设计为一个组件而不是独立模式 — 它提供并行执行和智能模型路由，但没有持久化或验证循环。
+
+Ralph 和 Autopilot 在内部使用 Ultrawork。
+
+## 使用
+
+```bash
+/oh-my-claudecode:ultrawork "implement user authentication with OAuth"
+```
+
+也可通过魔法关键词激活。
+
+```
+ultrawork implement the API endpoints
+ulw add validation to all forms
+```
+
+## 如何工作
+
+### 任务分类
+
+区分独立任务和具有依赖关系的任务。
+
+### 模型路由
+
+根据任务复杂性选择适当的模型级别。
+
+| 复杂性 | 模型 | 用例 |
+|------------|-------|----------|
+| 简单查找/定义 | Haiku | 添加类型导出、修复缺失导入 |
+| 标准实现 | Sonnet | 实现 API 端点、编写测试 |
+| 复杂分析/重构 | Opus | 实现 OAuth 流、架构重构 |
+
+### 并行执行
+
+独立任务同时运行。
+
+```
+Task 1 (Haiku):  Add type exports             ─┐
+Task 2 (Sonnet): Implement API endpoints       ─┤── 并发
+Task 3 (Sonnet): Auth middleware tests         ─┘
+```
+
+具有依赖关系的任务在其前置条件完成后运行。
+长时间运行的任务（如构建、安装和测试）在后台运行。
+
+## 与其他模式的关系
+
+```
+autopilot（自主执行）
+ └── ralph（持续循环）
+      └── ultrawork（并行执行） ← 此技能
+```
+
+- **单独使用 ultrawork**：仅需要并行执行而不需持久化或验证时
+- **更喜欢 ralph**：需要持久化和验证时（ralph 包含 ultrawork）
+- **更喜欢 autopilot**：需要完整生命周期时
+
+## 相关技能
+
+- [ralph](/docs/skills/workflow/ralph) - 在 ultrawork 基础上添加持久化和验证
+- [autopilot](/docs/skills/workflow/autopilot) - 包含 ralph 的完整自主流水线
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:ultrawork` |
+| 魔法关键词 | `ultrawork`, `ulw` |
+| 类别 | Workflow |
+| 状态文件 | `.omc/state/ultrawork-state.json` |

@@ -1,0 +1,98 @@
+---
+title: Self-Improve
+description: 具有竞赛选择的自主进化代码改进引擎
+---
+
+## 概览
+
+`self-improve` 是一个**自主进化代码改进引擎**，在目标仓库上运行研究 → 规划 → 执行 → 竞赛选择循环。它管理完整的生命周期：设置、研究、规划、执行、竞赛选择、历史记录、可视化和停止条件评估。
+
+这是一个**级别 4 技能**：一旦启动，它就完全自主运行，直到满足停止条件。它不会在迭代之间暂停以确认。
+
+## 使用
+
+```bash
+/oh-my-claudecode:self-improve
+```
+
+## 自主执行策略
+
+**循环在改进期间永不停止以询问用户。** 一旦门控检查通过且循环开始，它就完全自主运行，直到满足停止条件。
+
+- 迭代之间无确认
+- 无"总结并等待"
+- 智能体失败时：重试一次，然后跳过继续
+- 所有计划被拒绝时：记录并继续下一次迭代
+- 所有执行器失败时：记录并继续
+- 基准测试错误时：记录、标记执行器失败、继续
+- **仅显式停止条件**会暂停循环
+
+## 信任边界
+
+循环在目标仓库内按原样运行基准命令。用户**在设置期间明确确认仓库路径和基准命令**。循环：
+
+- 不安装包
+- 不修改系统配置
+- 不访问超出基准命令所做的网络资源
+- **密封文件**：`validate.sh` 强制基准代码不能被循环修改，防止自修改评估
+
+## 状态布局
+
+所有状态都位于 `.omc/self-improve/` 下：
+
+```
+.omc/self-improve/
+├── config/                       # 用户配置
+│   ├── settings.json             # 智能体、基准、阈值、sealed_files
+│   ├── goal.md                   # 改进目标 + 目标指标
+│   ├── harness.md                # 护栏规则（H001/H002/H003）
+│   └── idea.md                   # 用户实验想法
+├── state/                        # 运行时状态
+│   ├── agent-settings.json       # 迭代、best_score、状态
+│   ├── iteration_state.json      # 迭代内进度（可恢复）
+│   ├── research_briefs/          # 每轮研究输出
+│   ├── iteration_history/        # 每轮完整历史
+│   ├── merge_reports/            # 竞赛结果
+│   └── plan_archive/             # 归档计划（永久）
+├── plans/                        # 活跃计划（当前轮）
+└── tracking/                     # 可视化数据
+    ├── raw_data.json             # 所有候选分数
+    ├── baseline.json             # 初始基准分数
+    ├── events.json               # 配置更改
+    └── progress.png              # 生成的图表
+```
+
+OMC 模式生命周期：`.omc/state/sessions/{sessionId}/self-improve-state.json`
+
+## 循环阶段
+
+1. **设置门控** — 确认目标、基准、密封文件、护栏规则
+2. **研究** — 为下一次迭代收集上下文
+3. **规划** — 生成候选改进计划
+4. **执行** — 作为候选并行应用计划
+5. **竞赛选择** — 对每个候选进行基准测试，保留赢家
+6. **历史记录** — 记录迭代结果，更新跟踪
+7. **停止检查** — 评估停止条件；如果未满足，返回步骤 2
+
+## 停止条件
+
+循环仅在以下情况停止：
+
+- 达到目标指标（来自 `goal.md`）
+- 达到最大迭代数
+- 跨 N 个连续迭代的重复失败
+- 显式用户取消（`/oh-my-claudecode:cancel`）
+
+## 相关技能
+
+- [ralph](/docs/skills/workflow/ralph) — 持续循环直到验证完成
+- [autopilot](/docs/skills/workflow/autopilot) — 自主想法到代码流水线
+- [ultrawork](/docs/skills/workflow/ultrawork) — 最大并行执行
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:self-improve` |
+| 级别 | 4（自主循环） |
+| 类别 | Workflow |

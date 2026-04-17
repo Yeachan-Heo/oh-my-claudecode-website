@@ -1,0 +1,93 @@
+---
+title: SciOMC
+description: 使用并行科学家智能体的研究编排
+---
+
+## 概览
+
+SciOMC 是一项研究编排技能，将研究目标分解为独立的步骤，并运行并行科学家智能体进行分析。
+
+它遵循 4 阶段工作流：分解 → 执行 → 验证 → 综合，在 AUTO 模式下支持完全自主执行。
+
+## 使用
+
+```bash
+/oh-my-claudecode:sciomc <goal>
+/oh-my-claudecode:sciomc AUTO: <goal>
+/oh-my-claudecode:sciomc status
+/oh-my-claudecode:sciomc resume
+/oh-my-claudecode:sciomc list
+/oh-my-claudecode:sciomc report <session-id>
+```
+
+## 示例
+
+```bash
+# 标准研究（带用户检查点）
+/oh-my-claudecode:sciomc What are the performance characteristics of different sorting algorithms?
+
+# 完全自主执行
+/oh-my-claudecode:sciomc AUTO: Analyze authentication patterns in this codebase
+
+# 错误处理分析
+/oh-my-claudecode:sciomc How does the error handling work across the API layer?
+```
+
+## 研究协议
+
+### 1. 步骤分解
+
+将研究目标分解为 3-7 个独立的步骤。为每个步骤分配复杂性级别（LOW/MEDIUM/HIGH）。
+
+### 2. 并行执行
+
+使用科学家智能体并发运行独立步骤。
+
+| 复杂性 | 模型 | 用例 |
+|------------|-------|----------|
+| LOW | Haiku | 文件枚举、模式计数、简单查找 |
+| MEDIUM | Sonnet | 代码分析、模式检测、文档审查 |
+| HIGH | Opus | 架构分析、跨切面关注点、假设验证 |
+
+支持最多 20 个并发科学家智能体。
+
+### 3. 交叉验证
+
+所有步骤完成后，验证发现的一致性。
+检查矛盾、缺失的连接、覆盖差距和证据质量。
+
+### 4. 综合报告
+
+在 `.omc/research/{session-id}/report.md` 生成最终报告。
+
+## AUTO 模式
+
+添加 `AUTO:` 前缀会完全自主运行，无需用户干预。
+
+- 最多 10 次迭代
+- 每步完成后保存状态
+- 可用 `/oh-my-claudecode:cancel` 取消
+
+## 会话管理
+
+| 命令 | 操作 |
+|---------|--------|
+| `status` | 显示当前会话进度 |
+| `resume` | 恢复中断的会话 |
+| `list` | 列出所有会话 |
+| `report <id>` | 生成或重新生成报告 |
+| `cancel` | 取消当前会话（保留状态） |
+
+## 相关技能
+
+- [external-context](/docs/skills/workflow/external-context) - 外部文档查找
+- [trace](/docs/skills/utility/trace) - 证据驱动的因果追踪
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:sciomc` |
+| 魔法关键词 | - |
+| 类别 | Workflow |
+| 会话路径 | `.omc/research/{session-id}/` |

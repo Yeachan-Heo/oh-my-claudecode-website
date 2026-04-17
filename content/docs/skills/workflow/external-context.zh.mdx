@@ -1,0 +1,72 @@
+---
+title: External Context
+description: 使用并行 document-specialist 智能体获取外部文档和参考
+---
+
+## 概览
+
+External Context 是用于获取外部文档、参考和上下文的技能。它将查询分解为 2-5 个独立的搜索方面，并生成并行 document-specialist 智能体同时调查这些方面。
+
+## 使用
+
+```bash
+/oh-my-claudecode:external-context <topic or question>
+```
+
+## 示例
+
+```bash
+/oh-my-claudecode:external-context What are the best practices for JWT token rotation in Node.js?
+/oh-my-claudecode:external-context Compare Prisma vs Drizzle ORM for PostgreSQL
+/oh-my-claudecode:external-context Latest React Server Components patterns and conventions
+```
+
+## 协议
+
+### 1. 方面分解
+
+将查询分解为 2-5 个独立的搜索方面。
+
+```
+查询："JWT token rotation best practices in Node.js"
+
+方面 1：JWT 轮换官方文档和 RFC
+方面 2：Node.js JWT 库比较（jsonwebtoken、jose）
+方面 3：生产 JWT 刷新模式
+```
+
+### 2. 并行智能体调用
+
+为每个方面并发运行 document-specialist (Sonnet) 智能体。使用 WebSearch 和 WebFetch 查找官方文档和示例。
+
+支持最多 5 个并行智能体。
+
+### 3. 合成输出
+
+合成带源引用的发现。
+
+```markdown
+## 关键发现
+1. **Finding** - 来源：[title](url)
+2. **Finding** - 来源：[title](url)
+
+## 详细结果
+...
+
+## 来源
+- [Source 1](url)
+- [Source 2](url)
+```
+
+## 相关技能
+
+- [sciomc](/docs/skills/workflow/sciomc) - 更深层的并行研究编排
+- [ask](/docs/skills/utility/ask) - 查询单个提供方
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:external-context` |
+| 魔法关键词 | - |
+| 类别 | 工作流 |

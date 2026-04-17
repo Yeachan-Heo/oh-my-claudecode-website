@@ -1,0 +1,78 @@
+---
+title: UltraQA
+description: QA 循环工作流，重复测试、验证和修复直到达到目标
+---
+
+## 概览
+
+UltraQA 是一个自主 QA 循环工作流。它重复 qa-tester 执行、architect 诊断和 executor 修复，直到目标（测试通过、构建成功、lint 通过等）达成。
+
+它运行最多 5 个循环，如果相同的失败重复 3 次则将其视为根本问题并提前停止。
+
+## 使用
+
+```bash
+/oh-my-claudecode:ultraqa --tests
+/oh-my-claudecode:ultraqa --build
+/oh-my-claudecode:ultraqa --lint
+/oh-my-claudecode:ultraqa --typecheck
+/oh-my-claudecode:ultraqa --custom "all endpoints return 200"
+/oh-my-claudecode:ultraqa --interactive
+```
+
+## 目标类型
+
+| 标志 | 目标 | 检查内容 |
+|------|------|-----------------|
+| `--tests` | 测试 | 所有测试套件通过 |
+| `--build` | 构建 | 构建成功（exit 0） |
+| `--lint` | Lint | 无 lint 错误 |
+| `--typecheck` | 类型检查 | 无 TypeScript 错误 |
+| `--custom "pattern"` | 自定义 | 检查输出中的特定模式 |
+| `--interactive` | 交互式 | 通过 qa-tester 进行 CLI/服务测试 |
+
+## 循环工作流
+
+每个循环通过以下步骤进行。
+
+1. **运行 QA**：根据目标类型执行验证
+2. **检查结果**：如果通过则成功退出并显示消息
+3. **Architect 诊断**：失败时使用 opus 模型分析根本原因
+4. **应用修复**：Executor 按 architect 建议应用修复
+5. **重复**：返回步骤 1
+
+## 退出条件
+
+| 条件 | 操作 |
+|-----------|--------|
+| 目标达成 | `ULTRAQA COMPLETE: Goal met after N cycles` |
+| 达到 5 个循环 | `ULTRAQA STOPPED: Max cycles. Diagnosis: ...` |
+| 相同失败 3 次 | `ULTRAQA STOPPED: Same failure detected 3 times` |
+| 环境错误 | `ULTRAQA ERROR: [issue description]` |
+
+## 进度输出
+
+```
+[ULTRAQA Cycle 1/5] Running tests...
+[ULTRAQA Cycle 1/5] FAILED - 3 tests failing
+[ULTRAQA Cycle 1/5] Architect diagnosing...
+[ULTRAQA Cycle 1/5] Fixing: auth.test.ts - missing mock
+[ULTRAQA Cycle 2/5] Running tests...
+[ULTRAQA Cycle 2/5] PASSED - All 47 tests pass
+[ULTRAQA COMPLETE] Goal met after 2 cycles
+```
+
+## 相关技能
+
+- [autopilot](/docs/skills/workflow/autopilot) - 第 3 阶段使用 UltraQA
+- [ralph](/docs/skills/workflow/ralph) - 更广泛范围的持续循环
+- [cancel](/docs/skills/utility/cancel) - 取消 UltraQA 执行
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:ultraqa` |
+| 魔法关键词 | - |
+| 类别 | Workflow |
+| 状态文件 | `.omc/state/ultraqa-state.json` |

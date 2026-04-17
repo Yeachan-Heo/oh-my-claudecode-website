@@ -1,0 +1,124 @@
+---
+title: Deep Dive
+description: "2 阶段流水线：溯源（因果调查）→ deep-interview（需求结晶）"
+---
+
+## 概览
+
+Deep Dive 编排一个 2 阶段流水线，首先调查事情发生的原因（溯源），然后准确定义如何处理（深度访谈）。溯源阶段运行 3 个并行的因果调查通道，其发现通过 3 点注入机制馈送到访谈阶段。
+
+结果是一个以证据而非假设为基础的清晰规格说明。
+
+## 使用
+
+```bash
+/oh-my-claudecode:deep-dive "why does the auth token expire early?"
+```
+
+也可通过魔法关键词激活。
+
+```
+deep dive into the authentication failures
+investigate deeply why the DAG fails intermittently
+```
+
+## 何时使用
+
+- 用户遇到问题但不知道根本原因 — 需要在需求前进行调查
+- 缺陷调查："某些东西坏了，我需要弄清楚原因，然后规划修复"
+- 功能探索："我想改进 X，但首先需要了解它现在的工作方式"
+- 问题模糊、因果关系强、证据充分
+
+## 何时不使用
+
+- 用户已知道根本原因 — 直接使用 `/deep-interview`
+- 用户有明确具体的请求和文件路径 — 直接执行
+- 用户只想溯源而不需要需求 — 使用 `/trace`
+- 用户已有 PRD 或规格说明 — 使用 `/ralph` 或 `/autopilot`
+
+## 流水线阶段
+
+```
+阶段 1: Deep Dive               阶段 2: Ralplan                阶段 3: Autopilot
+┌─────────────────────┐    ┌───────────────────────────┐    ┌──────────────────────┐
+│ Trace (3 lanes)     │    │ Planner creates plan      │    │ Phase 2: Execution   │
+│ Interview (Socratic)│───>│ Architect reviews         │───>│ Phase 3: QA cycling  │
+│ 3-point injection   │    │ Critic validates          │    │ Phase 4: Validation  │
+│ Spec crystallization│    │ Loop until consensus      │    │ Phase 5: Cleanup     │
+│ Gate: ≤20% ambiguity│    │ ADR + RALPLAN-DR summary  │    │                      │
+└─────────────────────┘    └───────────────────────────┘    └──────────────────────┘
+输出: spec.md            输出: consensus-plan.md        输出: working code
+```
+
+## 执行阶段
+
+### 阶段 1：初始化
+
+解析用户输入，检测褐地型与绿地型，并生成 3 个溯源通道假设：
+
+1. **代码路径 / 实现原因**
+2. **配置 / 环境 / 编排原因**
+3. **测量 / 工件 / 假设不匹配原因**
+
+### 阶段 2：通道确认
+
+向用户呈现 3 个假设以确认（仅 1 轮）。
+
+### 阶段 3：溯源执行
+
+使用 Claude 内置团队模式运行 3 个并行的溯源通道。每个通道：
+
+- 拥有恰好一个假设
+- 收集赞成和反对的证据
+- 命名关键未知数
+- 推荐最佳的辨别探针
+
+在领先假设和最强替代方案之间运行一轮证伪。
+
+### 阶段 4：带有溯源注入的访谈
+
+遵循深度访谈协议，有 3 个初始化覆盖：
+
+1. **initial_idea 充实**：用溯源发现替换原始输入
+2. **codebase_context 替换**：使用溯源合成而非重新探索
+3. **initial question queue 注入**：每个通道的关键未知数成为首个访谈问题
+
+访谈继续进行 Socratic 质询，直到模糊性 ≤ 20%。
+
+### 阶段 5：执行桥接
+
+呈现执行选项：
+
+| 选项 | 说明 |
+|--------|-------------|
+| Ralplan → Autopilot（推荐） | 共识精化规格说明，然后使用完整 autopilot 执行 |
+| Autopilot（跳过 ralplan） | 完整自动流水线，更快但无共识 |
+| Ralph | 带架构师验证的持久循环 |
+| Team | N 个并行协调的智能体 |
+| 进一步精化 | 继续访谈 |
+
+## 溯源输出
+
+溯源结果保存到 `.omc/specs/deep-dive-trace-{slug}.md`，包含：
+
+- 排名的假设及置信度和证据强度
+- 每个通道的证据摘要
+- 反驳轮结果
+- 最可能的解释
+- 关键未知数和推荐的辨别探针
+
+## 相关技能
+
+- [trace](/docs/skills/utility/trace) - 仅调查，无需求
+- [deep-interview](/docs/skills/workflow/deep-interview) - 仅需求，无调查
+- [ralplan](/docs/skills/workflow/ralplan) - 共识规划（阶段 2）
+- [autopilot](/docs/skills/workflow/autopilot) - 自动执行（阶段 3）
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:deep-dive` |
+| 魔法关键词 | `deep dive`, `deep-dive`, `investigate deeply` |
+| 类别 | 工作流 |
+| 流水线 | deep-dive → omc-plan → autopilot |

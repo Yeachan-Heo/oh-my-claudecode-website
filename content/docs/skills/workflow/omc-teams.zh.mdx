@@ -1,0 +1,73 @@
+---
+title: OMC Teams
+description: 在 tmux 中运行 claude、codex 和 gemini CLI 工作进程的并行任务技能
+---
+
+## 概览
+
+OMC Teams 在 tmux pane 中生成 N 个 CLI 工作进程并并行运行任务。它支持三种智能体类型：Claude、Codex 和 Gemini。
+
+与使用 Claude Code 原生团队智能体的 `/team` 不同，此方法直接运行外部 CLI 进程。
+
+## 使用
+
+```bash
+/oh-my-claudecode:omc-teams N:claude "task description"
+/oh-my-claudecode:omc-teams N:codex "task description"
+/oh-my-claudecode:omc-teams N:gemini "task description"
+```
+
+### 参数
+
+- **N**：CLI 工作进程数（1-10）
+- **agent-type**：`claude`、`codex` 或 `gemini`
+- **task**：要在所有工作进程中分布的任务描述
+
+## 示例
+
+```bash
+/omc-teams 2:claude "implement auth module with tests"
+/omc-teams 2:codex "review the auth module for security issues"
+/omc-teams 3:gemini "redesign UI components for accessibility"
+```
+
+## 需求
+
+- **tmux**：必须安装（`command -v tmux`）
+- **活跃 tmux 会话**：需要创建工作进程 pane
+- **claude CLI**：`npm install -g @anthropic-ai/claude-code`
+- **codex CLI**：`npm install -g @openai/codex`
+- **gemini CLI**：`npm install -g @google/gemini-cli`
+
+## 工作流
+
+1. **检查先决条件**：验证 tmux 已安装且会话活跃
+2. **解析输入**：提取并验证 N、agent-type 和 task
+3. **分解任务**：将任务分解为 N 个独立的子任务
+4. **启动 CLI 团队**：运行 `omc team N:agent "task"`
+5. **监控**：用 `omc team status <team-name>` 检查进度
+6. **关闭**：需要时使用 `omc team shutdown <team-name>`
+7. **报告**：总结结果
+
+## 与 `/team` 的差异
+
+| 项目 | `/team` | `/omc-teams` |
+|------|---------|--------------|
+| 工作进程类型 | Claude Code 原生团队智能体 | claude/codex/gemini CLI 进程 |
+| 调用 | `TeamCreate` / `Task` / `SendMessage` | `omc team` CLI + tmux |
+| 协调 | 原生团队消息、分阶段流水线 | tmux 工作进程运行时 + CLI API 状态文件 |
+| 何时使用 | Claude 原生团队编排 | 运行外部 CLI 工作进程 |
+
+## 相关技能
+
+- [team](/docs/skills/workflow/team) - Claude Code 原生团队编排
+- [ccg](/docs/skills/workflow/ccg) - Claude-Codex-Gemini 三模型顾问
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:omc-teams` |
+| 魔法关键词 | - |
+| 类别 | 工作流 |
+| 状态文件 | `.omc/state/omc-teams-state.json` |

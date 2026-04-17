@@ -1,0 +1,130 @@
+---
+title: Autopilot
+description: 从想法到可工作代码的完整自动执行流水线
+---
+
+## 概览
+
+Autopilot 从简单的想法描述出发，自动处理整个开发生命周期 — 包括需求分析、技术设计、规划、并行实现、QA 循环和验证。
+
+目标是从 2-3 行描述中生成可工作的代码。内部使用 ralph、ultrawork 和 ultraqa，在每个阶段完成时依次进入下一阶段。
+
+## 使用
+
+```bash
+/oh-my-claudecode:autopilot "REST API for a bookstore with CRUD operations using TypeScript"
+```
+
+也可通过魔法关键词激活。
+
+```
+autopilot build me a CLI tool that tracks daily habits
+build me a todo app with React and PostgreSQL
+I want a chat application with WebSocket support
+```
+
+## 执行阶段
+
+Autopilot 包含 6 个阶段。
+
+### 阶段 0 - 扩展
+
+将用户的想法扩展为详细规格说明。
+
+- 分析师 (Opus) 提取需求
+- 架构师 (Opus) 编写技术规格说明
+- 输出：`.omc/autopilot/spec.md`
+
+如果 ralplan 共识计划已存在，将跳过阶段 0 和 1。
+如果存在 deep-interview 规格说明，将用作阶段 0 的输出。
+
+### 阶段 1 - 规划
+
+从规格说明生成实现计划。
+
+- 架构师 (Opus) 编写计划
+- 评论者 (Opus) 验证计划
+- 输出：`.omc/plans/autopilot-impl.md`
+
+### 阶段 2 - 执行
+
+使用 Ralph + Ultrawork 实现计划。
+
+- 简单任务：执行者 (Haiku)
+- 标准任务：执行者 (Sonnet)
+- 复杂任务：执行者 (Opus)
+- 独立任务并行运行
+
+### 阶段 3 - QA
+
+在 UltraQA 模式中迭代，直到所有测试通过。
+
+- 构建、检查、测试、修复失败
+- 最多 5 次迭代
+- 如果同一错误重复 3 次，将被视为根本原因，执行停止
+
+### 阶段 4 - 验证
+
+执行并行审查。
+
+- 架构师：验证功能完整性
+- 安全审查者：检查安全漏洞
+- 代码审查者：审查代码质量
+- 所有审查者必须批准
+
+### 阶段 5 - 清理
+
+完成时删除所有状态文件。
+
+## 示例
+
+```bash
+# 指定具体领域和技术栈
+autopilot A REST API for a bookstore inventory with CRUD operations using TypeScript
+
+# 清晰的功能描述
+build me a CLI tool that tracks daily habits with streak counting
+
+# 3 阶段流水线（最高质量）
+/oh-my-claudecode:deep-interview "vague idea"
+  → /oh-my-claudecode:ralplan --direct
+    → /oh-my-claudecode:autopilot
+```
+
+## 选项
+
+在 `.claude/settings.json` 中配置。
+
+```json
+{
+  "omc": {
+    "autopilot": {
+      "maxIterations": 10,
+      "maxQaCycles": 5,
+      "maxValidationRounds": 3,
+      "pauseAfterExpansion": false,
+      "skipQa": false,
+      "skipValidation": false
+    }
+  }
+}
+```
+
+## 相关技能
+
+- [ralph](/docs/skills/workflow/ralph) - 处理 autopilot 内部的执行循环
+- [ultrawork](/docs/skills/workflow/ultrawork) - 处理 autopilot 内部的并行执行
+- [ultraqa](/docs/skills/workflow/ultraqa) - autopilot 的阶段 3 QA 循环
+- [deep-interview](/docs/skills/workflow/deep-interview) - 预访谈以澄清模糊想法
+- [ralplan](/docs/skills/workflow/ralplan) - 基于共识的规划
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:autopilot` |
+| 魔法关键词 | `autopilot`, `build me`, `I want a` |
+| 类别 | 工作流 |
+| 状态文件 | `.omc/state/autopilot-state.json` |
+| 取消 | `/oh-my-claudecode:cancel` |
+| 恢复 | 用相同命令重新运行 |

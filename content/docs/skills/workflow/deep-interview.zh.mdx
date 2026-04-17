@@ -1,0 +1,121 @@
+---
+title: Deep Interview
+description: 带数学模糊性门控的 Socratic 深度访谈
+---
+
+## 概览
+
+Deep Interview 结合受 Ouroboros 启发的 Socratic 质询与数学模糊性评分。它提出有针对性的问题以表面隐藏的假设，在加权维度上测量清晰度，并拒绝继续，直到模糊性降低到阈值以下（默认 20%）。
+
+设计为 3 阶段流水线的第一步：**deep-interview → ralplan → autopilot**
+
+## 使用
+
+```bash
+/oh-my-claudecode:deep-interview "vague idea or description"
+```
+
+也可通过魔法关键词激活。
+
+```
+deep interview me about this project idea
+ouroboros help me clarify what I want
+I have a vague idea about a task management tool
+```
+
+## 模糊性评分
+
+在访谈期间清晰度在 4 个维度上测量。
+
+| 维度 | 绿地型权重 | 褐地型权重 |
+|-----------|-------------------|-------------------|
+| 目标清晰度 | 40% | 35% |
+| 约束清晰度 | 30% | 25% |
+| 成功标准清晰度 | 30% | 25% |
+| 上下文清晰度 | - | 15% |
+
+褐地型（修改现有代码）另外测量对现有系统的理解。
+
+### 评分解释
+
+| 范围 | 含义 |
+|-------|---------|
+| 0-10% | 完全清晰，立即进行 |
+| 10-20% | 足够清晰（默认阈值） |
+| 20-40% | 有些不足，继续访谈 |
+| 40-60% | 显著不足，专注弱维度 |
+| 60-80% | 非常不清楚，需要重构 |
+| 80-100% | 几乎一无所知 |
+
+## 挑战智能体
+
+在特定轮次时提问角度发生转变。
+
+| 模式 | 激活 | 目的 |
+|------|-----------|---------|
+| 反对者 | 第 4+ 轮 | "如果相反的是真的呢？" — 挑战核心假设 |
+| 简化者 | 第 6+ 轮 | "最简单的版本是什么？" — 去除复杂性 |
+| 本体论者 | 第 8+ 轮（模糊性 > 30%） | "这究竟是什么？" — 寻找本质 |
+
+每个模式仅使用一次。
+
+## 执行阶段
+
+### 阶段 1：初始化
+
+- 解析用户的想法
+- 检测褐地型与绿地型（explore 智能体）
+- 初始化状态
+
+### 阶段 2：访谈循环
+
+- 生成针对最弱维度的问题
+- 一次只提一个问题
+- 每个答案后计算并显示模糊性评分
+- 代码库事实首先通过 explore 智能体收集
+
+### 阶段 3：挑战智能体
+
+在第 4、6 和 8 轮时转变角度。
+
+### 阶段 4：规格说明结晶
+
+当达到模糊性阈值时，生成规格说明文件：`.omc/specs/deep-interview-{slug}.md`
+
+### 阶段 5：执行桥接
+
+呈现执行选项：
+
+1. **Ralplan → Autopilot**（推荐）：共识精化然后自动执行
+2. **Autopilot**（快速）：直接自动执行而不共识精化
+3. **Ralph**：持久循环执行
+4. **Team**：N 个并行智能体
+5. **继续访谈**：持续访谈以获得更大清晰度
+
+## 3 阶段流水线
+
+```
+deep-interview → ralplan → autopilot
+  ambiguity ≤ 20%   consensus plan   execution
+```
+
+每个阶段提供不同的质量门。
+
+1. **Deep Interview**：清晰度门（用户知道他们想要什么吗？）
+2. **Ralplan**：可行性门（方法是否健全？）
+3. **Autopilot**：正确性门（代码是否工作？）
+
+## 相关技能
+
+- [ralplan](/docs/skills/workflow/ralplan) - 基于共识的规划（阶段 2）
+- [autopilot](/docs/skills/workflow/autopilot) - 自动执行（阶段 3）
+- [plan](/docs/skills/workflow/plan) - 战略规划
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:deep-interview` |
+| 魔法关键词 | `deep interview`, `ouroboros`, `socratic` |
+| 类别 | 工作流 |
+| 规格说明路径 | `.omc/specs/deep-interview-{slug}.md` |

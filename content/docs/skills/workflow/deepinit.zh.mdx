@@ -1,0 +1,76 @@
+---
+title: Deepinit
+description: 自动在整个代码库中生成分层 AGENTS.md 文档
+---
+
+## 概览
+
+Deepinit 在整个代码库中生成分层 AGENTS.md 文档。AGENTS.md 文件是 AI 可读的文档，描述每个目录的内容、组件关系以及使用代码时的注意事项。
+
+目标是帮助智能体更好地理解代码库，更准确地工作。
+
+## 使用
+
+```bash
+/oh-my-claudecode:deepinit
+/oh-my-claudecode:deepinit [path]
+```
+
+## 分层标记
+
+除根目录外，每个 AGENTS.md 都包含父引用标记。
+
+```
+/AGENTS.md                        (根目录，无父级)
+├── src/AGENTS.md                 <!-- Parent: ../AGENTS.md -->
+│   ├── src/components/AGENTS.md  <!-- Parent: ../AGENTS.md -->
+│   └── src/utils/AGENTS.md       <!-- Parent: ../AGENTS.md -->
+└── docs/AGENTS.md                <!-- Parent: ../AGENTS.md -->
+```
+
+## AGENTS.md 结构
+
+每个文件中包含的部分：
+
+- **Purpose**：目录角色的描述
+- **Key Files**：重要文件及其描述的列表
+- **Subdirectories**：子目录列表
+- **For AI Agents**：工作说明、测试需求、代码模式
+- **Dependencies**：内部和外部依赖
+
+## 执行工作流
+
+1. **映射目录结构**：explore 智能体映射整个结构
+2. **生成任务计划**：按深度级别组织
+3. **按级别生成**：父到子顺序（确保父引用有效）
+4. **更新现有文件**：比较和合并（如已存在）（保留手动部分）
+5. **验证层级结构**：检查父引用、孤立文件和完整性
+
+## 并行化规则
+
+- 同级目录：并行处理
+- 不同级别：顺序处理（父优先）
+- 大型目录：分配给专用智能体
+- 小型目录：单个智能体处理多个
+
+## 更新模式
+
+在已存在 AGENTS.md 文件的代码库上运行时：
+
+1. 读取和解析现有内容
+2. 分析当前目录状态
+3. 比较现有与当前差异
+4. 更新自动生成部分，保留 `<!-- MANUAL -->` 下方的手动部分
+
+## 相关技能
+
+- [learner](/docs/skills/utility/learner) - 从会话中提取技能
+- [skill](/docs/skills/utility/skill) - 管理本地技能
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:deepinit` |
+| 魔法关键词 | - |
+| 类别 | 工作流 |

@@ -1,0 +1,70 @@
+---
+title: CCG
+description: 三模型编排 Claude-Codex-Gemini 以收集多角度输入
+---
+
+## 概览
+
+CCG（Claude-Codex-Gemini）是一个三模型编排，同时查询 Codex 和 Gemini，然后由 Claude 将两个响应合成为单个统一的答案。
+
+它使用 `/ask` 技能轻量级收集外部视角，无需启动 tmux 团队工作进程。
+
+## 使用
+
+```bash
+/oh-my-claudecode:ccg "Review this PR - architecture/security via Codex and UX/readability via Gemini"
+```
+
+也可通过魔法关键词激活。
+
+```
+ccg review the authentication flow
+claude-codex-gemini analyze this API design
+```
+
+## 工作原理
+
+1. **请求分解**：Claude 将请求分解为两个顾问提示
+   - Codex 提示：架构、正确性、后端、风险、测试策略
+   - Gemini 提示：UX/内容清晰度、替代方案、边界情况、文档
+2. **并行查询**：同时运行 `/ask codex` 和 `/ask gemini`
+3. **工件收集**：从 `.omc/artifacts/ask/` 读取结果
+4. **合成**：Claude 将两个输出合并为单个统一的答案
+
+## 合成输出格式
+
+- 一致的建议
+- 冲突的建议（明确标记）
+- 选定的最终方向 + 理由
+- 行动检查清单
+
+## 何时使用
+
+- 当单个请求涉及后端/分析和前端/UI 工作时
+- 需要架构和设计/UX 视角的代码审查
+- Codex 和 Gemini 可能提供不同意见的交叉验证
+- 需要快速顾问输入而不启动团队运行时编排时
+
+## 回退
+
+- 如果一个提供方不可用，继续使用可用提供方 + Claude 合成
+- 如果两个提供方都不可用，回退到仅 Claude 答案
+
+## 需求
+
+- **Codex CLI**：`npm install -g @openai/codex`
+- **Gemini CLI**：`npm install -g @google/gemini-cli`
+
+## 相关技能
+
+- [ask](/docs/skills/utility/ask) - 查询单个提供方
+- [omc-teams](/docs/skills/workflow/omc-teams) - 通过团队工作进程进行更重的并行工作
+- [team](/docs/skills/workflow/team) - Claude 原生团队编排
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:ccg` |
+| 魔法关键词 | `ccg`, `claude-codex-gemini` |
+| 类别 | 工作流 |

@@ -1,0 +1,167 @@
+---
+title: Team
+description: 团队编排，协调 N 个 Claude 智能体在共享任务列表上协作
+---
+
+## 概览
+
+Team 是一项编排技能，创建 N 个 Claude Code 原生智能体并让它们在共享任务列表上协作。它具有内置的团队管理、智能体间消息和任务依赖，无需外部依赖。
+
+工作通过 5 阶段流水线进行：team-plan、team-prd、team-exec、team-verify、team-fix。
+
+## 使用
+
+```bash
+/oh-my-claudecode:team N:agent-type "task description"
+/oh-my-claudecode:team "task description"
+/oh-my-claudecode:team ralph "task description"
+```
+
+### 参数
+
+- **N**：团队成员智能体数量（1-20）。如果省略，根据任务分解自动确定
+- **agent-type**：在 team-exec 阶段使用的智能体类型（executor、debugger、designer、codex、gemini 等）。如果省略，按阶段自动路由
+- **task**：高级任务描述，用于分解和分配
+- **ralph**：指定时，将团队流水线包装在 Ralph 的持续循环中，以便失败重试和完成时的 architect 验证
+
+## 示例
+
+```bash
+# 5 个 executor 修复 TypeScript 错误
+/team 5:executor "fix all TypeScript errors across the project"
+
+# 3 个 debugger 修复构建错误
+/team 3:debugger "fix build errors in src/"
+
+# 自动调整大小、自动路由
+/team "refactor the auth module with security review"
+
+# 使用 Ralph 持续循环
+/team ralph "build a complete REST API for user management"
+
+# 使用 Codex CLI 工作进程
+/team 3:codex "review all API endpoints for security"
+```
+
+## 流水线阶段
+
+### team-plan
+
+explore 和 planner 智能体分析任务并创建执行计划。
+
+### team-prd
+
+analyst 智能体分析需求并定义验收标准。
+
+### team-exec
+
+团队成员并行执行任务。应用按阶段的智能体路由。
+
+### team-verify
+
+verifier 和必要的审查者验证结果。
+
+### team-fix
+
+修复验证期间发现的问题。根据缺陷类型使用 executor 或 debugger。
+修复循环受最大尝试次数限制。
+
+## Team + Ralph
+
+`team ralph` 将团队流水线包装在 Ralph 的持续循环中。
+
+- 如果团队失败，Ralph 会重试
+- 完成后进行 architect 验证
+- 取消其中任何一个都会取消另一个
+
+## 按角色提供方和模型路由
+
+> **范围**：仅适用于 `/team`。基于任务的委派使用 `delegationRouting`（独立系统）。两者共存是设计决策。
+
+声明哪个提供方（`claude`、`codex`、`gemini`）以及哪个模型层应该支持每个规范角色。路由在**团队创建时解析一次**，并保存在 `TeamConfig.resolved_routing` 中 — 生成、扩展和重启都从快照读取，所以角色的工作进程 CLI 和模型在团队生命周期内保持稳定。
+
+### 示例 — `.claude/omc.jsonc`
+
+```jsonc
+{
+  "team": {
+    "roleRouting": {
+      "orchestrator":  { "model": "inherit" },
+      "planner":       { "provider": "claude", "model": "HIGH" },
+      "analyst":       { "provider": "claude", "model": "HIGH" },
+      "executor":      { "provider": "claude", "model": "MEDIUM" },
+      "critic":        { "provider": "codex" },
+      "code-reviewer": { "provider": "gemini" },
+      "test-engineer": { "provider": "gemini", "model": "MEDIUM" }
+    }
+  }
+}
+```
+
+### 规范角色
+
+`orchestrator`、`planner`、`analyst`、`architect`、`executor`、`debugger`、`critic`、`code-reviewer`、`security-reviewer`、`test-engineer`、`designer`、`writer`、`code-simplifier`、`explore`、`document-specialist`。
+
+别名在解析时被规范化 — `reviewer` → `code-reviewer`、`quality-reviewer` → `code-reviewer`、`harsh-critic` → `critic`、`build-fixer` → `debugger`。未知角色验证失败。
+
+### 规范字段
+
+- **`provider`** — `"claude" | "codex" | "gemini"`。省略 → 默认为 `claude`。
+- **`model`** — 级别名称（`"HIGH" | "MEDIUM" | "LOW"`）或显式模型 ID。级别通过 `routing.tierModels` 解析。
+- **`agent`** — 可选的 Claude 智能体名称（例如 `"critic"`、`"executor"`）。仅当解析的提供方是 `claude` 时才被遵守。
+
+`orchestrator` 固定为 `claude`；仅对它配置 `model`。
+
+### 环境覆盖
+
+```bash
+OMC_TEAM_ROLE_OVERRIDES='{"critic":{"provider":"codex"},"code-reviewer":{"provider":"gemini"}}'
+```
+
+优先级：`OMC_TEAM_ROLE_OVERRIDES` > `.claude/omc.jsonc`（项目）> `~/.config/claude-omc/config.jsonc`（用户）> 内置默认值。
+
+### CLI 回退
+
+如果配置的提供方的 CLI 在生成时不在 `PATH` 中，团队负责人会发出可见警告，并确定地回退到具有相同级别 + 智能体的 Claude 分配。回退设计上是显眼的。通过 `omc doctor --team-routing` 探测可用性。
+
+### 零配置行为
+
+空的 `team.roleRouting` 保留预补丁行为：每个工作者都是 Claude，模型级别遵循 `routing.tierModels`，`/team 3:executor ...` 仍然生成三个 Claude Sonnet executor。
+
+## 配置
+
+可选设置位于 `.claude/omc.jsonc`（项目）或 `~/.config/claude-omc/config.jsonc`（用户）：
+
+```jsonc
+{
+  "team": {
+    "ops": {
+      "maxAgents": 20,
+      "defaultAgentType": "claude",
+      "monitorIntervalMs": 30000,
+      "shutdownTimeoutMs": 15000
+    }
+  }
+}
+```
+
+- **`ops.maxAgents`** — 最大队友数（默认：20）
+- **`ops.defaultAgentType`** — `/team` 未指定时的 CLI 提供方（`claude` | `codex` | `gemini`，默认：`claude`）
+- **`ops.monitorIntervalMs`** — `TaskList` 轮询间隔（默认：30 秒）
+- **`ops.shutdownTimeoutMs`** — 关闭响应宽限期（默认：15 秒）
+
+## 相关技能
+
+- [omc-teams](/docs/skills/workflow/omc-teams) - 运行外部 CLI 工作进程（codex/gemini）
+- [ralph](/docs/skills/workflow/ralph) - 单智能体持续循环
+- [ultrawork](/docs/skills/workflow/ultrawork) - 简单并行执行
+- [ralplan](/docs/skills/workflow/ralplan) - 推荐在 team 前运行共识规划
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:team` |
+| 魔法关键词 | - |
+| 类别 | Workflow |
+| 状态文件 | `.omc/state/team-state.json` |

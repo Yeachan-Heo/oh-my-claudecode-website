@@ -1,0 +1,101 @@
+---
+title: Plan
+description: 支持 4 种模式（包括基于访谈的规划）的战略规划技能
+---
+
+## 概览
+
+Plan 是一个战略规划技能，支持四种模式：访谈、直接、共识和审查。它根据请求的具体程度自动选择模式，首先探索代码库，然后向用户提问。
+
+## 使用
+
+```bash
+/oh-my-claudecode:omc-plan "implement user authentication"
+/oh-my-claudecode:omc-plan --consensus "redesign the API layer"
+/oh-my-claudecode:omc-plan --direct "add caching to the search endpoint"
+/oh-my-claudecode:omc-plan --review
+```
+
+也可通过魔法关键词激活。
+
+```
+plan this feature
+plan the migration
+let's plan the refactoring
+```
+
+## 模式选择
+
+| 模式 | 触发 | 行为 |
+|------|---------|----------|
+| 访谈 | 广泛请求（默认） | 交互式需求收集 |
+| 直接 | `--direct` 或详细请求 | 跳过访谈并立即生成计划 |
+| 共识 | `--consensus` 或 `ralplan` | 迭代规划者-架构师-评论者共识 |
+| 审查 | `--review` | 对现有计划的评论者评估 |
+
+## 访谈模式
+
+为广泛或模糊的请求交互式收集需求。
+
+- 代码库事实首先通过 explore 智能体收集
+- 一次只提一个问题
+- 每个问题以前面的答案为基础
+- 当用户准备好时生成计划
+
+## 共识模式
+
+使用 RALPLAN-DR 结构化审议的共识模式。
+
+1. **规划者**编写初始计划和 RALPLAN-DR 摘要
+2. **架构师**审查架构合理性（顺序运行）
+3. **评论者**评估质量标准（在架构师完成后运行）
+4. 在拒绝时迭代最多 5 次
+5. 批准时输出最终计划和 ADR
+
+### RALPLAN-DR 摘要结构
+
+- 原则（3-5 个）
+- 决策驱动因素（前 3 个）
+- 可行选项（2 个或更多），每个有利弊
+- `--deliberate` 模式：前期分析（3 个情景）+ 扩展测试计划
+
+## 选项 / 标志
+
+| 标志 | 说明 |
+|------|-------------|
+| `--direct` | 在不访谈的情况下直接生成计划 |
+| `--consensus` | 激活共识模式 |
+| `--review` | 审查现有计划 |
+| `--interactive` | 在共识模式期间启用用户提示 |
+| `--deliberate` | 高风险工作的深度审议模式 |
+| `--architect codex` | 在架构师阶段使用 Codex |
+| `--critic codex` | 在评论者阶段使用 Codex |
+
+## 计划输出格式
+
+每个计划都包括：
+
+- 需求摘要
+- 验收标准（可测试）
+- 实现步骤（带文件引用）
+- 风险和缓解措施
+- 验证步骤
+- 共识模式：RALPLAN-DR 摘要 + ADR
+
+计划保存到 `.omc/plans/`。
+
+## 相关技能
+
+- [ralplan](/docs/skills/workflow/ralplan) - `plan --consensus` 的快捷别名
+- [autopilot](/docs/skills/workflow/autopilot) - 规划后的自动执行
+- [ralph](/docs/skills/workflow/ralph) - 规划后的持久循环执行
+- [deep-interview](/docs/skills/workflow/deep-interview) - 规划前的深度访谈
+
+## 参考
+
+| 项目 | 值 |
+|------|-------|
+| 调用 | `/oh-my-claudecode:omc-plan` |
+| 魔法关键词 | `plan this`, `plan the`, `let's plan` |
+| 类别 | 工作流 |
+| 输出路径 | `.omc/plans/` |
