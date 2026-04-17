@@ -1,0 +1,117 @@
+---
+title: 状態管理
+description: OMC 実行モードの状態を管理するための MCP ツールグループ
+---
+
+## 概要
+
+State ツールは OMC 実行モード（autopilot、ralph、ultrawork など）の状態を管理します。各モードは現在の進捗、アクティブ状態、設定を状態ファイルに記録します。
+
+## 保存パス
+
+```
+.omc/state/
+├── sessions/{sessionId}/     # セッション単位の状態
+│   ├── autopilot-state.json
+│   ├── ralph-state.json
+│   └── ultrawork-state.json
+├── autopilot-state.json      # レガシー互換性
+├── ralph-state.json
+└── ultrawork-state.json
+```
+
+セッション ID が指定された場合はセッション単位のパスが使用されます。そうでない場合はレガシーパスがフォールバックとして使用されます。
+
+## ツール一覧
+
+### state_read
+
+指定モードの状態を読み取ります。
+
+```
+state_read(mode="ralph")
+state_read(mode="ralph", session_id="abc123")
+```
+
+状態ファイルが存在しない場合は空の応答を返します。
+
+### state_write
+
+指定モードの状態を保存します。
+
+```
+state_write(mode="ralph", state={
+  active: true,
+  current_phase: "execution",
+  iteration: 3,
+  max_iterations: 10
+})
+```
+
+### state_clear
+
+指定モードの状態ファイルを削除します。
+
+```
+state_clear(mode="ralph")
+state_clear(mode="ralph", session_id="abc123")
+```
+
+セッション ID なしで呼び出すとレガシーファイルをクリーンアップします。
+
+### state_list_active
+
+現在アクティブなすべてのモードをリストします。
+
+```
+state_list_active()
+```
+
+アクティブな状態ファイルを持つモードを返します。
+
+### state_get_status
+
+特定のモードまたはすべてのモードの詳細ステータスを返します。
+
+```
+state_get_status(mode="ralph")
+```
+
+アクティブ状態、ファイルパス、状態内容を含みます。
+
+## 環境変数
+
+| 変数 | デフォルト | 説明 |
+|------|--------|------|
+| `OMC_STATE_DIR` | 未設定 | 一元化された状態ディレクトリ。設定時、ワークツリーが削除されても状態が保持される |
+
+`OMC_STATE_DIR` が設定されている場合、状態は `$OMC_STATE_DIR/{project-id}/` に保存されます。
+
+```bash
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```
+
+## 使用パターン
+
+### モードをアクティベート
+
+```
+state_write(mode="autopilot", state={
+  active: true,
+  current_phase: "expansion",
+  started_at: "2024-01-15T09:00:00Z"
+})
+```
+
+### モードをデアクティベート
+
+```
+state_clear(mode="autopilot")
+```
+
+### アクティブモードを確認
+
+```
+state_list_active()
+→ [{session_id: "abc123", mode: "ralph", active: true}]
+```

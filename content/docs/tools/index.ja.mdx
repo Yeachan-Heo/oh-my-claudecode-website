@@ -1,0 +1,92 @@
+---
+title: ツール
+description: OMCが提供するMCPツールをカテゴリー別に紹介します。
+---
+
+## MCP ツールとは
+
+OMC は Claude Code エージェント向けに MCP（Model Context Protocol）ツールを提供します。エージェントはこれらを使用して、状態管理、メモ保存、コード分析、データ処理を行います。
+
+ユーザーが直接呼び出す[スキル](/docs/skills)とは異なり、ツールはエージェントの作業中に内部的に使用されます。
+
+## ツールカテゴリ
+
+### 状態管理
+
+実行モードの状態を管理するツール。
+
+`state_read`, `state_write`, `state_clear`, `state_list_active`, `state_get_status`
+
+Autopilot、Ralph、Ultrawork などの実行モードが現在の状態を保存・読込するために使用されます。
+
+### Notepad
+
+コンテキスト圧縮を通じて保持されるメモシステム。
+
+`notepad_read`, `notepad_write_priority`, `notepad_write_working`, `notepad_write_manual`, `notepad_prune`, `notepad_stats`
+
+長いセッション中にコンテキストウィンドウから押し出された場合でも、重要情報は Notepad に保存することで保持されます。
+
+### プロジェクトメモリ
+
+プロジェクト単位の長期メモリを管理します。
+
+`project_memory_read`, `project_memory_write`, `project_memory_add_note`, `project_memory_add_directive`
+
+プロジェクト構造、ルール、学習した知識をセッション間で保持します。
+
+### LSP
+
+言語サーバープロトコルを利用したコード知能ツール。
+
+`lsp_hover`, `lsp_goto_definition`, `lsp_find_references`, `lsp_diagnostics`, `lsp_rename` および他 7 つのツール
+
+型情報、定義へのジャンプ、参照の検索、エラー診断、シンボル検索など を有効にします。
+
+### AST Grep
+
+AST ベースの構造的コード検索・置換ツール。
+
+`ast_grep_search`, `ast_grep_replace`
+
+正規表現ではなくコード構造パターンを使用した検索・置換。
+
+### Python REPL
+
+永続的な Python REPL でデータ分析を実行します。
+
+`python_repl`
+
+セッション間で状態が保持される Python 環境。
+
+### セッション検索
+
+前回のローカルセッション履歴とトランスクリプトアーティファクトを検索します。
+
+`session_search`
+
+セッション ID、タイムスタンプ、ソースパス、マッチング抜粋を構造化 JSON で返します。
+
+### トレース
+
+エージェントフロートレースデータを分析します。
+
+`trace_timeline`, `trace_summary`
+
+`trace_timeline` はフック、キーワード、スキル、エージェント、ツールを時系列で表示します。`trace_summary` はフック統計、キーワード頻度、スキル活性化、モード遷移、ツールボトルネックを集約します。
+
+### 共有メモリ
+
+チームオーケストレーション用のクロスエージェント共有メモリ。
+
+`shared_memory_write`, `shared_memory_read`, `shared_memory_list`, `shared_memory_delete`, `shared_memory_cleanup`
+
+エージェント間でチーム境界を越えたデータ共有を実現します。
+
+### スキル
+
+スキル管理用の内部ツール。
+
+`load_omc_skills_local`, `load_omc_skills_global`, `list_omc_skills`
+
+ローカルプロジェクトおよびグローバルユーザーディレクトリから利用可能な OMC スキルをロード・一覧表示します。

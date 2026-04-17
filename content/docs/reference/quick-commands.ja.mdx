@@ -1,0 +1,120 @@
+---
+title: クイックコマンド
+description: エージェントを直接呼び出すためのクイックコマンド短縮リファレンス
+---
+
+## クイックコマンドとは
+
+クイックコマンドはエージェントを直接呼び出す短縮キーワードです。
+スキルとは異なり、別のパイプラインなしに対応するエージェントをすぐに実行します。
+
+<Callout type="info">
+クイックコマンドは独立したスラッシュコマンドではなく、プロンプト trigger 動作です。自然言語プロンプトにキーワードを含めると、対応するエージェントが呼び出されます。
+</Callout>
+
+## 完全なリスト
+
+| クイックコマンド | 呼び出されるエージェント | 説明 |
+|--------------|-------------|------|
+| `analyze` | `debugger` | 根本原因分析、バグ調査 |
+| `tdd` | `test-engineer` | TDD ワークフロー（Red-Green-Refactor） |
+| `build-fix` | `debugger` | ビルドエラー、型エラーを修正 |
+| `code-review` | `code-reviewer` | 包括的なコードレビュー |
+| `security-review` | `security-reviewer` | セキュリティ脆弱性レビュー |
+| `review` | `omc-plan --review` | 既存計画をレビュー/批評 |
+
+## 使用例
+
+### analyze
+
+```bash
+# auth テストが失敗している理由を分析
+analyze why the auth tests are failing
+
+# パフォーマンス問題を調査
+analyze the slow response time on /api/users
+```
+
+`debugger` エージェントがコードを分析し、根本原因を特定します。
+
+### tdd
+
+```bash
+# TDD でフィーチャーを実装
+tdd: implement password validation
+
+# テストファースト開発
+test first: add email format validation
+```
+
+`test-engineer` エージェントが Red-Green-Refactor サイクルに従います。
+1. 失敗するテストを作成（Red）
+2. テストをパスするコードを実装（Green）
+3. コードをクリーンアップ（Refactor）
+
+### build-fix
+
+```bash
+# ビルドエラーを修正
+build-fix
+
+# 型エラーを修正
+fix build errors in the auth module
+```
+
+`debugger` エージェントがコンパイル/ビルドエラーを分析および修正します。
+
+### code-review
+
+```bash
+# コードレビューをリクエスト
+code-review the recent changes
+
+# 特定のファイルをレビュー
+review code in src/auth/
+```
+
+`code-reviewer` エージェント（opus）が以下の観点からレビューします：
+- ロジックの欠陥
+- 保守性
+- アンチパターン
+- パフォーマンス
+- API コントラクト
+- 後方互換性
+
+### security-review
+
+```bash
+# セキュリティレビュー
+security-review the payment module
+
+# セキュリティ監査
+security review on authentication flow
+```
+
+`security-reviewer` エージェントが以下の観点からレビューします：
+- 脆弱性検出
+- 信頼境界
+- 認証/認可ロジック
+- OWASP チェックリスト
+
+### review
+
+```bash
+# 計画をレビュー
+review the current plan
+
+# 設計を批評
+review plan for the migration
+```
+
+`/omc-plan --review` を実行して、既存の計画の問題を分析します。
+
+## クイックコマンド vs スキル
+
+| アイテム | クイックコマンド | スキル |
+|------|---------------|------|
+| 呼び出し | プロンプトキーワード | `/oh-my-claudecode:name` |
+| パイプライン | なし（単一エージェント直接呼び出し） | あり（複数段階） |
+| カスタマイズ | 利用できません | 利用可能（SKILL.md） |
+| 例 | `analyze`、`tdd` | `autopilot`、`ralph` |

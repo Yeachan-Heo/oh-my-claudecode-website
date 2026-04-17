@@ -1,0 +1,93 @@
+---
+title: AST Grep
+description: AST ベースの構造的コード検索・置換ツール
+---
+
+## 概要
+
+AST Grep ツールは [@ast-grep/napi](https://ast-grep.github.io/) を使用して、コード内の構造的パターンを検索・置換します。正規表現ではなく AST（抽象構文木）ベースで動作し、コード構造を正確にマッチングします。
+
+## ツール一覧
+
+### ast_grep_search
+
+AST パターンを使用してコードを検索します。
+
+```
+ast_grep_search(
+  pattern="console.log($$$ARGS)",
+  lang="typescript"
+)
+```
+
+#### メタ変数
+
+| メタ変数 | 説明 | 例 |
+|-----------|------|------|
+| `$VAR` | 単一の AST ノードにマッチ | `$VAR.map($FUNC)` |
+| `$$$` | 複数の AST ノードにマッチ | `console.log($$$ARGS)` |
+
+#### 例
+
+```
+# すべての console.log 呼び出しを検索
+ast_grep_search(pattern="console.log($$$)", lang="typescript")
+
+# 特定パターンに一致する関数呼び出しを検索
+ast_grep_search(pattern="fetch($URL, { method: 'POST', $$$REST })", lang="typescript")
+
+# React useState の使用法を検索
+ast_grep_search(pattern="const [$STATE, $SETTER] = useState($INIT)", lang="tsx")
+
+# try-catch ブロックを検索
+ast_grep_search(pattern="try { $$$ } catch($ERR) { $$$ }", lang="typescript")
+```
+
+### ast_grep_replace
+
+AST パターンを使用して構造的にコードを置換します。
+
+```
+ast_grep_replace(
+  pattern="console.log($$$ARGS)",
+  replacement="logger.info($$$ARGS)",
+  lang="typescript",
+  dryRun=true
+)
+```
+
+**最初は必ず `dryRun=true` で実行して、変更内容を確認してください。**
+
+#### 例
+
+```
+# console.log を logger.info に変換
+ast_grep_replace(
+  pattern="console.log($$$ARGS)",
+  replacement="logger.info($$$ARGS)",
+  lang="typescript",
+  dryRun=true
+)
+
+# 同期関数を非同期関数に変換
+ast_grep_replace(
+  pattern="function $NAME($$$PARAMS) { $$$BODY }",
+  replacement="async function $NAME($$$PARAMS) { $$$BODY }",
+  lang="typescript",
+  dryRun=true
+)
+```
+
+## 正規表現との違い
+
+| 項目 | Regex（Grep） | AST Grep |
+|------|--------------|----------|
+| マッチ対象 | テキストパターン | コード構造 |
+| 空白・改行 | 敏感 | 無視 |
+| コメント | マッチ対象 | スキップ |
+| リファクタリング | リスキー | 構造保存 |
+| 使用ケース | テキスト検索 | コード変換 |
+
+## サポート言語
+
+TypeScript、JavaScript、TSX、JSX、Python、Go、Rust、Java、C、C++、C#、Ruby、Swift、Kotlin を含む主要なプログラミング言語をサポートしています。

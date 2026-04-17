@@ -1,0 +1,99 @@
+---
+title: コアフック
+description: 実行モード、オーケストレーション、持続化のための OMC コアフックを説明します。
+---
+
+## 実行モードフック
+
+これらのフックは OMC のコア実行モードを管理します。
+状態ファイル（`.omc/state/{mode}-state.json`）を使用してモードをアクティブ化/非アクティブ化し、保持します。
+
+### autopilot
+
+アイデアから動作するコードまで完全に自律実行します。
+
+- **アクティブ化**: 「autopilot」「build me」「I want a」などのキーワード
+- **動作**: 計画→実装→テスト→検証のフルサイクルを自動実行
+- **状態ファイル**: `.omc/state/autopilot-state.json`
+
+### ralph
+
+検証完了まで実行を続ける持続化モード。
+
+- **アクティブ化**: 「ralph」「don't stop」「must complete」のキーワード
+- **動作**: すべてのタスクが完了し検証されるまで停止しません
+- **機能**: 自動的に ultrawork を含めます。チーム（`team ralph`）と連携可能
+- **状態ファイル**: `.omc/state/ralph-state.json`
+- **強化メッセージ**: 「The boulder never stops」-- Stop フックから継続作業を促す
+
+### ultrawork
+
+最大限の並列化で複数のエージェントを実行します。
+
+- **アクティブ化**: 「ultrawork」「ulw」のキーワード
+- **動作**: 独立したタスクを複数のエージェントに並列委譲
+- **状態ファイル**: `.omc/state/ultrawork-state.json`
+
+### ultraqa
+
+目標が達成されるまで QA サイクルを繰り返します。
+
+- **アクティブ化**: autopilot 内で自動実行
+- **動作**: テスト→検証→修正→繰り返し
+- **関連スキル**: `/oh-my-claudecode:ultraqa`
+
+## オーケストレーション フック
+
+### keyword-detector
+
+ユーザープロンプト内のマジックキーワードを検出し、対応するスキルを呼び出します。
+
+- **イベント**: UserPromptSubmit
+- **動作**: プロンプトをサニタイズ（コードブロック、URL、ファイルパスを削除）してからキーワード マッチング実行
+- **競合解決**: cancel が最優先、次に ralph > autopilot > ultrawork
+- **安全ガード**: チームワーカー内では無効化（無限生成を防止）
+
+詳細なキーワード リストについては、[マジックキーワード](/docs/hooks/magic-keywords) ページを参照してください。
+
+### persistent-mode
+
+セッション間でアクティブな実行モードを保持します。
+
+- **イベント**: Stop
+- **動作**: アクティブなモード（ralph、ultrawork、autopilot など）が存在する場合、強化メッセージを注入
+- **メッセージ**: 不完全なタスクがある場合に継続作業を促す
+- **キャンセル**: `/oh-my-claudecode:cancel` を使用してモードを非アクティブ化
+
+## モード状態管理
+
+実行モードフックは `.omc/state/` ディレクトリの状態ファイルを管理します。
+
+```json
+{
+  "active": true,
+  "started_at": "2025-01-15T10:30:00Z",
+  "prompt": "ultrawork implement auth",
+  "session_id": "abc123",
+  "project_path": "/path/to/project",
+  "iteration": 0,
+  "max_iterations": 10,
+  "linked_ultrawork": false,
+  "last_checked_at": "2025-01-15T10:30:00Z"
+}
+```
+
+セッション ID が存在する場合、状態はセッション スコープで `.omc/state/sessions/{sessionId}/` に保存されます。
+
+### モードのキャンセル
+
+```
+cancelomc
+```
+
+または
+
+```
+/oh-my-claudecode:cancel
+```
+
+cancel は ralph、autopilot、ultrawork を含むすべてのアクティブなモードの状態ファイルを削除します。

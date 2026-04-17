@@ -1,0 +1,135 @@
+---
+title: ライフサイクルイベント
+description: Claude Code の 11 個のライフサイクルイベントと各イベントに接続されたフックを説明します。
+---
+
+## ライフサイクルイベントとは
+
+Claude Code はセッション中に複数のイベントを発行します。
+OMC はこれらのイベントにフックを接続して動作を拡張します。
+
+以下は Claude Code がサポートする 11 個のライフサイクルイベント
+と各イベントで実行される OMC フックです。
+
+## UserPromptSubmit
+
+ユーザーがプロンプトを送信したとき発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `keyword-detector.mjs` | マジックキーワードを検出し、対応するスキルを呼び出す | 5s |
+| `skill-injector.mjs` | スキルプロンプトを注入 | 3s |
+
+このイベントはすべてのユーザー入力で実行されます（`matcher: "*"`）。
+キーワード検出器が「ultrawork」「ralph」「autopilot」などのキーワードを見つけると、
+`additionalContext` を通じてスキル呼び出し命令を注入します。
+
+## SessionStart
+
+新しいセッションが開始したとき発火します。
+
+| スクリプト | matcher | 役割 | timeout |
+|---------|---------|------|---------|
+| `session-start.mjs` | `*` | セッション初期化、状態復元 | 5s |
+| `project-memory-session.mjs` | `*` | プロジェクトメモリを読み込み | 5s |
+| `setup-init.mjs` | `init` | 初期セットアップウィザード | 30s |
+| `setup-maintenance.mjs` | `maintenance` | メンテナンス タスク | 60s |
+
+`init` と `maintenance` matcher は特殊な場合にのみ実行されます。
+通常のセッション開始では、`*` matcher を持つ 2 つのスクリプトのみ実行されます。
+
+## PreToolUse
+
+Claude がツールを使用する直前に発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `pre-tool-enforcer.mjs` | ツール使用前にルールを検証 | 3s |
+
+すべてのツール呼び出し（`matcher: "*"`）で実行され、エージェント パーミッション制限を強制
+（例えば、読み取り専用エージェントの Write/Edit をブロック）。
+
+## PermissionRequest
+
+Bash ツール実行中にパーミッション リクエストが発生したときに発火します。
+
+| スクリプト | matcher | 役割 | timeout |
+|---------|---------|------|---------|
+| `permission-handler.mjs` | `Bash` | Bash コマンド パーミッションを処理 | 5s |
+
+Bash ツールのパーミッション リクエストのみを処理します。
+
+## PostToolUse
+
+ツール使用が完了した後に発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `post-tool-verifier.mjs` | ツール使用結果を検証し、追加コンテキストを注入 | 3s |
+| `project-memory-posttool.mjs` | プロジェクトメモリを更新 | 3s |
+
+Read、Write、Edit、Bash などのツール結果に基づいて追加ガイダンスを注入します。
+例えば、ファイルを読み込んだ後、「並列読み込みを検討してください」とヒント表示される場合があります。
+
+## PostToolUseFailure
+
+ツール使用に失敗したときに発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `post-tool-use-failure.mjs` | 失敗したツール使用のための回復ガイダンスを提供 | 3s |
+
+## SubagentStart
+
+サブエージェントが生成されたとき発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `subagent-tracker.mjs start` | サブエージェント開始を追跡し、プロンプトを注入 | 3s |
+
+サブエージェントの名前、開始時刻、セッション情報を記録します。
+
+## SubagentStop
+
+サブエージェントが完了したときに発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `subagent-tracker.mjs stop` | サブエージェント完了を追跡 | 5s |
+| `verify-deliverables.mjs` | サブエージェント成果物を検証 | 5s |
+
+## PreCompact
+
+コンテキスト コンパクション直前に発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `pre-compact.mjs` | コンパクション前に状態を保持 | 10s |
+| `project-memory-precompact.mjs` | プロジェクトメモリを保持 | 5s |
+
+コンテキストウィンドウがいっぱいの時にコンパクションが実行される前に、
+重要な状態とメモリを保持します。
+
+## Stop
+
+Claude の応答が終了するときに発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `context-guard-stop.mjs` | コンテキスト使用を監視 | 5s |
+| `persistent-mode.cjs` | アクティブなモード状態を保持（ralph、ultrawork など） | 10s |
+| `code-simplifier.mjs` | 変更されたファイルを自動簡略化（オプトイン） | 5s |
+
+persistent-mode は「The boulder never stops」のような強化メッセージを注入します
+ユーザーがアクティブな実行モードを持っているときに継続作業を促すため。
+
+## SessionEnd
+
+セッションが終了するときに発火します。
+
+| スクリプト | 役割 | timeout |
+|---------|------|---------|
+| `session-end.mjs` | セッション要約を保存し、コールバック通知を送信 | 10s |
+
+セッション中にエージェント アクティビティ、トークン使用などを `.omc/sessions/` に保存し、
+Discord/Telegram/Slack が設定されている場合は完了通知を送信します。

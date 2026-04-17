@@ -1,0 +1,140 @@
+---
+title: 環境変数
+description: OMC の動作を制御する環境変数の完全リストと使用方法
+---
+
+## コア環境変数
+
+### DISABLE_OMC
+
+すべての OMC フックを無効化します。
+
+```bash
+export DISABLE_OMC=1
+```
+
+任意の値が設定されると、OMC は完全に無効化されます。
+Claude Code は OMC なしでデフォルトの動作で実行されます。
+
+### OMC_SKIP_HOOKS
+
+特定のフックのみをスキップします。カンマで区切ります。
+
+```bash
+export OMC_SKIP_HOOKS="keyword-detector,persistent-mode"
+```
+
+この環境変数を使用して、完全な無効化（`DISABLE_OMC`）なしに特定のフックを無効化できます。
+
+## ステート管理
+
+### OMC_STATE_DIR
+
+ステートファイルを集中化された場所で管理します。
+
+```bash
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```
+
+| アイテム | デフォルト | 設定後 |
+|------|--------|--------|
+| ステート保存場所 | `{worktree}/.omc/` | `$OMC_STATE_DIR/{project-id}/` |
+| Worktree 削除時 | ステートも一緒に削除 | ステートは保持 |
+
+プロジェクト識別子は Git リモート URL のハッシュを使用します。
+同じリポジトリの異なる worktree 間でステートが共有されます。
+
+## 機能制御
+
+| 変数 | デフォルト | 説明 |
+|------|--------|------|
+| `OMC_PARALLEL_EXECUTION` | `true` | 並列エージェント実行を許可 |
+| `OMC_LSP_TOOLS` | `true` | LSP ツールを有効化 |
+| `OMC_MAX_BACKGROUND_TASKS` | `5` | バックグラウンドタスクの最大数 |
+| `OMC_LSP_TIMEOUT_MS` | `15000` | LSP リクエストタイムアウト（ミリ秒） |
+
+## モデルルーティング
+
+| 変数 | デフォルト | 説明 |
+|------|--------|------|
+| `OMC_ROUTING_ENABLED` | `true` | インテリジェントモデルルーティングを有効化 |
+| `OMC_ROUTING_DEFAULT_TIER` | `MEDIUM` | デフォルトモデル段階（LOW/MEDIUM/HIGH） |
+| `OMC_ROUTING_FORCE_INHERIT` | `false` | 親モデル継承を強制 |
+| `OMC_ESCALATION_ENABLED` | `true` | 昇格を許可 |
+
+### 段階別モデルオーバーライド
+
+```bash
+export OMC_MODEL_HIGH="claude-opus-4-6"    # HIGH 段階デフォルトモデル
+export OMC_MODEL_MEDIUM="claude-sonnet-4-6" # MEDIUM 段階デフォルトモデル
+export OMC_MODEL_LOW="claude-haiku-4-5"    # LOW 段階デフォルトモデル
+```
+
+各段階のデフォルトモデル ID をオーバーライドします。Bedrock/Vertex AI 環境で特に有用です。
+
+### モデルエイリアスオーバーライド
+
+```bash
+export OMC_MODEL_ALIAS_HAIKU="custom-haiku-model"
+export OMC_MODEL_ALIAS_SONNET="custom-sonnet-model"
+export OMC_MODEL_ALIAS_OPUS="custom-opus-model"
+```
+
+非標準プロバイダーを使用する場合にモデル名をマップします。
+
+## 外部モデル
+
+| 変数 | デフォルト | 説明 |
+|------|--------|------|
+| `OMC_EXTERNAL_MODELS_DEFAULT_CODEX_MODEL` | `gpt-5.3-codex` | デフォルト Codex CLI モデル |
+| `OMC_EXTERNAL_MODELS_DEFAULT_GEMINI_MODEL` | `gemini-3.1-pro-preview` | デフォルト Gemini CLI モデル |
+| `OMC_EXTERNAL_MODELS_DEFAULT_PROVIDER` | - | デフォルト外部プロバイダー（codex/gemini） |
+| `OMC_EXTERNAL_MODELS_FALLBACK_POLICY` | `provider_chain` | モデル失敗時のフォールバックポリシー |
+| `OMC_CODEX_DEFAULT_MODEL` | - | （レガシー）代わりに `OMC_EXTERNAL_MODELS_DEFAULT_CODEX_MODEL` を使用 |
+| `OMC_GEMINI_DEFAULT_MODEL` | - | （レガシー）代わりに `OMC_EXTERNAL_MODELS_DEFAULT_GEMINI_MODEL` を使用 |
+
+## 委譲ルーティング
+
+| 変数 | デフォルト | 説明 |
+|------|--------|------|
+| `OMC_DELEGATION_ROUTING_ENABLED` | `false` | 外部プロバイダーへの委譲ルーティングを有効化 |
+| `OMC_DELEGATION_ROUTING_DEFAULT_PROVIDER` | `claude` | デフォルト委譲プロバイダー |
+
+## MCP サーバー
+
+| 変数 | 説明 |
+|------|------|
+| `EXA_API_KEY` | Exa MCP サーバー API キー |
+
+## 高度な設定
+
+| 変数 | 説明 |
+|------|------|
+| `OMC_BRIDGE_SCRIPT` | Python ブリッジスクリプトパス（自動検出） |
+| `OMC_USE_NODE_HOOKS` | `1` に設定すると、macOS/Linux で Node.js フックを使用 |
+
+## 使用例
+
+### コスト削減モード
+
+```bash
+# ルーティングを無効化し、すべてのエージェントが親モデルを継承
+export OMC_ROUTING_FORCE_INHERIT=true
+```
+
+### デバッグモード
+
+```bash
+# 特定のフックを無効化して問題を分離
+export OMC_SKIP_HOOKS="persistent-mode,keyword-detector"
+```
+
+### 大規模プロジェクト
+
+```bash
+# LSP タイムアウトを増加
+export OMC_LSP_TIMEOUT_MS=30000
+
+# バックグラウンドタスクを増やす
+export OMC_MAX_BACKGROUND_TASKS=10
+```

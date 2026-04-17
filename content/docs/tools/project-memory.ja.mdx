@@ -1,0 +1,98 @@
+---
+title: プロジェクトメモリ
+description: プロジェクト単位の長期メモリを管理するための MCP ツールグループ
+---
+
+## 概要
+
+Project Memory はプロジェクト単位の長期メモリを管理するツールです。プロジェクト構造、ルール、学習した知識、ディレクティブをセッション間で保持し、エージェントがプロジェクトコンテキストを素早く理解できるようにします。
+
+## 保存パス
+
+```
+.omc/project-memory.json
+```
+
+## ツール一覧
+
+### project_memory_read
+
+プロジェクトメモリの全内容を読み取ります。
+
+```
+project_memory_read()
+```
+
+プロジェクトの保存されたすべてのメモとディレクティブを返します。
+
+### project_memory_write
+
+プロジェクトメモリを完全に上書きします。
+
+```
+project_memory_write(content={
+  notes: ["TypeScript strict モードを使用", "テストは vitest を使用"],
+  directives: ["すべての関数に JSDoc が必須"]
+})
+```
+
+注：既存コンテンツを完全に置換します。部分更新には `add_note` または `add_directive` を使用します。
+
+### project_memory_add_note
+
+プロジェクトについてのメモを追加します。
+
+```
+project_memory_add_note(note="src/utils/ には純粋関数のみを含める")
+```
+
+プロジェクト構造、パターン、学習した知識を記録します。
+
+### project_memory_add_directive
+
+エージェントが従わなければならないディレクティブを追加します。
+
+```
+project_memory_add_directive(directive="console.log の代わりに構造化ロギングを使用")
+```
+
+コーディングルール、禁止事項、要件を記録します。
+
+## メモとディレクティブの違い
+
+| | メモ | ディレクティブ |
+|------|-------------|----------------------|
+| 性質 | 情報、観察、学習 | ルール、制約、要件 |
+| 例 | "このプロジェクトはモノレポ構造を使用している" | "テストなしの PR は禁止" |
+| エージェント動作 | 判断の参考 | 従わなければならない |
+
+## Notepad との違い
+
+| 項目 | Notepad | プロジェクトメモリ |
+|------|---------|----------------|
+| スコープ | 現在のセッション | プロジェクト全体（セッション間で保持） |
+| 目的 | 作業中のメモ | プロジェクトルール、構造、学習 |
+| ファイル | `.omc/notepad.md` | `.omc/project-memory.json` |
+| 圧縮 | 圧縮時に復元 | 常に利用可能 |
+
+## 使用パターン
+
+### プロジェクトルールを登録
+
+```
+project_memory_add_directive("このリポジトリは Conventional Commits を使用")
+project_memory_add_directive("src/generated/ 内のファイルは手動編集禁止")
+```
+
+### コードベース構造を記録
+
+```
+project_memory_add_note("API レイヤー：src/api/ → src/services/ → src/repositories/")
+project_memory_add_note("認証：JWT + passport.js、src/auth/ に実装")
+```
+
+### 学習を記録
+
+```
+project_memory_add_note("tsconfig paths 設定を jest.config と同期する必要あり")
+```

@@ -1,0 +1,100 @@
+---
+title: Notepad
+description: コンテキストウィンドウ圧縮を通じて保持される永続的なメモシステム
+---
+
+## 概要
+
+Notepad は永続的なメモシステムで、コンテキストウィンドウ圧縮を通じて保持されます。長いセッション中に会話の早期の重要情報がコンテキストから押し出された場合でも、Notepad に保存されたコンテンツは圧縮後に復元されます。
+
+## 保存パス
+
+```
+.omc/notepad.md
+```
+
+## ツール一覧
+
+### notepad_read
+
+現在の Notepad の全内容を読み取ります。
+
+```
+notepad_read()
+```
+
+### notepad_write_priority
+
+Priority Context セクションに書き込みます。**既存コンテンツを置換します。** セッション開始時に常にロードされます。500 文字以下に保つ。
+
+```
+notepad_write_priority(content="このプロジェクトは TypeScript strict モードを使用しています")
+```
+
+アーキテクチャ決定、コア制約、絶対に忘れてはいけない情報に使用します。
+
+### notepad_write_working
+
+Working Memory セクションにタイムスタンプ付きエントリを追加します。7 日後に自動削除されます。
+
+```
+notepad_write_working(content="現在 auth モジュールをリファクタリング中、5 ファイル中 3 ファイル完了")
+```
+
+進捗更新、次のステップ、作業中に発見された情報に使用します。
+
+### notepad_write_manual
+
+MANUAL セクションにエントリを追加します。自動削除されません。
+
+```
+notepad_write_manual(content="バグ：session.ts:45 で sessionId が未定義")
+```
+
+### notepad_prune
+
+N 日以上前の Working Memory エントリを削除します（デフォルト：7 日）。
+
+```
+notepad_prune()
+```
+
+### notepad_stats
+
+Notepad の統計情報（エントリ数、サイズなど）を返します。
+
+```
+notepad_stats()
+```
+
+## 使用パターン
+
+### 重要な決定を記録
+
+```
+notepad_write_priority(content="DB マイグレーション：PostgreSQL → MySQL は禁止。既存のクエリ互換性の問題あり")
+```
+
+### タスク進捗を記録
+
+```
+notepad_write_working(content="TODO：1. auth モジュール修正 ✓ 2. テスト追加 3. ドキュメント更新")
+```
+
+### セッション再開時にコンテキストを復元
+
+```
+notepad_read()
+→ "現在 auth をリファクタリング中。src/auth/login.ts 完了。次：src/auth/session.ts"
+```
+
+## 圧縮の動作
+
+Claude Code がコンテキストを圧縮するとき：
+
+1. Notepad の内容が圧縮結果に含まれます
+2. Priority メモが最初に復元されます
+3. Working メモが次に復元されます
+4. 削除されたメモは除外されます
+
+コア コンテキストは長いセッション中も保持されます。

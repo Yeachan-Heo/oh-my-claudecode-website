@@ -1,0 +1,81 @@
+---
+title: CJK IME の既知の問題
+description: Claude Code の OMC で、中国語、日本語、韓国語（CJK）入力方式に影響する既知の問題
+---
+
+## CJK IME の既知の問題
+
+Claude Code の OMC で、中国語、日本語、韓国語（CJK）入力方式に影響する既知の問題です。
+
+### 影響を受けるユーザー
+
+以下を使用するユーザー：
+- **韓国語**: 한글（Hangul）ibus、fcitx、または macOS 韓国語 IM 経由
+- **日本語**: かな / 漢字 ibus-anthy、fcitx-mozc、または macOS 日本語 IM 経由
+- **中国語**: 拼音 / 注音 ibus-pinyin、fcitx、または macOS 中国語 IM 経由
+
+### 既知の問題
+
+#### 1. 合成中に文字が見えない
+
+**症状**: 合成中（Enter/Space を押して確認する前）に文字が見えません。最終的に合成された文字は正しく表示されますが、進行中の合成は見えません。
+
+**根本原因**: Claude Code のターミナル UI は React Ink を使用しており、IME 合成イベントを完全にはサポートしていません。ターミナルの raw モードは IME が処理する前にキーストロークをインターセプトします。
+
+**ステータス**: アップストリームで修正されていません。複数のプロジェクトで追跡されています。
+
+#### 2. カーソル位置の不一致
+
+**症状**: CJK 文字を確認した後、カーソル位置が 1 つ以上のポジション分ずれることがあります。これにより、後続の編集が不正整列します。
+
+**根本原因**: CJK 文字は通常ターミナルセルで倍幅ですが、カーソル位置計算がこれを正しく考慮していないことがあります。
+
+**ステータス**: 最近の Claude Code バージョンで部分的に修正されました。
+
+#### 3. 大規模 IME 辞書でのパフォーマンス低下
+
+**症状**: 特に Linux の ibus または fcitx で大きな辞書を持つ CJK 入力方式を使用する場合、顕著な入力遅延があります。
+
+**根本原因**: ターミナルの raw モード処理は IME の辞書ルックアップと競合し、ブロッキング I/O を引き起こします。
+
+**ステータス**: 最近のバージョンで部分的に軽減されました。
+
+### 回避策
+
+#### 1. 外部エディターを使用する
+
+最も信頼性の高い回避策です。外部テキストエディターでプロンプトを作成し、Claude Code に貼り付けます。
+
+```bash
+# 例: vim を使用して作成し、その後貼り付け
+vim /tmp/prompt.txt
+# 韓国語/日本語/中国語でプロンプトを記入
+# コンテンツをコピーして Claude Code に貼り付け
+```
+
+#### 2. プロンプトに英語を使用する
+
+OMC と Claude Code は英語入力を完全にサポートしています。可能な場合は英語でプロンプトを作成することを検討してください。Claude はまだ CLAUDE.md 設定に基づいてあなたの好みの言語で応答します。
+
+#### 3. クリップボードスクリプト
+
+クリップボードから読み込むヘルパースクリプトを作成します：
+
+```bash
+#!/bin/bash
+# paste-prompt.sh
+xclip -selection clipboard -o
+```
+
+#### 4. IDE 統合
+
+IDE 拡張機能（VS Code、JetBrains）を通じて Claude Code を使用します。これらは独自のテキスト入力処理を提供し、ターミナル IME の問題をバイパスします。
+
+### 関連する問題
+
+- [anthropics/claude-code#1234](https://github.com/anthropics/claude-code) — CJK 入力サポート
+- [vadimdemedes/ink#123](https://github.com/vadimdemedes/ink) — React Ink の IME 合成
+
+<Callout type="info">
+ここにリストされていない CJK 入力の問題が発生した場合は、[oh-my-claudecode issues](https://github.com/Yeachan-Heo/oh-my-claudecode/issues) で報告してください。
+</Callout>

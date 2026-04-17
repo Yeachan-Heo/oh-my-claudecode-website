@@ -1,0 +1,126 @@
+---
+title: LSP
+description: 言語サーバープロトコルを利用した 12 個のコード知能ツール
+---
+
+## 概要
+
+LSP ツールは言語サーバープロトコルに基づくコード知能を提供します。型情報、定義へのジャンプ、参照の検索、エラー診断、シンボル検索、リネームを有効にします。
+
+言語サーバーをインストール必須（typescript-language-server、pylsp、rust-analyzer、gopls など）。`lsp_servers` を使用してインストール状態を確認します。
+
+## ツール一覧
+
+### lsp_hover
+
+指定位置の型情報とドキュメントを返します。
+
+```
+lsp_hover(file="src/auth.ts", line=42, character=10)
+```
+
+### lsp_goto_definition
+
+シンボルの定義位置に移動します。
+
+```
+lsp_goto_definition(file="src/auth.ts", line=42, character=10)
+```
+
+### lsp_find_references
+
+シンボルのすべての使用箇所を検索します。
+
+```
+lsp_find_references(file="src/auth.ts", line=42, character=10)
+```
+
+### lsp_document_symbols
+
+ファイルの構造概要を返します（関数、クラス、インターフェース等）。
+
+```
+lsp_document_symbols(file="src/auth.ts")
+```
+
+### lsp_workspace_symbols
+
+ワークスペース全体でシンボルを検索します。
+
+```
+lsp_workspace_symbols(query="UserConfig")
+```
+
+### lsp_diagnostics
+
+ファイルのエラー、警告、ヒントを返します。
+
+```
+lsp_diagnostics(file="src/auth.ts")
+```
+
+コード変更後の型エラーを即座にチェックするのに便利です。
+
+### lsp_diagnostics_directory
+
+指定ディレクトリのプロジェクトレベル診断を実行します。`tsc --noEmit` を優先し、失敗時に反復 LSP モードにフォールバックします。
+
+```
+lsp_diagnostics_directory(path="src/")
+```
+
+複雑なマルチファイル変更後にプロジェクト全体の型エラーをチェックします。
+
+### lsp_prepare_rename
+
+リネームが有効かどうかを事前チェックします。
+
+```
+lsp_prepare_rename(file="src/auth.ts", line=42, character=10)
+```
+
+### lsp_rename
+
+プロジェクト全体でシンボルをリネームするための編集リストを返します。**自動的には変更を適用しません。**
+
+```
+lsp_rename(file="src/auth.ts", line=42, character=10, newName="AuthService")
+```
+
+### lsp_code_actions
+
+利用可能なリファクタリングアクションのリストを返します。
+
+```
+lsp_code_actions(file="src/auth.ts", startLine=40, endLine=50)
+```
+
+### lsp_code_action_resolve
+
+コードアクションの詳細を返します。
+
+```
+lsp_code_action_resolve(action=<action_object>)
+```
+
+### lsp_servers
+
+利用可能な言語サーバーとそのインストール状態のリストを返します。
+
+```
+lsp_servers()
+```
+
+## 環境変数
+
+| 変数 | デフォルト | 説明 |
+|------|--------|------|
+| `OMC_LSP_TIMEOUT_MS` | `15000` | LSP リクエストタイムアウト（ミリ秒）。大規模リポジトリや遅いサーバーの場合は増やしてください |
+
+## トラブルシューティング
+
+| 問題 | 解決策 |
+|------|------|
+| LSP ツールが機能しない | 言語サーバーをインストール：`npm install -g typescript-language-server` |
+| タイムアウト | `OMC_LSP_TIMEOUT_MS` を増やす |
+| サーバー状態を確認 | `lsp_servers()` を使用してインストール状態を確認 |

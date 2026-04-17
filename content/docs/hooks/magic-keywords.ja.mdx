@@ -1,0 +1,135 @@
+---
+title: マジックキーワード
+description: 自然言語プロンプトを通じて OMC 実行モードとスキルをアクティブ化するマジックキーワード システム。
+---
+
+## マジックキーワードとは
+
+マジックキーワードはユーザーの自然言語プロンプト内の特定の単語またはパターンを検出し、
+OMC スキルまたは実行モードを自動的にアクティブ化するシステムです。
+
+別のスラッシュコマンドなしに、プロンプトにキーワードを含めるだけで、
+対応する機能が自動的にアクティブ化されます。
+
+## keyword-detector の動作方法
+
+`keyword-detector.mjs` は UserPromptSubmit イベントで実行されます。
+
+1. ユーザー プロンプトを受け取ってサニタイズ
+2. コードブロック、XML タグ、URL、ファイルパスを削除して誤検知を防止
+3. サニタイズされたテキストでキーワード パターン マッチング実行
+4. 競合解決後にスキル呼び出し命令を注入
+
+### 安全ガード
+
+- **サニタイズ**: コードブロック内、URL 内の単語、ファイルパスのキーワードは無視
+- **チームワーカー保護**: `OMC_TEAM_WORKER` 環境変数が設定されている場合は無効化（無限生成を防止）
+- **無効化**: `DISABLE_OMC=1` または `OMC_SKIP_HOOKS=keyword-detector`
+
+## キーワード リスト
+
+### 実行モード キーワード
+
+スキルを呼び出し、状態ファイルを作成するキーワード。
+
+| キーワード | スキル | 説明 |
+|--------|------|------|
+| `cancelomc`、`stopomc` | cancel | すべてのアクティブなモードをキャンセル |
+| `ralph`、`don't stop`、`must complete`、`until done` | ralph | 検証完了まで持続的実行 |
+| `autopilot`、`auto pilot`、`auto-pilot`、`autonomous`、`build me`、`I want a`、`create/make me <noun>`、`handle it all`、`full auto`、`fullsend`、`end to end`、`e2e this` | autopilot | 完全自律実行 |
+| `ultrawork`、`ulw`、`uw` | ultrawork | 最大限の並列実行 |
+| `ccg`、`claude-codex-gemini` | ccg | Claude-Codex-Gemini トライモデル オーケストレーション |
+| `ralplan` | ralplan | コンセンサスベースの反復計画 |
+| `deep interview`、`ouroboros` | deep-interview | ソクラティック深層インタビュー |
+
+### AI スロップ クリーンアップ キーワード
+
+2 つのタイプをサポート：明示的なパターンと組み合わせパターン。
+
+**明示的なパターン**（単独でアクティブ化）：
+- `ai-slop`、`anti-slop`、`deslop`、`de-slop`
+
+**組み合わせパターン**（アクション + におい が組み合わされたときにアクティブ化）：
+
+| アクション キーワード | におい キーワード |
+|------------|------------|
+| `cleanup`、`refactor`、`simplify`、`dedupe`、`prune` | `slop`、`duplicate`、`duplication`、`dead code`、`unused code`、`over-abstraction`、`wrapper layers`、`needless abstractions`、`unnecessary abstractions`、`ai-generated`、`generated code`、`tech debt`、`boundary violations` |
+
+例：「cleanup the duplicate code」→ ai-slop-cleaner スキルをアクティブ化
+
+### エージェント ショートカット キーワード
+
+スラッシュコマンドの代わりに自然言語でエージェントをアクティブ化します。
+
+| キーワード | 効果 | 動作 |
+|--------|------|------|
+| `tdd`、`test first`、`red green` | TDD モード | テストファーストライティングを強制 |
+| `code review`、`review code` | コード レビュー モード | 包括的なコード レビュー実行 |
+| `security review`、`review security` | セキュリティ レビュー モード | セキュリティ重視のレビュー実行 |
+
+これらのキーワードはスキルを呼び出す代わりにインライン モード メッセージを注入します。
+
+### 推論拡張 キーワード
+
+| キーワード | 効果 |
+|--------|------|
+| `ultrathink`、`think hard`、`think deeply` | 拡張推論モードをアクティブ化 |
+| `deepsearch`、`search the codebase`、`find in codebase`（その他：`search code`、`search files`、`search project`、`find in code`、`find in all files`） | コードベース重視検索モード |
+| `deep-analyze`、`deepanalyze` | 深層分析モード |
+
+## 優先度と競合解決
+
+複数のキーワードが同時に検出された場合、次の優先度順に解決されます：
+
+```
+cancel（最優先、排他的）
+  → ralph
+    → autopilot
+      → ultrawork
+        → ccg
+          → ralplan
+            → deep-interview
+              → ai-slop-cleaner
+                → tdd
+                  → code-review
+                    → security-review
+                      → ultrathink
+                        → deepsearch
+                          → analyze
+```
+
+`cancel` は排他的です -- 他のすべてのマッチを無視し、cancel のみ実行します。
+他のキーワードは複数マッチを許可し、優先度順に処理されます。
+
+## 使用例
+
+```bash
+# Claude Code 内：
+
+# 自律実行
+autopilot: implement user authentication with OAuth
+
+# 並列実行
+ultrawork write all tests for this module
+
+# 持続的実行
+ralph refactor this authentication module
+
+# TDD
+tdd: implement password validation function
+
+# コード レビュー
+code review the recent changes
+
+# キャンセル
+stopomc
+```
+
+## チーム キーワード
+
+`team` は自動検出されません。
+無限生成を防ぐため、`/team` スラッシュコマンドで明示的に呼び出す必要があります。
+
+```
+/oh-my-claudecode:team 3:executor "build a full-stack todo app"
+```

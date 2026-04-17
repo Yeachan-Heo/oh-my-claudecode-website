@@ -1,0 +1,136 @@
+---
+title: マイグレーションガイド
+description: Oh My ClaudeCode のバージョン間を移行するためのアップグレードガイド
+---
+
+## マイグレーションガイド
+
+OMC のバージョン間を移行するためのステップバイステップアップグレード手順です。
+
+### v3.x → v4.0
+
+v4.0 は大規模なアーキテクチャー改築です。アップグレードパスはインストール方法に依存します。
+
+#### プラグインインストール（推奨）
+
+```bash
+# 古いバージョンを削除
+/plugin uninstall oh-my-claudecode
+
+# 新しいバージョンをインストール
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+/plugin install oh-my-claudecode
+
+# セットアップを再実行
+setup omc
+```
+
+#### NPM インストール
+
+```bash
+npm install -g oh-my-claudecode@latest
+omc setup
+```
+
+#### v4.0 の破壊的変更
+
+| 領域 | v3.x | v4.0 |
+|------|------|------|
+| 設定フォーマット | `.omc/config.json` | `config.jsonc`（JSONC） |
+| エージェント数 | 15 エージェント | 19 エージェント（4 レーン） |
+| スキルシステム | 基本的なスキルレジストリ | パイプラインメタデータ、レイヤー |
+| フックシステム | シンプルなイベントハンドラー | 11 個のライフサイクルイベント |
+| ステート管理 | フラットファイルステート | 構造化 `.omc/` ディレクトリ |
+
+#### 削除された機能
+
+- `skill-injector`（フックベース注入に置換）
+- `legacy-mode`（非推奨実行パス）
+- 直接エージェント呼び出し構文（`oh-my-claudecode:agent-name` フォーマットを使用）
+
+### v3.3.x → v3.4.0
+
+**並列実行 & 高度なワークフロー**
+
+- `ultrawork` スキルが並列エージェント実行用に導入されました
+- `team` スキルが N エージェント調整用に導入されました
+- `ccg` スキルがトリモデルオーケストレーション用に導入されました
+
+破壊的変更はありません。標準インストール経由でアップグレードしてください。
+
+### v3.0 → v3.1
+
+**Notepad Wisdom & 拡張機能**
+
+- Notepad システムが導入（コンテキスト圧縮を生き延びる）
+- Project memory システムが導入
+- `deepinit` スキルが導入
+
+破壊的変更はありません。標準インストール経由でアップグレードしてください。
+
+### v2.x → v3.0
+
+**パッケージ名変更 & 自動有効化**
+
+#### 破壊的変更
+
+| 領域 | v2.x | v3.0 |
+|------|------|------|
+| パッケージ名 | `claude-code-orchestrator` | `oh-my-claudecode` |
+| 有効化 | 手動 `omc start` | フック経由の自動有効化 |
+| 設定場所 | `~/.omc/` | `.omc/`（プロジェクト別） |
+
+#### マイグレーション手順
+
+1. 古いパッケージをアンインストール: `npm uninstall -g claude-code-orchestrator`
+2. 新しいパッケージをインストール: `npm install -g oh-my-claudecode`
+3. 設定を移動: `mv ~/.omc/ .omc/`
+4. セットアップを実行: `setup omc`
+
+### v3.5.2 → v3.5.3
+
+**スキル統合**
+
+8 個のスキルが削除され、既存スキルに統合されました：
+
+| 削除されたスキル | 置換 |
+|--------------|-------------|
+| `simplify` | `code-simplifier` エージェント |
+| `codebase-search` | `explore` エージェント（`deepsearch` キーワード付き） |
+| `review` | `omc-plan --review` |
+| `build-fix` | `debugger` エージェント |
+| `analyze` | `debugger` エージェント |
+| `tdd` | `test-engineer` エージェント |
+| `security-review` | `security-reviewer` エージェント |
+| `code-review` | `code-reviewer` エージェント |
+
+### 一般的なアップグレード問題
+
+#### アップグレード後にフックが読み込まれない
+
+```bash
+# 診断を実行
+/oh-my-claudecode:omc-doctor
+
+# フックを再インストール
+/oh-my-claudecode:omc-setup
+```
+
+#### 設定フォーマットエラー
+
+v4.0 は JSONC フォーマットを使用します。v3.x から `config.json` がある場合：
+
+1. `config.jsonc` に名前を変更
+2. 必要に応じてコメントを追加（JSONC は `//` および `/* */` コメントをサポート）
+
+#### ステートディレクトリの競合
+
+ユーザー別ステートからプロジェクト別ステートへのアップグレード時：
+
+```bash
+# ステートをプロジェクトディレクトリに移動
+mv ~/.omc/state/ .omc/state/
+
+# または集中化されたステートを設定
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```

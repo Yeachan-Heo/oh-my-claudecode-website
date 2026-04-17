@@ -1,0 +1,308 @@
+---
+title: config.jsonc リファレンス
+description: OMC 設定ファイル（config.jsonc）のすべてのオプション、デフォルト値、および使用例
+---
+
+## 設定ファイルの場所
+
+| スコープ | パス |
+|------|------|
+| ユーザー（グローバル） | `~/.config/claude-omc/config.jsonc` |
+| プロジェクト | `.claude/omc.jsonc` |
+
+設定は以下の順序でマージされます：`defaults → user config → project config → environment variables`。
+後の設定が前の設定をオーバーライドします。
+
+## agents
+
+各エージェントのモデルを指定します。
+
+```jsonc
+{
+  "agents": {
+    "omc": { "model": "opus" },        // メインオーケストレータ
+    "explore": { "model": "haiku" },    // コードベース探索
+    "analyst": { "model": "opus" },     // 要件分析
+    "planner": { "model": "opus" },     // タスク計画
+    "architect": { "model": "opus" },   // システム設計
+    "debugger": { "model": "sonnet" },  // デバッグ
+    "executor": { "model": "sonnet" },  // コード実装
+    "verifier": { "model": "sonnet" },  // 検証
+    "securityReviewer": { "model": "sonnet" }, // セキュリティレビュー
+    "codeReviewer": { "model": "opus" },       // コードレビュー
+    "testEngineer": { "model": "sonnet" },     // テスト戦略
+    "designer": { "model": "sonnet" },  // UI/UX デザイン
+    "writer": { "model": "haiku" },     // ドキュメント
+    "qaTester": { "model": "sonnet" },  // QA テスト
+    "scientist": { "model": "sonnet" }, // データ分析
+    "tracer": { "model": "sonnet" },    // 因果追跡
+    "gitMaster": { "model": "sonnet" }, // Git 操作
+    "codeSimplifier": { "model": "opus" },     // コード簡略化
+    "critic": { "model": "opus" },      // 計画レビュー
+    "documentSpecialist": { "model": "sonnet" } // ドキュメント検索
+  }
+}
+```
+
+<Callout type="info">
+ハイフン（-）を含むエージェント名は、設定内で camelCase に変換されます。
+例：`security-reviewer` → `securityReviewer`、`code-reviewer` → `codeReviewer`
+</Callout>
+
+## features
+
+機能トグル。
+
+```jsonc
+{
+  "features": {
+    "parallelExecution": true,        // 並列エージェント実行
+    "lspTools": true,                 // LSP ツール統合
+    "astTools": true,                 // AST ツール（ast-grep）
+    "continuationEnforcement": true,  // タスク完了強制
+    "autoContextInjection": true      // 自動コンテキスト注入
+  }
+}
+```
+
+| オプション | デフォルト | 説明 |
+|------|--------|------|
+| `parallelExecution` | `true` | 複数エージェントを同時に実行 |
+| `lspTools` | `true` | Language Server Protocol ツールを有効化 |
+| `astTools` | `true` | ast-grep ベース AST ツールを有効化 |
+| `continuationEnforcement` | `true` | 未完了のタスクがある場合は継続 |
+| `autoContextInjection` | `true` | CLAUDE.md/AGENTS.md を自動注入 |
+
+## magicKeywords
+
+マジックキーワード trigger をカスタマイズできます。
+
+```jsonc
+{
+  "magicKeywords": {
+    "ultrawork": ["ultrawork", "ulw", "uw"],
+    "search": ["search", "find", "locate"],
+    "analyze": ["analyze", "investigate", "examine"],
+    "ultrathink": ["ultrathink", "think", "reason", "ponder"]
+  }
+}
+```
+
+各カテゴリに文字列配列を指定します。ユーザー入力がこれらの文字列のいずれかを含む場合、対応するモードが起動されます。
+
+<Callout type="warn">
+`magicKeywords` で変更できるのは上記の 4 つのカテゴリのみです。`autopilot`、`ralph`、`ccg` などのキーワードは keyword-detector フック内でハードコードされており、設定経由では変更できません。
+</Callout>
+
+## routing
+
+モデルルーティング設定。
+
+```jsonc
+{
+  "routing": {
+    "enabled": true,           // インテリジェントモデルルーティングを有効化
+    "defaultTier": "MEDIUM",   // デフォルト段階（LOW | MEDIUM | HIGH）
+    "forceInherit": false,     // 親モデル継承を強制
+    "escalationEnabled": true, // 昇格を許可
+    "maxEscalations": 2        // 最大昇格数
+  }
+}
+```
+
+| オプション | デフォルト | 説明 |
+|------|--------|------|
+| `enabled` | `true` | モデルルーティングを有効化するかどうか |
+| `defaultTier` | `"MEDIUM"` | ルールがマッチしない場合に適用されるデフォルト段階 |
+| `forceInherit` | `false` | `true` の場合、すべてのエージェントが親モデルを継承 |
+| `escalationEnabled` | `true` | タスク複雑度に基づいた自動アップグレードを許可 |
+| `maxEscalations` | `2` | 昇格の最大回数 |
+
+<Callout type="info">
+CC Switch、カスタム `ANTHROPIC_BASE_URL`、AWS Bedrock、または Google Vertex AI を使用している場合、`forceInherit` は自動的に `true` に設定されます。これは、Claude 固有のモデル名（sonnet、opus、haiku）をこれらのプラットフォームに渡すとエラーが発生するためです。
+</Callout>
+
+## permissions
+
+パーミッション設定。
+
+```jsonc
+{
+  "permissions": {
+    "allowBash": true,          // Bash コマンド実行を許可
+    "allowEdit": true,          // ファイル編集を許可
+    "allowWrite": true,         // ファイル作成を許可
+    "maxBackgroundTasks": 5     // バックグラウンドタスクの最大数（1～50）
+  }
+}
+```
+
+## mcpServers
+
+MCP サーバー設定。
+
+```jsonc
+{
+  "mcpServers": {
+    "exa": {
+      "enabled": true,
+      "apiKey": "your-exa-api-key"  // または EXA_API_KEY env var を使用
+    },
+    "context7": {
+      "enabled": true
+    }
+  }
+}
+```
+
+## externalModels
+
+外部モデルプロバイダー設定。
+
+```jsonc
+{
+  "externalModels": {
+    "defaults": {
+      "codexModel": "gpt-5.3-codex",          // デフォルト Codex モデル
+      "geminiModel": "gemini-3.1-pro-preview"  // デフォルト Gemini モデル
+    },
+    "fallbackPolicy": {
+      "onModelFailure": "provider_chain",  // provider_chain | cross_provider | claude_only
+      "allowCrossProvider": false,
+      "crossProviderOrder": ["codex", "gemini"]
+    }
+  }
+}
+```
+
+## delegationRouting
+
+外部モデルへの委譲ルーティング設定（オプトイン機能）。
+
+```jsonc
+{
+  "delegationRouting": {
+    "enabled": false,              // デフォルトでは無効
+    "defaultProvider": "claude",   // claude | codex | gemini
+    "roles": {
+      "executor": {
+        "provider": "codex",
+        "tool": "Task"
+      }
+    }
+  }
+}
+```
+
+## startupCodebaseMap
+
+セッション開始時のコードベースマップ生成設定。
+
+```jsonc
+{
+  "startupCodebaseMap": {
+    "enabled": true,
+    "maxFiles": 200,
+    "maxDepth": 4
+  }
+}
+```
+
+## taskSizeDetection
+
+自動タスクサイズ検出設定。
+
+```jsonc
+{
+  "taskSizeDetection": {
+    "enabled": true,
+    "smallWordLimit": 50,                    // 単語数がこれより少ないタスクは small task
+    "largeWordLimit": 200,                   // 単語数がこれより多いタスクは large task
+    "suppressHeavyModesForSmallTasks": true  // small task に対して heavy mode を抑制
+  }
+}
+```
+
+## 完全なデフォルト設定
+
+以下が OMC のすべてのデフォルト設定値です。
+
+```jsonc
+{
+  "agents": {
+    "omc": { "model": "opus" },
+    "explore": { "model": "haiku" },
+    "analyst": { "model": "opus" },
+    "planner": { "model": "opus" },
+    "architect": { "model": "opus" },
+    "debugger": { "model": "sonnet" },
+    "executor": { "model": "sonnet" },
+    "verifier": { "model": "sonnet" },
+    "securityReviewer": { "model": "sonnet" },
+    "codeReviewer": { "model": "opus" },
+    "testEngineer": { "model": "sonnet" },
+    "designer": { "model": "sonnet" },
+    "writer": { "model": "haiku" },
+    "qaTester": { "model": "sonnet" },
+    "scientist": { "model": "sonnet" },
+    "tracer": { "model": "sonnet" },
+    "gitMaster": { "model": "sonnet" },
+    "codeSimplifier": { "model": "opus" },
+    "critic": { "model": "opus" },
+    "documentSpecialist": { "model": "sonnet" }
+  },
+  "features": {
+    "parallelExecution": true,
+    "lspTools": true,
+    "astTools": true,
+    "continuationEnforcement": true,
+    "autoContextInjection": true
+  },
+  "magicKeywords": {
+    "ultrawork": ["ultrawork", "ulw", "uw"],
+    "search": ["search", "find", "locate"],
+    "analyze": ["analyze", "investigate", "examine"],
+    "ultrathink": ["ultrathink", "think", "reason", "ponder"]
+  },
+  "routing": {
+    "enabled": true,
+    "defaultTier": "MEDIUM",
+    "forceInherit": false,
+    "escalationEnabled": true,
+    "maxEscalations": 2
+  },
+  "permissions": {
+    "allowBash": true,
+    "allowEdit": true,
+    "allowWrite": true,
+    "maxBackgroundTasks": 5
+  },
+  "externalModels": {
+    "defaults": {
+      "codexModel": "gpt-5.3-codex",
+      "geminiModel": "gemini-3.1-pro-preview"
+    },
+    "fallbackPolicy": {
+      "onModelFailure": "provider_chain",
+      "allowCrossProvider": false,
+      "crossProviderOrder": ["codex", "gemini"]
+    }
+  },
+  "delegationRouting": {
+    "enabled": false,
+    "defaultProvider": "claude",
+    "roles": {}
+  },
+  "startupCodebaseMap": {
+    "enabled": true,
+    "maxFiles": 200,
+    "maxDepth": 4
+  },
+  "taskSizeDetection": {
+    "enabled": true,
+    "smallWordLimit": 50,
+    "largeWordLimit": 200,
+    "suppressHeavyModesForSmallTasks": true
+  }
+}
+```

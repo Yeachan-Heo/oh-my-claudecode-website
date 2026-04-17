@@ -1,0 +1,13 @@
+{
+  "title": "ビルドと分析",
+  "pages": [
+    "explore",
+    "analyst",
+    "planner",
+    "architect",
+    "debugger",
+    "executor",
+    "verifier",
+    "tracer"
+  ]
+}

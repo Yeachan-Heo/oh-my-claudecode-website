@@ -1,0 +1,96 @@
+---
+title: Python REPL
+description: 永続的な Python REPL 環境でデータ分析と計算を実行する
+---
+
+## 概要
+
+Python REPL は状態がセッション間で保持される Python 実行環境です。データ分析、統計計算、可視化、プロトタイピングに使用します。
+
+## ツール
+
+### python_repl
+
+Python コードを実行して結果を返します。`action` パラメータが動作を指定します。
+
+| action | 説明 |
+|--------|------|
+| `execute`（デフォルト） | コードを実行 |
+| `interrupt` | 実行を中断 |
+| `reset` | 状態をリセット |
+| `get_state` | メモリ・変数を確認 |
+
+```
+python_repl(code="import json; data = json.loads('{\"key\": \"value\"}'); print(data)")
+```
+
+## 機能
+
+### 状態の永続化
+
+定義された変数、関数、インポートは後続の呼び出しで利用可能です。
+
+```python
+# 最初の呼び出し
+python_repl(code="import pandas as pd; df = pd.read_csv('data.csv')")
+
+# 2 番目の呼び出し（df は保持される）
+python_repl(code="print(df.describe())")
+```
+
+### データ分析
+
+```python
+python_repl(code="""
+import json
+with open('.omc/research/session-1/state.json') as f:
+    state = json.load(f)
+print(f"ステージ数：{len(state['stages'])}")
+print(f"ステータス：{state['status']}")
+""")
+```
+
+### 計算と変換
+
+```python
+python_repl(code="""
+# トークンコスト計算
+input_tokens = 150000
+output_tokens = 50000
+cost = (input_tokens * 0.003 + output_tokens * 0.015) / 1000
+print(f"推定コスト：${cost:.4f}")
+""")
+```
+
+### ファイル処理
+
+```python
+python_repl(code="""
+import os
+import json
+
+# プロジェクトファイル統計
+extensions = {}
+for root, dirs, files in os.walk('src'):
+    for f in files:
+        ext = os.path.splitext(f)[1]
+        extensions[ext] = extensions.get(ext, 0) + 1
+
+for ext, count in sorted(extensions.items(), key=lambda x: -x[1]):
+    print(f"{ext}：{count} ファイル")
+""")
+```
+
+## ユースケース
+
+| ユースケース | 説明 |
+|-----------|------|
+| データ分析 | CSV、JSON ファイル分析、統計計算 |
+| プロトタイピング | アルゴリズム検証、ロジックテスト |
+| ファイル処理 | ファイル変換、バッチ処理 |
+| 可視化 | matplotlib、plotly を使用したチャート生成 |
+| 計算 | 数学計算、コスト推定 |
+
+## Scientist エージェントとの統合
+
+[scientist](/docs/agents/domain/scientist) エージェントは python_repl をデータ分析に使用します。[SciOMC](/docs/skills/workflow/sciomc) リサーチワークフローで統計分析と可視化に使用されます。

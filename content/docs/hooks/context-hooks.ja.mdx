@@ -1,0 +1,70 @@
+---
+title: コンテキスト管理フック
+description: メモリ、プロジェクト状態、コンパクションを管理する OMC フックを説明します。
+---
+
+## コンテキスト管理が必要な理由
+
+Claude Code のコンテキストウィンドウは有限です。
+長いセッションではコンパクションが発生し、前の会話内容が要約されます。
+OMC のコンテキスト管理フックはコンパクションに備え、重要な情報を保持し、
+プロジェクトレベルのメモリを保持します。
+
+## notepad
+
+コンパクション耐性メモリシステム。
+
+- **保存パス**: `.omc/notepad.md`
+- **MCP ツール**: `notepad_read`、`notepad_write_priority`、`notepad_write_working`、`notepad_write_manual`
+- **動作**: notepad に書き込まれた情報はコンパクション後も保持されます
+
+notepad は 3 つの優先度レベルをサポートします。
+
+| 優先度 | ツール | 説明 |
+|---------|------|------|
+| Priority | `notepad_write_priority` | 決して失われてはいけない情報 |
+| Working | `notepad_write_working` | 現在のタスク進行状況 |
+| Manual | `notepad_write_manual` | 手動で記録されたノート |
+
+古いエントリをクリーンアップするには `notepad_prune` を、状態をチェックするには `notepad_stats` を使用してください。
+
+## project-memory
+
+プロジェクトレベルの永続的なメモリを管理します。
+
+- **保存パス**: `.omc/project-memory.json`
+- **MCP ツール**: `project_memory_read`、`project_memory_write`、`project_memory_add_note`、`project_memory_add_directive`
+- **関連フック**:
+  - `project-memory-session.mjs` (SessionStart): セッション開始時にプロジェクトメモリを読み込み
+  - `project-memory-posttool.mjs` (PostToolUse): ツール使用後にメモリを更新
+  - `project-memory-precompact.mjs` (PreCompact): コンパクション前にメモリを保持
+
+project-memory に保存される 2 種類のデータ。
+
+- **Notes**: プロジェクトについて学習した事実（アーキテクチャパターン、バグレコード など）
+- **Directives**: プロジェクト上で作業するときに従わなければならない命令
+
+## pre-compact
+
+コンパクション直前に重要な状態を保持します。
+
+- **イベント**: PreCompact
+- **動作**: 現在のタスク状態、進行中の TODO、重要なコンテキストを要約/保持
+- **目的**: コンパクション後も作業を続行できるように重要な情報を保持
+
+## コンテキスト保持戦略
+
+OMC のコンテキスト管理フックは以下の戦略で協働します：
+
+```
+セッション開始
+  → project-memory を読み込み (project-memory-session.mjs)
+    → [進行中の作業]
+    → 重要な情報を notepad に記録
+    → project-memory を更新 (project-memory-posttool.mjs)
+      → [コンパクション発生]
+      → コンパクション前に状態を保持 (pre-compact.mjs)
+      → project-memory を保持 (project-memory-precompact.mjs)
+        → [コンパクション後]
+        → notepad/project-memory から復元
+```
