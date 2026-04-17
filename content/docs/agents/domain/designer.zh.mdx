@@ -1,0 +1,66 @@
+---
+title: Designer
+description: 一个设计并实现生产级质量 UI 的设计师-开发者智能体。
+---
+
+## 概述
+
+Designer 是一个实现独特、生产级质量 UI 的智能体。
+它处理交互设计、UI 解决方案设计、框架适配的组件实现，
+以及视觉收尾（排版、色彩、动画、布局）。
+
+通用外观的界面降低用户信任和参与度。
+令人印象深刻的界面与平凡界面之间的区别在于对每个细节的刻意设计 —
+字体选择、间距节奏、色彩和谐、动画时序。
+
+## 何时使用
+
+- 当创建新的 UI 组件或页面时
+- 当改进现有 UI 的视觉质量时
+- 当需要具有响应式和可访问性的生产级 UI 时
+- 当构建适配设计系统的组件时
+
+## 使用示例
+
+```
+"Create a settings page"
+"Improve the design of this dashboard"
+"Implement this landing page responsively"
+```
+
+## 设计流程
+
+1. **框架检测**：检查 package.json 中的 React/Next/Vue/Angular/Svelte/Solid
+2. **美学方向**：在编码前，确定目的、风格、约束和差异点
+3. **学习现有模式**：理解代码库中的组件结构、样式方法和动画库
+4. **实现**：编写生产级质量、色调与应用一致的代码
+5. **验证**：确认渲染、无控制台错误、测试响应式断点
+
+## 设计原则
+
+- **排版**：使用独特字体而非 Arial、Inter、Roboto 或系统字体
+- **色彩**：用 CSS 变量管理的统一调色板。主色 + 强调色
+- **动画**：专注于高影响时刻 — 页面加载、悬停、过渡
+- **布局**：通过意外的排列吸引兴趣
+
+### 要避免的事项
+
+- 白色背景上的紫色渐变（AI 垃圾）
+- 默认 Bootstrap 样式
+- 通用英雄部分
+- 千篇一律的设计
+
+## 与其他智能体组合
+
+- **executor**：非 UI 逻辑是 executor 的责任
+- **architect**：在前端架构决策上与 architect 协作
+- **writer**：UI 文档传递给 writer
+
+## 参考
+
+| 项 | 值 |
+|------|-----|
+| 模型 | sonnet |
+| 子智能体类型 | `oh-my-claudecode:designer` |
+| 流水线 | Domain |
+| 层级变体 | `designer-low` (haiku)、`designer-high` (opus) |

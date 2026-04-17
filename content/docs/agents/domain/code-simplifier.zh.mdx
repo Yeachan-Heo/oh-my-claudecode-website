@@ -1,0 +1,92 @@
+---
+title: Code Simplifier
+description: 一个改进代码清晰度、一致性和可维护性的智能体，同时完全保留功能。
+---
+
+## 概述
+
+Code Simplifier 是一个改进代码清晰度、一致性和可维护性的智能体，同时完全保留代码的功能。
+它将项目最佳实践应用于最近修改的代码，保持代码简洁整洁。
+
+它倾向于使用显式、易读的代码，而不是过度压缩的代码。
+它只改变"如何做"，不改变行为。
+
+## 何时使用
+
+- 当你想改进最近编写的代码的可读性时
+- 当你想减少不必要的复杂性时
+- 当整理代码以匹配项目编码标准时
+- 当由 Stop 钩子自动触发时（可选）
+
+## 使用示例
+
+```
+"Simplify the code I just wrote"
+"Improve the readability of this file"
+```
+
+## 核心原则
+
+### 功能保留
+
+永远不改变原始功能、输出或行为。
+不重命名导出符号、改变函数签名或重新排列控制流。
+
+### 应用项目标准
+
+- ES 模块、正确的导入排序、`.js` 扩展名
+- 顶级声明优先使用 `function` 关键字（而非箭头函数）
+- 顶级函数上的显式返回类型注解
+- camelCase（变量）、PascalCase（类型）命名
+- TypeScript 严格模式模式
+
+### 清晰度改进
+
+- 减少不必要的复杂性和嵌套
+- 删除重复的代码和抽象
+- 通过清晰的变量/函数名改进可读性
+- 合并相关逻辑
+- 删除仅描述代码已清楚显示内容的注释
+- **无嵌套三元运算符** — 改用 `switch` 或 `if/else` 链
+
+### 保持平衡
+
+避免以下过度简化：
+- 损害代码清晰度或可维护性的简化
+- 难以理解的过度聪明解决方案
+- 将太多关注点组合到一个函数中
+- 删除改进代码组织的有用抽象
+- 优先使用"更少行数"而不是可读性
+
+## Stop 钩子自动执行
+
+Code Simplifier 可作为 Stop 钩子自动执行（默认禁用）。
+
+在 `~/.omc/config.json` 中启用：
+
+```json
+{
+  "codeSimplifier": {
+    "enabled": true,
+    "extensions": [".ts", ".tsx", ".js", ".jsx", ".py", ".go", ".rs"],
+    "maxFiles": 10
+  }
+}
+```
+
+启用后，每次 Claude 停止时，它都会使用 `git diff HEAD --name-only` 找到修改的文件
+并将它们委托给 code-simplifier 智能体。
+每轮仅运行一次。
+
+## 与其他智能体组合
+
+- **executor**：Executor 完成实现后，Code Simplifier 改进可读性
+- **code-reviewer**：Code Simplifier 用于基于代码审查发现的重构
+
+## 参考
+
+| 项 | 值 |
+|------|-----|
+| 模型 | opus |
+| 子智能体类型 | `oh-my-claudecode:code-simplifier` |
+| 流水线 | Domain |

@@ -1,0 +1,94 @@
+---
+title: Code Reviewer
+description: 一个代码审查智能体，通过严重性等级反馈评估代码质量和安全性。
+---
+
+## 概览
+
+Code Reviewer 是一个代码审查智能体，涵盖规范合规性验证、安全检查、代码质量评估、逻辑正确性、错误处理完整性、反模式检测、SOLID 原则遵守和性能审查。
+
+核心原则是"优先验证规范合规性，然后审查代码质量"。遗漏一个 SQL 注入漏洞但标记代码风格问题是一个失败。每个问题都包含 CRITICAL/HIGH/MEDIUM/LOW 严重性等级和具体的修复建议。
+
+这是一个只读智能体，审查作为独立于作者的单独流程进行。
+
+## 何时使用
+
+- 进行 PR 或代码变更的完整审查时
+- 验证代码质量和逻辑正确性时
+- 检查 API 合约和向后兼容性时
+- 评估发布就绪程度时
+
+## 使用示例
+
+```
+"Code review this PR"
+"Review the quality of the recent changes"
+"code review"  # 魔法关键词自动激活
+```
+
+## 2 阶段审查流程
+
+### 阶段 1：规范合规性（始终优先）
+
+- 实现是否涵盖所有需求？
+- 它是否解决了正确的问题？
+- 缺少什么？添加了什么？
+- 请求者能否识别这是他们的请求？
+
+### 阶段 2：代码质量（仅在阶段 1 通过后）
+
+- 在所有修改的文件上运行 lsp_diagnostics
+- 使用 ast_grep_search 检测问题模式（console.log、空 catch、硬编码的密钥）
+- 逻辑正确性：循环边界、空值处理、类型不匹配、控制流/数据流
+- 错误处理：错误传播、资源清理
+- 反模式：God Object、魔数、复制粘贴、散弹枪手术
+- SOLID 原则：SRP、OCP、LSP、ISP、DIP
+- 可维护性：可读性、复杂度（圈复杂度 < 10）、可测试性
+
+## 其他审查模式
+
+Code Reviewer 可根据请求启用其他模式。
+
+### API 合约审查
+
+- 破坏性变更：移除的字段、更改的类型、重命名的端点
+- 版本管理策略：不兼容变更时的版本提升
+- 错误语义：一致的错误代码、无内部信息泄露
+- 向后兼容性：现有调用者是否能继续工作而无需更改
+
+### 性能审查
+
+- 算法复杂度（O(n^2) 循环、N+1 查询）
+- 内存泄漏、过度分配
+- 缓存机会和失效正确性
+
+### 质量策略
+
+- 测试覆盖率充分性（单元、集成、e2e）
+- 发布就绪：阻塞性缺陷、未测试的路径
+- 风险等级：SAFE / MONITOR / HOLD
+
+## 批准标准
+
+| 审查意见 | 条件 |
+|------|------|
+| APPROVE | 无 CRITICAL/HIGH 问题，仅需要小的改进 |
+| REQUEST CHANGES | 存在 CRITICAL 或 HIGH 问题 |
+| COMMENT | 仅有 LOW/MEDIUM 问题，无阻塞关注 |
+
+## 与其他智能体配合
+
+- **security-reviewer**：需要专业深度安全审计时
+- **test-engineer**：编写测试是 test-engineer 的责任
+- **executor**：修复实现传递给 executor
+- **architect**：需要架构级设计审查时
+
+## 参考
+
+| 项目 | 值 |
+|------|-----|
+| 模型 | opus |
+| 智能体类型 | `oh-my-claudecode:code-reviewer` |
+| 车道 | Review |
+| 只读 | 是（写入、编辑被阻止） |
+| 已弃用的名称 | `api-reviewer`、`performance-reviewer`、`quality-reviewer`、`quality-strategist` |

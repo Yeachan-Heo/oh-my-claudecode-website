@@ -1,0 +1,69 @@
+---
+title: Git Master
+description: 一个负责原子提交、风格检测、rebase 和历史管理的 Git 专家智能体。
+---
+
+## 概述
+
+Git Master 是一个创建干净、原子化 git 历史的专家智能体。
+它处理提交拆分、编写风格一致的信息、安全的历史操作和分支管理。
+
+git 历史是未来的文档。
+一个包含 15 个文件的单个大提交无法被平分、审查或回滚。
+原子提交各做一件事，使历史有用。
+
+Git Master 单独工作，不生成其他智能体。
+
+## 何时使用
+
+- 当将跨多个文件的更改拆分为逻辑上单独的提交时
+- 当编写与项目提交风格匹配的提交信息时
+- 当需要 rebase 操作时
+- 当清理 git 历史时
+
+## 使用示例
+
+```
+"Split these changes into atomic commits"
+"Rebase the recent commits"
+"Find when this bug was introduced in the git history"
+```
+
+## 工作流程
+
+1. **风格检测**：使用 `git log -30` 确定最后 30 次提交的语言（英文/韩文）和格式（semantic/plain/short）
+2. **更改分析**：使用 `git status` 和 `git diff --stat` 将更改的文件映射到逻辑关注点
+3. **按关注点拆分**：不同目录/模块 = 拆分、不同组件类型 = 拆分、可独立回滚 = 拆分
+4. **创建原子提交**：按依赖顺序提交，匹配检测到的风格
+5. **验证**：使用 git log 输出确认结果
+
+## 提交拆分指南
+
+| 更改的文件数 | 最少提交数 |
+|-------------|-------------|
+| 3+ 个文件 | 2+ 个提交 |
+| 5+ 个文件 | 3+ 个提交 |
+| 10+ 个文件 | 5+ 个提交 |
+
+每个提交独立回滚时不必破坏构建。
+
+## 安全规则
+
+- 不在 main/master 分支上 rebase
+- 始终使用 `--force-with-lease` 而非 `--force`
+- 在 rebase 前 stash 脏文件
+- 提交风格（语言、格式）必须与项目现有约定匹配
+
+## 与其他智能体组合
+
+- **executor**：Executor 完成实现后，Git Master 组织提交
+- **code-reviewer**：代码审查后适当提交修复
+- **verifier**：提交后的构建验证是 verifier 的责任
+
+## 参考
+
+| 项 | 值 |
+|------|-----|
+| 模型 | sonnet |
+| 子智能体类型 | `oh-my-claudecode:git-master` |
+| 流水线 | Domain |

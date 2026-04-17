@@ -1,0 +1,80 @@
+---
+title: Scientist
+description: 一个负责使用 Python 进行数据/统计分析和研究执行的智能体。
+---
+
+## 概述
+
+Scientist 是一个在 Python 中运行数据分析和研究任务并报告基于证据的发现的智能体。
+它处理数据加载/探索、统计分析、假设检验、可视化和报告生成。
+
+没有统计严谨性的数据分析会产生误导性结论。
+没有置信区间的发现是猜测、没有上下文的可视化会误导、
+不承认局限性的结论很危险。
+
+它是一个只读智能体 — Write/Edit 工具被阻止。
+分析结果和报告通过 python_repl 生成。
+
+## 何时使用
+
+- 当探索数据集和分析统计模式时
+- 当测试假设和报告结果时
+- 当生成可视化和编写报告时
+- 当分析性能基准数据时
+
+## 使用示例
+
+```
+"Analyze this CSV data"
+"Analyze the correlation between price and sales"
+"Statistically validate this A/B test result"
+```
+
+## 分析流程
+
+1. **设置**：验证 Python/包、创建工作目录（`.omc/scientist/`）、识别数据文件、说明目标 ([OBJECTIVE])
+2. **探索**：加载数据、检查形状/类型/缺失值、使用 `.head()`、`.describe()` 输出数据特征 ([DATA])
+3. **分析**：运行统计分析。对于每个见解，输出发现 ([FINDING]) 和统计 ([STAT:*])。假设驱动分析
+4. **合成**：总结发现、标记局限性 ([LIMITATION])、生成报告、清理
+
+## 输出标记
+
+Scientist 使用定义的标记。
+
+| 标记 | 目的 |
+|------|------|
+| `[OBJECTIVE]` | 分析目标 |
+| `[DATA]` | 数据特征 |
+| `[FINDING]` | 发现 |
+| `[STAT:ci]` | 置信区间 |
+| `[STAT:effect_size]` | 效应大小 |
+| `[STAT:p_value]` | p 值 |
+| `[STAT:n]` | 样本量 |
+| `[LIMITATION]` | 局限性/注意事项 |
+
+每个 `[FINDING]` 必须在 10 行内包括至少一个 `[STAT:*]` 证据。
+
+## 技术约束
+
+- 所有 Python 代码必须通过 `python_repl` 执行（无 Bash heredocs）
+- 无包安装 — 使用标准库替代或通知用户
+- 无打印整个 DataFrame — 使用 `.head()`、`.describe()`、聚合结果
+- 使用 matplotlib Agg 后端、`plt.savefig()` 必需（无 `plt.show()`）
+
+## 与其他智能体组合
+
+- **tracer**：与 tracer 结合进行数据驱动的因果追踪分析
+- **document-specialist**：外部研究材料查找由 document-specialist 处理
+- **architect**：当需要基于分析结果的架构决策时
+
+## 参考
+
+| 项 | 值 |
+|------|-----|
+| 模型 | sonnet |
+| 子智能体类型 | `oh-my-claudecode:scientist` |
+| 流水线 | Domain |
+| 只读 | 是（Write、Edit 被阻止） |
+| 层级变体 | `scientist-high` (opus) |
+| 输出路径 | `.omc/scientist/reports/`、`.omc/scientist/figures/` |
+| 技能集成 | `/oh-my-claudecode:sciomc` |

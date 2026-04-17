@@ -1,0 +1,65 @@
+---
+title: QA Tester
+description: 一个通过 tmux 会话交互验证 CLI/服务运行时行为的智能体。
+---
+
+## 概述
+
+QA Tester 是一个在 tmux 会话中交互验证实际应用行为的智能体。
+它处理启动服务、发送命令、捕获输出、验证预期和清理。
+
+单元测试验证代码逻辑，但 QA 测试验证实际行为。
+应用可以通过所有单元测试，但在实际运行时失败。
+通过 tmux 的交互测试捕获启动失败、集成问题和面向用户的错误。
+
+## 何时使用
+
+- 当自动化测试套件不覆盖相关行为时
+- 当需要交互式 CLI 输入/输出模拟时
+- 当需要服务启动/关闭测试时
+- 当需要流式/实时行为验证时
+
+### 何时不使用
+
+- 当项目有覆盖该特性的测试时（运行测试更高效）
+- 对于简单命令验证（直接执行更高效）
+- 对于静态代码分析（architect 更合适）
+
+## 使用示例
+
+```
+"Actually test that the API server responds correctly"
+"Validate the interactive features of this CLI tool"
+"Check the /health endpoint after service startup"
+```
+
+## 测试流程
+
+1. **前置条件检查**：验证 tmux 已安装、端口可用、目录存在。如果不满足则立即失败
+2. **设置**：创建具有唯一名称的 tmux 会话（`qa-{service}-{test}-{timestamp}`）、启动服务、等待就绪信号
+3. **执行**：发送测试命令、等待输出、使用 `tmux capture-pane` 捕获
+4. **验证**：将捕获的输出与预期模式进行比较。报告 PASS/FAIL
+5. **清理**：终止 tmux 会话并删除工件。即使失败也始终清理
+
+## 关键规则
+
+- **唯一会话名**：使用格式 `qa-{service}-{test}-{timestamp}`。不使用"test"等通用名称
+- **等待就绪**：服务启动后不立即发送命令。轮询输出模式或端口可用性
+- **先捕获输出**：在做出断言前始终运行 `tmux capture-pane`
+- **始终清理**：即使测试失败也始终终止会话。防止孤立进程
+- **适当延迟**：send-keys 和 capture-pane 之间需要短延迟
+
+## 与其他智能体组合
+
+- **architect**：Architect 诊断并输出测试计划；QA Tester 执行它（诊断-验证循环）
+- **debugger**：测试失败的根本原因分析是 debugger 的责任
+- **verifier**：自动化测试验证由 verifier 处理
+
+## 参考
+
+| 项 | 值 |
+|------|-----|
+| 模型 | sonnet |
+| 子智能体类型 | `oh-my-claudecode:qa-tester` |
+| 流水线 | Domain |
+| 所需工具 | tmux |

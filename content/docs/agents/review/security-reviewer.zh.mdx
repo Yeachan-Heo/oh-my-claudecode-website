@@ -1,0 +1,80 @@
+---
+title: Security Reviewer
+description: 一个基于 OWASP Top 10 检测和排序安全漏洞的智能体。
+---
+
+## 概览
+
+Security Reviewer 是一个智能体，在安全问题到达生产之前识别并排序安全漏洞。它执行 OWASP Top 10 分析、密钥检测、输入验证审查、身份验证/授权检查和依赖安全审计。
+
+安全问题在被利用之前是隐形的。审查中遗漏一个漏洞的成本比彻底检查的成本高许多倍。所有发现都根据"严重性 x 可利用性 x 影响范围"排序。
+
+这是一个只读智能体。
+
+## 何时使用
+
+- 添加新的 API 端点时
+- 身份验证/授权代码更改时
+- 用户输入处理逻辑更改时
+- 数据库查询被添加或修改时
+- 依赖被更新时
+- 支付相关代码更改时
+
+## 使用示例
+
+```
+"Review this PR for security vulnerabilities"
+"Security review the auth module"
+"security review"  # 魔法关键词自动激活
+```
+
+## 审查流程
+
+1. **范围识别**：识别正在审查的文件/组件和编程语言/框架
+2. **密钥扫描**：使用 api_key、password、secret、token 模式搜索硬编码的密钥
+3. **依赖审计**：运行适合该语言的工具，如 `npm audit`、`pip-audit`、`cargo audit`
+4. **OWASP Top 10 检查**：验证每个类别的相关模式
+5. **优先级排序**：按严重性 x 可利用性 x 影响范围排序
+6. **提供安全代码示例**：在同一编程语言中对比易受攻击的代码和安全代码
+
+## OWASP Top 10 检查清单
+
+| 代码 | 类别 | 检查 |
+|------|---------|----------|
+| A01 | Broken Access Control | 所有路由上的授权、CORS 配置 |
+| A02 | Cryptographic Failures | 强算法（AES-256、RSA-2048+）、密钥管理 |
+| A03 | Injection | 参数化查询、输入清理、输出转义 |
+| A04 | Insecure Design | 威胁建模、安全设计模式 |
+| A05 | Security Misconfiguration | 更改默认值、禁用调试、安全头 |
+| A06 | Vulnerable Components | 依赖审计、无 CRITICAL/HIGH CVEs |
+| A07 | Auth Failures | 强密码哈希（bcrypt/argon2）、JWT 验证 |
+| A08 | Integrity Failures | 签名更新、CI/CD 流水线验证 |
+| A09 | Logging Failures | 安全事件日志、监控 |
+| A10 | SSRF | URL 验证、出站请求白名单 |
+
+## 严重性定义
+
+| 等级 | 说明 | 响应时间 |
+|------|------|----------|
+| CRITICAL | 可利用的漏洞，影响严重（数据泄露、RCE） | 24 小时内 |
+| HIGH | 需要特定条件但影响严重 | 1 周内 |
+| MEDIUM | 影响有限或难以利用 | 1 个月内 |
+| LOW | 最佳实践违反或次要安全关注 | 待办事项 |
+
+暴露的密钥必须在发现时立即轮换（1 小时内）。
+
+## 与其他智能体配合
+
+- **code-reviewer**：代码质量和逻辑审查是 code-reviewer 的责任。专业安全审查由 security-reviewer 处理
+- **executor**：漏洞修复实现传递给 executor
+- **architect**：需要安全架构级设计审查时
+
+## 参考
+
+| 项目 | 值 |
+|------|-----|
+| 模型 | sonnet |
+| 智能体类型 | `oh-my-claudecode:security-reviewer` |
+| 车道 | Review |
+| 只读 | 是（写入、编辑被阻止） |
+| 等级变体 | `security-reviewer-low`（haiku） |

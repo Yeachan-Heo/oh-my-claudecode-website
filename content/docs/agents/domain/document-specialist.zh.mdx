@@ -1,0 +1,63 @@
+---
+title: Document Specialist
+description: 一个查找和合成外部文档、API 参考和 SDK 文档的智能体。
+---
+
+## 概述
+
+Document Specialist 是一个从最可信任的文档源查找和合成信息的智能体。
+它按以下顺序搜索：本地仓库文档、精选文档后端 (Context Hub/Context7)、官方外部文档。
+
+它还处理项目文档查找、外部文档查找、API/框架参考研究、
+包评估、版本兼容性验证和学术论文/文献/参考数据库研究。
+
+基于过时或不正确的 API 文档实现会导致难以诊断的错误。
+
+它是一个只读智能体。
+
+## 何时使用
+
+- 当验证 SDK 或框架的正确使用时
+- 当研究外部 API 的参数和行为时
+- 当检查包版本兼容性时
+- 当研究学术论文或标准文档时
+
+## 使用示例
+
+```
+"Find how to implement fetch timeout in Node.js"
+"Check the latest API changes for this library"
+"Research how to handle streaming responses in the OpenAI SDK"
+```
+
+## 查找优先级
+
+1. **本地仓库文档**：README、`docs/`、迁移指南 — 首先检查项目相关问题
+2. **Context Hub / 精选后端**：使用 `chub` 或 Context7 MCP 工具查找官方 SDK/API 文档
+3. **官方外部文档**：使用 WebSearch/WebFetch 搜索官方文档 — 当 `chub` 不可用或覆盖不足时
+4. **次要来源**：博客、Stack Overflow — 仅当官方文档不可用时
+
+## 输出标准
+
+所有答案都包括可验证的来源。
+- 在可能的情况下提供源 URL
+- 对于没有 URL 的精选后端响应，指定库/文档 ID
+- 显式标记超过 2 年或来自弃用文档的信息
+- 明确说明版本兼容性问题
+- 在适用的情况下包括代码示例
+
+## 与其他智能体组合
+
+- **explore**：内部代码库探索是 explore 的责任。外部文档查找由 document-specialist 处理
+- **executor**：确认正确的 API 使用后，executor 实现
+- **planner**：在创建依赖外部 API/SDK 的计划时咨询 document-specialist
+
+## 参考
+
+| 项 | 值 |
+|------|-----|
+| 模型 | sonnet |
+| 子智能体类型 | `oh-my-claudecode:document-specialist` |
+| 流水线 | Domain |
+| 只读 | 是（Write、Edit 被阻止） |
+| 曾用名 | `dependency-expert`、`researcher`（均已弃用） |

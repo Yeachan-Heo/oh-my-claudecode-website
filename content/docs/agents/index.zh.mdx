@@ -1,0 +1,128 @@
+---
+title: 智能体目录
+description: OMC 的 19 个专业智能体，按 4 个流水线分组。
+---
+
+## 智能体系统
+
+oh-my-claudecode 拥有 19 个专业智能体。
+每个智能体都有定义的角色，使用格式 `oh-my-claudecode:agent-name` 调用。
+
+编排器自动根据任务性质委托给相应的智能体，
+用户也可以直接指定智能体。
+
+## 4 流水线结构
+
+智能体按角色分为 4 个流水线。
+
+### 构建与分析
+
+涵盖从代码库探索到实现和验证的完整开发流程。
+
+| 智能体 | 默认模型 | 角色 |
+|----------|-----------|------|
+| [`explore`](/docs/agents/build-analysis/explore) | haiku | 代码库探索、文件/符号查找 |
+| [`analyst`](/docs/agents/build-analysis/analyst) | opus | 需求分析、验收标准定义 |
+| [`planner`](/docs/agents/build-analysis/planner) | opus | 任务排序、执行计划创建 |
+| [`architect`](/docs/agents/build-analysis/architect) | opus | 系统设计、边界、接口定义 |
+| [`debugger`](/docs/agents/build-analysis/debugger) | sonnet | 根本原因分析、构建错误解决 |
+| [`executor`](/docs/agents/build-analysis/executor) | sonnet | 代码实现、重构 |
+| [`verifier`](/docs/agents/build-analysis/verifier) | sonnet | 完成证据收集、声明验证 |
+| [`tracer`](/docs/agents/build-analysis/tracer) | sonnet | 基于证据的因果追踪、竞争假说 |
+
+### 审查
+
+审查代码质量和安全性。
+
+| 智能体 | 默认模型 | 角色 |
+|----------|-----------|------|
+| [`security-reviewer`](/docs/agents/review/security-reviewer) | sonnet | OWASP Top 10、认证/授权漏洞审查 |
+| [`code-reviewer`](/docs/agents/review/code-reviewer) | opus | 逻辑缺陷、API 约定、向后兼容性审查 |
+
+### 专业领域
+
+处理领域特定的专业任务。
+
+| 智能体 | 默认模型 | 角色 |
+|----------|-----------|------|
+| [`test-engineer`](/docs/agents/domain/test-engineer) | sonnet | 测试策略、覆盖率、TDD |
+| [`designer`](/docs/agents/domain/designer) | sonnet | UI/UX 架构、交互设计 |
+| [`writer`](/docs/agents/domain/writer) | haiku | 技术文档、README、API 文档 |
+| [`qa-tester`](/docs/agents/domain/qa-tester) | sonnet | CLI/服务运行时验证（tmux） |
+| [`scientist`](/docs/agents/domain/scientist) | sonnet | 数据/统计分析、研究执行 |
+| [`git-master`](/docs/agents/domain/git-master) | sonnet | 原子提交、变基、历史管理 |
+| [`document-specialist`](/docs/agents/domain/document-specialist) | sonnet | 外部文档/参考查找 |
+| [`code-simplifier`](/docs/agents/domain/code-simplifier) | opus | 代码清晰度和一致性改进 |
+
+### 协调
+
+对计划和设计应用批判性审查。
+
+| 智能体 | 默认模型 | 角色 |
+|----------|-----------|------|
+| [`critic`](/docs/agents/coordination/critic) | opus | 计划/设计的批判性审查、多角度分析 |
+
+## 模型层级
+
+每个智能体都有分配的默认模型层级，但可以在调用时使用 `model` 参数修改。
+
+| 层级 | 模型 | 特征 | 代表智能体 |
+|------|------|------|--------------|
+| 低 | haiku | 快速且便宜。适合简单查找 | explore、writer |
+| 中 | sonnet | 平衡性能。适合实现/调试 | executor、debugger、test-engineer |
+| 高 | opus | 顶级推理能力。适合设计/分析 | architect、planner、critic、code-reviewer |
+
+某些智能体支持层级变体。
+例如，`explore` 默认使用 haiku，但 `explore-high` 使用 opus 层级。
+
+## 智能体选择指南
+
+| 任务类型 | 推荐智能体 | 模型 |
+|-----------|-------------|------|
+| 快速代码查找 | `explore` | haiku |
+| 查找文件/模式 | `explore` | haiku |
+| 特性实现 | `executor` | sonnet |
+| 复杂重构 | `executor` (model=opus) | opus |
+| 简单错误修复 | `debugger` | sonnet |
+| 复杂调试 | `architect` | opus |
+| UI 组件 | `designer` | sonnet |
+| 编写文档 | `writer` | haiku |
+| SDK/API 文档查找 | `document-specialist` | sonnet |
+| 测试策略 | `test-engineer` | sonnet |
+| 安全审查 | `security-reviewer` | sonnet |
+| 代码审查 | `code-reviewer` | opus |
+| 数据分析 | `scientist` | sonnet |
+| 战略规划 | `planner` | opus |
+| 计划审查 | `critic` | opus |
+
+## 智能体工作流
+
+在典型任务中，智能体按以下顺序协作。
+
+```
+explore (发现)
+  → analyst (需求分析)
+    → planner (计划创建)
+      → critic (计划审查)
+        → executor (实现)
+          → verifier (验证)
+```
+
+每个流水线内各个智能体的详细描述见子页面。
+
+## 已弃用的智能体别名
+
+以下别名仍然保留用于向后兼容。
+
+| 别名 | 实际智能体 |
+|------|-------------|
+| `api-reviewer` | code-reviewer |
+| `performance-reviewer` | code-reviewer |
+| `quality-reviewer` | code-reviewer |
+| `quality-strategist` | code-reviewer |
+| `dependency-expert` | document-specialist |
+| `researcher` | document-specialist |
+| `tdd-guide` | test-engineer |
+| `deep-executor` | executor |
+| `build-fixer` | debugger |
+| `harsh-critic` | critic |
