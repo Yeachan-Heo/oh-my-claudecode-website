@@ -1,0 +1,760 @@
+---
+title: 指南
+description: OMC 实践使用的分步指导
+---
+
+## 实践指南
+
+一旦你理解了 OMC 的核心概念，是时候付诸实践了。
+
+### 推荐学习路径
+
+#### 初级
+
+1. [第一次 autopilot 会话](#什么是-autopilot) - 体验使用简单项目的 autopilot
+2. [创建自定义技能](#什么是自定义技能) - 注册你自己的技能
+3. [最佳实践](#模型成本优化) - 高效使用模式
+
+#### 中级
+
+1. [团队编排](#什么是团队模式) - 同时使用多个智能体
+2. [规划工作流](#为什么规划很重要) - 结构化规划
+3. [使用 OMC 调试](#omc-调试工具) - 追踪复杂 bug
+
+---
+
+## 什么是 Autopilot？
+
+Autopilot 是 OMC 的旗舰工作流 — 给它一个想法，它会自动生成成品代码。
+它按顺序运行一个 5 阶段流水线。
+
+### 运行 Autopilot
+
+在空目录中打开 Claude Code 并输入以下内容。
+
+```bash
+autopilot build me a todo CLI app
+```
+
+### 5 阶段流水线
+
+<Steps>
+
+### 扩展
+
+`analyst` 和 `architect` 智能体充实了"todo CLI app"的想法。
+
+- 收集功能需求 (添加、删除、列表、标记完成)
+- 生成技术规格 (Node.js CLI、JSON 文件存储等)
+- 输出：`.omc/autopilot/spec.md`
+
+### 规划
+
+`planner` 智能体创建实现计划。
+
+- 任务分解 (文件结构、每个功能的实现顺序)
+- `critic` 智能体审查计划并识别缺陷
+- 输出：`.omc/plans/autopilot-impl.md`
+
+### 执行
+
+`executor` 智能体根据计划编写代码。
+
+- 需要时多个 executor 并行工作
+- 在 `ralph` + `ultrawork` 模式下运行以继续直到完成
+
+### QA
+
+ultraqa 验证质量。
+
+- 检查构建是否成功
+- 检查测试是否通过
+- 自动修复失败并重新验证 (最多 5 次尝试)
+
+### 验证
+
+专业智能体从三个角度进行最终审查。
+
+| 验证类型 | 检查内容 |
+|----------------|-----------------|
+| 功能性 | 功能是否按规格工作 |
+| 安全性 | 是否存在安全漏洞 |
+| 质量 | 代码质量是否足够 |
+
+所有必须收到 `APPROVED` 以完成任务。
+如果返回 `REJECTED` 或 `NEEDS_FIX`，进行修复并重新验证 (最多 3 轮)。
+
+</Steps>
+
+### 监控进度
+
+#### HUD 状态栏
+
+```
+[OMC] autopilot:planning | agents:2 | todos:1/4 | ctx:32%
+```
+
+#### 检查状态文件
+
+autopilot 的当前状态可在这些文件中获得。
+
+```bash
+# 状态文件
+.omc/state/autopilot-state.json
+
+# 规格文档
+.omc/autopilot/spec.md
+
+# 执行计划
+.omc/plans/autopilot-impl.md
+```
+
+### Autopilot 配置选项
+
+你可以微调 autopilot 行为。
+
+| 选项 | 默认值 | 描述 |
+|--------|---------|-------------|
+| `maxIterations` | 10 | 最大迭代次数 |
+| `maxQaCycles` | 5 | QA 重试尝试次数 |
+| `maxValidationRounds` | 3 | 最终验证轮数 |
+| `parallelExecutors` | 5 | 并行 executor 智能体数量 |
+| `pauseAfterExpansion` | false | 扩展阶段后暂停 |
+| `pauseAfterPlanning` | false | 规划阶段后暂停 |
+| `skipQa` | false | 跳过 QA 阶段 |
+| `skipValidation` | false | 跳过验证阶段 |
+
+### 取消 Autopilot
+
+要在 autopilot 运行时停止它，输入以下任一内容。
+
+```bash
+cancelomc
+# 或
+/oh-my-claudecode:cancel
+```
+
+取消时的进度会被保留，所以你可以稍后恢复。
+
+---
+
+## 什么是团队模式？
+
+团队模式是一个协作系统，同时运行多个 Claude 智能体以实现单一目标。
+它适合难以用单个智能体处理的大规模任务。
+
+### 基本用法
+
+```bash
+# 在 3 个 executor 智能体中分配工作
+/oh-my-claudecode:team 3:executor "implement a full-stack todo app"
+
+# 也可以作为 CLI 命令运行
+omc team 2:executor "implement API endpoints"
+```
+
+格式：`N:agent-type "task description"`
+
+- `N`：智能体数量 (建议 2–5 个)
+- `agent-type`：要使用的智能体 (executor、codex、gemini 等)
+
+### 团队流水线
+
+团队模式通过 5 阶段流水线运行。
+
+<Steps>
+
+### team-plan
+
+`explore` 和 `planner` 智能体分析任务并创建计划。
+`analyst` 或 `architect` 也可能根据需要参与。
+
+### team-prd
+
+`analyst` 智能体详细定义需求。
+`critic` 审查需求的缺陷。
+
+### team-exec
+
+`executor` 智能体并行实现代码。
+根据需要调入 `designer`、`writer` 和 `test-engineer` 等专家智能体。
+
+### team-verify
+
+`verifier` 和审查器智能体验证结果。
+
+### team-fix
+
+验证期间发现的问题被修复。
+根据问题类型调入 `executor`、`debugger` 等。
+重复直到问题解决 (受最大尝试次数限制)。
+
+</Steps>
+
+### 团队状态管理
+
+```bash
+# 检查团队状态
+omc team status <team-name>
+
+# 强制关闭团队
+omc team shutdown <team-name> --force
+```
+
+### team ralph
+
+`team ralph` 结合团队模式和 ralph 模式。
+它重复运行团队流水线，不停止直到验证器确认所有任务完成。
+
+```bash
+# 结合 team + ralph
+team ralph 3:executor "implement the full authentication system"
+```
+
+取消任一模式也会取消另一个。
+
+### 智能体类型用例
+
+| 智能体类型 | 用例 |
+|-----------|----------|
+| `executor` | 功能实现、重构 |
+| `codex` | 通过 OpenAI Codex 实现 |
+| `gemini` | 通过 Google Gemini 实现 |
+
+### 团队模式 vs Autopilot
+
+| 方面 | autopilot | team |
+|--------|-----------|------|
+| 自动化级别 | 完全自动 (5 个阶段) | 半自动 (需要方向) |
+| 智能体数量 | 自动确定 | 由用户指定 |
+| 规划 | 自动包含 | 作为单独阶段包含 |
+| 最适用于 | 端到端自动执行 | 特定阶段的并行处理 |
+
+### 注意事项
+
+<Callout type="warn">
+团队模式同时运行多个智能体，所以 token 成本很高。对于简单任务，单个智能体更高效。
+</Callout>
+
+---
+
+## 为什么规划很重要
+
+在复杂任务上直接跳到执行很容易迷失方向。
+OMC 支持分步规划以保持工作有序。
+
+### 选择规划工作流
+
+| 工作流 | 最适用于 | 成本 |
+|----------|----------|------|
+| `/plan` | 需要快速计划时 | 低 |
+| `/ralplan` | 需要多个角度的共识时 | 中 |
+| `autopilot` | 想要从规划到执行自动化时 | 高 |
+
+### /plan (基础规划)
+
+最简单的计划创建方式。
+
+```bash
+/oh-my-claudecode:omc-plan "refactor the authentication system"
+```
+
+`planner` 智能体分析任务并生成执行计划。
+
+#### 选项
+
+```bash
+# 基于共识的计划 (与 ralplan 相同)
+/oh-my-claudecode:omc-plan --consensus "refactor the authentication system"
+
+# 审查现有计划
+/oh-my-claudecode:omc-plan --review "analyze problems with the current plan"
+```
+
+### /ralplan (基于共识的规划)
+
+一个规划过程，其中规划器、架构师和批评者迭代直到达成共识。
+
+```bash
+ralplan this feature
+# 或
+/oh-my-claudecode:ralplan "design the payment system"
+```
+
+#### 共识过程
+
+```
+规划器 (创建计划)
+    ↓
+架构师 (技术审查)
+    ↓
+批评者 (缺陷分析)
+    ↓
+达成共识? → 否 → 回到规划器
+    ↓ 是
+最终计划确认
+```
+
+#### 高风险模式 (--deliberate)
+
+对于关键项目，使用 `--deliberate` 选项进行更彻底的审议。
+
+```bash
+/oh-my-claudecode:ralplan --deliberate "production database migration"
+```
+
+与默认模式的区别：
+
+| 方面 | 默认模式 | --deliberate |
+|--------|-------------|-------------|
+| 预分析 | 无 | 包含前期分析 |
+| 测试规划 | 基础 | 单元/集成/E2E/可观察性测试 |
+| 迭代 | 简短审议 | 扩展审议 |
+
+### 从规划到执行
+
+从规划过渡到执行的方式。
+
+#### 选项 1：手动执行
+
+```bash
+# 1. 创建计划
+ralplan "API refactoring"
+
+# 2. 审查计划，然后手动执行
+ultrawork implement the plan in .omc/plans/
+```
+
+#### 选项 2：autopilot (自动过渡)
+
+autopilot 自动从规划阶段过渡到执行阶段。
+
+```bash
+autopilot refactor the authentication system
+```
+
+#### 选项 3：技能流水线
+
+技能支持到下一个技能的移交。
+
+```
+deep-interview → omc-plan → autopilot
+```
+
+在 deep-interview 中澄清需求，使用 omc-plan 创建计划，然后使用 autopilot 执行。
+
+### 计划文件位置
+
+| 文件 | 用途 |
+|------|---------|
+| `.omc/plans/autopilot-impl.md` | autopilot 执行计划 |
+| `.omc/autopilot/spec.md` | autopilot 需求规格 |
+| `.omc/plans/*.md` | 其他计划文件 |
+
+<Callout type="info">
+计划文件被视为只读。小心不要让智能体直接修改计划文件。
+</Callout>
+
+---
+
+## 什么是自定义技能？
+
+除了 OMC 的内置技能，你还可以创建和注册自己的技能。
+将重复的任务模式转化为技能，这样它们可以用单个命令执行。
+
+### 技能结构
+
+技能由单个 `SKILL.md` 文件定义。
+
+```
+~/.claude/skills/
+└── my-skill/
+    └── SKILL.md
+```
+
+#### 编写 SKILL.md
+
+```markdown
+---
+name: my-skill
+description: 我的自定义技能的描述
+trigger: "my-skill"
+---
+
+# 我的技能
+
+## 此技能的作用
+
+在此处详细描述技能的行为。
+Claude 读取此提示并根据说明行动。
+
+## 执行步骤
+
+1. 第一步
+2. 第二步
+3. 第三步
+
+## 规则
+
+- 必须遵循的规则
+- 禁止做的事
+```
+
+#### Frontmatter 字段
+
+| 字段 | 必需 | 描述 |
+|-------|----------|-------------|
+| `name` | 必需 | 技能名称 (在斜杠命令中使用) |
+| `description` | 必需 | 技能的简短描述 |
+| `trigger` | 可选 | 魔法关键词触发 |
+
+#### 流水线元数据 (高级)
+
+你可以定义技能之间的过渡。
+
+```yaml
+---
+name: my-interview
+pipeline: [my-interview, omc-plan, autopilot]
+next-skill: omc-plan
+next-skill-args: --consensus --direct
+handoff: .omc/specs/my-interview-{slug}.md
+---
+```
+
+| 字段 | 描述 |
+|-------|-------------|
+| `pipeline` | 技能执行顺序 |
+| `next-skill` | 下一个要调用的技能 |
+| `next-skill-args` | 传递给下一个技能的参数 |
+| `handoff` | 传递给下一个技能的工件路径 |
+
+### 技能管理命令
+
+使用 `/oh-my-claudecode:skill` 命令管理技能。
+
+```bash
+# 列出已安装的技能
+/oh-my-claudecode:skill list
+
+# 添加新技能
+/oh-my-claudecode:skill add
+
+# 移除技能
+/oh-my-claudecode:skill remove my-skill
+
+# 搜索技能
+/oh-my-claudecode:skill search "deploy"
+
+# 编辑技能
+/oh-my-claudecode:skill edit my-skill
+```
+
+### 使用 learner 自动提取技能
+
+你可以自动从当前会话中提取重复的任务模式作为技能。
+
+```bash
+/oh-my-claudecode:learner
+```
+
+如果 learner 在当前对话中发现可复用模式，它会为你生成一个 `SKILL.md`。
+
+### 技能存储位置
+
+| 位置 | 范围 |
+|----------|-------|
+| `~/.claude/skills/` | 在所有项目中可用 |
+| `.claude/skills/` | 仅在当前项目中可用 |
+
+### 编写技能的提示
+
+1. 具体列出执行步骤
+2. 清晰说明禁止执行的操作
+3. 包含输入和输出示例可以提高准确性
+4. 如果需要特定智能体，明确说明
+
+```markdown
+## 执行步骤
+
+1. 使用 `explore` 智能体查找相关文件
+2. 使用 `executor` 智能体实现更改
+3. 使用 `verifier` 智能体验证结果
+```
+
+---
+
+## OMC 调试工具
+
+OMC 为调试提供多个专业智能体。
+
+| 智能体 | 角色 | 模型 |
+|-------|------|-------|
+| `debugger` | 根本原因分析、构建错误修复 | sonnet |
+| `tracer` | 基于证据的因果追踪 | sonnet |
+| `architect` | 系统级设计分析 | opus |
+| `qa-tester` | 通过 tmux 的运行时验证 | sonnet |
+
+### 快速调试
+
+对于简单错误，使用魔法关键词立即开始分析。
+
+```bash
+analyze why this test is failing
+```
+
+`analyze` 关键词直接调用 `debugger` 智能体。
+
+### /trace 技能：基于证据的追踪
+
+对于复杂 bug，使用 `/trace` 技能。
+多个 tracer 智能体并行工作，形成假设并收集证据。
+
+```bash
+/oh-my-claudecode:trace
+```
+
+#### trace 工作流
+
+```
+观察问题
+    ↓
+假设 1 ──→ tracer A (收集证据)
+假设 2 ──→ tracer B (收集证据)
+假设 3 ──→ tracer C (收集证据)
+    ↓
+合成证据 → 识别根本原因
+    ↓
+修复并验证
+```
+
+每个 tracer 独立验证其假设同时收集证据。
+收集支持和反驳证据后，识别最可能的原因。
+
+### Architect + QA-Tester 循环
+
+调试 CLI 应用或服务中的 bug 的有用模式。
+
+<Steps>
+
+### architect 诊断问题
+
+架构师智能体分析代码并识别根本原因。
+它输出具体的测试计划 (要运行的命令和预期结果)。
+
+### qa-tester 验证
+
+qa-tester 智能体在 tmux 中执行测试计划。
+它捕获实际输出。
+
+### 比较结果
+
+比较预期结果和实际结果。
+如果不匹配，向 architect 请求进一步分析。
+
+### 重复
+
+重复直到问题解决。
+
+</Steps>
+
+### 验证优先级
+
+调试后验证修复时，从成本最低的方法开始。
+
+| 优先级 | 验证方法 | 成本 | 何时使用 |
+|----------|-------------------|------|-------------|
+| 1 | 运行现有测试 | 低 | 项目有测试套件时 |
+| 2 | 直接运行命令 (curl 等) | 低 | 进行简单行为检查时 |
+| 3 | qa-tester (tmux) | 高 | 仅当需要交互式验证时 |
+
+<Callout type="info">
+qa-tester 在 tmux 会话中运行真实服务，所以 token 成本很高。如果项目有测试，首先运行这些。
+</Callout>
+
+### 修复构建错误
+
+构建错误和类型错误由 `debugger` 智能体处理。
+
+```bash
+# 使用魔法关键词调用
+analyze fix the build errors
+
+# 使用快速命令
+build-fix
+```
+
+`debugger` 智能体的操作：
+
+1. 分析错误消息
+2. 识别根本原因
+3. 应用修复
+4. 重新运行构建以验证
+
+### 调试组合示例
+
+#### 测试失败
+
+```bash
+# 1. 分析失败原因
+analyze why test_auth.py is failing
+
+# 2. 如需要收集证据
+/oh-my-claudecode:trace
+
+# 3. 修复并验证
+tdd: fix the failing test
+```
+
+#### 生产问题
+
+```bash
+# 1. 深度分析
+deep-analyze the memory leak in the worker process
+
+# 2. 基于证据的追踪
+/oh-my-claudecode:trace
+
+# 3. 修复并审查
+ralph: fix the memory leak and add regression tests
+```
+
+---
+
+## 模型成本优化
+
+OMC 使用三个模型层级。选择正确的层级可以显著降低成本。
+
+### Haiku 优先原则
+
+默认从最轻模型 (haiku) 开始每个任务，仅在需要时升级到更重模型。
+
+| 任务类型 | 推荐模型 | 理由 |
+|-----------|-------------------|--------|
+| 文件搜索、代码查询 | haiku | 搜索是简单任务 |
+| 文档 | haiku | 结构化文本生成 |
+| 通用代码实现 | sonnet | 优秀的质量成本比 |
+| 调试 | sonnet | 需要代码理解 |
+| 架构设计 | opus | 需要深度推理 |
+| 安全审查 | opus | 需要穷尽分析 |
+
+### 高成本操作
+
+- `team` 模式：同时运行多个智能体
+- `ralph` 模式：循环直到完成
+- `autopilot`：完整 5 阶段流水线
+- `qa-tester`：基于 tmux 会话的验证
+
+<Callout type="warn">
+对简单任务使用 autopilot 或团队模式会浪费 token。选择与任务规模相匹配的工具。
+</Callout>
+
+### 智能体组合模式
+
+#### 标准开发流程
+
+```
+explore → planner → executor → verifier
+```
+
+最基础的流程。按顺序进行探索、规划、实现和验证。
+
+#### 深度分析然后实现
+
+```
+analyst → architect → planner → critic → executor → verifier
+```
+
+对于复杂项目，在实现前充分分析需求。
+
+#### 调试循环
+
+```
+debugger → architect → qa-tester → (重复)
+```
+
+在根本原因分析、系统级审查和运行时验证之间迭代。
+
+#### 代码审查流水线
+
+```
+code-reviewer → security-reviewer → executor (修复)
+```
+
+审查代码质量和安全性，然后修复发现的任何问题。
+
+### 验证策略
+
+#### 验证必须始终基于证据
+
+在声明完成前始终检查实际命令输出。
+
+| 验证类型 | 方法 |
+|-------------------|--------|
+| BUILD | 运行构建命令、确认成功 |
+| TEST | 运行测试、确认全部通过 |
+| LINT | 运行 linter、确认无错误 |
+| FUNCTIONALITY | 确认功能按意图工作 |
+
+#### 验证成本优化
+
+1. 运行现有测试 (成本最低) — 如果项目有测试，首先运行这些
+2. 直接命令 (成本低) — 使用 curl、CLI 命令的快速检查
+3. qa-tester (成本高) — 仅当上述方法不足时
+
+### 反模式
+
+#### 过度使用 qa-tester
+
+当项目已有测试套件时使用 qa-tester 很浪费。
+
+```bash
+# 不好：当测试存在时使用 qa-tester
+qa-tester verify the login feature
+
+# 好：运行现有测试
+npm test -- --grep "login"
+```
+
+#### 未验证声明完成
+
+当智能体说"完成"时，不要立即继续。
+始终先检查构建/测试结果。
+
+#### 为简单任务使用重型模式
+
+```bash
+# 不好：为单个文件编辑使用 autopilot
+autopilot fix the typo in README.md
+
+# 好：直接编辑请求
+Fix the typo in README.md
+```
+
+#### 为所有事情使用 opus
+
+```jsonc
+// 不好：将所有智能体设置为 opus
+{
+  "agents": {
+    "explore": { "model": "opus" },
+    "writer": { "model": "opus" },
+    "executor": { "model": "opus" }
+  }
+}
+
+// 好：保持默认，仅在需要处更改
+{
+  "agents": {
+    "executor": { "model": "opus" }  // 仅用于复杂项目
+  }
+}
+```
+
+### 常规提示
+
+1. 从小处开始 — 从单个智能体开始，需要时扩展到团队或 autopilot
+2. 首先规划 — 在执行复杂任务前使用 `/plan` 或 `ralplan` 进行规划
+3. 使用记事本 — 使用 `/note` 保存重要信息以幸存上下文压缩
+4. 监控状态 — 使用 HUD 或状态文件追踪当前进度
+5. 知道何时取消 — 使用 `cancelomc` 快速停止不必要的工作

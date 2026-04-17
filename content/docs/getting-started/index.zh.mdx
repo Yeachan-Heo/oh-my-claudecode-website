@@ -1,0 +1,340 @@
+---
+title: 快速开始
+description: 从安装到第一次会话，快速上手 Oh My ClaudeCode (OMC)
+---
+
+## 概览
+
+如果你是 Oh My ClaudeCode (OMC) 的新用户，请按顺序执行以下步骤。
+
+1. [安装](#安装) - 安装 OMC 插件并运行初始设置
+2. [第一次会话](#第一次会话) - 使用 autopilot 运行你的第一个任务
+3. [配置](#配置) - 按项目设置和智能体模型自定义
+
+### 前置条件
+
+| 要求 | 详情 |
+|-------------|---------|
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | 必须安装 |
+| 身份验证 | Claude Max/Pro 订阅或 `ANTHROPIC_API_KEY` 环境变量 |
+
+---
+
+## 安装
+
+OMC 只能作为 Claude Code 插件安装。
+不支持通过 npm 或 bun 直接安装。
+
+### 添加 Marketplace
+
+在 Claude Code 内运行以下命令。
+
+```bash
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+```
+
+### 安装插件
+
+添加 marketplace 后，安装插件。
+
+```bash
+/plugin install oh-my-claudecode
+```
+
+### 运行初始设置
+
+安装后，在 Claude Code 中输入以下任一命令。
+
+```bash
+# 选项 1: 自然语言
+setup omc
+
+# 选项 2: 技能命令
+/oh-my-claudecode:omc-setup
+```
+
+不带参数运行会启动交互式向导。你也可以直接指定范围。
+
+| 范围 | 命令 | 配置位置 |
+|-------|---------|-----------------|
+| 按项目 | `/oh-my-claudecode:omc-setup --local` | `./.claude/CLAUDE.md` |
+| 全局 | `/oh-my-claudecode:omc-setup --global` | `~/.claude/CLAUDE.md` |
+
+<Callout type="warn">
+全局设置会覆盖你现有的 `~/.claude/CLAUDE.md` 文件。如果你已经在那里有配置，请使用 `--local`。
+</Callout>
+
+### 验证安装
+
+使用诊断工具确认安装正常工作。
+
+```bash
+/oh-my-claudecode:omc-doctor
+```
+
+### 更新
+
+OMC 每 24 小时自动检查一次更新。
+要手动更新，重新运行插件安装命令。
+
+<Callout type="info">
+插件更新后，建议重新运行 `/oh-my-claudecode:omc-setup` 以应用最新配置。
+</Callout>
+
+### 卸载
+
+```bash
+/plugin uninstall oh-my-claudecode@oh-my-claudecode
+```
+
+---
+
+## 第一次会话
+
+安装 OMC 后，立即运行你的第一个任务。
+
+`autopilot` 是 OMC 的旗舰技能。给它一个想法，它会自动运行完整的开发流水线 — 从分析和代码编写到测试和验证。
+
+打开 Claude Code 并输入以下内容。
+
+```bash
+autopilot build me a hello world app
+```
+
+当 OMC 检测到 `autopilot` 关键词时，它启动一个 5 阶段流水线。
+
+<Steps>
+
+### 扩展
+
+`analyst` 和 `architect` 智能体分析你的想法。
+他们收集需求并生成技术规格说明。
+
+### 规划
+
+`planner` 智能体创建执行计划。
+`critic` 智能体审查计划并识别缺陷。
+
+### 执行
+
+`executor` 智能体根据计划编写代码。
+需要时，多个智能体并行工作。
+
+### QA
+
+验证构建成功且测试通过。
+自动修复失败并重新验证。
+
+### 验证
+
+专业智能体从三个角度进行最终审查。
+一旦所有检查通过，任务完成。
+
+</Steps>
+
+### HUD 状态显示
+
+任务运行时，你可以在 Claude Code 的状态栏 (HUD) 中监控当前状态。
+
+```
+[OMC] autopilot:execution | agents:3 | todos:2/5 | ctx:45%
+```
+
+| 字段 | 含义 |
+|-------|---------|
+| `autopilot:execution` | autopilot 流水线的当前阶段 |
+| `agents:3` | 当前活跃智能体数量 |
+| `todos:2/5` | 完成的任务 / 总任务数 |
+| `ctx:45%` | 上下文窗口使用率 |
+
+要更改 HUD 设置，运行：
+
+```bash
+/oh-my-claudecode:hud setup
+```
+
+---
+
+## 配置
+
+OMC 支持两个级别的配置文件。
+
+| 范围 | 文件路径 | 用途 |
+|-------|-----------|---------|
+| 用户 (全局) | `~/.config/claude-omc/config.jsonc` | 适用于所有项目 |
+| 项目 | `.claude/omc.jsonc` | 仅适用于当前项目 |
+
+<Callout type="warn">
+配置文件格式是 JSONC (带注释的 JSON)。它不是 TypeScript 配置文件 (omc.config.ts)。
+</Callout>
+
+### 配置优先级
+
+当设置来自多个源时，它们按以下顺序合并。较低的条目具有更高的优先级。
+
+```
+默认值 → 用户配置 (~/.config/claude-omc/config.jsonc)
+       → 项目配置 (.claude/omc.jsonc)
+       → 环境变量
+```
+
+### 基础配置结构
+
+```jsonc
+{
+  // 按智能体模型设置
+  "agents": {
+    "explore": { "model": "haiku" },
+    "executor": { "model": "sonnet" },
+    "architect": { "model": "opus" }
+  },
+
+  // 功能开关
+  "features": {
+    "parallelExecution": true,
+    "lspTools": true,
+    "astTools": true,
+    "continuationEnforcement": true,
+    "autoContextInjection": true
+  },
+
+  // MCP 服务器设置
+  "mcpServers": {
+    "exa": { "enabled": true },
+    "context7": { "enabled": true }
+  },
+
+  // 权限设置
+  "permissions": {
+    "allowBash": true,
+    "allowEdit": true,
+    "allowWrite": true,
+    "maxBackgroundTasks": 5
+  },
+
+  // 魔法关键词自定义
+  "magicKeywords": {
+    "ultrawork": ["ultrawork", "ulw", "uw"],
+    "search": ["search", "find", "locate"],
+    "analyze": ["analyze", "investigate", "examine"],
+    "ultrathink": ["ultrathink", "think", "reason", "ponder"]
+  },
+
+  // 外部模型设置 (可选)
+  "externalModels": {
+    "defaults": {
+      "codexModel": "gpt-5.3-codex",
+      "geminiModel": "gemini-3.1-pro-preview"
+    }
+  }
+}
+```
+
+### 智能体模型覆盖
+
+你可以改变每个智能体使用的 AI 模型。
+
+```jsonc
+{
+  "agents": {
+    // 将 explore 智能体升级到更强大的模型
+    "explore": { "model": "sonnet" },
+
+    // 将 executor 升级到 opus (用于复杂项目)
+    "executor": { "model": "opus" },
+
+    // 成本节省：为文档编写使用 haiku
+    "writer": { "model": "haiku" }
+  }
+}
+```
+
+#### 默认模型映射
+
+| 智能体 | 默认模型 | 角色 |
+|-------|---------------|------|
+| `explore` | haiku | 代码库探索 |
+| `writer` | haiku | 文档编写 |
+| `executor` | sonnet | 代码实现 |
+| `debugger` | sonnet | 调试 |
+| `designer` | sonnet | UI/UX 设计 |
+| `verifier` | sonnet | 验证 |
+| `securityReviewer` | sonnet | 安全审查 |
+| `testEngineer` | sonnet | 测试策略 |
+| `qaTester` | sonnet | QA 测试 |
+| `scientist` | sonnet | 数据分析 |
+| `tracer` | sonnet | 因果追踪 |
+| `gitMaster` | sonnet | Git 管理 |
+| `documentSpecialist` | sonnet | 外部文档查询 |
+| `omc` | opus | 主编排器 |
+| `analyst` | opus | 需求分析 |
+| `architect` | opus | 系统设计 |
+| `planner` | opus | 战略规划 |
+| `critic` | opus | 计划审查 |
+| `codeReviewer` | opus | 代码审查 |
+| `codeSimplifier` | opus | 代码简化 |
+
+### 魔法关键词自定义
+
+你可以通过 `config.jsonc` 的 `magicKeywords` 部分自定义 4 个类别中的关键词。
+
+```jsonc
+{
+  "magicKeywords": {
+    // 触发并行执行模式
+    "ultrawork": ["ultrawork", "ulw", "parallel"],
+
+    // 触发代码库搜索模式
+    "search": ["search", "find", "locate", "grep"],
+
+    // 触发分析模式
+    "analyze": ["analyze", "debug", "investigate"],
+
+    // 触发深度推理模式
+    "ultrathink": ["ultrathink", "think", "reason", "ponder"]
+  }
+}
+```
+
+<Callout type="info">
+`config.jsonc` 中的 `magicKeywords` 只能更改 4 个类别 (ultrawork、search、analyze、ultrathink)。`autopilot`、`ralph` 和 `ccg` 等关键词在关键词检测钩子中是硬编码的，不能通过配置文件更改。
+</Callout>
+
+### 模型路由配置
+
+OMC 根据任务复杂度自动选择模型层级。
+
+```jsonc
+{
+  "routing": {
+    "enabled": true,
+    "defaultTier": "MEDIUM",
+    // 强制所有智能体继承父模型
+    // (使用 CC Switch、Bedrock 或 Vertex AI 时自动启用)
+    "forceInherit": false
+  }
+}
+```
+
+| 层级 | 模型 | 用例 |
+|------|-------|----------|
+| LOW | haiku | 快速查询、简单任务 |
+| MEDIUM | sonnet | 标准实现、通用任务 |
+| HIGH | opus | 架构、深度分析 |
+
+### CLAUDE.md 配置
+
+OMC 的默认行为也通过 `CLAUDE.md` 文件配置。
+运行 `/oh-my-claudecode:omc-setup` 会自动生成此文件。
+
+| 范围 | 文件 | 描述 |
+|-------|------|-------------|
+| 全局 | `~/.claude/CLAUDE.md` | 所有项目的通用设置 |
+| 项目 | `.claude/CLAUDE.md` | 项目特定的上下文 |
+
+### 何时重新运行设置
+
+- 初始安装后
+- OMC 更新后 (应用最新配置)
+- 在新机器上使用 OMC 时
+- 启动新项目时 (使用 `--local` 选项)

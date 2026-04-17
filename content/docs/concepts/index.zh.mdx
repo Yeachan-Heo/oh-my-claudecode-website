@@ -1,0 +1,602 @@
+---
+title: 核心概念
+description: 了解 OMC 中的智能体、技能、钩子和状态管理系统如何协作
+---
+
+## OMC 构建块
+
+OMC 运行在四个系统之上。
+
+<Mermaid chart={`
+graph TD
+    A["用户输入"] --> B["钩子\n事件检测"]
+    B --> C["技能\n行为注入"]
+    C --> D["智能体\n专业任务执行"]
+    D --> E["状态\n进度追踪"]
+`} />
+
+### 每个概念的总结
+
+#### 智能体
+
+19 个专业智能体根据其角色执行任务。
+每个智能体使用适当的 AI 模型 (haiku、sonnet 或 opus)。
+
+示例：`explore` (发现)、`executor` (实现)、`architect` (设计)、`verifier` (验证)
+
+#### 技能
+
+37 个技能组合并扩展智能体的行为方式。
+它们通过斜杠命令 (`/oh-my-claudecode:skill-name`) 或魔法关键词激活。
+
+示例：`autopilot` (自主执行)、`ralph` (循环直到完成)、`team` (并行协作)
+
+#### 钩子
+
+对 Claude Code 生命周期事件做出反应以激活技能和智能体。
+当用户提交提示、使用工具或会话启动或结束时触发。
+
+#### 状态管理
+
+将任务进度、笔记和项目知识存储在 `.omc/` 目录中。
+即使发生上下文压缩，重要信息也会被保留。
+
+---
+
+## 什么是智能体？
+
+智能体是针对特定角色专业化的 AI 工作者。
+OMC 将其 19 个智能体组织成 4 个通道。
+
+每个智能体使用 `oh-my-claudecode:agent-name` 格式调用。
+
+### 构建/分析通道
+
+处理整个开发流程 — 从探索到验证。
+
+| 智能体 | 默认模型 | 角色 |
+|-------|---------------|------|
+| `explore` | haiku | 代码库探索、文件和模式发现 |
+| `analyst` | opus | 需求分析、发现隐藏的约束 |
+| `planner` | opus | 任务排序、执行规划 |
+| `architect` | opus | 系统设计、接口定义、权衡分析 |
+| `debugger` | sonnet | 根本原因分析、构建错误修复 |
+| `executor` | sonnet | 代码实现、重构 |
+| `verifier` | sonnet | 完成验证、测试充分性检查 |
+| `tracer` | sonnet | 基于证据的因果追踪、假设竞争 |
+
+### 审查通道
+
+代码移交前的质量门槛。捕捉质量和安全问题。
+
+| 智能体 | 默认模型 | 角色 |
+|-------|---------------|------|
+| `security-reviewer` | sonnet | 安全漏洞、信任边界、认证/授权 |
+| `code-reviewer` | opus | 全面代码审查、API 契约、向后兼容性 |
+
+### 领域通道
+
+根据需要调用的领域专家。
+
+| 智能体 | 默认模型 | 角色 |
+|-------|---------------|------|
+| `test-engineer` | sonnet | 测试策略、覆盖率、不稳定测试硬化 |
+| `designer` | sonnet | UI/UX 架构、交互设计 |
+| `writer` | haiku | 文档、迁移说明 |
+| `qa-tester` | sonnet | CLI/服务运行时验证 (通过 tmux) |
+| `scientist` | sonnet | 数据分析、统计研究 |
+| `git-master` | sonnet | Git 操作、提交、变基、历史管理 |
+| `document-specialist` | sonnet | 外部文档、API 和 SDK 参考查询 |
+| `code-simplifier` | opus | 代码清晰度、简化、可维护性改进 |
+
+### 协调通道
+
+质疑其他智能体做出的计划。如果未发现缺陷，计划通过。
+
+| 智能体 | 默认模型 | 角色 |
+|-------|---------------|------|
+| `critic` | opus | 计划和设计的缺陷分析、多角度审查 |
+
+### 模型路由
+
+OMC 使用三个模型层级。
+
+| 层级 | 模型 | 特征 | 成本 |
+|------|-------|-----------------|------|
+| LOW | haiku | 快速且便宜 | 低 |
+| MEDIUM | sonnet | 性能和成本的平衡 | 中 |
+| HIGH | opus | 最高级别的推理 | 高 |
+
+默认层级因智能体而异。
+
+- haiku：快速查询和简单任务 (explore、writer)
+- sonnet：代码实现、调试、测试 (executor、debugger、test-engineer)
+- opus：架构、战略分析、审查 (architect、planner、critic、code-reviewer)
+
+### 委派规则
+
+OMC 编排器根据任务类型委派给适当的智能体。
+
+#### 何时委派给智能体
+
+- 需要更改多个文件时
+- 需要重构时
+- 需要调试或根本原因分析时
+- 需要代码审查或安全审查时
+- 需要规划或研究时
+
+#### 何时直接处理
+
+- 简单的文件查询
+- 直接的问题回答
+- 单行命令执行
+
+### 示例智能体工作流
+
+典型的任务流如下所示。
+
+<Mermaid chart={`
+graph LR
+    A["explore\n发现"] --> B["analyst\n需求"]
+    B --> C["planner\n规划"]
+    C --> D["critic\n审查"]
+    D --> E["executor\n实现"]
+    E --> F["verifier\n验证"]
+`} />
+
+#### 智能体角色边界
+
+| 智能体 | 执行 | 不执行 |
+|-------|------|----------|
+| `architect` | 代码分析、调试、验证 | 需求收集、规划 |
+| `analyst` | 发现需求缺陷 | 代码分析、规划 |
+| `planner` | 创建任务计划 | 需求分析、计划审查 |
+| `critic` | 审查计划质量 | 需求分析、代码分析 |
+
+### 智能体选择指南
+
+| 任务类型 | 推荐智能体 | 模型 |
+|-----------|-------------------|-------|
+| 快速代码查询 | `explore` | haiku |
+| 功能实现 | `executor` | sonnet |
+| 复杂重构 | `executor` (model=opus) | opus |
+| 简单 bug 修复 | `debugger` | sonnet |
+| 复杂调试 | `architect` | opus |
+| UI 组件 | `designer` | sonnet |
+| 文档 | `writer` | haiku |
+| 测试策略 | `test-engineer` | sonnet |
+| 安全审查 | `security-reviewer` | sonnet |
+| 代码审查 | `code-reviewer` | opus |
+| 数据分析 | `scientist` | sonnet |
+
+---
+
+## 什么是技能？
+
+技能是一个行为注入系统，定义智能体如何行动。
+它们不替代智能体 — 它们为现有智能体增加额外功能。
+
+技能分为三个层。
+
+<Mermaid chart={`
+graph TD
+    G["保证层 (可选)\nralph：验证前永不停止"]
+    E["增强层 (0 个或更多)\nultrawork (并行) | git-master (提交)"]
+    X["执行层 (默认)\ndefault (构建) | orchestrate (协调)"]
+    G --> E --> X
+`} />
+
+技能可以组合。
+
+```
+任务："ultrawork：重构 API 并提交"
+激活的技能：ultrawork + default + git-master
+```
+
+### 如何调用技能
+
+#### 斜杠命令
+
+```bash
+/oh-my-claudecode:autopilot build me a todo app
+/oh-my-claudecode:ralph refactor the auth module
+/oh-my-claudecode:team 3:executor "implement a full-stack app"
+```
+
+#### 魔法关键词
+
+在自然语言中包含一个关键词，相应的技能会自动激活。
+
+```bash
+autopilot build me a todo app          # 激活 autopilot 技能
+ralph: refactor the auth module        # 激活 ralph 技能
+ultrawork implement OAuth              # 激活 ultrawork 技能
+```
+
+### 关键工作流技能
+
+#### autopilot
+
+一个从想法到成品代码的 5 阶段自主执行流水线。
+
+```bash
+autopilot build me a REST API with authentication
+```
+
+触发关键词：`autopilot`、`build me`、`I want a`
+
+#### ralph
+
+一个不停止循环直到任务验证完成的技能。
+持续工作直到验证器确认完成。
+
+```bash
+ralph: refactor the authentication module
+```
+
+触发关键词：`ralph`、`don't stop`、`must complete`
+
+#### ultrawork
+
+同时运行多个智能体并实现最大并行化。
+
+```bash
+ultrawork implement user authentication with OAuth
+```
+
+触发关键词：`ultrawork`、`ulw`
+
+#### team
+
+同时协调 N 个 Claude 智能体。
+通过 5 阶段流水线操作：plan → prd → exec → verify → fix
+
+```bash
+/oh-my-claudecode:team 3:executor "implement a full-stack todo app"
+```
+
+#### ccg (Claude-Codex-Gemini)
+
+同时查询 Codex 和 Gemini，然后 Claude 合成结果。
+
+```bash
+ccg: review this authentication implementation
+```
+
+触发关键词：`ccg`、`claude-codex-gemini`
+
+#### ralplan
+
+一个规划过程，其中规划器、架构师和批评者迭代直到达成共识。
+
+```bash
+ralplan this feature
+```
+
+触发关键词：`ralplan`
+
+### 实用技能
+
+| 技能 | 描述 | 命令 |
+|-------|-------------|---------|
+| `cancel` | 取消运行中的模式 | `/oh-my-claudecode:cancel` |
+| `note` | 保存笔记到记事本 | `/oh-my-claudecode:note` |
+| `hud` | 配置状态栏 | `/oh-my-claudecode:hud` |
+| `omc-setup` | 初始设置向导 | `/oh-my-claudecode:omc-setup` |
+| `omc-doctor` | 安装诊断 | `/oh-my-claudecode:omc-doctor` |
+| `learner` | 从会话中提取可复用技能 | `/oh-my-claudecode:learner` |
+| `skill` | 管理本地技能 (列表/添加/移除) | `/oh-my-claudecode:skill` |
+| `trace` | 基于证据的因果追踪 | `/oh-my-claudecode:trace` |
+| `release` | 自动化发布工作流 | `/oh-my-claudecode:release` |
+| `deepinit` | 生成分层 AGENTS.md | `/oh-my-claudecode:deepinit` |
+| `deep-interview` | 苏格拉底式深度访谈 | `/oh-my-claudecode:deep-interview` |
+| `sciomc` | 并行科学家智能体编排 | `/oh-my-claudecode:sciomc` |
+| `external-context` | 并行文档专家研究 | `/oh-my-claudecode:external-context` |
+| `ai-slop-cleaner` | AI 表达清理工作流 | `/oh-my-claudecode:ai-slop-cleaner` |
+| `writer-memory` | 写作项目的内存系统 | `/oh-my-claudecode:writer-memory` |
+
+### 完整魔法关键词列表
+
+| 关键词 | 效果 |
+|---------|--------|
+| `ultrawork`、`ulw` | 并行智能体编排 |
+| `autopilot`、`build me`、`I want a` | 自主执行流水线 |
+| `ralph`、`don't stop`、`must complete` | 循环直到验证完成 |
+| `ccg`、`claude-codex-gemini` | 3 模型编排 |
+| `ralplan` | 基于共识的规划 |
+| `deep interview`、`ouroboros` | 苏格拉底式深度访谈 |
+| `deepsearch`、`search the codebase` | 代码库搜索模式 |
+| `deepanalyze`、`deep-analyze` | 深度分析模式 |
+| `ultrathink` | 深度推理模式 |
+| `tdd`、`test first`、`red green` | TDD 工作流 |
+| `deslop`、`anti-slop` | AI 表达清理 |
+| `cancelomc`、`stopomc` | 取消执行模式 |
+
+### config.jsonc 与 keyword-detector
+
+关键词在两个地方处理。
+
+| 源 | 角色 | 可自定义 |
+|--------|------|-------------|
+| `config.jsonc` `magicKeywords` | 4 个类别 (ultrawork、search、analyze、ultrathink) | 是 |
+| `keyword-detector` 钩子 | 11+ 个触发器 (autopilot、ralph、ccg 等) | 否 |
+
+你可以在 `config.jsonc` 中更改的关键词是有限的。
+像 `autopilot`、`ralph` 和 `ccg` 这样的主要触发器在钩子中是硬编码的。
+
+---
+
+## 什么是钩子？
+
+钩子是对 Claude Code 生命周期事件做出反应的代码。
+当用户提交提示、使用工具或会话启动或结束时自动运行。
+
+OMC 使用此钩子系统实现智能体委派、关键词检测和状态持久化。
+
+### 生命周期事件
+
+Claude Code 提供 11 个生命周期事件，OMC 在其中注册钩子。
+
+| 事件 | 触发时机 | OMC 用法 |
+|-------|--------------|-----------|
+| `UserPromptSubmit` | 当用户提交提示时 | 魔法关键词检测、技能注入 |
+| `SessionStart` | 当会话启动时 | 初始设置、项目内存加载 |
+| `PreToolUse` | 工具使用前 | 权限验证、并行执行提示 |
+| `PermissionRequest` | 请求权限时 | Bash 命令权限处理 |
+| `PostToolUse` | 工具使用后 | 工具结果验证、项目内存更新 |
+| `PostToolUseFailure` | 工具使用失败后 | 错误恢复处理 |
+| `SubagentStart` | 子智能体启动时 | 智能体追踪 |
+| `SubagentStop` | 子智能体停止时 | 智能体追踪、输出验证 |
+| `PreCompact` | 上下文压缩前 | 保留重要信息、保存项目内存 |
+| `Stop` | Claude 停止时 | 保持持久模式、代码简化 |
+| `SessionEnd` | 会话结束时 | 会话数据清理 |
+
+### system-reminder 注入
+
+钩子通过 `<system-reminder>` 标签向 Claude 注入额外上下文。
+
+```xml
+<system-reminder>
+hook success: Success
+</system-reminder>
+```
+
+含义取决于注入的模式。
+
+| 模式 | 含义 |
+|---------|---------|
+| `hook success: Success` | 钩子运行成功，正常继续 |
+| `hook additional context: ...` | 额外上下文信息，请注意 |
+| `[MAGIC KEYWORD: ...]` | 检测到魔法关键词，执行指定技能 |
+| `The boulder never stops` | ralph/ultrawork 模式处于活跃状态 |
+
+### 关键钩子描述
+
+#### keyword-detector
+
+在 `UserPromptSubmit` 事件上触发。
+检测用户输入中的魔法关键词并激活相应的技能。
+
+<Mermaid chart={`
+graph LR
+    A["用户\nautopilot build me a todo app"] --> B["keyword-detector\n检测 autopilot 关键词"]
+    B --> C["autopilot\n技能激活"]
+`} />
+
+#### persistent-mode
+
+在 `Stop` 事件上触发。
+当 ralph 或 ultrawork 等持久模式处于活跃状态时，防止 Claude 停止。
+
+#### pre-compact
+
+在 `PreCompact` 事件上触发。
+在上下文窗口压缩前保存重要信息到记事本。
+
+#### subagent-tracker
+
+在 `SubagentStart` 和 `SubagentStop` 事件上触发。
+追踪当前运行的智能体并在其停止时验证其输出。
+
+#### context-guard-stop
+
+在 `Stop` 事件上触发。
+监控上下文使用并在接近限制时警告。
+
+#### code-simplifier
+
+在 `Stop` 事件上触发。默认禁用。
+启用后，当 Claude 停止时自动简化修改的文件。
+
+启用方式：
+
+```json
+{
+  "codeSimplifier": {
+    "enabled": true,
+    "extensions": [".ts", ".tsx", ".js", ".jsx", ".py", ".go", ".rs"],
+    "maxFiles": 10
+  }
+}
+```
+
+### 禁用钩子
+
+#### 禁用所有钩子
+
+```bash
+export DISABLE_OMC=1
+```
+
+#### 跳过特定钩子
+
+```bash
+export OMC_SKIP_HOOKS="keyword-detector,persistent-mode"
+```
+
+可以使用逗号分隔一次跳过多个钩子。
+
+### 钩子注册结构
+
+OMC 钩子在 `hooks.json` 文件中声明式定义。
+每个钩子作为 Node.js 脚本实现，具有配置的超时时间。
+
+```json
+{
+  "UserPromptSubmit": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "node scripts/keyword-detector.mjs",
+          "timeout": 5
+        }
+      ]
+    }
+  ]
+}
+```
+
+- `matcher`：钩子响应的模式 (`*` 匹配所有输入)
+- `timeout`：超时时间 (秒)
+- `type`：始终为 `"command"` (运行外部命令)
+
+---
+
+## 状态管理概述
+
+OMC 将任务进度和项目知识存储在 `.omc/` 目录中。
+即使发生上下文压缩，此状态系统也会保留重要信息。
+
+### 目录结构
+
+```
+.omc/
+├── state/                    # 按模式的状态文件
+│   ├── autopilot-state.json  # autopilot 进度
+│   ├── ralph-state.json      # ralph 循环状态
+│   ├── team/                 # 团队任务状态
+│   └── sessions/             # 按会话的状态
+│       └── {sessionId}/
+├── notepad.md                # 压缩抵抗笔记
+├── project-memory.json       # 项目知识存储
+├── plans/                    # 执行计划
+├── notepads/                 # 按计划的知识捕获
+│   └── {plan-name}/
+│       ├── learnings.md
+│       ├── decisions.md
+│       ├── issues.md
+│       └── problems.md
+├── autopilot/                # autopilot 工件
+│   └── spec.md
+├── research/                 # 研究结果
+└── logs/                     # 执行日志
+```
+
+### 记事本
+
+**文件**：`.omc/notepad.md`
+
+记事本是一个幸存上下文压缩的备忘录垫。
+即使 Claude 的上下文窗口被重置，写入记事本的内容也会被保留。
+
+#### 用法
+
+```bash
+# 使用技能保存笔记
+/oh-my-claudecode:note "Use /api/v2 for the API endpoint"
+```
+
+#### MCP 工具
+
+| 工具 | 描述 |
+|------|-------------|
+| `notepad_read` | 读取记事本内容 |
+| `notepad_write_priority` | 保存高优先级笔记 (永久保留) |
+| `notepad_write_working` | 保存工作笔记 |
+| `notepad_write_manual` | 保存手动笔记 |
+| `notepad_prune` | 清理旧笔记 |
+| `notepad_stats` | 查看记事本统计信息 |
+
+#### 工作原理
+
+1. 当 `PreCompact` 事件触发时，重要信息被保存到记事本
+2. 上下文压缩后，记事本内容被重新注入
+3. 智能体使用记事本恢复之前的上下文
+
+### 项目内存
+
+**文件**：`.omc/project-memory.json`
+
+项目内存是项目级知识的持久存储。
+项目相关的知识跨会话保留。
+
+#### MCP 工具
+
+| 工具 | 描述 |
+|------|-------------|
+| `project_memory_read` | 读取项目内存 |
+| `project_memory_write` | 写入整个项目内存 |
+| `project_memory_add_note` | 添加笔记 |
+| `project_memory_add_directive` | 添加指令 |
+
+#### 生命周期整合
+
+- `SessionStart`：加载项目内存并将其注入到上下文中
+- `PostToolUse`：从工具使用结果中提取并保存项目知识
+- `PreCompact`：在上下文压缩前保存项目内存
+
+### 会话范围
+
+**路径**：`.omc/state/sessions/{sessionId}/`
+
+存储按会话隔离的状态。
+同一项目上同时运行的多个会话不会有状态冲突。
+
+### 计划记事本 (按计划的知识捕获)
+
+**路径**：`.omc/notepads/{plan-name}/`
+
+为每个执行计划单独存储学习。
+
+| 文件 | 内容 |
+|------|----------|
+| `learnings.md` | 发现的模式、成功的方法 |
+| `decisions.md` | 架构决策和理由 |
+| `issues.md` | 问题和阻碍 |
+| `problems.md` | 技术债和谨慎 |
+
+所有条目都自动加上时间戳。
+
+### 集中状态管理
+
+默认情况下，状态存储在项目内的 `.omc/` 目录中。
+如果 worktree 被删除，状态会随之丢失。
+
+要跨 worktree 删除保留状态，设置 `OMC_STATE_DIR` 环境变量。
+
+```bash
+# 添加到 ~/.bashrc 或 ~/.zshrc
+export OMC_STATE_DIR="$HOME/.claude/omc"
+```
+
+使用此设置，状态存储在 `~/.claude/omc/{project-identifier}/`。
+项目标识符是 Git 远程 URL 的哈希值，因此状态可以在同一仓库的不同 worktree 之间共享。
+
+### 持久内存 (remember 标签)
+
+特别重要的信息可以用 `<remember>` 标签存储。
+
+```xml
+<!-- 保留 7 天 -->
+<remember>API 端点更改为 /v2</remember>
+
+<!-- 永久保留 -->
+<remember priority>永远不要直接访问生产数据库</remember>
+```
+
+| 标签 | 保留期限 |
+|-----|-----------|
+| `<remember>` | 7 天 |
+| `<remember priority>` | 永久 |
