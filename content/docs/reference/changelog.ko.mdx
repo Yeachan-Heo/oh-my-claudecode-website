@@ -7,11 +7,44 @@ description: Oh My ClaudeCode의 버전별 변경 사항
 
 Oh My ClaudeCode의 주요 변경 사항을 버전별로 정리합니다.
 
-### v4.11.4 (현재)
+### v4.12.0 (현재)
+
+**신규 기능**
+- Team: canonical 역할별 provider/model 라우팅과 resolved-routing 스냅샷 — `.claude/omc.jsonc`의 `roleRouting`에서 역할별(예: `codex critic`, `gemini reviewer`)로 구성 가능 (#2614)
+- HUD: 추가 사용량(지출) 데이터 표시 (closes #2570)
+- HUD: MiniMax coding plan 사용량 provider 추가
+- HUD: 세션 간 캐시 충돌 제거를 위해 사용량 캐시를 provider별로 분리
+- Release: release 스킬을 generic repo-aware release assistant로 재작성 — 레포 + CI를 분석해 규칙을 `.omc/RELEASE_RULE.md`에 캐시한 뒤 릴리스를 가이드 (#2501)
+- CI: 경고와 오류를 잡아내는 upgrade test 추가
+
+**버그 수정 (선별)**
+- Persistent stop hook: 계약 일관성 맞추고 에이전트 출력 계약을 강화 (#2653)
+- Context-bloat: 중복되는 rule/skill 주입 3개 경로 제거 (#2577)
+- Pre-tool-enforcer: centralized state-root resolver를 통해 `OMC_STATE_DIR`를 존중 (#2621)
+- Ralplan: 자동 시작 전에 명시적 호출 의도를 요구 (#2620)
+- Team: `sendToWorker` 200자 제한에 맞게 트리거 메시지 단축 (#2617)
+- Installer: 업데이트 중에도 OMC 스타일 frontmatter가 있는 사용자 스킬을 보존 (#2573)
+- Permission-handler: 읽기 전용 `gh issue`/`pr` 명령 허용, installer 라이브러리 assertion 추가
+- Deep-interview: 남아 있던 하드코딩된 20%/0.2 임계값 5개를 설정 기반으로 교체 (#2545)
+- State-root: hook 진입점 전반에서 `OMC_STATE_DIR` 해석을 중앙화 (#2532)
+- Keyword-detector: 붙여넣은 transcript 블록 무시, review-seed echo 억제 (#2541)
+- Session-start: stale `CLAUDE_PLUGIN_ROOT`을 최신 버전으로 심볼릭 링크 연결
+- Doctor: 플러그인 캐시 대비 `CLAUDE.md` 버전 drift 감지
+- Tmux: 모든 tmux 실행을 wrapper 함수로 중앙화
+
+**리팩토링**
+- HUD: z.ai `TOKENS_LIMIT`를 reset time이 아닌 단위(unit) 기준으로 분류
+- MCP: standalone-server와 `listtools` 테스트 deslop
+
+**통계:** 121 PR 병합 · 신규 기능 6개 · 버그 수정 67개 · 기타 변경 3개
+
+---
+
+### v4.11.4
 
 > **참고:** Upstream이 v4.11.3 릴리스 본문을 그대로 v4.11.4 태그에 다시
-> 올렸습니다. 아래 수정 내역은 v4.11.3과 동일합니다 — v4.11.4가 최신
-> 게시 태그라서 여기 표시될 뿐입니다.
+> 올렸습니다. 아래 수정 내역은 v4.11.3과 동일합니다 — v4.11.4는 중복
+> 태그였기 때문에 여기에 남겨둡니다.
 
 실제 수정 목록은 **v4.11.3** 항목을 참조하세요.
 

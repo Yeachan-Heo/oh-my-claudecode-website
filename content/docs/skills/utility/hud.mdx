@@ -88,6 +88,19 @@ Configure under the `omcHud` key in `~/.claude/settings.json`.
 
 Available presets: `minimal`, `focused`, `full`, `dense`, `analytics`, `opencode`
 
+## Usage Providers
+
+When `showTokens` is enabled, HUD displays usage and spend data pulled from the provider backing your current session. Usage caches are split per provider to eliminate cross-session thrashing when you switch between accounts.
+
+Supported providers:
+
+- **Claude** (claude.ai subscriptions, Anthropic API, Bedrock)
+- **z.ai** — weekly `TOKENS_LIMIT` classified by unit (pro+ tiers honored)
+- **MiniMax** — coding plan usage, with `minimaxi.com` / `minimax.com` domains both supported; routing is independent of credential presence
+- **Codex / OpenAI** (when routed via `omc ask codex` or team workers)
+
+Extra spend data (closes #2570) is shown when the provider exposes it.
+
 ## Related Skills
 
 - [omc-setup](/docs/skills/utility/omc-setup) - Full OMC configuration (includes HUD)

@@ -7,11 +7,44 @@ description: Version-by-version changes for Oh My ClaudeCode
 
 A summary of major changes to Oh My ClaudeCode by version.
 
-### v4.11.4 (current)
+### v4.12.0 (current)
+
+**New Features**
+- Team: per-role provider and model routing with resolved-routing snapshot — configure `roleRouting` per canonical role (e.g., `codex critic`, `gemini reviewer`) in `.claude/omc.jsonc` (#2614)
+- HUD: display extra usage spend data (closes #2570)
+- HUD: add MiniMax coding plan usage provider
+- HUD: split usage cache by provider to eliminate cross-session thrashing
+- Release: rewrite release skill as generic repo-aware release assistant — analyzes repo + CI, caches rules in `.omc/RELEASE_RULE.md`, then walks you through the release (#2501)
+- CI: add upgrade test to catch warnings and errors
+
+**Bug Fixes (selected)**
+- Persistent stop hook: align contract and tighten agent output contracts (#2653)
+- Context-bloat: eliminate three sources of repeated rule/skill injection (#2577)
+- Pre-tool-enforcer: honor `OMC_STATE_DIR` via centralized state-root resolver (#2621)
+- Ralplan: require invocation intent before auto-starting (#2620)
+- Team: shorten trigger messages to fit `sendToWorker` 200-char limit (#2617)
+- Installer: preserve user skills with OMC-style frontmatter during updates (#2573)
+- Permission-handler: allow read-only `gh issue`/`pr` commands; add installer lib assertions
+- Deep-interview: replace five remaining hardcoded 20%/0.2 threshold signals (#2545)
+- State-root: centralize `OMC_STATE_DIR` resolution across hook entrypoints (#2532)
+- Keyword-detector: ignore pasted transcript blocks; suppress review-seed echo (#2541)
+- Session-start: symlink stale `CLAUDE_PLUGIN_ROOT` to latest version
+- Doctor: detect `CLAUDE.md` version drift against plugin cache
+- Tmux: centralize all tmux execution through wrapper functions
+
+**Refactoring**
+- HUD: classify z.ai `TOKENS_LIMIT` by unit instead of reset time
+- MCP: deslop standalone-server and `listtools` test
+
+**Stats:** 121 PRs merged · 6 new features · 67 bug fixes · 3 other changes
+
+---
+
+### v4.11.4
 
 > **Note:** Upstream re-published the v4.11.3 release body unchanged for the
 > v4.11.4 tag. The fixes below are the same set as v4.11.3 — they appear here
-> only because v4.11.4 is the latest published tag.
+> only because v4.11.4 was a duplicate tag.
 
 See **v4.11.3** for the actual fix list.
 

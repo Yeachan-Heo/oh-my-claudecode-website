@@ -1,71 +1,115 @@
 ---
 title: Release
-description: oh-my-claudecode의 버전 범프, 테스트, 배포를 자동화하는 릴리스 워크플로우
+description: 레포의 릴리스 규칙을 분석해 .omc/RELEASE_RULE.md에 캐시한 뒤 릴리스를 안내하는 범용 repo-aware 릴리스 어시스턴트
 ---
 
 ## 개요
 
-Release는 oh-my-claudecode의 릴리스 프로세스를 자동화하는 스킬입니다. 버전 범프, 테스트 실행, 커밋, 태그, npm 배포, GitHub 릴리스 생성까지 전체 과정을 순차로 처리합니다.
+Release는 얇고 repo-aware한 릴리스 어시스턴트입니다. 처음 실행하면 프로젝트와 CI를 검사해 릴리스 규칙을 도출하고, 이를 `.omc/RELEASE_RULE.md`에 캐시한 뒤, 그 규칙을 기반으로 릴리스를 안내합니다.
+
+특정 스택에 하드코딩되어 있지 **않습니다**. npm / PyPI / Cargo / Docker / GitHub Packages를 자동 감지하고, 버전이 어느 파일(`package.json`, `pyproject.toml`, `Cargo.toml`, `VERSION` 등)에 있는지 찾아내며, 릴리스 트리거(태그 푸시, 수동 dispatch, 머지 등)를 파악해 그에 맞춰 동작합니다.
 
 ## 사용법
 
 ```bash
-/oh-my-claudecode:release <version>
-/oh-my-claudecode:release patch
-/oh-my-claudecode:release minor
-/oh-my-claudecode:release major
+/oh-my-claudecode:release [version]
+/oh-my-claudecode:release --refresh
 ```
 
-## 릴리스 체크리스트
+- `version`은 선택입니다. `patch`, `minor`, `major` 또는 `2.4.0` 같은 명시적 semver 허용. 생략하면 스킬이 물어봅니다.
+- `--refresh`는 캐시된 규칙 파일이 있어도 레포 재분석을 강제합니다.
 
-순서대로 실행됩니다.
+## 실행 플로우
 
-### 1. 버전 범프
+### Step 0 — 릴리스 규칙 로드 또는 생성
 
-다음 파일들의 버전을 업데이트합니다.
+- `.omc/RELEASE_RULE.md`이 **없으면**(또는 `--refresh`가 넘어오면): 전체 분석을 실행하고 파일을 작성합니다.
+- **있으면**: 파일을 읽고, 델타 검사를 수행합니다 — `.github/workflows/`, `.circleci/`, `.travis.yml`, `Jenkinsfile`, `bitbucket-pipelines.yml`, `gitlab-ci.yml`을 확인해 캐시된 `last-analyzed` 이후로 수정된 것이 있는지 점검합니다. 변경이 있으면 해당 섹션만 갱신합니다.
 
-| 파일 | 필드 |
-|------|------|
-| `package.json` | `"version": "X.Y.Z"` |
-| `src/installer/index.ts` | `VERSION` 상수 |
-| `.claude-plugin/plugin.json` | `"version"` |
-| `.claude-plugin/marketplace.json` | `plugins[0].version` + 루트 `version` |
-| `docs/CLAUDE.md` | `<!-- OMC:VERSION:X.Y.Z -->` |
-| `README.md` | 버전 배지 + 타이틀 |
+### Step 1 — 레포 분석
 
-### 2. 테스트 실행
+스킬이 검사하는 항목:
 
-```bash
-npm run test:run
+- **버전 소스** — 현재 버전이 담긴 모든 파일, 그리고 릴리스 자동화 스크립트(`scripts/release.*`, `bump2version`, `release-it`, `semantic-release`, `changesets`, `goreleaser`, `Makefile` 타깃).
+- **레지스트리 / 배포** — npm, PyPI, Cargo, Docker, GitHub Packages, 그리고 CI에서 실제 배포를 수행하는 job.
+- **릴리스 트리거** — 태그 푸시(`v*`), 수동 dispatch, main 브랜치 머지, 릴리스 브랜치 머지, 커밋 메시지 패턴 등.
+- **테스트 게이트** — 테스트 커맨드와 CI가 이를 필수로 요구하는지 여부.
+- **릴리스 노트 / 체인지로그** — 존재 여부 및 컨벤션(Keep a Changelog, Conventional Commits, GitHub 자동 생성, release-body 파일, 없음).
+- **최초 설정 공백** — 릴리스 워크플로우 미존재, 빌드 산출물에 대한 `.gitignore` 미존재, git 태그 미존재 등.
+
+### Step 2 — `.omc/RELEASE_RULE.md` 작성
+
+캐시 파일 구조:
+
+```markdown
+# Release Rules
+<!-- last-analyzed: YYYY-MM-DDTHH:MM:SSZ -->
+
+## Version Sources
+## Release Trigger
+## Test Gate
+## Registry / Distribution
+## Release Notes Strategy
+## CI Workflow Files
+## First-Time Setup Gaps
 ```
 
-### 3. 커밋 및 태그
+### Step 3 — 버전 결정
 
-```bash
-git add -A
-git commit -m "chore: Bump version to <version>"
-git tag v<version>
-git push origin main
-git push origin v<version>
-```
+사용자가 버전을 지정하지 않으면, 스킬이 현재 버전과 `patch` / `minor` / `major`가 만들어낼 버전을 보여주고 선택을 요청합니다.
 
-### 4. npm 배포
+### Step 4 — 사전 체크리스트
 
-```bash
-npm publish --access public
-```
+릴리스 진행 전 최소 확인 항목:
 
-### 5. GitHub 릴리스
+- 이번 릴리스에 포함될 모든 변경이 커밋·푸시됨
+- 대상 브랜치의 CI가 green
+- 로컬 테스트 통과(테스트 게이트 커맨드 실행)
+- 모든 버전 소스 파일에 버전 범프 반영
+- 릴리스 노트 / 체인지로그 준비 완료
 
-```bash
-gh release create v<version> --title "v<version> - <title>" --notes "<notes>"
-```
+### Step 5 — 릴리스 노트 가이던스
 
-## 시맨틱 버저닝
+레포가 사용 중인 컨벤션을 그대로 적용합니다. 컨벤션이 없을 때 기본 가이드:
 
-- **patch** (X.Y.Z+1): 버그 수정, 사소한 개선
-- **minor** (X.Y+1.0): 새 기능, 하위 호환
-- **major** (X+1.0.0): 호환성 깨지는 변경
+- **사용자 관점의 변경점**을 먼저, 내부 구현 디테일은 생략.
+- 타입별 그룹화: `New Features`, `Bug Fixes`, `Breaking Changes`, `Deprecations`, `Internal / Chores`.
+- 항목당 한 문장, PR/이슈 링크, 외부 컨트리뷰터 크레딧.
+- Breaking changes는 맨 위로, 마이그레이션 경로 필수.
+- 사용자에게 보이지 않는 변경(리팩토링, CI 조정, 테스트 전용)은 빌드 재현성에 영향을 주지 않는 한 생략.
+
+Conventional Commits 레포라면 `git log <prev-tag>..HEAD --no-merges --format="%s"` 결과를 커밋 타입별로 그룹화해 draft를 자동 생성합니다.
+
+### Step 6 — 릴리스 실행
+
+1. **버전 범프** — 모든 버전 소스 파일에 반영.
+2. **테스트 실행** — 테스트 게이트 커맨드.
+3. **커밋** — `git add <version files> CHANGELOG.md` → `chore(release): bump version to vX.Y.Z`.
+4. **태그** — annotated 권장: `git tag -a vX.Y.Z -m "vX.Y.Z"`.
+5. **푸시** — 브랜치 + 태그.
+6. **CI 인수** — 트리거가 태그 푸시라면 CI가 publish와 GitHub Release 생성을 이어서 처리. CI 자동화가 없다면 수동 배포 커맨드(`npm publish --access public`, `twine upload dist/*` 등) 안내.
+
+### Step 7 — 최초 설정 제안
+
+Step 1에서 공백이 감지되었다면 다음을 제안합니다:
+
+- 감지된 스택에 맞는 `.github/workflows/release.yml` 스캐폴드
+- 빌드 산출물을 `.gitignore`에 추가
+- 태그가 하나도 없는 레포라면 git 태그 베스트 프랙티스 설명
+
+### Step 8 — 검증
+
+푸시 후 확인:
+
+- `gh run list --workflow=<release workflow> --limit=3` (`gh` 설치 시)
+- 잠시 후 레지스트리에 새 버전 노출 확인
+- `gh release view vX.Y.Z`
+
+## 메모
+
+- 특정 프로젝트에 하드코딩된 부분은 없습니다 — 모두 레포 검사로부터 도출됩니다.
+- `.omc/RELEASE_RULE.md`는 로컬 캐시입니다. 팀과 규칙을 공유하려면 커밋하고, 로컬 전용으로 두려면 `.gitignore`.
+- Monorepo / workspace(npm / pnpm / Cargo)도 감지 및 대응합니다.
 
 ## 관련 스킬
 

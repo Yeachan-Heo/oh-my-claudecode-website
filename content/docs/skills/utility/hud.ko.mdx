@@ -88,6 +88,19 @@ HUD는 Claude Code의 상태 라인에 OMC 실시간 상태를 표시하는 Head
 
 사용 가능한 프리셋: `minimal`, `focused`, `full`, `dense`, `analytics`, `opencode`
 
+## 사용량 Provider
+
+`showTokens`가 활성화되면 HUD는 현재 세션을 지원하는 provider에서 가져온 사용량 및 지출 데이터를 표시합니다. 계정을 전환할 때 세션 간 캐시 충돌을 제거하기 위해 사용량 캐시는 provider별로 분리되어 있습니다.
+
+지원 provider:
+
+- **Claude** (claude.ai 구독, Anthropic API, Bedrock)
+- **z.ai** — 주간 `TOKENS_LIMIT`을 단위(unit) 기준으로 분류 (pro+ 티어 지원)
+- **MiniMax** — coding plan 사용량 표시, `minimaxi.com` / `minimax.com` 도메인 모두 지원. 라우팅은 자격 증명 유무와 독립적으로 동작
+- **Codex / OpenAI** (`omc ask codex` 또는 team 워커로 라우팅된 경우)
+
+provider가 노출할 경우 추가 지출 데이터(closes #2570)도 표시됩니다.
+
 ## 관련 스킬
 
 - [omc-setup](/docs/skills/utility/omc-setup) - 전체 OMC 설정 (HUD 포함)

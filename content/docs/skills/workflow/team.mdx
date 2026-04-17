@@ -74,6 +74,82 @@ The fix loop is bounded by a maximum number of attempts.
 - Performs architect verification on completion
 - Cancelling either one cancels the other
 
+## Per-Role Provider & Model Routing
+
+> **Scope:** Applies to `/team` only. Task-based delegation uses `delegationRouting` (separate system). The two coexist by design.
+
+Declare which provider (`claude`, `codex`, `gemini`) and which model tier should back each canonical role. Routing is resolved **once** at team creation and persisted in `TeamConfig.resolved_routing` — spawn, scale-up, and restart all read from the snapshot, so a role's worker CLI and model stay stable for the lifetime of the team.
+
+### Example — `.claude/omc.jsonc`
+
+```jsonc
+{
+  "team": {
+    "roleRouting": {
+      "orchestrator":  { "model": "inherit" },
+      "planner":       { "provider": "claude", "model": "HIGH" },
+      "analyst":       { "provider": "claude", "model": "HIGH" },
+      "executor":      { "provider": "claude", "model": "MEDIUM" },
+      "critic":        { "provider": "codex" },
+      "code-reviewer": { "provider": "gemini" },
+      "test-engineer": { "provider": "gemini", "model": "MEDIUM" }
+    }
+  }
+}
+```
+
+### Canonical roles
+
+`orchestrator`, `planner`, `analyst`, `architect`, `executor`, `debugger`, `critic`, `code-reviewer`, `security-reviewer`, `test-engineer`, `designer`, `writer`, `code-simplifier`, `explore`, `document-specialist`.
+
+Aliases are normalized at parse time — `reviewer` → `code-reviewer`, `quality-reviewer` → `code-reviewer`, `harsh-critic` → `critic`, `build-fixer` → `debugger`. Unknown roles fail validation.
+
+### Spec fields
+
+- **`provider`** — `"claude" | "codex" | "gemini"`. Omitted → defaults to `claude`.
+- **`model`** — tier name (`"HIGH" | "MEDIUM" | "LOW"`) or explicit model ID. Tiers resolve through `routing.tierModels`.
+- **`agent`** — optional Claude agent name (e.g., `"critic"`, `"executor"`). Only honored when the resolved provider is `claude`.
+
+`orchestrator` is pinned to `claude`; only `model` is configurable for it.
+
+### Env override
+
+```bash
+OMC_TEAM_ROLE_OVERRIDES='{"critic":{"provider":"codex"},"code-reviewer":{"provider":"gemini"}}'
+```
+
+Precedence: `OMC_TEAM_ROLE_OVERRIDES` > `.claude/omc.jsonc` (project) > `~/.config/claude-omc/config.jsonc` (user) > built-in defaults.
+
+### CLI fallback
+
+If a configured provider's CLI is absent from `PATH` at spawn time, the team lead emits a visible warning and falls back deterministically to a Claude assignment with the same tier + agent. Fallback is loud by design. Probe availability via `omc doctor --team-routing`.
+
+### Zero-config behavior
+
+An empty `team.roleRouting` preserves pre-patch behavior: every worker is Claude, model tiers follow `routing.tierModels`, and `/team 3:executor ...` still spawns three Claude Sonnet executors.
+
+## Configuration
+
+Optional settings live in `.claude/omc.jsonc` (project) or `~/.config/claude-omc/config.jsonc` (user):
+
+```jsonc
+{
+  "team": {
+    "ops": {
+      "maxAgents": 20,
+      "defaultAgentType": "claude",
+      "monitorIntervalMs": 30000,
+      "shutdownTimeoutMs": 15000
+    }
+  }
+}
+```
+
+- **`ops.maxAgents`** — Maximum teammates (default: 20)
+- **`ops.defaultAgentType`** — CLI provider when `/team` does not specify one (`claude` | `codex` | `gemini`, default: `claude`)
+- **`ops.monitorIntervalMs`** — `TaskList` poll interval (default: 30s)
+- **`ops.shutdownTimeoutMs`** — Shutdown response grace period (default: 15s)
+
 ## Related Skills
 
 - [omc-teams](/docs/skills/workflow/omc-teams) - run external CLI workers (codex/gemini)

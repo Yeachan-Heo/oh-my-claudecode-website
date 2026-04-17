@@ -19,7 +19,7 @@ export default async function Layout({
         title: (
           <div className="flex flex-col">
             <span>Oh My ClaudeCode</span>
-            <span className="text-xs text-fd-muted-foreground">v4.11.4</span>
+            <span className="text-xs text-fd-muted-foreground">v4.12.0</span>
           </div>
         ),
         url: lang === i18n.defaultLanguage ? '/docs' : `/${lang}/docs`,

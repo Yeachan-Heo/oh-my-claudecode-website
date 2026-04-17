@@ -74,6 +74,82 @@ verifier와 필요한 리뷰어가 결과를 검증합니다.
 - 완료 시 architect 검증을 수행합니다
 - 어느 한쪽을 취소하면 다른 쪽도 함께 취소됩니다
 
+## 역할(Role)별 Provider & Model 라우팅
+
+> **범위:** `/team`에만 적용됩니다. Task 기반 위임은 별도 시스템(`delegationRouting`)을 사용하며, 둘은 공존하도록 설계되어 있습니다.
+
+canonical 역할별로 어떤 provider(`claude`, `codex`, `gemini`)와 어떤 모델 티어를 사용할지 선언합니다. 라우팅은 팀 생성 시점에 **한 번** 해석되어 `TeamConfig.resolved_routing`에 저장됩니다 — spawn, scale-up, 재시작 모두 이 스냅샷을 읽기 때문에, 한 팀의 수명 동안 역할별 워커 CLI와 모델이 안정적으로 유지됩니다.
+
+### 예시 — `.claude/omc.jsonc`
+
+```jsonc
+{
+  "team": {
+    "roleRouting": {
+      "orchestrator":  { "model": "inherit" },
+      "planner":       { "provider": "claude", "model": "HIGH" },
+      "analyst":       { "provider": "claude", "model": "HIGH" },
+      "executor":      { "provider": "claude", "model": "MEDIUM" },
+      "critic":        { "provider": "codex" },
+      "code-reviewer": { "provider": "gemini" },
+      "test-engineer": { "provider": "gemini", "model": "MEDIUM" }
+    }
+  }
+}
+```
+
+### Canonical 역할
+
+`orchestrator`, `planner`, `analyst`, `architect`, `executor`, `debugger`, `critic`, `code-reviewer`, `security-reviewer`, `test-engineer`, `designer`, `writer`, `code-simplifier`, `explore`, `document-specialist`.
+
+별칭은 파싱 시점에 정규화됩니다 — `reviewer` → `code-reviewer`, `quality-reviewer` → `code-reviewer`, `harsh-critic` → `critic`, `build-fixer` → `debugger`. 알 수 없는 역할은 검증에서 실패합니다.
+
+### 스펙 필드
+
+- **`provider`** — `"claude" | "codex" | "gemini"`. 생략 시 `claude`.
+- **`model`** — 티어(`"HIGH" | "MEDIUM" | "LOW"`) 또는 명시적 모델 ID. 티어는 `routing.tierModels`로 해석됩니다.
+- **`agent`** — 선택. Claude 에이전트 이름(예: `"critic"`, `"executor"`). resolved provider가 `claude`일 때만 유효.
+
+`orchestrator`는 `claude`로 고정되며, 해당 역할은 `model`만 설정 가능합니다.
+
+### 환경변수 override
+
+```bash
+OMC_TEAM_ROLE_OVERRIDES='{"critic":{"provider":"codex"},"code-reviewer":{"provider":"gemini"}}'
+```
+
+우선순위: `OMC_TEAM_ROLE_OVERRIDES` > `.claude/omc.jsonc` (프로젝트) > `~/.config/claude-omc/config.jsonc` (사용자) > 내장 기본값.
+
+### CLI 폴백
+
+설정된 provider의 CLI가 spawn 시점에 `PATH`에 없으면, team lead가 경고 메시지를 보내고 동일 티어 + agent를 유지한 채 Claude로 결정적으로 폴백합니다. 폴백은 의도적으로 "크게 보이도록" 설계되어 있습니다. `omc doctor --team-routing`으로 사전 확인할 수 있습니다.
+
+### Zero-config 동작
+
+`team.roleRouting`이 비어 있으면 패치 이전 동작이 유지됩니다 — 모든 워커는 Claude, 모델 티어는 `routing.tierModels`를 따르고 `/team 3:executor ...`는 여전히 Claude Sonnet executor 3명을 spawn합니다.
+
+## 설정
+
+`.claude/omc.jsonc` (프로젝트) 또는 `~/.config/claude-omc/config.jsonc` (사용자)에서 선택적으로 설정합니다.
+
+```jsonc
+{
+  "team": {
+    "ops": {
+      "maxAgents": 20,
+      "defaultAgentType": "claude",
+      "monitorIntervalMs": 30000,
+      "shutdownTimeoutMs": 15000
+    }
+  }
+}
+```
+
+- **`ops.maxAgents`** — 최대 팀원 수 (기본 20)
+- **`ops.defaultAgentType`** — `/team`에서 provider를 지정하지 않을 때 쓸 CLI (`claude` | `codex` | `gemini`, 기본 `claude`)
+- **`ops.monitorIntervalMs`** — `TaskList` 폴링 주기 (기본 30초)
+- **`ops.shutdownTimeoutMs`** — 종료 응답 대기 시간 (기본 15초)
+
 ## 관련 스킬
 
 - [omc-teams](/docs/skills/workflow/omc-teams) - 외부 CLI 워커 (codex/gemini) 실행
