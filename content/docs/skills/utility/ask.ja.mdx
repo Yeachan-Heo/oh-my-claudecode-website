@@ -1,0 +1,53 @@
+---
+title: Ask
+description: Claude、Codex、Gemini に質問し、結果を成果物として保存
+---
+
+## 概要
+
+Ask はアドバイザースキルで、ローカルにインストールされた Claude、Codex、または Gemini CLI にプロンプトを転送し、結果を成果物ファイルとして保存します。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:ask <claude|codex|gemini> <question or task>
+```
+
+## 例
+
+```bash
+/oh-my-claudecode:ask codex "review this patch from a security perspective"
+/oh-my-claudecode:ask gemini "suggest UX improvements for this flow"
+/oh-my-claudecode:ask claude "draft an implementation plan for issue #123"
+```
+
+## 要件
+
+選択した CLI がインストールされ、認証されている必要があります。
+
+```bash
+claude --version
+codex --version
+gemini --version
+```
+
+## 成果物
+
+結果は次のパスに保存されます：
+
+```
+.omc/artifacts/ask/<provider>-<slug>-<timestamp>.md
+```
+
+## 関連スキル
+
+- [ccg](/docs/skills/workflow/ccg) - Codex + Gemini に同時に質問し、Claude が合成
+
+## リファレンス
+
+| 項目 | 値 |
+|-----|-----|
+| 呼び出し | `/oh-my-claudecode:ask` |
+| サブコマンド | `ask codex`、`ask gemini`、`ask claude` |
+| カテゴリ | ユーティリティ |
+| 成果物パス | `.omc/artifacts/ask/` |

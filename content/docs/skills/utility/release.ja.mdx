@@ -1,0 +1,124 @@
+---
+title: Release
+description: リポジトリ対応のリリースアシスタント。リリースルールを分析し、.omc/RELEASE_RULE.md にキャッシュして、リリースをガイド
+---
+
+## 概要
+
+Release は薄型のリポジトリ対応リリースアシスタントです。初回実行時にプロジェクトと CI を検査してリリースルールを導き出し、`.omc/RELEASE_RULE.md` に保存して、その後はそのルールを使用してリリースをガイドします。
+
+特定のスタックにハードコードされていません。npm / PyPI / Cargo / Docker / GitHub Packages を検出し、バージョンが置かれている場所（`package.json`、`pyproject.toml`、`Cargo.toml`、`VERSION` など）を見つけ、リリーストリガー（タグプッシュ、手動ディスパッチ、マージ）を理解し、適応します。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:release [version]
+/oh-my-claudecode:release --refresh
+```
+
+- `version` はオプション。`patch`、`minor`、`major`、または `2.4.0` のような明示的なセマンティックバージョンを受け入れます。省略された場合、スキルが尋ねます。
+- `--refresh` はキャッシュされたルールファイルが存在する場合でも、リポジトリの再分析を強制します。
+
+## 実行フロー
+
+### ステップ 0 — リリースルールをロードまたは構築
+
+- `.omc/RELEASE_RULE.md` が**存在しない**場合（または `--refresh` が渡された場合）：完全なリポ分析を実行してファイルを書き込みます。
+- **存在する**場合：それを読み、デルタチェックを実行します — `.github/workflows/`、`.circleci/`、`.travis.yml`、`Jenkinsfile`、`bitbucket-pipelines.yml`、`gitlab-ci.yml` をスキャンして、キャッシュされた `last-analyzed` タイムスタンプより新しい変更を探します。CI が変更されている場合、それらのセクションのみを更新します。
+
+### ステップ 1 — リポ分析
+
+スキルが検査するもの：
+
+- **バージョンソース** — 現在のバージョンを含むファイル、およびリリース自動化スクリプト（`scripts/release.*`、`bump2version`、`release-it`、`semantic-release`、`changesets`、`goreleaser`、`Makefile` ターゲット）。
+- **レジストリ / 配布** — npm、PyPI、Cargo、Docker、GitHub Packages、および公開する CI ジョブ。
+- **リリーストリガー** — タグプッシュ（`v*`）、手動ディスパッチ、main へのマージ、リリースブランチマージ、またはコミットメッセージパターン。
+- **テストゲート** — テストコマンド、および公開前に CI で合格が必要かどうか。
+- **リリースノート / チェンジログ** — 存在と慣例（Keep a Changelog、Conventional Commits、GitHub 自動生成、リリースボディファイル、または無し）。
+- **初回セットアップギャップ** — リリースワークフロー欠落、ビルドアーティファクト用の `.gitignore` エントリ欠落、git タグなし。
+
+### ステップ 2 — `.omc/RELEASE_RULE.md` を書き込む
+
+キャッシュされたファイルはこの構造を使用します：
+
+```markdown
+# Release Rules
+<!-- last-analyzed: YYYY-MM-DDTHH:MM:SSZ -->
+
+## Version Sources
+## Release Trigger
+## Test Gate
+## Registry / Distribution
+## Release Notes Strategy
+## CI Workflow Files
+## First-Time Setup Gaps
+```
+
+### ステップ 3 — バージョンを決定
+
+ユーザーがバージョンを渡さなかった場合、スキルは現在のバージョン、および `patch` / `minor` / `major` が生成する内容を表示してから、ユーザーに尋ねます。
+
+### ステップ 4 — リリース前チェックリスト
+
+進む前に、スキルが確認します（最小限）：
+
+- すべての意図された変更がコミット、プッシュされている
+- ターゲットブランチで CI が緑
+- テストがローカルで合格する（テストゲートコマンドを実行）
+- バージョンバンプがすべてのバージョンソースファイルに適用されている
+- リリースノート / チェンジログが準備されている
+
+### ステップ 5 — リリースノートガイダンス
+
+リポの検出されたコンベンションを適用します。コンベンションがない場合、デフォルトは：
+
+- **ユーザーにとって何が変わったか**で始まり、内部詳細ではなく。
+- タイプでグループ化：`新機能`、`バグ修正`、`破壊的変更`、`非推奨化`、`内部 / 雑務`。
+- アイテムごとに 1 文、PR/イシューリンク、外部コントリビューターへの謝辞。
+- 破壊的変更は先に来て、移行パスを含む。
+- 見えない変更（リファクタ、CI 調整、テスト専用）は、再現性に影響する場合を除いて省略。
+
+Conventional Commits リポの場合、`git log <prev-tag>..HEAD --no-merges --format="%s"` から コミットタイプでグループ化したドラフトを生成します。
+
+### ステップ 6 — リリースを実行
+
+1. **バージョンをバンプ**します すべてのソースファイル。
+2. **テストを実行**します テストゲートコマンド経由。
+3. **コミット**します `git add <version files> CHANGELOG.md` → `chore(release): bump version to vX.Y.Z`。
+4. **タグ付け**します — 注釈付き：`git tag -a vX.Y.Z -m "vX.Y.Z"`。
+5. **プッシュ**します ブランチ + タグ。
+6. **CI が引き継ぎます** — リリーストリガーがタグプッシュの場合、CI が公開 + GitHub Release を処理します。そうでなければ、スキルが手動公開コマンド（`npm publish --access public`、`twine upload dist/*` など）を表示します。
+
+### ステップ 7 — 初回セットアップ提案
+
+ステップ 1 がギャップにフラグを立てた場合、スキルは以下の提案をします：
+
+- 検出されたスタック用に `.github/workflows/release.yml` をスキャフォルド
+- ビルドアーティファクトを `.gitignore` に追加
+- タグなしリポの git タグベストプラクティスを説明
+
+### ステップ 8 — 検証
+
+プッシュ後：
+
+- `gh run list --workflow=<release workflow> --limit=3`（`gh` がインストールされている場合）
+- 数分後にレジストリで新バージョンをチェック
+- `gh release view vX.Y.Z`
+
+## ノート
+
+- 特定のプロジェクトにハードコードされた内容はありません — すべてはリポ検査から導き出されます。
+- `.omc/RELEASE_RULE.md` はローカルキャッシュです。導き出されたルールをチームと共有するためにコミットしたり、ローカルが好みの場合は `.gitignore` したりできます。
+- モノリポ / ワークスペース（npm / pnpm / Cargo）が検出され、処理されます。
+
+## 関連スキル
+
+- [omc-setup](/docs/skills/utility/omc-setup) — 更新後に設定を適用
+
+## リファレンス
+
+| 項目 | 値 |
+|------|-------|
+| 呼び出し | `/oh-my-claudecode:release` |
+| マジックキーワード | - |
+| カテゴリ | Utility |

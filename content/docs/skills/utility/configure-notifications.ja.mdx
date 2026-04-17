@@ -1,0 +1,100 @@
+---
+title: 通知を設定
+description: Telegram、Discord、Slack 通知統合をセットアップするインタラクティブウィザード
+---
+
+## 概要
+
+通知を設定は、Telegram、Discord、Slack 統合をセットアップし、セッション終了時、入力待機時、またはバックグラウンドタスク完了時に通知を受け取れるようにするインタラクティブウィザードです。
+
+自然言語会話を通じてステップバイステップで案内します。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:configure-notifications
+/oh-my-claudecode:configure-notifications telegram
+/oh-my-claudecode:configure-notifications discord
+/oh-my-claudecode:configure-notifications slack
+```
+
+## サポートされているプラットフォーム
+
+### Telegram
+
+1. @BotFather 経由でボットを作成
+2. ボットトークンとチャット ID を入力
+3. メッセージフォーマット（Markdown/HTML）を選択
+4. イベントを選択
+5. テスト通知を送信
+
+環境変数でも設定できます：
+```bash
+export OMC_TELEGRAM_BOT_TOKEN="123456789:ABCdefGHI..."
+export OMC_TELEGRAM_CHAT_ID="123456789"
+```
+
+### Discord
+
+2 つのメソッドをサポート：
+- **Webhook**（推奨）: チャネル設定から webhook URL を生成
+- **Bot API**: ボットトークン + チャネル ID
+
+メンション設定: ユーザー ID、ロール ID、またはメンションなしを選択
+
+環境変数：
+```bash
+export OMC_DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
+export OMC_DISCORD_MENTION="<@1465264645320474637>"
+```
+
+### Slack
+
+1. Slack アプリを作成 → Incoming Webhooks を有効化
+2. webhook URL を入力
+3. メンションを設定（ユーザー、@channel、@here）
+4. チャネルをオーバーライド（オプション）
+
+環境変数：
+```bash
+export OMC_SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..."
+export OMC_SLACK_MENTION="<@U1234567890>"
+```
+
+## 通知イベント
+
+| イベント | 説明 |
+|---------|------|
+| session-end | Claude セッションが終了したとき（推奨） |
+| ask-user-question | Claude がユーザーからの入力を待っているとき |
+| session-start | 新しいセッションが開始されたとき |
+| session-continuing | 永続モードがセッションを維持しているとき |
+
+## プラットフォームの有効化
+
+設定後でも、通知を送信するにはセッションごとにフラグを有効にする必要があります。
+
+```bash
+omc --telegram              # Telegram のみ有効化
+omc --telegram --discord     # Telegram + Discord を有効化
+omc --telegram --slack       # Telegram + Slack を有効化
+```
+
+フラグなしで `omc` を実行すると通知は送信されません。
+
+## 設定ファイル
+
+設定は `~/.claude/.omc-config.json` に保存されます。
+
+## 関連スキル
+
+- [omc-setup](/docs/skills/utility/omc-setup) - 完全な OMC 設定
+
+## リファレンス
+
+| 項目 | 値 |
+|-----|-----|
+| 呼び出し | `/oh-my-claudecode:configure-notifications` |
+| マジックキーワード | - |
+| カテゴリ | ユーティリティ |
+| 設定ファイル | `~/.claude/.omc-config.json` |

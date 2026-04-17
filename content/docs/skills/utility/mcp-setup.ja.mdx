@@ -1,0 +1,93 @@
+---
+title: MCP セットアップ
+description: Claude Code の機能を拡張する MCP サーバーを設定するスキル
+---
+
+## 概要
+
+MCP セットアップは、Model Context Protocol（MCP）サーバーを設定して Claude Code エージェントに Web 検索、ファイルシステムアクセス、GitHub 統合などの追加ツールを提供するスキルです。
+
+設定は `claude mcp add` コマンドを使用して行われます。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:mcp-setup
+```
+
+## サポートされている MCP サーバー
+
+### Context7
+
+ライブラリとフレームワークの公式ドキュメンテーションを取得します。API キーは不要です。
+
+```bash
+claude mcp add context7 -- npx -y @upstash/context7-mcp
+```
+
+### Exa Web サーチ
+
+拡張された Web 検索機能。
+
+```bash
+claude mcp add -e EXA_API_KEY=<key> exa -- npx -y exa-mcp-server
+```
+
+### ファイルシステム
+
+拡張ファイルシステムアクセス機能。
+
+```bash
+claude mcp add filesystem -- npx -y @modelcontextprotocol/server-filesystem <dirs>
+```
+
+### GitHub
+
+GitHub API 統合（イシュー、PR、リポジトリ管理）。
+
+```bash
+# Docker（ローカル）
+claude mcp add -e GITHUB_PERSONAL_ACCESS_TOKEN=<token> github -- docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server
+
+# HTTP（リモート）
+claude mcp add --transport http github https://api.githubcopilot.com/mcp/
+```
+
+### カスタム
+
+カスタム MCP サーバーを追加します。
+
+```bash
+# stdio サーバー
+claude mcp add <name> -- <command> [args...]
+
+# HTTP サーバー
+claude mcp add --transport http <name> <url>
+```
+
+## インストール検証
+
+```bash
+claude mcp list
+```
+
+## トラブルシューティング
+
+| 問題 | 解決策 |
+|-----|--------|
+| MCP サーバーがロードされない | Node.js 18+ がインストールされていることを確認 |
+| API キーの問題 | 各サービスのダッシュボードでキーを確認 |
+| 組み込みツールを使用 | Claude Code を再起動 |
+
+## 関連スキル
+
+- [omc-setup](/docs/skills/utility/omc-setup) - 完全な OMC 設定（MCP を含む）
+- [setup](/docs/skills/utility/setup) - 統一セットアップエントリポイント
+
+## リファレンス
+
+| 項目 | 値 |
+|-----|-----|
+| 呼び出し | `/oh-my-claudecode:mcp-setup` |
+| マジックキーワード | - |
+| カテゴリ | ユーティリティ |

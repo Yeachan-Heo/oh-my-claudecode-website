@@ -1,0 +1,86 @@
+---
+title: OMC セットアップ
+description: oh-my-claudecode をインストール・設定するために知っておく必要がある唯一のコマンド
+---
+
+## 概要
+
+OMC セットアップは oh-my-claudecode をセットアップして設定するスキルです。初回インストール後に 1 回実行すればあとはすべて自動的に機能します。アップデート後、このコマンドを使用して最新の設定を適用してください。
+
+**これが知っておく必要のある唯一のコマンドです。**
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:omc-setup              # 初回セットアップまたはアップデート
+/oh-my-claudecode:omc-setup --local      # 現在のプロジェクトのみを設定
+/oh-my-claudecode:omc-setup --global     # グローバル設定
+/oh-my-claudecode:omc-setup --force      # 完全なセットアップウィザードを再実行
+/oh-my-claudecode:omc-setup --help       # ヘルプを表示
+```
+
+## 設定スコープ
+
+### プロジェクトスコープ（`--local`、推奨）
+
+`./.claude/CLAUDE.md` に設定を作成します。現在のプロジェクトのみに適用され、他のプロジェクトに影響しません。
+
+### グローバルスコープ（`--global`）
+
+`~/.claude/CLAUDE.md` に設定を作成します。すべての Claude Code セッションに適用されます。
+
+プロジェクト設定はグローバル設定よりも優先されます。
+
+## セットアップフェーズ
+
+完全なセットアップは 4 つのフェーズを通じて進みます。
+
+### フェーズ 1 - CLAUDE.md インストール
+
+最新の CLAUDE.md をダウンロードしてインストールします。既存ファイルをバックアップします。
+
+### フェーズ 2 - 環境設定
+
+HUD ステータス行をセットアップします。HUD スキルに委譲して処理します。
+
+### フェーズ 3 - 統合セットアップ
+
+MCP サーバーなどの追加統合を設定します。
+
+### フェーズ 4 - 完了
+
+セットアップ完了メッセージを表示し、次のステップを案内します。
+
+## すでに設定済み
+
+セットアップが既に完了している場合、再実行するとはい 3 つのオプションが表示されます：
+
+1. **CLAUDE.md のみを更新**: 最新の CLAUDE.md をダウンロード（高速）
+2. **完全セットアップを再実行**: 最初からウィザードを実行
+3. **キャンセル**: 変更なしで終了
+
+## 更新方法
+
+プラグインアップデート後：
+
+```bash
+/oh-my-claudecode:omc-setup          # CLAUDE.md のみを更新するオプションを提示
+/oh-my-claudecode:omc-setup --local  # プロジェクト設定のみを更新
+/oh-my-claudecode:omc-setup --force  # ウィザード全体を再実行
+```
+
+## 関連スキル
+
+- [setup](/docs/skills/utility/setup) - 統一セットアップエントリポイント
+- [omc-doctor](/docs/skills/utility/omc-doctor) - インストール問題を診断
+- [mcp-setup](/docs/skills/utility/mcp-setup) - MCP サーバー設定
+- [hud](/docs/skills/utility/hud) - HUD ステータス行設定
+
+## リファレンス
+
+| 項目 | 値 |
+|-----|-----|
+| 呼び出し | `/oh-my-claudecode:omc-setup` |
+| マジックキーワード | - |
+| カテゴリ | ユーティリティ |
+| 設定レコード | `~/.claude/.omc-config.json` |

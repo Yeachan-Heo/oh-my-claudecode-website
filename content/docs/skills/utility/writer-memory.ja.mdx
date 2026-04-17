@@ -1,0 +1,84 @@
+---
+title: Writer Memory
+description: キャラクター、関係、シーン、テーマを追跡するライター向けエージェント memory システム
+---
+
+## 概要
+
+Writer Memory は クリエイティブライター向けの永続的 memory システム。Claude セッション全体でキャラクターの感情的な弧、態度、対話トーン、関係ダイナミクス、シーン構造、テーマを保持。
+
+韓国のストーリーテリングワークフロー向けファーストクラスサポートを持ち、すべてのデータは Git コラボレーション用に `.writer-memory/memory.json` に保存。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:writer-memory init <project-name>
+/oh-my-claudecode:writer-memory char add <name>
+/oh-my-claudecode:writer-memory char <name>
+/oh-my-claudecode:writer-memory rel add <char1> <char2> <type>
+/oh-my-claudecode:writer-memory scene add <title>
+/oh-my-claudecode:writer-memory query <question>
+/oh-my-claudecode:writer-memory validate <character> <dialogue>
+/oh-my-claudecode:writer-memory synopsis
+/oh-my-claudecode:writer-memory export
+```
+
+## Memory タイプ
+
+### キャラクター Memory
+
+| フィールド | 韓国語 | 説明 |
+|-------|--------|-------------|
+| `arc` | 감정궤도 | 感情的な旅（例、「諦観 → 欲望の目覚め → 選択」） |
+| `attitude` | 태도 | 現在の気質 |
+| `tone` | 대사톤 | 対話スタイル（例、「控えめ」、「直接的」） |
+| `speechLevel` | 말투 레벨 | 発話公式性：informal、formal、casual、mixed |
+| `keywords` | 핵심 단어 | キャラクターが頻繁に使用する単語 |
+| `taboo` | 금기어 | キャラクターが決して使用しない単語 |
+
+### 関係 Memory
+
+キャラクター間のダイナミクスと時系列の変化を追跡。
+タイプ（ロマンティック、ファミリー、友情など）、ステータス、パワーダイナミクス、イベント年表をレコード。
+
+### シーン Memory
+
+シーンの感情的なアーキテクチャを追跡。ショット構成、ナレーション トーン、感情タグ、ビフォー/アフター変化をレコード。
+
+### テーマ Memory
+
+ストーリーを走る深い意味をキャプチャ。テーマがどう表現されるか、関連シーン、著者意図をレコード。
+
+## キャラクター検証
+
+対話がキャラクターの確立されたボイスに一致するかをチェック。
+
+```bash
+/writer-memory validate 새랑 "사랑해, 해랑아."
+```
+
+発話公式レベル、トーンマッチ、タブー語違反、感情的範囲をチェック、その後 PASS/WARN/FAIL 判定を発行。
+
+## シノプシス生成
+
+5 つの本質的要素を含む感情中心のシノプシス生成：
+
+1. 主人公態度サマリー
+2. コア関係ダイナミクス
+3. 感情的なテーマ
+4. ジャンル対本当の感情コントラスト
+5. 終わりの感情的な響き
+
+## 関連スキル
+
+- [learner](/docs/skills/utility/learner) - セッションからパターン抽出
+- [skill](/docs/skills/utility/skill) - ローカルスキル管理
+
+## リファレンス
+
+| 項目 | 値 |
+|------|-------|
+| 呼び出し | `/oh-my-claudecode:writer-memory` |
+| マジックキーワード | - |
+| カテゴリ | Utility |
+| データパス | `.writer-memory/memory.json` |

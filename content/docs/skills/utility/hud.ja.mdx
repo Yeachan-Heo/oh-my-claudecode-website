@@ -1,0 +1,115 @@
+---
+title: HUD
+description: OMC のリアルタイム状態を表示する HUD（ヘッズアップディスプレイ）を設定・管理するスキル
+---
+
+## 概要
+
+HUD は Claude Code のステータス行にリアルタイム OMC 状態を表示するヘッズアップディスプレイを設定・管理するスキルです。アクティブなモード、コンテキスト使用量、エージェント状態、TODO 進行状況などが一目で見えます。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:hud              # 現在の状態を表示（必要に応じて自動設定）
+/oh-my-claudecode:hud setup        # HUD ステータス行をインストール/修復
+/oh-my-claudecode:hud minimal      # 最小限の表示
+/oh-my-claudecode:hud focused      # フォーカス表示（デフォルト）
+/oh-my-claudecode:hud full         # 詳細表示
+/oh-my-claudecode:hud status       # 詳細ステータス
+```
+
+## プリセット
+
+### 最小限
+
+本質的な情報のみを表示します。
+
+```
+[OMC] ralph | ultrawork | todos:2/5
+```
+
+### フォーカス（デフォルト）
+
+すべての関連要素を表示します。
+
+```
+[OMC] branch:main | ralph:3/10 | US-002 | ultrawork | ctx:67% | agents:2 | todos:2/5
+```
+
+### 詳細
+
+マルチライン表示で詳細なエージェント情報を表示します。
+
+```
+[OMC] repo:omc branch:main | ralph:3/10 | US-002 | ctx:[████░░]67% | agents:3 | todos:2/5
+├─ O architect    2m   analyzing architecture patterns...
+├─ e explore     45s   searching for test files
+└─ s executor     1m   implementing validation logic
+```
+
+## 表示要素
+
+| 要素 | 説明 |
+|-----|------|
+| `[OMC]` | モード識別子 |
+| `repo:name` | Git リポジトリ名 |
+| `branch:name` | Git ブランチ名 |
+| `ralph:3/10` | Ralph 反復回数 / 最大値 |
+| `US-002` | 現在の PRD ストーリー ID |
+| `ctx:67%` | コンテキストウィンドウ使用量 |
+| `agents:2` | 実行中のサブエージェント数 |
+| `todos:2/5` | TODO 完了状態 |
+
+## カラーコード
+
+- **緑**: 正常/健全
+- **黄**: 警告（コンテキスト > 70%、ralph > 7）
+- **赤**: クリティカル（コンテキスト > 85%、ralph が最大値）
+
+## 設定
+
+`~/.claude/settings.json` の `omcHud` キーで設定します。
+
+```json
+{
+  "omcHud": {
+    "preset": "focused",
+    "elements": {
+      "omcLabel": true,
+      "contextBar": true,
+      "agents": true,
+      "todos": true,
+      "ralph": true,
+      "showTokens": false
+    }
+  }
+}
+```
+
+利用可能なプリセット: `minimal`、`focused`、`full`、`dense`、`analytics`、`opencode`
+
+## 使用量プロバイダー
+
+`showTokens` が有効な場合、HUD は現在のセッションを支援するプロバイダーから取得された使用量と費用データを表示します。使用量キャッシュはプロバイダーごとに分割されており、アカウント間で切り替えるときのクロスセッション スラッシングを排除します。
+
+サポートされているプロバイダー：
+
+- **Claude**（claude.ai サブスクリプション、Anthropic API、Bedrock）
+- **z.ai** — 週単位の `TOKENS_LIMIT`（ユニット別に分類、pro+ ティアを尊重）
+- **MiniMax** — コーディング計画使用量、`minimaxi.com` / `minimax.com` ドメイン両方をサポート; ルーティングは認証情報の有無に関わらず独立
+- **Codex / OpenAI**（`omc ask codex` またはチームワーカー経由でルーティングされた場合）
+
+プロバイダーが公開している場合、追加の費用データが表示されます。
+
+## 関連スキル
+
+- [omc-setup](/docs/skills/utility/omc-setup) - 完全な OMC 設定（HUD を含む）
+
+## リファレンス
+
+| 項目 | 値 |
+|-----|-----|
+| 呼び出し | `/oh-my-claudecode:hud` |
+| マジックキーワード | - |
+| カテゴリ | ユーティリティ |
+| 設定場所 | `~/.claude/settings.json`（`omcHud` キー） |

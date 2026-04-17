@@ -1,0 +1,46 @@
+---
+title: Setup
+description: インストール、診断、MCP 設定を 1 つのエントリポイント下に統合するセットアップスキル
+---
+
+## 概要
+
+Setup は OMC の設定関連スキルを 1 つのエントリポイントに統合するスキル。提供された引数に基づいて、適切なサブスキルにルーティングします。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:setup              # フルセットアップウィザード（→ omc-setup）
+/oh-my-claudecode:setup doctor       # インストール診断（→ omc-doctor）
+/oh-my-claudecode:setup mcp          # MCP サーバー設定（→ mcp-setup）
+/oh-my-claudecode:setup wizard       # 明示的なウィザードパス（→ omc-setup）
+/oh-my-claudecode:setup --local      # ローカルプロジェクト設定（→ omc-setup --local）
+/oh-my-claudecode:setup --global     # グローバル設定（→ omc-setup --global）
+```
+
+## ルーティングルール
+
+| 引数 | ルーティング先 |
+|----------|-----------|
+| none、`wizard`、`local`、`global`、`--force` | `/oh-my-claudecode:omc-setup` |
+| `doctor` | `/oh-my-claudecode:omc-doctor` |
+| `mcp` | `/oh-my-claudecode:mcp-setup` |
+
+## 互換性
+
+`omc-setup`、`omc-doctor`、`mcp-setup` は引き続き個別に呼び出すことができます。
+新しいドキュメントは `/oh-my-claudecode:setup` の使用を推奨します。
+
+## 関連スキル
+
+- [omc-setup](/docs/skills/utility/omc-setup) - フル OMC セットアップウィザード
+- [omc-doctor](/docs/skills/utility/omc-doctor) - インストールイシュー診断
+- [mcp-setup](/docs/skills/utility/mcp-setup) - MCP サーバー設定
+
+## リファレンス
+
+| 項目 | 値 |
+|------|-------|
+| 呼び出し | `/oh-my-claudecode:setup` |
+| マジックキーワード | - |
+| カテゴリ | Utility |

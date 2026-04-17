@@ -1,0 +1,109 @@
+---
+title: Project Session Manager
+description: git ワークツリーと tmux を使用して分離した開発環境を管理するセッションマネージャー
+---
+
+## 概要
+
+Project Session Manager (PSM) は git ワークツリーと tmux セッションを使用して分離した開発環境を自動化します。PR レビュー、イシュー修正、機能開発を並列に独立して実行できます。
+
+ワークツリーの簡単な作成だけが必要な場合は、`omc teleport` コマンドも利用できます。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:project-session-manager review <ref>
+/oh-my-claudecode:project-session-manager fix <ref>
+/oh-my-claudecode:project-session-manager feature <project> <name>
+/oh-my-claudecode:project-session-manager list
+/oh-my-claudecode:project-session-manager attach <session>
+/oh-my-claudecode:project-session-manager kill <session>
+/oh-my-claudecode:project-session-manager cleanup
+/oh-my-claudecode:project-session-manager status
+```
+
+エイリアス `psm` も利用可能です：
+
+```bash
+/psm review omc#123
+/psm fix omc#42
+/psm feature omc add-webhooks
+```
+
+## プロジェクト参照フォーマット
+
+| フォーマット | 例 |
+|--------|---------|
+| エイリアス | `omc#123` |
+| フル | `owner/repo#123` |
+| URL | `https://github.com/owner/repo/pull/123` |
+| 現在のリポ | `#123` |
+
+## 主要コマンド
+
+### review
+
+PR レビューセッションを作成します。PR ブランチをチェックアウトし、ワークツリーを作成し、tmux セッションを起動し、Claude Code を実行します。
+
+### fix
+
+イシュー修正セッションを作成します。イシュー情報を取得し、修正ブランチを作成します。
+
+### feature
+
+機能開発セッションを作成します。機能ブランチを作成し、ワークツリーをセットアップします。
+
+### cleanup
+
+マージされた PR または閉じられたイシューのセッションを自動的にクリーンアップします。
+
+## Teleport コマンド
+
+PSM より軽量なワークツリー作成ツール。tmux セッション管理なしでワークツリーを作成します。
+
+```bash
+omc teleport #123           # イシュー/PR のワークツリーを作成
+omc teleport my-feature     # 機能のワークツリーを作成
+omc teleport list           # ワークツリーをリスト表示
+omc teleport remove <name>  # ワークツリーを削除
+```
+
+## プロバイダー
+
+| プロバイダー | CLI | 参照フォーマット |
+|----------|-----|-----------------|
+| GitHub（デフォルト） | `gh` | `owner/repo#123`、エイリアス、URL |
+| Jira | `jira` | `PROJ-123`、エイリアス |
+
+## 設定
+
+プロジェクトエイリアスを `~/.psm/projects.json` で設定します。
+
+```json
+{
+  "aliases": {
+    "omc": {
+      "repo": "Yeachan-Heo/oh-my-claudecode",
+      "local": "~/Workspace/oh-my-claudecode",
+      "default_base": "main"
+    }
+  }
+}
+```
+
+## 要件
+
+- `git`（v2.5 以上、ワークツリーサポート）
+- `jq`
+- `tmux`（オプション、推奨）
+- `gh`（GitHub 用）または `jira`（Jira 用）
+
+## リファレンス
+
+| 項目 | 値 |
+|------|-------|
+| 呼び出し | `/oh-my-claudecode:project-session-manager` |
+| エイリアス | `/oh-my-claudecode:psm` |
+| マジックキーワード | - |
+| カテゴリ | Utility |
+| 設定 | `~/.psm/projects.json` |

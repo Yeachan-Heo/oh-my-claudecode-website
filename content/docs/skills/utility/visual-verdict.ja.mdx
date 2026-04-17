@@ -1,0 +1,80 @@
+---
+title: Visual Verdict
+description: スクリーンショット対参照比較のための構造化された視覚的判定
+---
+
+## 概要
+
+Visual Verdict は生成された UI スクリーンショットを参照画像と比較し、次の編集イテレーションを駆動する厳密な JSON 判定を返す。ビジュアルフィデリティ要件に対して確定的なパス/失敗ガイダンス提供。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:visual-verdict
+```
+
+## 使用タイミング
+
+- タスクにビジュアルフィデリティ要件が含まれる（レイアウト、スペーシング、タイポグラフィ、コンポーネントスタイリング）
+- 生成されたスクリーンショットと少なくとも 1 つの参照画像がある
+- 編集を続ける前に確定的なパス/失敗ガイダンスが必要
+
+## 入力
+
+- `reference_images[]` — 1 つ以上の画像パス
+- `generated_screenshot` — 現在の出力画像
+- オプション：`category_hint` — 例、`hackernews`、`sns-feed`、`dashboard`
+
+## 出力フォーマット
+
+**JSON のみ**を返す。この形状：
+
+```json
+{
+  "score": 87,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "Top nav spacing is tighter than reference",
+    "Primary button uses smaller font weight"
+  ],
+  "suggestions": [
+    "Increase nav item horizontal padding by 4px",
+    "Set primary button font-weight to 600"
+  ],
+  "reasoning": "Core layout matches, but style details still diverge."
+}
+```
+
+### フィールド
+
+| フィールド | タイプ | 説明 |
+|-------|------|-------------|
+| `score` | 整数 0-100 | ビジュアルフィデリティスコア |
+| `verdict` | 文字列 | `pass`、`revise`、または `fail` |
+| `category_match` | ブール値 | 生成された出力が意図された UI カテゴリに一致するかどうか |
+| `differences` | 文字列[] | 具体的なビジュアルミスマッチ（レイアウト、スペーシング、タイポグラフィ、色） |
+| `suggestions` | 文字列[] | 実行可能な次の編集。相違と結びつけられた |
+| `reasoning` | 文字列 | 1-2 文のサマリー |
+
+## パス閾値
+
+- ターゲットパス閾値は **90 以上**
+- `score < 90` の場合、編集続けます。visual-verdict を再実行して、さらなるビジュアルレビュー前に
+- ビジュアルタスクは、次のスクリーンショットが閾値をクリアするまで完了したと扱わ**ない**
+
+## デバッグビジュアライゼーション
+
+ミスマッチ診断が困難な場合：
+
+1. visual-verdict を権威あるの決定に保つ
+2. ピクセルレベルの diff ツール（pixelmatch オーバーレイ）をホットスポット局所化の**セカンダリデバッグエイド**として使用
+3. ピクセル diff ホットスポットを具体的な `differences[]` および `suggestions[]` 更新に変換
+
+## リファレンス
+
+| 項目 | 値 |
+|------|-------|
+| 呼び出し | `/oh-my-claudecode:visual-verdict` |
+| マジックキーワード | - |
+| カテゴリ | Utility |

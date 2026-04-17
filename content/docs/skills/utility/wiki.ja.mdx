@@ -1,0 +1,111 @@
+---
+title: Wiki
+description: LLM Wiki — セッション間で複合する永続的マークダウン知識ベース（Karpathy モデル）
+---
+
+## 概要
+
+`wiki` は**永続的で自己保持されるマークダウン知識ベース** プロジェクトおよびセッション知識用。Karpathy の LLM Wiki コンセプトに inspired、知識がチャット履歴で消えるのではなくセッション間で複合することを可能に。
+
+ページは `.omc/wiki/` に存在し、カテゴリでまとめられ。`[[page-name]]` wiki リンク構文経由でのクロスリファレンスをサポート。
+
+## 使用方法
+
+```bash
+/oh-my-claudecode:wiki
+```
+
+マジックキーワード：`wiki`、`wiki this`、`wiki add`、`wiki lint`、`wiki query`
+
+## オペレーション
+
+### Ingest
+
+ウィキページに知識を処理。単一の ingest は複数のページに触れることができます。
+
+```
+wiki_ingest({ title: "Auth Architecture", content: "...", tags: ["auth", "architecture"], category: "architecture" })
+```
+
+### Query
+
+すべてのウィキページをキーワードとタグで検索。マッチするページをスニペット付き返す — LLM は引用で答えを合成。
+
+```
+wiki_query({ query: "authentication", tags: ["auth"], category: "architecture" })
+```
+
+### Lint
+
+ウィキのヘルスチェックを実行。孤立ページ、陳腐コンテンツ、壊れたクロスリファレンス、巨大ページ、構造的矛盾を検出。
+
+```
+wiki_lint()
+```
+
+### クイック追加
+
+1 つのページを素早く追加（ingest より単純）。
+
+```
+wiki_add({ title: "Page Title", content: "...", tags: ["tag1"], category: "decision" })
+```
+
+### リスト / 読む / 削除
+
+```
+wiki_list()                                # すべてのページを表示（index.md 読む）
+wiki_read({ page: "auth-architecture" })   # 特定ページを読む
+wiki_delete({ page: "outdated-page" })     # ページを削除
+```
+
+### ログ
+
+`.omc/wiki/log.md` でウィキオペレーション履歴を表示。
+
+## カテゴリ
+
+ページはカテゴリでまとめられ：
+
+- `architecture` — システム設計、コンポーネント、データフロー
+- `decision` — ADR と根拠
+- `pattern` — 反復パターンまたはイディオム
+- `debugging` — 既知の落とし穴、根本原因
+- `environment` — セットアップ、依存、ランタイム設定
+- `session-log` — 自動キャプチャ重要な発見
+
+## ストレージレイアウト
+
+```
+.omc/wiki/
+├── *.md              # ページ（YAML フロントマター付きマークダウン）
+├── index.md          # 自動保持カタログ
+└── log.md            # 追記専用オペレーション年代記
+```
+
+## クロスリファレンス
+
+`[[page-name]]` 構文を使用してページ間をリンク。スキルはリンクグラフを保持し、`wiki_lint()` は壊れたリファレンスをレポート。
+
+## オートキャプチャ
+
+セッション終了時に、重要な発見は自動的に `session-log` ページとしてキャプチャ。`.omc-config.json` の `wiki.autoCapture` 経由で設定（デフォルト：有効）。
+
+## ハード制約
+
+- **ベクトル埋め込みなし** — クエリはキーワード + タグマッチのみを使用
+- ウィキページはデフォルトで**git 無視**（`.omc/wiki/` はプロジェクトローカル）
+
+## 関連スキル
+
+- [remember](/docs/skills/utility/remember) — 知識を正しいメモリサーフェースにルーティング
+- [learner](/docs/skills/utility/learner) — セッションから再利用可能なスキルを抽出
+- [writer-memory](/docs/skills/utility/writer-memory) — ライティングプロジェクト用エージェント memory
+
+## リファレンス
+
+| 項目 | 値 |
+|------|-------|
+| 呼び出し | `/oh-my-claudecode:wiki` |
+| マジックキーワード | `wiki`、`wiki add`、`wiki lint`、`wiki query` |
+| カテゴリ | Utility |

@@ -1,0 +1,96 @@
+---
+title: スキル
+description: ワークフロー及びユーティリティカテゴリに整理された 37 個すべての OMC スキルを紹介します
+---
+
+## スキルとは
+
+スキルは `/oh-my-claudecode:スキル名` という形式で呼び出されるコマンドです。
+マジックキーワードで有効化することもできるため、コマンド名を暗記せずに会話の中で使用できます。
+
+> **数について:** OMC は **37 個の組み込みスキル** を搭載しています。36 個はスラッシュコマンドまたはマジックキーワードでユーザーが呼び出せます。1 個（`omc-reference`）は内部で自動ロードされ、`user-invocable: false` に設定されています。
+
+## ワークフロースキル
+
+タスク自動化する実行モードスキルです。
+
+| スキル | 説明 | マジックキーワード |
+|-------|------|-----------------|
+| [autopilot](/docs/skills/workflow/autopilot) | アイデアから動作するコードまでの完全な自動パイプライン | `autopilot`、`build me`、`I want a` |
+| [ralph](/docs/skills/workflow/ralph) | 完了するまで繰り返す自己参照ループ | `ralph`、`don't stop` |
+| [ultrawork](/docs/skills/workflow/ultrawork) | 最大並列エージェント実行 | `ultrawork`、`ulw` |
+| [ultraqa](/docs/skills/workflow/ultraqa) | QA サイクリング: テスト、検証、修正、繰り返し | - |
+| [team](/docs/skills/workflow/team) | N 個の Claude エージェント調整パイプライン | - |
+| [omc-teams](/docs/skills/workflow/omc-teams) | tmux で claude/codex/gemini CLI ワーカーを実行 | - |
+| [ccg](/docs/skills/workflow/ccg) | Claude-Codex-Gemini トライモデルオーケストレーション | `ccg` |
+| [plan](/docs/skills/workflow/plan) | インタビューベースの戦略計画 | - |
+| [ralplan](/docs/skills/workflow/ralplan) | Planner-Architect-Critic コンセンサス計画 | `ralplan` |
+| [sciomc](/docs/skills/workflow/sciomc) | 並列サイエンティスト エージェント研究オーケストレーション | - |
+| [external-context](/docs/skills/workflow/external-context) | 並列ドキュメント専門家による外部ドキュメント参照ルックアップ | - |
+| [deepinit](/docs/skills/workflow/deepinit) | 階層的 AGENTS.md コードベース ドキュメンテーション | - |
+| [deep-interview](/docs/skills/workflow/deep-interview) | 数学的曖昧性ゲート付きソクラティック深掘りインタビュー | `deep interview`、`ouroboros` |
+| [deep-dive](/docs/skills/workflow/deep-dive) | 2 段階パイプライン: トレース調査 → 深掘りインタビュー要件結晶化 | `deep dive` |
+| [self-improve](/docs/skills/workflow/self-improve) | トーナメント選択による自動進化的コード改善エンジン | - |
+
+## ユーティリティスキル
+
+設定、管理、ヘルパースキル。
+
+| スキル | 説明 | マジックキーワード |
+|-------|------|-----------------|
+| [cancel](/docs/skills/utility/cancel) | すべてのアクティブなモードをキャンセル | `cancelomc`、`stopomc` |
+| [ask](/docs/skills/utility/ask) | Claude/Codex/Gemini に質問して成果物をキャプチャ | - |
+| [ai-slop-cleaner](/docs/skills/utility/ai-slop-cleaner) | AI コードのスロップをクリーンアップ | `deslop`、`anti-slop` |
+| [learner](/docs/skills/utility/learner) | 現在のセッションから再利用可能なスキルを抽出 | - |
+| [skill](/docs/skills/utility/skill) | ローカルスキルを管理（一覧、追加、削除、検索） | - |
+| [trace](/docs/skills/utility/trace) | エビデンスドリブンなトレーシングレーン | - |
+| [hud](/docs/skills/utility/hud) | HUD ディスプレイ設定 | - |
+| [configure-notifications](/docs/skills/utility/configure-notifications) | 通知統合（Telegram、Discord、Slack） | `configure telegram`、`configure discord`、`configure slack` |
+| [release](/docs/skills/utility/release) | 自動化されたリリース ワークフロー | - |
+| [writer-memory](/docs/skills/utility/writer-memory) | ライター向けエージェント記憶システム | - |
+| [project-session-manager](/docs/skills/utility/project-session-manager) | git worktree + tmux 隔離開発環境 | - |
+| [visual-verdict](/docs/skills/utility/visual-verdict) | スクリーンショット参照比較のための構造化ビジュアル QA 検証 | - |
+| [omc-setup](/docs/skills/utility/omc-setup) | OMC セットアップと設定 | - |
+| [mcp-setup](/docs/skills/utility/mcp-setup) | MCP サーバーセットアップ | - |
+| [omc-doctor](/docs/skills/utility/omc-doctor) | インストール問題を診断して修正 | - |
+| [setup](/docs/skills/utility/setup) | 統一セットアップエントリポイント | - |
+| [debug](/docs/skills/utility/debug) | OMC セッション、フック、状態、オーケストレーションを診断 | - |
+| [verify](/docs/skills/utility/verify) | 完了申告前のエビデンスベース検証 | - |
+| [remember](/docs/skills/utility/remember) | 知識をプロジェクト記憶、notepad、ドキュメントにルーティング | - |
+| [skillify](/docs/skills/utility/skillify) | セッション ワークフローを再利用可能な SKILL.md ドラフトに変換 | - |
+| [wiki](/docs/skills/utility/wiki) | 永続的 markdown ナレッジベース（Karpathy LLM Wiki） | `wiki`、`wiki add`、`wiki query` |
+| [omc-reference](/docs/skills/utility/omc-reference) | 自動ロード OMC カタログ参照（内部） | - |
+
+## スキルの呼び出し方
+
+### スラッシュコマンド
+
+```bash
+/oh-my-claudecode:autopilot "REST API for a bookstore"
+/oh-my-claudecode:ralph "fix all TypeScript errors"
+/oh-my-claudecode:team 3:executor "implement user auth"
+```
+
+### マジックキーワード
+
+会話中にキーワードを入力するとスキルが自動的に有効化されます。
+
+```
+autopilot build me a todo app with React
+ralph fix the authentication module
+ulw implement user management
+```
+
+## スキル関係図
+
+```
+deep-interview (clarify requirements)
+  → ralplan (consensus planning)
+    → autopilot (autonomous execution)
+      → ralph (loop execution)
+        → ultrawork (parallel execution)
+      → ultraqa (QA cycling)
+```
+
+より高度なスキルは低度なスキルを自動的に含みます。
+autopilot を実行すると内部的に ralph と ultrawork の支援を求めます。
