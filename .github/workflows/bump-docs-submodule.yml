@@ -1,0 +1,54 @@
+name: Bump docs submodule
+
+on:
+  # Fallback cron: picks up changes within ~15 minutes even if webhook fails.
+  schedule:
+    - cron: '*/15 * * * *'
+  # Manual trigger from the Actions tab.
+  workflow_dispatch:
+  # Webhook from the docs repo (oh-my-claudecode-docs) on push.
+  # Requires the docs repo to dispatch via a PAT stored in its secrets.
+  repository_dispatch:
+    types: [docs-updated]
+
+# Never run two bumps concurrently — one is enough.
+concurrency:
+  group: bump-docs-submodule
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout website with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: true
+
+      - name: Fast-forward docs submodule to origin/main
+        run: |
+          git -C content/docs fetch origin main
+          git -C content/docs reset --hard origin/main
+
+      - name: Detect change
+        id: check
+        run: |
+          if git diff --quiet content/docs; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "short_sha=$(git -C content/docs rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push submodule bump
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/docs
+          git commit -m "chore(submodule): bump docs to ${{ steps.check.outputs.short_sha }}"
+          git push
