@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.12.0 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.13.0 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
@@ -1213,7 +1213,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.12.0</span>
+        <span class="sidebar-brand__version">v4.13.0</span>
       </a>
 
       <!-- Deprecation Notice -->
@@ -1380,10 +1380,28 @@
 
           <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.13.0</span>
+              Autoresearch Skill, Hooks Sync &amp; Windows Spawn Fixes
+            </div>
+            <details open>
+              <summary>View changes in v4.13.0</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Autoresearch as a Skill:</strong> Migrated autoresearch from raw enforcement to a proper skill. Better integration, preserved enforcement visibility, and cleaner migration path.</li>
+                <li><strong>Hooks Library Sync:</strong> Installer now properly copies hooks library modules during updates, preventing version mismatches and stale artifacts.</li>
+                <li><strong>Windows Spawn Fixes:</strong> Fixed EINVAL errors when spawning npm/npx on Windows. Plugin-patterns now correctly passes shell:true on win32 systems.</li>
+                <li><strong>Deep-Interview Threshold Alignment:</strong> Threshold rendering now stays aligned with live settings. Raw-skill contract explicitly defines the threshold for consistency.</li>
+                <li><strong>Ralph/Plan State Loop Fix:</strong> Prevented post-ralplan team follow-ups from looping back into planning, fixing repetitive planning cycles.</li>
+                <li><strong>Windows HUD &amp; Multi-Repo Fixes:</strong> Fixed Windows HUD npm root discovery and MSYS2 shell compatibility. Multi-repo workspace context preserved for CLI team handoffs.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card premium-card" data-tilt>
+            <div class="mode-card__header">
               <span class="mode-card__keyword">v4.12.0</span>
               HUD Reprioritization, Stop Hook &amp; Deep-Interview Threshold
             </div>
-            <details open>
+            <details>
               <summary>View changes in v4.12.0</summary>
               <ul style="list-style-type: disc;">
                 <li><strong>HUD Layout Reprioritization:</strong> Users can now reprioritize main-line HUD elements without a full layout rewrite. Customize visibility while preserving your preferred arrangement.</li>
