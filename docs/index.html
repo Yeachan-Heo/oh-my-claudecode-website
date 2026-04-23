@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.13.0 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.13.2 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
@@ -1213,7 +1213,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.13.0</span>
+        <span class="sidebar-brand__version">v4.13.2</span>
       </a>
 
       <!-- Deprecation Notice -->
@@ -1380,10 +1380,28 @@
 
           <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.13.2</span>
+              Cursor Support, Cross-Session Fixes &amp; Rate-Limit Hardening
+            </div>
+            <details open>
+              <summary>View changes in v4.13.2</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Cursor IDE Agent Support:</strong> <code>cursor-agent</code> added as the 4th tmux worker type in <code>omc-teams</code>. Run Cursor alongside Claude, Codex, and Gemini in coordinated workflows.</li>
+                <li><strong>Cross-Session Team Cancel Fix:</strong> Cleared the owning Ralph session when cross-session cancel has no local state, preventing orphaned team sessions.</li>
+                <li><strong>Rate-Limit Wait Fix:</strong> Prevented stale Usage API 429s from resuming blocked panes. Rate-limit wait now holds until the actual limit window resets.</li>
+                <li><strong>Codex MCP Sync Deduplication:</strong> Installer keeps Codex MCP sync from duplicating user-owned tables, preserving custom MCP server configurations.</li>
+                <li><strong>HUD Quota Preservation:</strong> Weekly HUD quotas are preserved when stdin rate limits are present. Rate-limiting no longer corrupts usage tracking data.</li>
+                <li><strong>Windows npm CLI Launch:</strong> Ensured Windows can launch npm-installed Claude CLI without spawn errors via fixed shell execution path resolution.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card premium-card" data-tilt>
+            <div class="mode-card__header">
               <span class="mode-card__keyword">v4.13.0</span>
               Autoresearch Skill, Hooks Sync &amp; Windows Spawn Fixes
             </div>
-            <details open>
+            <details>
               <summary>View changes in v4.13.0</summary>
               <ul style="list-style-type: disc;">
                 <li><strong>Autoresearch as a Skill:</strong> Migrated autoresearch from raw enforcement to a proper skill. Better integration, preserved enforcement visibility, and cleaner migration path.</li>
