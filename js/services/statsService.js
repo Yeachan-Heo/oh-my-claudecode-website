@@ -89,7 +89,7 @@ class StatsService {
       const data = {
         stars: githubData?.stargazers_count || 0,
         downloads: npmData?.downloads || 0,
-        agents: 33, // Known count from documentation
+        agents: 19, // Known count from source package
         version: releaseData?.tag_name?.replace(/^v/, '') || '0.0.0',
         updatedAt: new Date().toISOString(),
       };
@@ -106,9 +106,9 @@ class StatsService {
       }
 
       // If still missing critical data, use hardcoded fallbacks
-      if (data.stars === 0) data.stars = 4715;
-      if (data.downloads === 0) data.downloads = 33124;
-      if (data.version === '0.0.0') data.version = '4.13.2';
+      if (data.stars === 0) data.stars = 35474;
+      if (data.downloads === 0) data.downloads = 30371;
+      if (data.version === '0.0.0') data.version = '4.14.4';
 
       this.updateCache(data);
       return data;
@@ -117,10 +117,10 @@ class StatsService {
 
       // Return fallback data if everything fails
       return {
-        stars: 4715,
-        downloads: 33124,
+        stars: 35474,
+        downloads: 30371,
         agents: 19,
-        version: '4.13.2',
+        version: '4.14.4',
         updatedAt: new Date().toISOString(),
       };
     }

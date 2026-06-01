@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.13.2 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.14.4 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
@@ -1213,7 +1213,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.13.2</span>
+        <span class="sidebar-brand__version">v4.14.4</span>
       </a>
 
       <!-- Deprecation Notice -->
@@ -1380,10 +1380,88 @@
 
           <div class="mode-card premium-card" data-tilt>
             <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.14.4</span>
+              Native Windows Hook Manifest Hotfix
+            </div>
+            <details open>
+              <summary>View changes in v4.14.4</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Native Windows Hook Manifest:</strong> Plugin <code>hooks/hooks.json</code> now uses direct <code>node "$CLAUDE_PLUGIN_ROOT"/scripts/run.cjs</code> commands for every hook event, avoiding <code>sh</code>, <code>/bin/sh</code>, and <code>find-node.sh</code> on native Windows.</li>
+                <li><strong>macOS/Linux Cache Repair Preserved:</strong> Non-interactive shell setup still repairs to <code>find-node.sh</code> when nvm/fnm do not expose <code>node</code> on <code>PATH</code>.</li>
+                <li><strong>Doctor &amp; Test Hardening:</strong> Doctor checks cover stale Windows plugin manifests, and focused checks isolate user/global MCP registry state to prevent false conflict failures.</li>
+                <li><strong>Install:</strong> Use <code>npm install -g oh-my-claude-sisyphus@4.14.4</code> or reinstall/update from the Claude plugin marketplace when v4.14.4 appears.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card premium-card" data-tilt>
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.14.3</span>
+              Windows Hook &amp; Update Hotfixes
+            </div>
+            <details>
+              <summary>View changes in v4.14.3</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Windows Hook Rewrites:</strong> Fixed native Windows plugin hooks still invoking <code>sh</code>/<code>find-node.sh</code> for Stop, UserPromptSubmit, and related events.</li>
+                <li><strong>SessionEnd Portability:</strong> Restored native Windows SessionEnd hook launch behavior and quieted portable hook shutdown paths.</li>
+                <li><strong>Update Checks:</strong> Fixed update-check cache path consistency under the Claude config directory and added a HUD update notification visibility toggle.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card premium-card" data-tilt>
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.14.2</span>
+              Safer Cleanup, Durable Ultragoal &amp; Runtime Hardening
+            </div>
+            <details>
+              <summary>View changes in v4.14.2</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Safer Destructive Cleanup:</strong> Worktree cleanup and teleport removal paths now require safer path validation and fallbacks.</li>
+                <li><strong>Durable Ultragoal:</strong> Ultragoal story ledgers persist and enforce Claude goal activation handoffs before execution proceeds.</li>
+                <li><strong>Plugin/Runtime Reliability:</strong> Command wrappers, plugin registry alignment, stale cache repair, Windows HUD, PowerShell workers, and cmux team spawning were hardened.</li>
+                <li><strong>Model Guidance:</strong> Added model × agent compatibility and recommendation matrix documentation.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card premium-card" data-tilt>
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.14.1</span>
+              Goal Workflow Polish, Launch Reliability &amp; Diagnostics Hardening
+            </div>
+            <details>
+              <summary>View changes in v4.14.1</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Goal Workflow UX:</strong> Documented Claude <code>/goal</code> adapter boundaries, clarified workflow expectations, and mapped goal artifacts to OMC storage roots.</li>
+                <li><strong>Team Launch Reliability:</strong> Improved prompt delivery from TUI idle state, Claude Code v2.1.x banner handling, Enter-swallow stalls, and OSC 52 clipboard behavior.</li>
+                <li><strong>Diagnostics &amp; MCP:</strong> Preserved MCP registry headers and launch-profile availability while surfacing LSP install hints from aggregated diagnostics.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card premium-card" data-tilt>
+            <div class="mode-card__header">
+              <span class="mode-card__keyword">v4.14.0</span>
+              Ultragoal Port, Autopilot/Team Launch Hardening &amp; Plugin Skill Registry
+            </div>
+            <details>
+              <summary>View changes in v4.14.0</summary>
+              <ul style="list-style-type: disc;">
+                <li><strong>Ultragoal Port:</strong> Added <code>omc ultragoal</code> with durable plans, ledgers under <code>.omc/ultragoal</code>, Claude Code <code>/goal</code> handoff guidance, and fail-closed checkpointing.</li>
+                <li><strong>Preserve Claude Code:</strong> <code>omc update</code> snapshots global <code>@anthropic-ai/claude-code</code> installs and restores them if the OMC update path removes them.</li>
+                <li><strong>Concise Plugin Skill Registry:</strong> Re-registers bundled plugin skills while keeping full on-demand skill bodies under <code>skill-bodies/*/SKILL.md</code>.</li>
+                <li><strong>Launch &amp; Runtime Fixes:</strong> Hardens fixed team worker plans, HUD cache cleanup, autopilot stop-hook state cleanup, doctor package lookup, credential mirroring, and cancel-ralph alias behavior.</li>
+              </ul>
+            </details>
+          </div>
+
+          <div class="mode-card premium-card" data-tilt>
+            <div class="mode-card__header">
               <span class="mode-card__keyword">v4.13.2</span>
               Cursor Support, Cross-Session Fixes &amp; Rate-Limit Hardening
             </div>
-            <details open>
+            <details>
               <summary>View changes in v4.13.2</summary>
               <ul style="list-style-type: disc;">
                 <li><strong>Cursor IDE Agent Support:</strong> <code>cursor-agent</code> added as the 4th tmux worker type in <code>omc-teams</code>. Run Cursor alongside Claude, Codex, and Gemini in coordinated workflows.</li>

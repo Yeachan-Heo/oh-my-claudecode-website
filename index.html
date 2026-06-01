@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="oh-my-claudecode - A weapon, not a tool. Multi-agent orchestration plugin for Claude Code with 19 specialized agents and 36 skills.">
+  <meta name="description" content="oh-my-claudecode - A weapon, not a tool. Multi-agent orchestration plugin for Claude Code with 19 specialized agents and 39 skills.">
   <meta name="keywords" content="Claude Code, AI agents, multi-agent, orchestration, automation, CLI, developer tools">
   <meta name="author" content="oh-my-claudecode">
 
@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/">
   <meta property="og:title" content="oh-my-claudecode - A weapon, not a tool">
-  <meta property="og:description" content="Multi-agent orchestration plugin for Claude Code. 19 specialized agents, 36 skills, full autonomous execution.">
+  <meta property="og:description" content="Multi-agent orchestration plugin for Claude Code. 19 specialized agents, 39 skills, full autonomous execution.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
@@ -19,7 +19,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="oh-my-claudecode - A weapon, not a tool">
-  <meta name="twitter:description" content="Multi-agent orchestration plugin for Claude Code. 19 specialized agents, 36 skills.">
+  <meta name="twitter:description" content="Multi-agent orchestration plugin for Claude Code. 19 specialized agents, 39 skills.">
   <meta name="twitter:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>oh-my-claudecode - A weapon, not a tool</title>
@@ -2179,7 +2179,7 @@
           <span class="gradient-text">A weapon, not a tool</span>
         </p>
         <p class="hero__description hero-entrance hero-entrance--3">
-          Multi-AI orchestration plugin for Claude Code. Coordinate Claude, Gemini, and Codex with 19 specialized agents, 36 skills, and MCP-powered tools.
+          Multi-AI orchestration plugin for Claude Code. Coordinate Claude, Gemini, and Codex with 19 specialized agents, 39 skills, and MCP-powered tools.
         </p>
         <div class="hero-stats hero-entrance hero-entrance--3" style="--reveal-delay: 150ms">
           <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="hero-stat-badge" target="_blank" rel="noopener" aria-label="GitHub Stars">
@@ -2243,36 +2243,36 @@
     </div>
   </section>
 
-<!-- What's New in v4.13.2 Section -->
+<!-- What's New in v4.14.4 Section -->
 <section id="whats-new" class="section whats-new-section" aria-labelledby="whats-new-title">
   <div class="section__header" data-reveal="fade-up">
     <div class="whats-new-badge">
       <span class="whats-new-badge__label">NEW</span>
-      <span class="whats-new-badge__version">v4.13.2</span>
+      <span class="whats-new-badge__version">v4.14.4</span>
     </div>
-    <h2 id="whats-new-title" class="section__title">What's New in 4.13.2</h2>
-    <p class="section__subtitle">Cursor IDE support, cross-session team fixes, rate-limit handling, MCP sync improvements, and Windows CLI launch fixes across 8 PRs.</p>
+    <h2 id="whats-new-title" class="section__title">What's New in 4.14.4</h2>
+    <p class="section__subtitle">Native Windows hook manifest fixes, durable Ultragoal, Claude goal workflow polish, plugin/runtime hardening, and safer cleanup guardrails across the v4.14 series.</p>
   </div>
 
   <div class="whats-new-layout" data-reveal="fade-up" data-reveal-delay="100">
     <div class="whats-new-highlights">
       <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="200">
-        <div class="whats-new-card__icon whats-new-card__icon--feature">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
-        </div>
-        <div>
-          <h3 class="whats-new-card__title">Cursor IDE Agent Support</h3>
-          <p class="whats-new-card__desc"><code>cursor-agent</code> joins Claude, Codex, and Gemini as the 4th tmux worker type in <code>omc-teams</code> CLI execution. Run Cursor alongside other agents in coordinated multi-model workflows.</p>
-        </div>
-      </article>
-
-      <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="250">
         <div class="whats-new-card__icon whats-new-card__icon--security">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Cross-Session Team Cancel Fix</h3>
-          <p class="whats-new-card__desc">Cleared the owning Ralph session when cross-session cancel has no local state. Prevents orphaned team sessions and ensures clean teardown across workspace boundaries.</p>
+          <h3 class="whats-new-card__title">Native Windows Hook Manifest Hotfix</h3>
+          <p class="whats-new-card__desc">Plugin hook manifests now call <code>node "$CLAUDE_PLUGIN_ROOT"/scripts/run.cjs</code> directly on Windows, avoiding <code>sh</code>, <code>/bin/sh</code>, and <code>find-node.sh</code> launch regressions.</p>
+        </div>
+      </article>
+
+      <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="250">
+        <div class="whats-new-card__icon whats-new-card__icon--feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div>
+          <h3 class="whats-new-card__title">Durable Ultragoal Workflow</h3>
+          <p class="whats-new-card__desc"><code>omc ultragoal</code> now persists multi-goal plans and ledgers under <code>.omc/ultragoal</code>, with fail-closed checkpointing and Claude Code <code>/goal</code> handoff guidance.</p>
         </div>
       </article>
 
@@ -2281,8 +2281,8 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Rate-Limit Wait Fix</h3>
-          <p class="whats-new-card__desc">Prevented stale Usage API 429 responses from resuming blocked panes. Rate-limit wait now correctly holds until the actual limit window resets, avoiding premature execution.</p>
+          <h3 class="whats-new-card__title">Goal Workflow Polish</h3>
+          <p class="whats-new-card__desc">The v4.14 line clarifies Claude <code>/goal</code> boundaries, maps goal artifacts to OMC storage roots, and improves durable workflow UX across sessions.</p>
         </div>
       </article>
 
@@ -2291,34 +2291,34 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Codex MCP Sync Deduplication</h3>
-          <p class="whats-new-card__desc">Installer now keeps Codex MCP sync from duplicating user-owned tables. Preserves your custom MCP server configurations while still syncing new default entries cleanly.</p>
+          <h3 class="whats-new-card__title">Plugin &amp; Runtime Reliability</h3>
+          <p class="whats-new-card__desc">Plugin cache repair, registry alignment, command wrapper preservation, and update-check cache paths are hardened so marketplace and CLI updates stay consistent.</p>
         </div>
       </article>
 
       <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="400">
-        <div class="whats-new-card__icon whats-new-card__icon--feature">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <div class="whats-new-card__icon whats-new-card__icon--security">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Windows npm CLI Launch</h3>
-          <p class="whats-new-card__desc">Ensured Windows can launch npm-installed Claude CLI without spawn errors. Fixed shell execution path resolution for npm global packages on Windows systems.</p>
+          <h3 class="whats-new-card__title">Safer Cleanup Guardrails</h3>
+          <p class="whats-new-card__desc">Destructive worktree cleanup and teleport removal paths now require safer path validation and fallbacks before deleting local state.</p>
         </div>
       </article>
 
       <article class="whats-new-card whats-new-card--premium" data-tilt data-reveal="fade-up" data-reveal-delay="450">
         <div class="whats-new-card__icon whats-new-card__icon--feature">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">HUD Quota Preservation</h3>
-          <p class="whats-new-card__desc">Weekly HUD quotas are now preserved when stdin rate limits are present. Rate-limiting no longer resets or corrupts your HUD usage tracking data.</p>
+          <h3 class="whats-new-card__title">Windows Team &amp; HUD Hardening</h3>
+          <p class="whats-new-card__desc">Windows HUD, PowerShell team worker startup, native Claude version detection, and hook shutdown paths are more portable across shells and platforms.</p>
         </div>
       </article>
     </div>
 
     <div class="whats-new-cta" data-reveal="fade-up" data-reveal-delay="500">
-      <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v4.13.2" class="btn btn--primary" target="_blank" rel="noopener">View Release Notes</a>
+      <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v4.14.4" class="btn btn--primary" target="_blank" rel="noopener">View Release Notes</a>
       <a href="https://github.com/yeachan-heo/oh-my-claudecode/blob/main/CHANGELOG.md" class="btn btn--secondary" target="_blank" rel="noopener">Full Changelog</a>
     </div>
   </div>
@@ -2425,7 +2425,7 @@
   <section id="installation" class="section install-section" aria-labelledby="install-title">
     <div class="section__header" data-reveal="fade-up">
       <h2 id="install-title" class="section__title">Get Started in Seconds</h2>
-      <p class="section__subtitle">Install via Claude Code plugin marketplace, or use the npm package directly: <code>oh-my-claude-sisyphus@4.13.2</code>.</p>
+      <p class="section__subtitle">Install via Claude Code plugin marketplace, or use the npm package directly: <code>oh-my-claude-sisyphus@4.14.4</code>.</p>
     </div>
 
     <div class="install-flow" data-reveal="stagger">
@@ -2464,13 +2464,13 @@
                 <span class="code-block__dot code-block__dot--yellow"></span>
                 <span class="code-block__dot code-block__dot--green"></span>
               </div>
-              <button class="code-block__copy" data-copy="npm install -g oh-my-claude-sisyphus@4.13.2" aria-label="Copy command">
+              <button class="code-block__copy" data-copy="npm install -g oh-my-claude-sisyphus@4.14.4" aria-label="Copy command">
                 Copy
               </button>
             </div>
             <div class="code-block__content">
               <code><span class="comment"># CLI install via npm:</span><br>
-  npm install -g oh-my-claude-sisyphus@4.13.2</code>
+  npm install -g oh-my-claude-sisyphus@4.14.4</code>
             </div>
           </div>
         </div>

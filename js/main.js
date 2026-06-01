@@ -580,7 +580,7 @@ if (document.readyState === 'loading') {
 
 // Expose minimal API for debugging
 window.OMC = {
-  version: '4.13.2',
+  version: '4.14.4',
   state: AppState,
   stats: statsService,
   storage: storageService,
