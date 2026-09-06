@@ -152,7 +152,7 @@ function countMcpTools() {
   });
 }
 
-const counts = sourceRoot
+let counts = sourceRoot
   ? {
       agents: countFiles('agents', '.md'),
       skills: countDirectories('skills'),
@@ -183,6 +183,22 @@ console.log(
   `Target version: v${version}` +
     (version === requestedVersion ? '' : ` (kept ahead of requested v${requestedVersion})`)
 );
+
+// Counts describe the release the source tree is on. A checkout that is behind
+// the recorded version (a stale local worktree, or a branch that predates the
+// release) would otherwise silently publish that older release's inventory,
+// so its counts are ignored rather than trusted.
+const sourceIsBehind =
+  Boolean(stats.version) && compareVersions(stats.version, requestedVersion) > 0;
+if (sourceIsBehind) {
+  console.warn(
+    `Source tree is v${requestedVersion}, behind the recorded v${stats.version}: keeping existing counts instead of publishing the older inventory.`
+  );
+  counts.agents = null;
+  counts.skills = null;
+  counts.commands = null;
+  counts.mcpTools = null;
+}
 
 const nextStats = {
   version,
