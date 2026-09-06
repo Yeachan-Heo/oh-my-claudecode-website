@@ -258,23 +258,57 @@ if (!currentVersion) {
   process.exit(1);
 }
 
-let content = original;
-if (currentVersion !== version) {
-  console.log(`Updating version: v${currentVersion} -> v${version}`);
-  const escaped = currentVersion.replace(/\./g, '\\.');
-  content = content
-    .replace(new RegExp(`v${escaped}`, 'g'), `v${version}`)
-    .replace(new RegExp(`(oh-my-claude-sisyphus@)${escaped}`, 'g'), `$1${version}`)
-    .replace(new RegExp(`(What's New in )${escaped}`, 'g'), `$1${version}`);
-} else {
+if (currentVersion === version) {
   console.log(`Website version already up-to-date: v${version}`);
+} else {
+  console.log(`Updating version: v${currentVersion} -> v${version}`);
 }
 
-content = syncProseCounts(syncStatElements(content));
+/**
+ * Historical release notes must keep naming their own version, so only the
+ * live surfaces are rewritten: `data-stat` elements, prose counts, meta
+ * descriptions, the docs sidebar badge, and unpinned install guidance.
+ */
+function syncLiveVersionClaims(content) {
+  return content
+    .replace(
+      /(<meta[^>]*content="[^"]*?)v\d+\.\d+\.\d+([^"]*")/g,
+      `$1v${version}$2`
+    )
+    .replace(
+      /(<span class="sidebar-brand__version"[^>]*>)v\d+\.\d+\.\d+(<\/span>)/g,
+      `$1v${version}$2`
+    )
+    .replace(
+      /(<span class="whats-new-badge__version"[^>]*>)v\d+\.\d+\.\d+(<\/span>)/g,
+      `$1v${version}$2`
+    )
+    .replace(
+      /(releases\/tag\/)v\d+\.\d+\.\d+/g,
+      `$1v${version}`
+    );
+}
 
-if (content !== original) {
-  writeFileSync(indexPath, content);
-  console.log(`Updated ${indexPath}`);
+for (const file of ['index.html', 'docs/index.html']) {
+  const filePath = join(ROOT, file);
+  if (!existsSync(filePath)) continue;
+
+  const before = readFileSync(filePath, 'utf8');
+  let content = before;
+
+  if (currentVersion !== version) {
+    const escaped = currentVersion.replace(/\./g, '\\.');
+    content = content
+      .replace(new RegExp(`(oh-my-claude-sisyphus@)${escaped}\\b`, 'g'), `$1${version}`)
+      .replace(new RegExp(`(What's New in )${escaped}\\b`, 'g'), `$1${version}`);
+  }
+
+  content = syncLiveVersionClaims(syncProseCounts(syncStatElements(content)));
+
+  if (content !== before) {
+    writeFileSync(filePath, content);
+    console.log(`Updated ${filePath}`);
+  }
 }
 
 console.log('Metadata sync complete!');

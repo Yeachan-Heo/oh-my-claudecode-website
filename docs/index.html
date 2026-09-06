@@ -7,9 +7,9 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs.html">
+  <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/docs/">
   <meta property="og:title" content="Documentation | Oh My Claudecode">
-  <meta property="og:description" content="Complete documentation for oh-my-claudecode v4.14.4 - runtime guardrails, centralized model defaults, Team workflows, and 25+ MCP tools.">
+  <meta property="og:description" content="Complete documentation for oh-my-claudecode v5.3.0 - runtime guardrails, centralized model defaults, Team workflows, and 55 MCP tools.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>Documentation | Oh My Claudecode</title>
@@ -1213,7 +1213,7 @@
       <a href="index.html" class="sidebar-brand">
         <div class="sidebar-brand__icon">OMC</div>
         <span class="sidebar-brand__text">Oh My Claudecode</span>
-        <span class="sidebar-brand__version">v4.14.4</span>
+        <span class="sidebar-brand__version" data-stat="version">v5.3.0</span>
       </a>
 
       <!-- Deprecation Notice -->
@@ -1552,7 +1552,7 @@
             <details>
               <summary>View changes in v4.7.0</summary>
               <ul style="list-style-type: disc;">
-                <li><strong>Native Team/Task API:</strong> Added <code>TeamCreate</code>, <code>TaskCreate</code>, <code>TaskList</code>, <code>TaskGet</code>, <code>TaskUpdate</code>, and <code>SendMessage</code> for granular agent orchestration.</li>
+                <li><strong>Native Team/Task API:</strong> Added <code>TeamCreate</code>, <code>TaskCreate</code>, <code>TaskList</code>, <code>TaskGet</code>, <code>TaskUpdate</code>, and <code>SendMessage</code> for granular agent orchestration. <em>Superseded: Claude Code 2.1.178+ removed the native team API &mdash; see <a href="#team-api">Team Coordination</a>.</em></li>
                 <li><strong>omc ask Command:</strong> New <code>omc ask &lt;claude|codex|gemini&gt;</code> flow for explicit tri-model routing.</li>
                 <li><strong>Skill Expansion:</strong> Added 14 new skills including <code>configure-openclaw</code>, <code>deepinit</code>, <code>project-session-manager</code>, <code>tdd</code>, and <code>trace</code>.</li>
                 <li><strong>Agent Catalog Update:</strong> Introduced <code>code-simplifier</code> agent to the Build lane.</li>
@@ -1617,7 +1617,7 @@
             <details>
               <summary>View changes in v4.4.0</summary>
               <ul style="list-style-type: disc;">
-                <li><strong>Breaking change:</strong> Codex and Gemini MCP providers were removed in v4.4.0 (restored as high-level <code>ask-codex</code> and <code>ask-gemini</code> skills in v4.6.0). Use <code>/omc-teams N:codex</code> or <code>/omc-teams N:gemini</code> for tmux workers.</li>
+                <li><strong>Breaking change:</strong> Codex and Gemini MCP providers were removed in v4.4.0 (restored as high-level <code>ask-codex</code> and <code>ask-gemini</code> skills in v4.6.0). Use <code>/skill:team N:codex</code> or <code>/skill:team N:gemini</code> for tmux workers.</li>
                 <li><strong>tmux CLI workers:</strong> You can spawn Claude, Codex, or Gemini CLI workers in visible tmux split panes.</li>
                 <li><strong>On-demand lifecycle:</strong> Workers start when a task arrives and stop when the task is done.</li>
                 <li><strong>/ccg tri-model skill:</strong> Work fans out to Codex and Gemini in parallel, then Claude combines the results.</li>
@@ -1701,7 +1701,7 @@
             <li>
               <div class="qs-content">
                 <h4>Parallel Work</h4>
-                <p><code>"ulw fix all typescript errors"</code> &mdash; Runs multiple agents in parallel for speed.</p>
+                <p><code>"execute fix all typescript errors"</code> &mdash; Carries the task through parallel worker lanes to verified code.</p>
               </div>
             </li>
             <li>
@@ -1851,15 +1851,15 @@
               <div class="mode-card__header">
                 <div class="mode-card__icon">⚡</div>
                 <div>
-                  <h3 class="mode-card__title">Ultrawork</h3>
-                  <span class="mode-card__keyword">ulw</span>
+                  <h3 class="mode-card__title">Execute</h3>
+                  <span class="mode-card__keyword">execute</span>
                 </div>
               </div>
-              <p class="mode-card__description">Maximum parallelism. Aggressively delegates subtasks to multiple background agents.</p>
+              <p class="mode-card__description">Carry an approved task through to working, verified code. Replaces the retired <code>ultrawork</code>/<code>ulw</code> mode.</p>
               <ul class="mode-card__features">
-                <li>Up to 5+ concurrent agents</li>
+                <li>Parallel worker lanes via the <code>team</code> skill</li>
                 <li>Smart model routing</li>
-                <li>Non-blocking background execution</li>
+                <li>Verification before completion is claimed</li>
               </ul>
             </div>
           </div>
@@ -1941,67 +1941,41 @@
           <p><strong>LSP Tools:</strong> <code>lsp_hover</code>, <code>lsp_goto_definition</code>, <code>lsp_find_references</code>, <code>lsp_diagnostics</code>, <code>lsp_rename</code>.</p>
           <p><strong>AST Grep:</strong> <code>ast_grep_search</code>, <code>ast_grep_replace</code> for structural refactoring.</p>
 
-          <h3>Team & Task Coordination</h3>
-          <p><strong>Team API:</strong> <code>TeamCreate</code>, <code>TaskCreate</code>, <code>TaskList</code>, <code>TaskGet</code>, <code>TaskUpdate</code>, <code>SendMessage</code>.</p>
+          <h3>Team &amp; Task Coordination</h3>
+          <p><strong>Teams:</strong> Claude Code 2.1.178+ removed the native <code>TeamCreate</code>/<code>TeamDelete</code> API. With <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> each session has one implicit team: the <code>team</code> skill spawns teammates with the Agent/Task tool using distinct <code>name</code> values.</p>
           <p><strong>Workflows:</strong> <code>omc ask &lt;claude|codex|gemini&gt;</code> for tri-model orchestration.</p>
-          <p><strong>Python REPL:</strong> Persistent environment for data analysis.</p>
+          <p><strong>Python REPL:</strong> Sandboxed execution &mdash; imports, file I/O, and dynamic code execution are blocked; use built-in functions and persistent variables for calculation and in-memory data analysis.</p>
         </section>
 
-        <!-- Team API Detailed -->
+        <!-- Team Coordination -->
         <section id="team-api" data-section>
-          <h2><span class="anchor-link">#</span>Team API Reference</h2>
-          <p>The Team API provides granular control over multi-agent orchestration. It allows you to programmatically manage teams, tasks, and inter-agent communication.</p>
+          <h2><span class="anchor-link">#</span>Team Coordination</h2>
+          <p>Claude Code 2.1.178+ removed the native <code>TeamCreate</code>/<code>TeamDelete</code> API, and the <code>swarm</code> compatibility alias was removed in #1131. There is no OMC MCP &ldquo;Team API&rdquo;: coordination now runs on Claude Code&rsquo;s implicit agent team.</p>
 
-          <div class="table-wrapper">
-            <table>
-              <thead>
-                <tr><th>Tool</th><th>Parameters</th><th>Description</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><code>TeamCreate</code></td>
-                  <td><code>team_name</code>, <code>workers</code></td>
-                  <td>Initializes a new team with a specified set of workers.</td>
-                </tr>
-                <tr>
-                  <td><code>TaskCreate</code></td>
-                  <td><code>team_name</code>, <code>subject</code>, <code>description</code></td>
-                  <td>Adds a new task to a team's backlog.</td>
-                </tr>
-                <tr>
-                  <td><code>TaskList</code></td>
-                  <td><code>team_name</code>, <code>status_filter</code></td>
-                  <td>Lists all tasks for a team, optionally filtered by status.</td>
-                </tr>
-                <tr>
-                  <td><code>TaskUpdate</code></td>
-                  <td><code>team_name</code>, <code>task_id</code>, <code>status</code>, <code>result</code></td>
-                  <td>Updates the status or result of a specific task.</td>
-                </tr>
-                <tr>
-                  <td><code>SendMessage</code></td>
-                  <td><code>team_name</code>, <code>to_worker</code>, <code>body</code></td>
-                  <td>Sends an asynchronous message to a specific team worker.</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="callout warn">
+            <div class="callout-title">Removed</div>
+            <p><code>TeamCreate</code>, <code>TeamDelete</code>, <code>TaskCreate</code>, <code>TaskList</code>, <code>TaskGet</code>, <code>TaskUpdate</code> and <code>SendMessage</code> are not OMC tools and must not be called. Use the <code>team</code> skill instead.</p>
           </div>
 
-          <h3>Example: Programmatic Delegation</h3>
+          <h3>How teams actually run</h3>
+          <ol>
+            <li>Set <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code>; each session then has exactly one implicit team.</li>
+            <li>Invoke <code>/skill:team</code> (or say <code>team 3:executor &lt;task&gt;</code>) to spawn N teammates.</li>
+            <li>Teammates are spawned with the Agent/Task tool using distinct <code>name</code> values such as <code>name="worker-1"</code>. <code>team_name</code> is accepted only as ignored legacy metadata.</li>
+            <li>Shared work is tracked in the active task list; each teammate returns a short execution summary rather than bulky logs.</li>
+          </ol>
+
+          <h3>Example</h3>
           <div class="code-block-wrapper">
-            <div class="code-block-header"><span class="code-lang">JAVASCRIPT</span></div>
-            <pre><code>// 1. Create a specialized team
-TeamCreate(team_name="ui-redesign", workers=["designer", "executor", "verifier"]);
+            <div class="code-block-header"><span class="code-lang">CLAUDE CODE</span></div>
+            <pre><code># enable implicit agent teams once per environment
+export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 
-// 2. Assign tasks
-TaskCreate(
-  team_name="ui-redesign",
-  subject="Hero Section",
-  description="Redesign the hero section with a focus on modern visual effects."
-);
+# spawn three executor teammates on a shared task list
+/skill:team 3:executor redesign the hero section
 
-// 3. Monitor progress
-const tasks = TaskList(team_name="ui-redesign", status_filter="completed");</code></pre>
+# legacy tmux/CLI worker runs
+omc team</code></pre>
           </div>
         </section>
 
@@ -2012,38 +1986,47 @@ const tasks = TaskList(team_name="ui-redesign", status_filter="completed");</cod
             <table>
               <thead><tr><th>Keyword</th><th>Description</th><th>Example</th></tr></thead>
               <tbody>
-                <tr><td><code>autopilot</code></td><td>Autonomous execution</td><td>"autopilot build a login page"</td></tr>
-                <tr><td><code>ralph</code></td><td>Persistence mode</td><td>"ralph refactor the API"</td></tr>
-                <tr><td><code>ulw</code></td><td>Ultrawork (Parallel)</td><td>"ulw fix these 5 bugs"</td></tr>
-                <tr><td><code>team</code></td><td>Native Team</td><td>"team 3:executor build it"</td></tr>
-                <tr><td><code>plan</code></td><td>Strategic planning</td><td>"plan the migration"</td></tr>
-                <tr><td><code>ask codex</code></td><td>Consult Codex</td><td>"ask codex to review this"</td></tr>
-                <tr><td><code>configure-openclaw</code></td><td>Notification gateway setup</td><td>"/configure-openclaw"</td></tr>
-                <tr><td><code>deepinit</code></td><td>Deep codebase initialization</td><td>"/deepinit"</td></tr>
-                <tr><td><code>external-context</code></td><td>Manage external hooks</td><td>"/external-context"</td></tr>
-                <tr><td><code>learn-about-omc</code></td><td>Usage pattern analysis</td><td>"/learn-about-omc"</td></tr>
-                <tr><td><code>learner</code></td><td>Extract learned skills</td><td>"/learner"</td></tr>
-                <tr><td><code>mcp-setup</code></td><td>MCP tool configuration</td><td>"/mcp-setup"</td></tr>
-                <tr><td><code>omc-doctor</code></td><td>Diagnostic toolkit</td><td>"/omc-doctor"</td></tr>
-                <tr><td><code>omc-help</code></td><td>Interactive help guide</td><td>"/omc-help"</td></tr>
-                <tr><td><code>project-session-manager</code></td><td>Isolated environments</td><td>"/project-session-manager"</td></tr>
-                <tr><td><code>ralph-init</code></td><td>Initialize PRD loop</td><td>"/ralph-init"</td></tr>
-                <tr><td><code>sciomc</code></td><td>Scientific research agents</td><td>"/sciomc research photosynthesis"</td></tr>
-                <tr><td><code>tdd</code></td><td>Test-driven development</td><td>"/tdd build auth"</td></tr>
-                <tr><td><code>trace</code></td><td>Agent flow visualization</td><td>"/trace"</td></tr>
-                <tr><td><code>writer-memory</code></td><td>Agentic memory for writers</td><td>"/writer-memory"</td></tr>
-                <tr><td><code>deep-interview</code></td><td>Socratic requirements clarification</td><td>"/deep-interview 'vague idea'"</td></tr>
-                <tr><td><code>ralplan</code></td><td>Iterative planning consensus</td><td>"ralplan this feature"</td></tr>
-                <tr><td><code>ccg</code></td><td>Tri-model fan-out (Claude+Codex+Gemini)</td><td>"/ccg review this module"</td></tr>
-                <tr><td><code>ultraqa</code></td><td>Automated QA cycling</td><td>"/ultraqa"</td></tr>
-                <tr><td><code>ai-slop-cleaner</code></td><td>Detect and remove AI-generated slop</td><td>"deslop this file"</td></tr>
-                <tr><td><code>release</code></td><td>Release management workflow</td><td>"/release"</td></tr>
-                <tr><td><code>configure-notifications</code></td><td>Set up Discord/Slack/Telegram alerts</td><td>"/configure-notifications"</td></tr>
-                <tr><td><code>omc-plan</code></td><td>Structured planning mode</td><td>"/omc-plan"</td></tr>
+                <tr><td><code>ai-slop-cleaner</code></td><td>Clean AI-generated code slop with a regression-safe, deletion-first workflow and optional rev…</td><td>"/skill:ai-slop-cleaner"</td></tr>
+                <tr><td><code>ask</code></td><td>Process-first advisor routing for Claude, Codex, Gemini, Antigravity, Grok, or Cursor via `om…</td><td>"/skill:ask"</td></tr>
+                <tr><td><code>ask-navigator</code></td><td>Shipyard's navigator — chart a foggy effort (destination unclear, questions not yet stateable…</td><td>"/skill:ask-navigator"</td></tr>
+                <tr><td><code>autopilot</code></td><td>Full autonomous execution from idea to working code</td><td>"/skill:autopilot"</td></tr>
+                <tr><td><code>autoresearch</code></td><td>Stateful single-mission improvement loop with strict evaluator contract, markdown decision lo…</td><td>"/skill:autoresearch"</td></tr>
+                <tr><td><code>cancel</code></td><td>Cancel any active OMC mode (autopilot, ralph, ultragoal, swarm, ultrapilot, pipeline, team) a…</td><td>"/skill:cancel"</td></tr>
+                <tr><td><code>configure-notifications</code></td><td>Configure notification integrations (Telegram, Discord, Slack) via natural language</td><td>"/skill:configure-notifications"</td></tr>
+                <tr><td><code>debug</code></td><td>Diagnose the current OMC session or repo state using logs, traces, state, and focused reprodu…</td><td>"/skill:debug"</td></tr>
+                <tr><td><code>deep-interview</code></td><td>Socratic deep interview with mathematical ambiguity gating before explicit execution approval</td><td>"/skill:deep-interview"</td></tr>
+                <tr><td><code>deepinit</code></td><td>Deep codebase initialization with hierarchical AGENTS.md documentation</td><td>"/skill:deepinit"</td></tr>
+                <tr><td><code>drydock</code></td><td>Lay the keel of the shipyard harness in any repo — the 4-pillar shared environment (Context…</td><td>"/skill:drydock"</td></tr>
+                <tr><td><code>execute</code></td><td>Carry an approved task through to working, verified code</td><td>"/skill:execute"</td></tr>
+                <tr><td><code>external-context</code></td><td>Invoke parallel document-specialist agents for external web searches and documentation lookup</td><td>"/skill:external-context"</td></tr>
+                <tr><td><code>graph</code></td><td>Deterministic orchestration graph runtime - declarative DAG pipelines with journal-based cras…</td><td>"/skill:graph"</td></tr>
+                <tr><td><code>hud</code></td><td>Configure HUD display options (layout, presets, display elements)</td><td>"/skill:hud"</td></tr>
+                <tr><td><code>launch</code></td><td>Shipyard's governed delivery pipeline — converge the mission, synthesize a durable spec, deco…</td><td>"/skill:launch"</td></tr>
+                <tr><td><code>loft</code></td><td>Loft the shape before cutting steel — answer a design question that prose cannot settle by bu…</td><td>"/skill:loft"</td></tr>
+                <tr><td><code>minimal-code-discipline</code></td><td>YAGNI-ladder coding discipline for writing changes — existence-first, reuse before writing, d…</td><td>"/skill:minimal-code-discipline"</td></tr>
+                <tr><td><code>omc-doctor</code></td><td>Diagnose and fix oh-my-claudecode installation issues</td><td>"/skill:omc-doctor"</td></tr>
+                <tr><td><code>omc-setup</code></td><td>Install or refresh oh-my-claudecode for plugin, npm, and local-dev setups from the canonical…</td><td>"/skill:omc-setup"</td></tr>
+                <tr><td><code>plan</code></td><td>Strategic planning with optional interview workflow</td><td>"/skill:plan"</td></tr>
+                <tr><td><code>project-session-manager</code></td><td>Worktree-first dev environment manager for issues, PRs, and features with optional tmux sessions</td><td>"/skill:project-session-manager"</td></tr>
+                <tr><td><code>ralph</code></td><td>Self-referential loop until task completion with configurable verification reviewer</td><td>"/skill:ralph"</td></tr>
+                <tr><td><code>ralplan</code></td><td>Consensus planning entrypoint that auto-gates vague ralph/autopilot/team requests before exec…</td><td>"/skill:ralplan"</td></tr>
+                <tr><td><code>release</code></td><td>Generic release assistant — analyzes repo release rules, caches them in .omc/RELEASE_RULE.md…</td><td>"/skill:release"</td></tr>
+                <tr><td><code>remember</code></td><td>Review reusable project knowledge and decide what belongs in project memory, notepad, or dura…</td><td>"/skill:remember"</td></tr>
+                <tr><td><code>research</code></td><td>Investigate an open question and return grounded, sourced findings</td><td>"/skill:research"</td></tr>
+                <tr><td><code>review</code></td><td>Evaluate finished work for defects, risk, and simplification before it ships</td><td>"/skill:review"</td></tr>
+                <tr><td><code>self-improve</code></td><td>Autonomous evolutionary code improvement engine with tournament selection</td><td>"/skill:self-improve"</td></tr>
+                <tr><td><code>skill</code></td><td>Manage local skills - list, add, remove, search, edit, setup wizard</td><td>"/skill:skill"</td></tr>
+                <tr><td><code>skillify</code></td><td>Turn a repeatable workflow from the current session into a reusable OMC skill draft</td><td>"/skill:skillify"</td></tr>
+                <tr><td><code>team</code></td><td>N coordinated agents on shared task list using Claude Code implicit agent teams</td><td>"/skill:team"</td></tr>
+                <tr><td><code>trace</code></td><td>Evidence-driven tracing lane that orchestrates competing tracer hypotheses in Claude built-in…</td><td>"/skill:trace"</td></tr>
+                <tr><td><code>ultragoal</code></td><td>Durable multi-goal workflow that persists plan/ledger artifacts under .omc/ultragoal and prin…</td><td>"/skill:ultragoal"</td></tr>
+                <tr><td><code>verify</code></td><td>Verify that a change really works before you claim completion</td><td>"/skill:verify"</td></tr>
+                <tr><td><code>visual-verdict</code></td><td>Structured visual QA verdict for screenshot-to-reference comparisons</td><td>"/skill:visual-verdict"</td></tr>
+                <tr><td><code>wiki</code></td><td>LLM Wiki — persistent markdown knowledge base that compounds across sessions (Karpathy model)</td><td>"/skill:wiki"</td></tr>
                 </tbody>
             </table>
           </div>
-          <p><strong>Utility Skills:</strong> <code>/oh-my-claudecode:cancel</code>, <code>note</code>, <code>omc-setup</code>, <code>hud</code>, <code>doctor</code>.</p>
+          <p><strong>Utility skills:</strong> <code>/skill:cancel</code>, <code>/skill:remember</code>, <code>/skill:omc-setup</code>, <code>/skill:hud</code>, <code>/skill:omc-doctor</code>.</p>
         </section>
 
         <!-- State & Memory -->
@@ -2496,13 +2479,13 @@ omc hud --watch --interval 1000</code></pre>
               <span class="workflow__arrow">&rarr;</span>
               <span class="workflow__step">/teams</span>
               <span class="workflow__arrow">or</span>
-              <span class="workflow__step">/omc-teams</span>
+              <span class="workflow__step">/skill:team</span>
               <span class="workflow__arrow">&rarr;</span>
               <span class="workflow__step">/ralph</span>
             </div>
             <ul class="mode-card__features">
               <li><code>/ralplan</code> reviews your PRD and builds a consensus plan (Planner + Architect + Critic agree).</li>
-              <li><code>/teams</code> spawns multiple Claude agents to build in parallel. Use <code>/omc-teams</code> instead if you need Codex or Gemini CLI workers.</li>
+              <li><code>/teams</code> spawns multiple Claude agents to build in parallel. Use <code>/skill:team</code> instead if you need Codex or Gemini CLI workers.</li>
               <li><code>/ralph</code> keeps going until the architect verifies everything works.</li>
             </ul>
           </div>
@@ -2522,13 +2505,13 @@ omc hud --watch --interval 1000</code></pre>
             <div class="workflow">
               <span class="workflow__step">/autopilot</span>
               <span class="workflow__arrow">&rarr;</span>
-              <span class="workflow__step">/ultrawork</span>
+              <span class="workflow__step">/skill:execute</span>
               <span class="workflow__arrow">&rarr;</span>
               <span class="workflow__step">/ralph</span>
             </div>
             <ul class="mode-card__features">
               <li><code>/autopilot</code> takes your request and starts building right away.</li>
-              <li><code>/ultrawork</code> splits work across agents for speed.</li>
+              <li><code>/skill:execute</code> splits work across agents for speed.</li>
               <li><code>/ralph</code> continues until everything is fully verified.</li>
             </ul>
           </div>
@@ -2550,12 +2533,12 @@ omc hud --watch --interval 1000</code></pre>
               <span class="workflow__arrow">&rarr;</span>
               <span class="workflow__step">/ralph</span>
               <span class="workflow__arrow">&rarr;</span>
-              <span class="workflow__step">/ultraqa</span>
+              <span class="workflow__step">/skill:verify</span>
             </div>
             <ul class="mode-card__features">
               <li><code>/plan</code> analyzes the issue and lays out a fix strategy.</li>
               <li><code>/ralph</code> keeps working on the fix until it passes checks.</li>
-              <li><code>/ultraqa</code> runs end-to-end and smoke tests (Playwright for web apps, tmux for CLI).</li>
+              <li><code>/skill:verify</code> runs end-to-end and smoke tests (Playwright for web apps, tmux for CLI).</li>
             </ul>
             <div class="callout info">
               <div class="callout-title">Tip</div>
@@ -2576,23 +2559,23 @@ omc hud --watch --interval 1000</code></pre>
               Use this when you need to handle many issues or tickets at the same time.
             </p>
             <div class="workflow">
-              <span class="workflow__step">/omc-teams N:architect</span>
+              <span class="workflow__step">/skill:team N:architect</span>
               <span class="workflow__arrow">&rarr;</span>
-              <span class="workflow__step">/omc-teams</span>
+              <span class="workflow__step">/skill:team</span>
               <span class="workflow__arrow">&rarr;</span>
-              <span class="workflow__step">/omc-teams</span>
+              <span class="workflow__step">/skill:team</span>
               <span class="workflow__arrow">&rarr;</span>
               <span class="workflow__step">/ralplan</span>
               <span class="workflow__arrow">&rarr;</span>
-              <span class="workflow__step">/ralph + /ultrawork</span>
+              <span class="workflow__step">/ralph + /skill:execute</span>
               <span class="workflow__arrow">&rarr;</span>
-              <span class="workflow__step">/ultraqa</span>
+              <span class="workflow__step">/skill:verify</span>
             </div>
             <ul class="mode-card__features">
               <li>Start architect workers to analyze all issues and draft one complete plan.</li>
               <li>Run workers in parallel on separate worktrees, each submitting a PR to <code>dev</code>.</li>
               <li>Review and merge open PRs, then <code>/ralplan</code> to resolve conflicts safely.</li>
-              <li>Finish with <code>/ralph</code>, <code>/ultrawork</code>, and <code>/ultraqa</code> until all tests pass.</li>
+              <li>Finish with <code>/ralph</code>, <code>/skill:execute</code>, and <code>/skill:verify</code> until all tests pass.</li>
             </ul>
           </div>
 
@@ -2608,10 +2591,19 @@ omc hud --watch --interval 1000</code></pre>
           <p>This guide walks you through installing OMC, running the setup wizard, and executing your first command.</p>
 
           <h3>Installation</h3>
-          <p>Install OMC with a single command:</p>
+          <p>Install from the Claude Code plugin marketplace. These are Claude Code slash commands &mdash; enter them <strong>one at a time</strong>:</p>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">CLAUDE CODE</span></div>
+            <pre><code>/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode</code></pre>
+          </div>
+          <div class="code-block-wrapper">
+            <div class="code-block-header"><span class="code-lang">CLAUDE CODE</span></div>
+            <pre><code>/plugin install oh-my-claudecode</code></pre>
+          </div>
+          <p>If you prefer the npm CLI/runtime path instead of the marketplace flow:</p>
           <div class="code-block-wrapper">
             <div class="code-block-header"><span class="code-lang">BASH</span></div>
-            <pre><code>curl -fsSL https://raw.githubusercontent.com/yeachan-heo/oh-my-claudecode/main/install.sh | bash</code></pre>
+            <pre><code>npm i -g oh-my-claude-sisyphus@latest</code></pre>
           </div>
 
           <h3>First Setup</h3>
@@ -2671,7 +2663,7 @@ omc hud --watch --interval 1000</code></pre>
           <p>Maximum parallelism. Ultrawork aggressively delegates subtasks to multiple background agents running concurrently (up to 5+ agents). It uses smart model routing to assign the right model tier to each subtask.</p>
           <div class="code-block-wrapper">
             <div class="code-block-header"><span class="code-lang">BASH</span></div>
-            <pre><code>ulw fix all 5 failing tests</code></pre>
+            <pre><code>execute fix all 5 failing tests</code></pre>
           </div>
           <p><strong>When to use:</strong> Batch operations, multiple independent fixes, any work that can be split into parallel subtasks.</p>
 
@@ -2695,7 +2687,7 @@ omc hud --watch --interval 1000</code></pre>
           <p>QA cycling -- test, verify, fix, repeat. UltraQA runs end-to-end tests, verifies results, fixes failures, and repeats until all tests pass. It is typically activated by Autopilot after implementation, but can be triggered independently.</p>
           <div class="code-block-wrapper">
             <div class="code-block-header"><span class="code-lang">BASH</span></div>
-            <pre><code>/ultraqa</code></pre>
+            <pre><code>/skill:verify</code></pre>
           </div>
           <p><strong>When to use:</strong> Ensuring quality after implementation, running comprehensive test suites, validating that all acceptance criteria are met.</p>
         </section>
