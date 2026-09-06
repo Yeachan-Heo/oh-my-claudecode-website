@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="oh-my-claudecode - A weapon, not a tool. Multi-agent orchestration plugin for Claude Code with 19 specialized agents and 39 skills.">
+  <meta name="description" content="oh-my-claudecode - A weapon, not a tool. Multi-agent orchestration plugin for Claude Code with 19 specialized agents and 37 skills.">
   <meta name="keywords" content="Claude Code, AI agents, multi-agent, orchestration, automation, CLI, developer tools">
   <meta name="author" content="oh-my-claudecode">
 
@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yeachan-heo.github.io/oh-my-claudecode-website/">
   <meta property="og:title" content="oh-my-claudecode - A weapon, not a tool">
-  <meta property="og:description" content="Multi-agent orchestration plugin for Claude Code. 19 specialized agents, 39 skills, full autonomous execution.">
+  <meta property="og:description" content="Multi-agent orchestration plugin for Claude Code. 19 specialized agents, 37 skills, full autonomous execution.">
   <meta property="og:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="640">
@@ -19,7 +19,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="oh-my-claudecode - A weapon, not a tool">
-  <meta name="twitter:description" content="Multi-agent orchestration plugin for Claude Code. 19 specialized agents, 39 skills.">
+  <meta name="twitter:description" content="Multi-agent orchestration plugin for Claude Code. 19 specialized agents, 37 skills.">
   <meta name="twitter:image" content="https://yeachan-heo.github.io/oh-my-claudecode-website/social-preview.jpg">
 
   <title>oh-my-claudecode - A weapon, not a tool</title>
@@ -2251,7 +2251,7 @@
       <span class="whats-new-badge__version" data-stat="version">v5.3.0</span>
     </div>
     <h2 id="whats-new-title" class="section__title">What's New in <span data-stat="version-bare">5.3.0</span></h2>
-    <p class="section__subtitle">Native Windows hook manifest fixes, durable Ultragoal, Claude goal workflow polish, plugin/runtime hardening, and safer cleanup guardrails across the v4.14 series.</p>
+    <p class="section__subtitle">Two new opt-in shipyard skills, remote approval gates with workspace checkpoints and rollback for <code>graph</code>, HUD and Windows cache performance work, and hook protocol fixes.</p>
   </div>
 
   <div class="whats-new-layout" data-reveal="fade-up" data-reveal-delay="100">
@@ -2261,8 +2261,8 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Native Windows Hook Manifest Hotfix</h3>
-          <p class="whats-new-card__desc">Plugin hook manifests now call <code>node "$CLAUDE_PLUGIN_ROOT"/scripts/run.cjs</code> directly on Windows, avoiding <code>sh</code>, <code>/bin/sh</code>, and <code>find-node.sh</code> launch regressions.</p>
+          <h3 class="whats-new-card__title">Remote Approval Gates for <code>graph</code></h3>
+          <p class="whats-new-card__desc">The <code>graph</code> workflow gains remote approval gates plus workspace checkpoints and rollback, so a staged change can be paused for sign-off and reverted to a known-good workspace state.</p>
         </div>
       </article>
 
@@ -2271,8 +2271,8 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Durable Ultragoal Workflow</h3>
-          <p class="whats-new-card__desc"><code>omc ultragoal</code> now persists multi-goal plans and ledgers under <code>.omc/ultragoal</code>, with fail-closed checkpointing and Claude Code <code>/goal</code> handoff guidance.</p>
+          <h3 class="whats-new-card__title">New Skill: <code>loft</code></h3>
+          <p class="whats-new-card__desc">Shipyard shape-before-steel discipline: shape the work before committing to implementation. Opt-in and model-invoked, so it only engages when the model judges it useful.</p>
         </div>
       </article>
 
@@ -2281,8 +2281,8 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Goal Workflow Polish</h3>
-          <p class="whats-new-card__desc">The v4.14 line clarifies Claude <code>/goal</code> boundaries, maps goal artifacts to OMC storage roots, and improves durable workflow UX across sessions.</p>
+          <h3 class="whats-new-card__title">New Skill: <code>ask-navigator</code></h3>
+          <p class="whats-new-card__desc">A shipyard navigator for foggy efforts — it takes an unclear objective and drives it toward a concrete next step. Opt-in.</p>
         </div>
       </article>
 
@@ -2291,8 +2291,8 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Plugin &amp; Runtime Reliability</h3>
-          <p class="whats-new-card__desc">Plugin cache repair, registry alignment, command wrapper preservation, and update-check cache paths are hardened so marketplace and CLI updates stay consistent.</p>
+          <h3 class="whats-new-card__title">HUD Render Performance</h3>
+          <p class="whats-new-card__desc">Git path memoization is now scoped per render, so HUD refreshes stop repeating filesystem work across unrelated frames.</p>
         </div>
       </article>
 
@@ -2301,8 +2301,8 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Safer Cleanup Guardrails</h3>
-          <p class="whats-new-card__desc">Destructive worktree cleanup and teleport removal paths now require safer path validation and fallbacks before deleting local state.</p>
+          <h3 class="whats-new-card__title">Hook Protocol Fixes</h3>
+          <p class="whats-new-card__desc">Hook stderr survives an early protocol stdout close, and the unsupported <code>suppressOutput</code> field is omitted from <code>PostToolUse</code> payloads.</p>
         </div>
       </article>
 
@@ -2311,8 +2311,8 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
         <div>
-          <h3 class="whats-new-card__title">Windows Team &amp; HUD Hardening</h3>
-          <p class="whats-new-card__desc">Windows HUD, PowerShell team worker startup, native Claude version detection, and hook shutdown paths are more portable across shells and platforms.</p>
+          <h3 class="whats-new-card__title">Windows Cache Occupancy</h3>
+          <p class="whats-new-card__desc">Windows cache occupancy identity checks are batched and occupancy tick precision is preserved, cutting redundant probes without losing accuracy.</p>
         </div>
       </article>
     </div>
@@ -2411,7 +2411,7 @@
         </svg>
         <h3>Claude Orchestrates</h3>
       </div>
-      <p class="ai-feature-card__desc">Claude decomposes tasks, fans out work to tmux workers via <code>/omc-teams</code> or <code>/ccg</code>, and synthesizes results — no MCP servers required.</p>
+      <p class="ai-feature-card__desc">Claude decomposes tasks, fans out work to parallel worker lanes via the <code>team</code> skill (<code>omc team</code> for legacy tmux/CLI runs), and synthesizes results — no MCP servers required.</p>
       <ul class="ai-feature-card__list">
         <li>On-demand worker spawn</li>
         <li>Graceful fallbacks</li>
@@ -2661,9 +2661,24 @@
             <td>"ralph: refactor auth system"</td>
           </tr>
           <tr>
-            <td><code>ulw</code></td>
-            <td>Maximum parallelism (ultrawork)</td>
-            <td>"ulw fix all errors"</td>
+            <td><code>ultragoal</code></td>
+            <td>Durable goal ledger that runs to completion</td>
+            <td>"ultragoal: ship the billing rewrite"</td>
+          </tr>
+          <tr>
+            <td><code>execute</code></td>
+            <td>Maximum parallelism across worker lanes</td>
+            <td>"execute: fix all type errors"</td>
+          </tr>
+          <tr>
+            <td><code>autoresearch</code></td>
+            <td>Goal-directed research mission ending in a verdict</td>
+            <td>"autoresearch: which queue fits our load"</td>
+          </tr>
+          <tr>
+            <td><code>graph</code></td>
+            <td>Remote approval gates with workspace checkpoints and rollback</td>
+            <td>"graph: stage the migration"</td>
           </tr>
           <tr>
             <td><code>plan</code></td>
@@ -2690,6 +2705,16 @@
             <td>Use <code>team</code> instead</td>
             <td>"team 5:executor fix all errors"</td>
           </tr>
+          <tr class="deprecated-row">
+            <td><code>ulw</code> / <code>ultrawork</code> <span class="deprecated-badge">Retired</span></td>
+            <td>Retired mode; <code>execute</code> handles parallel lanes</td>
+            <td>"execute: fix all type errors"</td>
+          </tr>
+          <tr class="deprecated-row">
+            <td><code>ultrapilot</code> <span class="deprecated-badge">Retired</span></td>
+            <td>Routes to <code>execute</code></td>
+            <td>"execute: land the refactor"</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -2698,7 +2723,7 @@
   <!-- Agent Lanes Section -->
   <section id="agents" class="section agents-section" aria-labelledby="agents-title">
     <div class="section__header" data-reveal="fade-up">
-      <h2 id="agents-title" class="section__title">19 Specialized Agents</h2>
+      <h2 id="agents-title" class="section__title"><span data-stat="agents">19</span> Specialized Agents</h2>
       <p class="section__subtitle">Unified agents organized by domain. Use the model parameter to match complexity.</p>
     </div>
 
@@ -2731,6 +2756,7 @@
           <span class="agent-tag">security-reviewer</span>
           <span class="agent-tag">code-reviewer</span>
           <span class="agent-tag">critic</span>
+          <span class="agent-tag">verifier</span>
         </div>
         <p class="tier-card__desc">Multi-dimensional code quality checks</p>
       </article>

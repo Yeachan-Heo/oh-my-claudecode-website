@@ -229,6 +229,25 @@ function syncStatElements(content) {
   return updated;
 }
 
+/**
+ * Meta tags and social-card copy cannot carry a `data-stat` element, so the
+ * capability counts embedded in that prose are rewritten by pattern instead.
+ */
+function syncProseCounts(content) {
+  let updated = content;
+  const prose = [
+    [counts.agents, /\b\d+ specialized agents\b/g, (n) => `${n} specialized agents`],
+    [counts.skills, /\b\d+ skills\b/g, (n) => `${n} skills`],
+    [counts.commands, /\b\d+ commands\b/g, (n) => `${n} commands`],
+    [counts.mcpTools, /\b\d+ MCP tools\b/g, (n) => `${n} MCP tools`]
+  ];
+  for (const [value, pattern, render] of prose) {
+    if (value === null) continue;
+    updated = updated.replace(pattern, render(value));
+  }
+  return updated;
+}
+
 const indexPath = join(ROOT, 'index.html');
 const original = readFileSync(indexPath, 'utf8');
 const versionMatch = original.match(/v(\d+\.\d+\.\d+)/);
@@ -251,7 +270,7 @@ if (currentVersion !== version) {
   console.log(`Website version already up-to-date: v${version}`);
 }
 
-content = syncStatElements(content);
+content = syncProseCounts(syncStatElements(content));
 
 if (content !== original) {
   writeFileSync(indexPath, content);
