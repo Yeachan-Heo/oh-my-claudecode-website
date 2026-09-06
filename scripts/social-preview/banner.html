@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800&family=JetBrains+Mono:wght@400;500;700&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --line: #2a1a1e;
+    --text: #f2f2f5;
+    --text-2: #a0a0b0;
+    --muted: #6e6e80;
+    --accent: #ff1f1f;
+    --accent-light: #ff4d4d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 640px; overflow: hidden; }
+  body {
+    background: radial-gradient(ellipse 60% 85% at 80% 60%, #1c0608 0%, var(--bg) 62%);
+    color: var(--text);
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,31,31,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,31,31,.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.2));
+  }
+  .frame {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: 700px 1fr;
+    padding: 64px 72px 56px 72px;
+  }
+  .left { display: flex; flex-direction: column; }
+  .title {
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2.5px;
+    white-space: nowrap;
+  }
+  .title .a { color: var(--accent); }
+  .tagline {
+    margin-top: 20px;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--accent-light);
+    letter-spacing: -0.5px;
+  }
+  hr {
+    border: 0; border-top: 2px solid var(--line);
+    margin: 34px 0 30px;
+    width: 600px;
+  }
+  .cols { display: grid; grid-template-columns: 300px 300px; }
+  .col h2 {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 22px;
+  }
+  .col ul { list-style: none; }
+  .col li {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.35;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .col li::before {
+    content: "";
+    width: 12px; height: 12px;
+    background: var(--accent);
+    flex: 0 0 auto;
+  }
+  .chips {
+    margin-top: auto;
+    display: flex; gap: 12px; align-items: center;
+    width: 600px;
+  }
+  .chip {
+    font-family: "JetBrains Mono", monospace;
+    border: 2px solid var(--line);
+    background: rgba(12,6,8,.85);
+    padding: 8px 14px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+  .chip b { color: var(--text); font-weight: 700; }
+  .chip.claude { border-color: rgba(255,31,31,.5); color: var(--accent-light); }
+  .right {
+    position: relative;
+    display: flex; align-items: flex-end; justify-content: center;
+    margin: -64px -72px -56px 0;
+    overflow: hidden;
+  }
+  .golem {
+    width: 470px;
+    height: auto;
+    image-rendering: pixelated;
+    margin-bottom: -20px;
+    filter: drop-shadow(0 0 24px rgba(255,31,31,.45)) drop-shadow(0 0 70px rgba(255,31,31,.25));
+  }
+  .fade {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 75%, var(--bg) 100%);
+  }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="frame">
+    <div class="left">
+      <div class="title">oh-my-<span class="a">claudecode</span></div>
+      <div class="tagline">A weapon, not a tool.</div>
+      <hr>
+      <div class="cols">
+        <div class="col">
+          <h2>WORKFLOWS</h2>
+          <ul>
+            <li>/deep-interview</li>
+            <li>/ralplan</li>
+            <li>/ralph</li>
+            <li>/team</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h2>MODES</h2>
+          <ul>
+            <li>/autopilot</li>
+            <li>/ultragoal</li>
+            <li>/autoresearch</li>
+            <li>/plan</li>
+          </ul>
+        </div>
+      </div>
+      <div class="chips">
+        <span class="chip"><b data-stat="agents">19</b> agents</span>
+        <span class="chip"><b data-stat="skills">39</b> skills</span>
+        <span class="chip"><b data-stat="mcpTools">25</b> MCP tools</span>
+        <span class="chip claude">Built for Claude Code</span>
+      </div>
+    </div>
+    <div class="right">
+      <img class="golem" src="omc-golem.png" alt="">
+      <div class="fade"></div>
+    </div>
+  </div>
+</body>
+</html>
