@@ -1928,12 +1928,8 @@
         <!-- MCP Tools -->
         <section id="mcp-tools" data-section>
           <h2><span class="anchor-link">#</span>MCP Tools</h2>
-          
-          <h3>External AI</h3>
-          <ul>
-            <li><strong>Codex (gpt-5.3-codex):</strong> Architectural reasoning, deep review, security analysis.</li>
-            <li><strong>Gemini (gemini-3-pro-preview):</strong> Visual analysis, UI design, 1M token context.</li>
-          </ul>
+
+          <p>OMC configures a single MCP server (the local bridge declared in <code>.mcp.json</code>) exposing <span data-stat="mcp-tools">55</span> tools. Codex and Gemini are <em>not</em> MCP providers &mdash; they are advisor providers reached through the <code>ask</code> skill and tmux CLI workers, documented under <a href="#advisors">Advisors</a>.</p>
 
           <h3>Code Intelligence</h3>
           <p><strong>LSP Tools:</strong> <code>lsp_hover</code>, <code>lsp_goto_definition</code>, <code>lsp_find_references</code>, <code>lsp_diagnostics</code>, <code>lsp_rename</code>.</p>
@@ -2024,6 +2020,40 @@ omc team</code></pre>
                 </tbody>
             </table>
           </div>
+          <h3 id="command-wrappers">Commands</h3>
+          <p>21 command wrappers ship alongside the skills. 19 are same-name wrappers that dispatch to the identically named skill and pass arguments through unchanged, so they are not separate capabilities; the two exceptions are called out below.</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Command</th><th>Relationship</th><th>Invocation</th></tr></thead>
+              <tbody>
+                <tr><td><code>ask</code></td><td>Wrapper for the <code>ask</code> skill</td><td>"/oh-my-claudecode:ask"</td></tr>
+                <tr><td><code>autoresearch</code></td><td>Wrapper for the <code>autoresearch</code> skill</td><td>"/oh-my-claudecode:autoresearch"</td></tr>
+                <tr><td><code>compact</code></td><td>Command-only — prepares a manual handoff to Claude Code’s native <code>/compact</code>; it does not compact by itself</td><td>"/oh-my-claudecode:compact"</td></tr>
+                <tr><td><code>configure-notifications</code></td><td>Wrapper for the <code>configure-notifications</code> skill</td><td>"/oh-my-claudecode:configure-notifications"</td></tr>
+                <tr><td><code>debug</code></td><td>Wrapper for the <code>debug</code> skill</td><td>"/oh-my-claudecode:debug"</td></tr>
+                <tr><td><code>deepinit</code></td><td>Wrapper for the <code>deepinit</code> skill</td><td>"/oh-my-claudecode:deepinit"</td></tr>
+                <tr><td><code>external-context</code></td><td>Wrapper for the <code>external-context</code> skill</td><td>"/oh-my-claudecode:external-context"</td></tr>
+                <tr><td><code>hud</code></td><td>Wrapper for the <code>hud</code> skill</td><td>"/oh-my-claudecode:hud"</td></tr>
+                <tr><td><code>omc-doctor</code></td><td>Wrapper for the <code>omc-doctor</code> skill</td><td>"/oh-my-claudecode:omc-doctor"</td></tr>
+                <tr><td><code>omc-setup</code></td><td>Wrapper for the <code>omc-setup</code> skill</td><td>"/oh-my-claudecode:omc-setup"</td></tr>
+                <tr><td><code>project-session-manager</code></td><td>Wrapper for the <code>project-session-manager</code> skill</td><td>"/oh-my-claudecode:project-session-manager"</td></tr>
+                <tr><td><code>psm</code></td><td>Alias for <code>project-session-manager</code></td><td>"/oh-my-claudecode:psm"</td></tr>
+                <tr><td><code>release</code></td><td>Wrapper for the <code>release</code> skill</td><td>"/oh-my-claudecode:release"</td></tr>
+                <tr><td><code>remember</code></td><td>Wrapper for the <code>remember</code> skill</td><td>"/oh-my-claudecode:remember"</td></tr>
+                <tr><td><code>self-improve</code></td><td>Wrapper for the <code>self-improve</code> skill</td><td>"/oh-my-claudecode:self-improve"</td></tr>
+                <tr><td><code>skill</code></td><td>Wrapper for the <code>skill</code> skill</td><td>"/oh-my-claudecode:skill"</td></tr>
+                <tr><td><code>skillify</code></td><td>Wrapper for the <code>skillify</code> skill</td><td>"/oh-my-claudecode:skillify"</td></tr>
+                <tr><td><code>trace</code></td><td>Wrapper for the <code>trace</code> skill</td><td>"/oh-my-claudecode:trace"</td></tr>
+                <tr><td><code>verify</code></td><td>Wrapper for the <code>verify</code> skill</td><td>"/oh-my-claudecode:verify"</td></tr>
+                <tr><td><code>visual-verdict</code></td><td>Wrapper for the <code>visual-verdict</code> skill</td><td>"/oh-my-claudecode:visual-verdict"</td></tr>
+                <tr><td><code>wiki</code></td><td>Wrapper for the <code>wiki</code> skill</td><td>"/oh-my-claudecode:wiki"</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="advisors">Advisors</h3>
+          <p>Codex, Gemini and other external models are reached through the <code>ask</code> skill &mdash; <code>/oh-my-claudecode:ask &lt;claude|codex|gemini|antigravity|grok|cursor&gt;</code> &mdash; or as tmux CLI workers under the <code>team</code> skill. They are advisor providers, not MCP servers.</p>
+
           <p><strong>Utility skills:</strong> <code>/oh-my-claudecode:cancel</code>, <code>/oh-my-claudecode:remember</code>, <code>/oh-my-claudecode:omc-setup</code>, <code>/oh-my-claudecode:hud</code>, <code>/oh-my-claudecode:omc-doctor</code>.</p>
         </section>
 
