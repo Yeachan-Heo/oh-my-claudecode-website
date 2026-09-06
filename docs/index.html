@@ -2299,7 +2299,7 @@ omc hud --watch --interval 1000</code></pre>
           <ul style="list-style-type: disc;">
             <li>Create a bot in the Discord Developer Portal and copy the bot token.</li>
             <li>Get the channel ID (right-click channel &gt; Copy ID with developer mode on).</li>
-            <li>Add <code>notifications["discord-bot"].botToken</code> and <code>notifications["discord-bot"].channelId</code> to config (the key is the literal hyphenated string, not <code>discordBot</code>).</li>
+            <li>Add <code>notifications["discord-bot"].botToken</code> and <code>notifications["discord-bot"].channelId</code> to config &mdash; the platform key is the literal hyphenated string.</li>
             <li>Activate per session with <code>omc --discord</code>.</li>
           </ul>
 
