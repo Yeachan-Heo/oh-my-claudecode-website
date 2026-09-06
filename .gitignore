@@ -29,3 +29,6 @@ social-preview-1x.png
 .omc/
 .sisyphus/
 .omx/
+
+# Source checkout used by .github/workflows/sync-from-source.yml
+oh-my-claudecode-source/

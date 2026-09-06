@@ -2179,22 +2179,22 @@
           <span class="gradient-text">A weapon, not a tool</span>
         </p>
         <p class="hero__description hero-entrance hero-entrance--3">
-          Multi-AI orchestration plugin for Claude Code. Coordinate Claude, Gemini, and Codex with 19 specialized agents, 39 skills, and MCP-powered tools.
+          Multi-AI orchestration plugin for Claude Code. Coordinate Claude, Gemini, and Codex with <span data-stat="agents">19</span> specialized agents, <span data-stat="skills">37</span> skills, and <span data-stat="mcp-tools">55</span> MCP-powered tools.
         </p>
         <div class="hero-stats hero-entrance hero-entrance--3" style="--reveal-delay: 150ms">
           <a href="https://github.com/yeachan-heo/oh-my-claudecode" class="hero-stat-badge" target="_blank" rel="noopener" aria-label="GitHub Stars">
             <span class="hero-stat-badge__icon" aria-hidden="true">&#9733;</span>
-            <span class="hero-stat-badge__value" id="hero-stars">---</span>
+            <span class="hero-stat-badge__value" id="hero-stars" data-stat="stars">---</span>
             <span class="hero-stat-badge__label">stars</span>
           </a>
           <div class="hero-stat-badge" aria-label="Monthly Downloads">
             <span class="hero-stat-badge__icon" aria-hidden="true">&#8595;</span>
-            <span class="hero-stat-badge__value" id="hero-downloads">---</span>
+            <span class="hero-stat-badge__value" id="hero-downloads" data-stat="downloads">---</span>
             <span class="hero-stat-badge__label">/mo</span>
           </div>
           <div class="hero-stat-badge" aria-label="Current Version">
             <span class="hero-stat-badge__icon" aria-hidden="true">v</span>
-            <span class="hero-stat-badge__value" id="hero-version">---</span>
+            <span class="hero-stat-badge__value" id="hero-version" data-stat="version-bare">5.3.0</span>
           </div>
         </div>
         <div class="hero__cta hero-entrance hero-entrance--4">
@@ -2243,14 +2243,14 @@
     </div>
   </section>
 
-<!-- What's New in v4.14.4 Section -->
+<!-- What's New in v5.3.0 Section -->
 <section id="whats-new" class="section whats-new-section" aria-labelledby="whats-new-title">
   <div class="section__header" data-reveal="fade-up">
     <div class="whats-new-badge">
       <span class="whats-new-badge__label">NEW</span>
-      <span class="whats-new-badge__version">v4.14.4</span>
+      <span class="whats-new-badge__version" data-stat="version">v5.3.0</span>
     </div>
-    <h2 id="whats-new-title" class="section__title">What's New in 4.14.4</h2>
+    <h2 id="whats-new-title" class="section__title">What's New in <span data-stat="version-bare">5.3.0</span></h2>
     <p class="section__subtitle">Native Windows hook manifest fixes, durable Ultragoal, Claude goal workflow polish, plugin/runtime hardening, and safer cleanup guardrails across the v4.14 series.</p>
   </div>
 
@@ -2318,7 +2318,7 @@
     </div>
 
     <div class="whats-new-cta" data-reveal="fade-up" data-reveal-delay="500">
-      <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v4.14.4" class="btn btn--primary" target="_blank" rel="noopener">View Release Notes</a>
+      <a href="https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v5.3.0" class="btn btn--primary" target="_blank" rel="noopener" data-stat-release-link>View Release Notes</a>
       <a href="https://github.com/yeachan-heo/oh-my-claudecode/blob/main/CHANGELOG.md" class="btn btn--secondary" target="_blank" rel="noopener">Full Changelog</a>
     </div>
   </div>
@@ -2425,7 +2425,7 @@
   <section id="installation" class="section install-section" aria-labelledby="install-title">
     <div class="section__header" data-reveal="fade-up">
       <h2 id="install-title" class="section__title">Get Started in Seconds</h2>
-      <p class="section__subtitle">Install via Claude Code plugin marketplace, or use the npm package directly: <code>oh-my-claude-sisyphus@4.14.4</code>.</p>
+      <p class="section__subtitle">Install via Claude Code plugin marketplace, or use the npm package directly: <code>oh-my-claude-sisyphus@5.3.0</code>.</p>
     </div>
 
     <div class="install-flow" data-reveal="stagger">
@@ -2464,13 +2464,13 @@
                 <span class="code-block__dot code-block__dot--yellow"></span>
                 <span class="code-block__dot code-block__dot--green"></span>
               </div>
-              <button class="code-block__copy" data-copy="npm install -g oh-my-claude-sisyphus@4.14.4" aria-label="Copy command">
+              <button class="code-block__copy" data-copy="npm install -g oh-my-claude-sisyphus@5.3.0" aria-label="Copy command">
                 Copy
               </button>
             </div>
             <div class="code-block__content">
               <code><span class="comment"># CLI install via npm:</span><br>
-  npm install -g oh-my-claude-sisyphus@4.14.4</code>
+  npm install -g oh-my-claude-sisyphus@5.3.0</code>
             </div>
           </div>
         </div>
@@ -2988,31 +2988,50 @@
 
   </script>
 
-  <!-- Standalone stats loader - updates hero badges only -->
+  <!-- Fallback stats loader: fills [data-stat] from data/stats.json for
+       browsers where the ES module bundle does not run. The module path in
+       js/main.js resolves the same keys from live npm/GitHub APIs and wins
+       whenever it loads. -->
   <script>
     (function() {
       fetch('./data/stats.json')
         .then(function(r) { return r.json(); })
         .then(function(data) {
-          var stars = (data.github && data.github.stars) || data.stars || 0;
-          var downloads = (data.npm && data.npm.downloads) || data.downloads || 0;
-          var version = (data.npm && data.npm.version) || data.version || '0.0.0';
-
-          // Format numbers
           function fmt(n) {
+            if (typeof n !== 'number' || !isFinite(n)) return null;
             if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
             if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
-            return n.toString();
+            return String(n);
           }
 
-          // Update hero badges (always - they start as "---")
-          var heroStars = document.getElementById('hero-stars');
-          var heroDownloads = document.getElementById('hero-downloads');
-          var heroVersion = document.getElementById('hero-version');
+          var values = {
+            version: typeof data.version === 'string' ? 'v' + data.version : null,
+            'version-bare': typeof data.version === 'string' ? data.version : null,
+            agents: fmt(data.agents),
+            skills: fmt(data.skills),
+            commands: fmt(data.commands),
+            'mcp-tools': fmt(data.mcpTools),
+            stars: fmt(data.stars),
+            forks: fmt(data.forks),
+            downloads: fmt(data.downloads)
+          };
 
-          if (heroStars && heroStars.textContent === '---') heroStars.textContent = fmt(stars);
-          if (heroDownloads && heroDownloads.textContent === '---') heroDownloads.textContent = fmt(downloads);
-          if (heroVersion && heroVersion.textContent === '---') heroVersion.textContent = version;
+          var nodes = document.querySelectorAll('[data-stat]');
+          Array.prototype.forEach.call(nodes, function(node) {
+            var value = values[node.getAttribute('data-stat')];
+            // Only fill placeholders; never overwrite a value the module
+            // path already resolved from the live APIs.
+            if (value && (node.textContent === '---' || node.textContent === '—' || node.dataset.statPending !== undefined)) {
+              node.textContent = value;
+            }
+          });
+
+          if (typeof data.version === 'string') {
+            var links = document.querySelectorAll('[data-stat-release-link]');
+            Array.prototype.forEach.call(links, function(link) {
+              link.href = 'https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v' + data.version;
+            });
+          }
         })
         .catch(function(e) { console.error('Fallback stats failed:', e); });
     })();

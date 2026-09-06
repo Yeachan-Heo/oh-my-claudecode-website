@@ -1,0 +1,58 @@
+name: Sync Stats from npm/GitHub
+
+on:
+  schedule:
+    # Every 2 hours: keeps the published version, downloads and stars fresh
+    # even if the source-repo sync is unavailable.
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-stats
+  cancel-in-progress: false
+
+jobs:
+  sync-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout website repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Refresh data/stats.json from npm + GitHub
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/sync-stats.mjs
+
+      - name: Propagate published version into static markup
+        run: |
+          VERSION=$(node -e "console.log(JSON.parse(require('fs').readFileSync('data/stats.json','utf8')).version)")
+          echo "Published version: $VERSION"
+          OMC_VERSION="$VERSION" node scripts/sync-version.mjs
+
+      - name: Check for changes
+        id: check
+        run: |
+          git add data/stats.json index.html
+          if git diff --cached --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "site: auto-sync release metadata ($(node -e "const s=require('./data/stats.json');console.log(\`v\${s.version}, downloads: \${s.downloads}, stars: \${s.stars}\`)"))"
+          git push

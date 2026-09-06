@@ -202,23 +202,53 @@ function animateTitleCharacters(titleElement) {
 
 /**
  * Stats Loading
- * Fetch stats and update hero badges only
+ * Fills every [data-stat] element from the resolved stats. Values that could
+ * not be resolved leave the server-rendered markup untouched rather than
+ * replacing it with a stale or empty placeholder.
  */
 async function loadStats() {
   try {
     const stats = await statsService.get();
     AppState.statsLoaded = true;
 
-    // Update hero stat badges
-    const heroStars = document.getElementById('hero-stars');
-    const heroDownloads = document.getElementById('hero-downloads');
-    const heroVersion = document.getElementById('hero-version');
+    const fmt = (n) =>
+      typeof n !== 'number' || !isFinite(n)
+        ? null
+        : n >= 1000000
+          ? (n / 1000000).toFixed(1) + 'M'
+          : n >= 1000
+            ? (n / 1000).toFixed(1) + 'k'
+            : String(n);
 
-    const fmt = (n) => n >= 1000000 ? (n / 1000000).toFixed(1) + 'M' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n.toString();
+    const values = {
+      version: typeof stats.version === 'string' ? 'v' + stats.version : null,
+      'version-bare': typeof stats.version === 'string' ? stats.version : null,
+      agents: fmt(stats.agents),
+      skills: fmt(stats.skills),
+      commands: fmt(stats.commands),
+      'mcp-tools': fmt(stats.mcpTools),
+      stars: fmt(stats.stars),
+      forks: fmt(stats.forks),
+      downloads: fmt(stats.downloads),
+    };
 
-    if (heroStars) heroStars.textContent = stats.stars ? fmt(stats.stars) : '---';
-    if (heroDownloads) heroDownloads.textContent = stats.downloads ? fmt(stats.downloads) : '---';
-    if (heroVersion) heroVersion.textContent = stats.version || '---';
+    document.querySelectorAll('[data-stat]').forEach((el) => {
+      const value = values[el.getAttribute('data-stat')];
+      if (value) el.textContent = value;
+    });
+
+    // Release-notes links must follow the resolved version too.
+    if (typeof stats.version === 'string') {
+      document.querySelectorAll('[data-stat-release-link]').forEach((el) => {
+        el.href = `https://github.com/yeachan-heo/oh-my-claudecode/releases/tag/v${stats.version}`;
+      });
+      document.querySelectorAll('[data-copy*="oh-my-claude-sisyphus@"]').forEach((el) => {
+        el.setAttribute(
+          'data-copy',
+          el.getAttribute('data-copy').replace(/oh-my-claude-sisyphus@[\d.]+/, `oh-my-claude-sisyphus@${stats.version}`)
+        );
+      });
+    }
   } catch (error) {
     console.error('[Main] Failed to load stats:', error);
   }

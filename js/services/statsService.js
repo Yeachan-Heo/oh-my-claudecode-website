@@ -79,50 +79,34 @@ class StatsService {
    */
   async doFetch() {
     try {
-      // Fetch ALL data from live APIs in parallel
-      const [githubData, npmData, releaseData] = await Promise.all([
-        this.fetchGitHubStats().catch(() => null),
+      // data/stats.json is the offline baseline (it is the only source of the
+      // capability counts); live APIs then win field by field.
+      const [localStats, npmLatest, npmData, githubData] = await Promise.all([
+        this.fetchLocalStats().catch(() => null),
+        this.fetchNpmLatest().catch(() => null),
         this.fetchNpmStats().catch(() => null),
-        this.fetchGitHubReleases().catch(() => null),
+        this.fetchGitHubStats().catch(() => null),
       ]);
 
-      const data = {
-        stars: githubData?.stargazers_count || 0,
-        downloads: npmData?.downloads || 0,
-        agents: 19, // Known count from source package
-        version: releaseData?.tag_name?.replace(/^v/, '') || '0.0.0',
-        updatedAt: new Date().toISOString(),
-      };
+      const data = { ...(localStats || {}) };
 
-      // If any API failed, try to fill gaps from local stats
-      if (!githubData || !npmData || !releaseData) {
-        const localStats = await this.fetchLocalStats().catch(() => null);
-        if (localStats) {
-          if (!githubData) data.stars = localStats.stars || data.stars;
-          if (!npmData) data.downloads = localStats.downloads || data.downloads;
-          if (!releaseData) data.version = localStats.version || data.version;
-          data.agents = localStats.agents || data.agents;
-        }
+      if (typeof npmLatest?.version === 'string') data.version = npmLatest.version;
+      if (typeof npmData?.downloads === 'number') data.downloads = npmData.downloads;
+      if (typeof githubData?.stargazers_count === 'number') {
+        data.stars = githubData.stargazers_count;
+        data.forks = githubData.forks_count;
       }
-
-      // If still missing critical data, use hardcoded fallbacks
-      if (data.stars === 0) data.stars = 35474;
-      if (data.downloads === 0) data.downloads = 30371;
-      if (data.version === '0.0.0') data.version = '4.14.4';
+      if (npmLatest || npmData || githubData) {
+        data.updatedAt = new Date().toISOString();
+      }
 
       this.updateCache(data);
       return data;
     } catch (error) {
       console.error('Failed to fetch stats:', error);
-
-      // Return fallback data if everything fails
-      return {
-        stars: 35474,
-        downloads: 30371,
-        agents: 19,
-        version: '4.14.4',
-        updatedAt: new Date().toISOString(),
-      };
+      // No hardcoded numbers: an unresolved field leaves the rendered markup
+      // untouched rather than advertising a stale release.
+      return {};
     }
   }
 
@@ -143,20 +127,38 @@ class StatsService {
         throw new Error(`HTTP ${response.status}`);
       }
 
-      const data = await response.json();
-
-      // Handle nested structure from stats.json (github.stars, npm.downloads, npm.version)
-      return {
-        stars: data.github?.stars || data.stars || 0,
-        downloads: data.npm?.downloads || data.downloads || 0,
-        agents: data.agents || 33,
-        version: data.npm?.version || data.version || '0.0.0',
-        updatedAt: data.lastUpdated || data.updatedAt || new Date().toISOString(),
-      };
+      const raw = await response.json();
+      const data = {};
+      const numbers = ['agents', 'skills', 'commands', 'mcpTools', 'downloads', 'stars', 'forks'];
+      for (const key of numbers) {
+        if (typeof raw[key] === 'number') data[key] = raw[key];
+      }
+      if (typeof raw.version === 'string') data.version = raw.version;
+      if (typeof raw.lastUpdated === 'string') data.updatedAt = raw.lastUpdated;
+      return data;
     } catch (error) {
       // Local stats file might not exist yet
       return null;
     }
+  }
+
+  /**
+   * Fetch the published npm version
+   * @private
+   * @returns {Promise<Object>}
+   */
+  async fetchNpmLatest() {
+    const response = await fetch(API_ENDPOINTS.npm.latest, {
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`npm registry error: ${response.status}`);
+    }
+
+    return response.json();
   }
 
   /**
@@ -193,25 +195,6 @@ class StatsService {
 
     if (!response.ok) {
       throw new Error(`npm API error: ${response.status}`);
-    }
-
-    return response.json();
-  }
-
-  /**
-   * Fetch latest GitHub release for version
-   * @private
-   * @returns {Promise<Object>}
-   */
-  async fetchGitHubReleases() {
-    const response = await fetch(API_ENDPOINTS.github.releases, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`GitHub Releases API error: ${response.status}`);
     }
 
     return response.json();

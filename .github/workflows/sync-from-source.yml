@@ -1,0 +1,62 @@
+name: Sync from oh-my-claudecode Source
+
+on:
+  schedule:
+    # Run every hour to check for updates
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-from-source
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout website repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+        with:
+          repository: Yeachan-Heo/oh-my-claudecode
+          path: oh-my-claudecode-source
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Sync version and capability counts
+        env:
+          OMC_SOURCE_DIR: ${{ github.workspace }}/oh-my-claudecode-source
+        run: node scripts/sync-version.mjs
+
+      - name: Check for changes
+        id: check
+        run: |
+          # Stage website paths only; the source checkout stays untracked.
+          git add data/ index.html
+          if git diff --cached --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes to commit"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "site: auto-sync from oh-my-claudecode source v$(node -e "console.log(require('./oh-my-claudecode-source/package.json').version)")"
+          git push

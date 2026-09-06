@@ -10,7 +10,6 @@ export const API_ENDPOINTS = {
   /** GitHub repository stats */
   github: {
     repo: 'https://api.github.com/repos/yeachan-heo/oh-my-claudecode',
-    releases: 'https://api.github.com/repos/yeachan-heo/oh-my-claudecode/releases/latest',
     rawContent: 'https://raw.githubusercontent.com/yeachan-heo/oh-my-claudecode/main',
   },
 
@@ -18,6 +17,7 @@ export const API_ENDPOINTS = {
   npm: {
     downloads: 'https://api.npmjs.org/downloads/point',
     package: 'https://registry.npmjs.org/oh-my-claude-sisyphus',
+    latest: 'https://registry.npmjs.org/oh-my-claude-sisyphus/latest',
   },
 
   /** Local data files */
