@@ -1,5 +1,5 @@
 {
-  "version": "5.7.21",
+  "version": "5.7.22",
   "agents": 19,
   "skills": 48,
   "commands": 21,
@@ -7,5 +7,5 @@
   "downloads": 25106,
   "stars": 40425,
   "forks": 3616,
-  "lastUpdated": "2026-10-30T18:59:34.593Z"
+  "lastUpdated": "2026-10-30T21:12:25.282Z"
 }
