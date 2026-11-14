@@ -1,11 +1,11 @@
 {
-  "version": "5.8.6",
+  "version": "5.8.4",
   "agents": 19,
   "skills": 84,
   "commands": 21,
   "mcpTools": 50,
   "downloads": 34678,
-  "stars": 40812,
-  "forks": 3645,
-  "lastUpdated": "2026-11-14T05:25:09.378Z"
+  "stars": 40815,
+  "forks": 3646,
+  "lastUpdated": "2026-11-14T08:38:51.422Z"
 }
